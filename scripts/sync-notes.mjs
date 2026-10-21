@@ -1,4 +1,5 @@
-import { readdir, readFile, writeFile, mkdir, cp, rm } from 'node:fs/promises'
+import { readdir, readFile, writeFile, mkdir, cp, rm, rename } from 'node:fs/promises'
+import matter from 'gray-matter'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -14,14 +15,51 @@ const courses = [
   ['物联网', 'INTERNET OF THINGS', '感知、通信与连接，记录物联网学习。'],
 ]
 const assetNames = new Set()
+const notePaths = new Set()
+const isCourseNote = file => path.extname(file).toLowerCase() === '.md' && path.relative(vault, path.dirname(file)).split(path.sep).some(part => /^notes?$/i.test(part))
 async function countNotes(dir) {
   let count = 0
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     if (entry.name.startsWith('.')) continue
     if (!entry.isDirectory()) assetNames.add(entry.name)
-    count += entry.isDirectory() ? await countNotes(path.join(dir, entry.name)) : Number(entry.name.endsWith('.md'))
+    if (isCourseNote(path.join(dir, entry.name))) notePaths.add(path.resolve(dir, entry.name))
+    count += entry.isDirectory() ? await countNotes(path.join(dir, entry.name)) : Number(isCourseNote(path.join(dir, entry.name)))
   }
   return count
+}
+async function flattenPublishedNotes(courseDir, courseName) {
+  const entries = []
+  async function collect(dir) {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name)
+      if (entry.isDirectory()) await collect(file)
+      else if (entry.name.endsWith('.md')) entries.push(file)
+    }
+  }
+  await collect(courseDir)
+  const targets = new Set()
+  for (const file of entries) {
+    const relative = path.relative(courseDir, file)
+    const target = path.join(courseDir, ...relative.split(path.sep).filter(part => !/^notes?$/i.test(part)))
+    if (targets.has(target.toLowerCase())) throw new Error(`展平后文件重名：${target}`)
+    targets.add(target.toLowerCase())
+  }
+  for (const file of entries) {
+    const relative = path.relative(courseDir, file)
+    const target = path.join(courseDir, ...relative.split(path.sep).filter(part => !/^notes?$/i.test(part)))
+    const parsed = matter(await readFile(file, 'utf8'))
+    parsed.data.title = path.basename(file, '.md')
+    const aliases = parsed.data.aliases ?? parsed.data.alias ?? []
+    parsed.data.aliases = [...new Set([...(Array.isArray(aliases) ? aliases : [aliases]), `${courseName}/${relative.split(path.sep).join('/').replace(/\.md$/, '')}`])]
+    await mkdir(path.dirname(target), { recursive: true })
+    await writeFile(file, matter.stringify(parsed.content, parsed.data), 'utf8')
+    if (file !== target) await rename(file, target)
+  }
+  // Keep old folder URLs working without retaining a notes layer in navigation.
+  await writeFile(path.join(courseDir, 'index.md'), matter.stringify('', {
+    title: courseName,
+    aliases: [`${courseName}/notes/index`, `${courseName}/note/index`],
+  }), 'utf8')
 }
 async function normalizeRelativeLinks(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -31,13 +69,21 @@ async function normalizeRelativeLinks(dir) {
     const source = await readFile(file, 'utf8')
     // Quartz resolves paths from content root. Convert explicit relative Markdown
     // paths in the publish copy; leave the original Obsidian file untouched.
-    const normalized = source.replace(/!\[\[([^\]|]+\.(?:png|jpe?g|gif|webp|svg))(?:\|[^\]]*)?\]\]/gi, (match, name) => assetNames.has(path.basename(name)) ? match : `【原笔记缺少图片：${name}】`).replace(/\]\(<?(\.\.?\/[^)>]+)>?\)/g, (match, url) => {
+    const normalized = source.replace(/!\[\[([^\]|]+\.(?:png|jpe?g|gif|webp|svg))(?:\|[^\]]*)?\]\]/gi, (match, name) => assetNames.has(path.basename(name)) ? match : `【原笔记缺少图片：${name}】`).replace(/(?<!!)\[\[([^\]|#]+)(#[^\]|]*)?(\|[^\]]*)?\]\]/g, (match, target, anchor = '', alias = '') => {
+      const note = target.endsWith('.md') ? target : `${target}.md`
+      const original = path.resolve(vault, path.relative(path.join(site, 'content'), path.dirname(file)), note)
+      if (!notePaths.has(original)) return match
+      const published = path.relative(vault, original).split(path.sep).filter(part => !/^notes?$/i.test(part)).join('/').replace(/\.md$/, '')
+      return `[[${published}${anchor}${alias || '|' + target}]]`
+    }).replace(/\]\(<?([^)>]+)>?\)/g, (match, url) => {
+      if (/^(?:[a-z]+:|#|\/)/i.test(url) || (!url.startsWith('.') && !/\.md(?:#.*)?$/.test(url))) return match
       const [target, ...anchor] = url.split('#')
       let decoded
       try { decoded = decodeURIComponent(target) } catch { return match }
       const absolute = path.resolve(path.dirname(file), decoded)
-      const relative = path.relative(path.join(site, 'content'), absolute)
+      let relative = path.relative(path.join(site, 'content'), absolute)
       if (relative.startsWith('..') || path.isAbsolute(relative)) return match
+      if (/\.md$/i.test(decoded)) relative = relative.split(path.sep).filter(part => !/^notes?$/i.test(part)).join(path.sep)
       return `](${relative.split(path.sep).map(encodeURIComponent).join('/')}${anchor.length ? '#' + anchor.join('#') : ''})`
     })
     if (source !== normalized) await writeFile(file, normalized, 'utf8')
@@ -49,8 +95,9 @@ for (const [name] of courses) {
   const dest = path.resolve(site, 'content', name)
   if (!dest.startsWith(path.resolve(site, 'content') + path.sep)) throw new Error('同步目标超出 content 目录')
   await rm(dest, { recursive: true, force: true })
-  await cp(path.join(vault, name), dest, { recursive: true, filter: source => !path.basename(source).startsWith('.') })
+  await cp(path.join(vault, name), dest, { recursive: true, filter: source => !path.basename(source).startsWith('.') && (path.extname(source).toLowerCase() !== '.md' || isCourseNote(source)) })
   await normalizeRelativeLinks(dest)
+  await flattenPublishedNotes(dest, name)
 }
 const total = counts.reduce((a, b) => a + b, 0)
 const cards = courses.map(([name, label, desc], i) => `<div class="course-card"><span class="course-label">${String(i + 1).padStart(2, '0')} / ${label}</span><h3><a class="internal" href="./${name}/">${name}</a></h3><p>${desc}</p><span class="course-count">${counts[i]} 篇笔记 <span aria-hidden="true">↗</span></span></div>`).join('\n')
