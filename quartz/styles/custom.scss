@@ -1,0 +1,39 @@
+@use "./base.scss";
+
+body { --bodyFont: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; --headerFont: var(--bodyFont); }
+body { background: var(--light); }
+article { font-size: 16px; line-height: 1.85; }
+article h1, article h2, article h3 { letter-spacing: -.025em; }
+article h2 { margin-top: 2.4rem; padding-bottom: .65rem; border-bottom: 1px solid var(--lightgray); }
+.page-title { font-size: 1.5rem; letter-spacing: -.05em; }
+.page-title a::before { content: "◈"; display: inline-block; margin-right: .55rem; color: var(--tertiary); }
+.eyebrow { font-size: .68rem; letter-spacing: .2em; color: var(--secondary); font-weight: 700; }
+.garden-intro { padding: 1.2rem 0 .6rem; }
+.garden-lead { font-size: 1.35rem; color: var(--dark); line-height: 1.6; }
+.garden-intro > p:not(.garden-lead) { color: var(--darkgray); }
+.garden-stats { display: flex; flex-wrap: wrap; gap: 1.6rem; align-items: center; margin-top: 1.8rem; padding: 1.2rem 0; border-top: 1px solid var(--lightgray); border-bottom: 1px solid var(--lightgray); font-size: .8rem; color: var(--darkgray); }
+.garden-stats strong { font-size: 1.4rem; color: var(--secondary); margin-right: .35rem; }
+.growing::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--tertiary); border-radius: 50%; margin-right: .5rem; }
+.course-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
+article .course-card { display: flex; flex-direction: column; padding: 1.3rem; border: 1px solid var(--lightgray); border-radius: 12px; background: transparent; text-decoration: none; font-weight: 400; transition: border-color .2s, transform .2s, background .2s; }
+article .course-card:hover { border-color: var(--tertiary); transform: translateY(-3px); background: var(--highlight); }
+.course-card .course-label { font-size: .58rem; letter-spacing: .13em; color: var(--secondary); }
+.course-card h3 { margin: .8rem 0 .4rem; font-size: 1.13rem; color: var(--dark); }
+.course-card p { font-size: .83rem; line-height: 1.7; margin: 0 0 1.2rem; color: var(--darkgray); }
+.course-count { margin-top: auto; font-size: .72rem; color: var(--secondary); display: flex; justify-content: space-between; }
+.course-card .external-icon { display: none; }
+pre { border-radius: 9px; }
+blockquote { border-radius: 0 8px 8px 0; }
+article img { border-radius: 6px; }
+footer { border-top: 1px solid var(--lightgray); padding-top: 1rem; }
+body[data-slug="index"] .article-title { font-size: clamp(1.9rem, 4vw, 2.65rem); line-height: 1.35; }
+body[data-slug="index"] .content-meta { display: none; }
+@media (max-width: 600px) { .course-grid { grid-template-columns: 1fr; } .garden-stats { gap: 1rem; } article { font-size: 15px; } }
+
+.course-card { position: relative; }
+.course-card h3 a.internal { background: transparent; padding: 0; }
+.course-card h3 a.internal:not([role="anchor"])::after { content: ''; position: absolute; inset: 0; border-radius: 12px; }
+
+
+
+.course-card h3 a[role='anchor'] { display: none; }

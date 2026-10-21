@@ -1,0 +1,30 @@
+#  Digital Image Processing / 图像信息处理
+- **学期：** 2026春夏学期
+- **讲师：** 宋明黎（Mingli Song）
+- **单位：** 浙江大学计算机科学与技术学院
+- **联系方式：** [brooksong@zju.edu.cn](https://www.google.com/url?sa=E&q=mailto%3Abrooksong%40zju.edu.cn)
+- **个人主页：** [http://person.zju.edu.cn/msong/](https://www.google.com/url?sa=E&q=http%3A%2F%2Fperson.zju.edu.cn%2Fmsong%2F)
+- **数字图像的重要性**
+	- **现如今，多媒体无处不在：** 加州大学伯克利分校的“信息量有多少”项目表明，2002年制作了约12亿小时的视频（约70,000 TB），且逐年增加。    
+	- **数字图像（或视频流）是信息呈现的主要形式。**    
+	    - 对于人类，超过60%的信息通过视觉获取，这是感知和理解环境的基础。        
+	    - 它是计算机视觉和计算机图形学的基础。        
+	    - 应用：计算机动画、视频监控、医学图像处理、遥感图像处理、视觉特效与增强等。 
+	- **不同的成像形式：** 可见光、X射线、超声波、红外线。（visible, X-ray, Ultrasonic wave, Infrared）、
+- **What is digital image processing？**![[Pasted image 20260305140454.png]]
+	- **图像获取：** 自动光圈校正和白平衡、图像重建。    
+	- **显示与打印：** 自动尺寸调整、色彩校正（CMYK vs. RGB）。    
+	- **存储与传输：** 高效存储（减少时空成本）、便捷传输（无损、高效、安全）。    
+	- **增强与复原：** 图像修复（Inpainting）、改善视觉效果（去雾、Retinex、去模糊、超分辨）。    
+	- **识别与理解：** 字符识别（OCR）、对象检测（人脸检测）、场景理解（图像检索、场景分类）。
+- **图像获取**
+	-  **自动光圈校正和白平衡（Automatic aperture correction and color balance）：** 人眼能动态适应环境亮度，具有极高的动态范围和速度。
+	-  **图像拼接（Panaroma）：** 全景图。
+	-  **图像变形（Image Warping）：** 展示了原始图像、仿射变换、相似性保持以及最新的方法（移动最小二乘法-SIGGRAPH）。![[Pasted image 20260305141124.png]]
+	- **图像渐变（Image Morphing）：** 展示了从一张女性面孔平滑过渡到男性面孔的过程。![[Pasted image 20260305141031.png]]
+- **存储与传输**
+	- **高效存储：减少时空成本。**    
+	    - bmp格式：492kb        
+	    - png格式：407kb        
+	    - jpeg格式：23kb（JPEG是数码相机的默认格式）。
+    - **便捷传输：无损、高效、安全。**

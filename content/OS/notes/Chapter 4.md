@@ -1,0 +1,124 @@
+# Threads
+- Outlines
+	- **Overview**
+		1. Thread（线程）的引入
+			- 单线程（Single Thread）程序任务顺序执行，一个任务阻塞会影响整个程序响应。
+			- 使用 **Thread（线程）** 将任务拆分，由 OS（Operating System，操作系统）调度，提高响应性。
+		2. Multithreading（多线程）
+			- 一个进程（Process）可以包含多个线程。
+			- 每个线程执行不同任务，提高程序效率。
+		3. Multithreading **Benefits**（多线程优势）
+			- **Responsiveness（响应性）**：提高交互程序响应速度。
+			- **Resource Sharing（资源共享）**：线程共享进程的代码和数据。
+			- **Economy（经济性）**：线程创建和切换成本低于进程。
+			- **Utilization of MP Architectures（多处理器架构利用）**：提高多 CPU 并发能力。
+		4. Concurrency vs. Parallelism（并发与并行）
+			- **Concurrency（并发）**：多个任务交替执行。
+			- **Parallelism（并行）**：多个任务同时执行，需要多个 CPU Core（核心）。
+		5. Thread 类型
+			**User Threads（用户线程）**
+			- 由用户级线程库管理。
+			- 常见：
+			    - **Pthreads（POSIX Threads，POSIX线程）**
+			    - **Win32 Threads（Windows线程）**
+			    - **Java Threads（Java线程）**
+			**Kernel Threads（内核线程）**
+			- 由 Kernel（内核）支持和管理。
+			- 常见系统：
+			    - Windows
+			    - Solaris
+			    - Linux
+			    - Mac OS X
+	- **Multithreading Models**
+		- Many-to-One
+			- 多个 **User Threads（用户线程）** 映射到一个 **Kernel Thread（内核线程）**。
+			- 优点：
+			    - Thread management（线程管理）效率高。
+			- 缺点：
+			    - 一个线程阻塞，整个进程阻塞。
+			    - Kernel 一次只能调度一个线程。
+			- 示例：
+			    - Solaris Green Threads
+			    - GNU Portable Threads
+		- One-to-One
+			- 每个 User Thread 对应一个 Kernel Thread。
+			- 优点：
+			    - 支持更多并发（Concurrency）。
+			    - 一个线程阻塞不会影响其他线程。
+			- 缺点：
+			    - 创建线程成本较高。
+			- 示例：
+			    - Windows NT/XP/2000
+			    - Linux
+			    - Solaris 9+
+		- Many-to-Many
+			- 多个 User Threads 映射到多个 Kernel Threads。
+			- 优点：
+			    - 灵活；
+			    - 可以创建足够数量的 Kernel Threads；
+			    - 兼顾并发和资源消耗。
+			- 示例：
+			    - Solaris 9以前
+			    - Windows NT/2000 ThreadFiber
+		- ![[Pasted image 20261013172147.png]]
+		- Two-Level Model
+			- 基于 Many-to-Many 模型。
+			- 额外允许：
+			    - 某个 User Thread 绑定（bind）到指定 Kernel Thread。
+			- 示例：
+			    - IRIX
+			    - HP-UX
+			    - Tru64 UNIX
+			    - Solaris 8及以前
+	- **Threading Issues**
+		- **fork()（创建进程）**
+			- fork() 是否复制调用线程？
+			- 或复制进程中的所有线程？
+			- 两种方式：
+				  - 复制所有线程；
+				  - 只复制调用 fork() 的线程。
+		- **exec()（执行新程序）**
+			- 会替换整个 Process（进程）。	
+		- **Thread Cancellation（线程取消）**
+			- 在线程完成任务前终止 Thread（线程）。
+		- **Asynchronous Cancellation（异步取消）**
+			- 立即终止目标线程。
+		- **Deferred Cancellation（延迟取消）**
+			- 线程周期性检查取消标志（flag）；
+			- 在合适时间终止。
+		- **Signal Handling（信号处理）**
+			- **Signal（信号）**
+				- UNIX 系统中用于通知进程某事件发生。
+			- 处理过程：
+				- Signal generated（信号产生）
+				- Signal delivered（信号传递）
+				- Signal handled（信号处理）
+			- 信号处理方式：
+				- 发送给产生信号的线程；
+				- 发送给进程中的所有线程；
+				- 发送给指定线程；
+				- 指定一个线程接收所有信号。
+		- **Thread Pool（线程池）**
+			- 预先创建多个 Thread（线程），等待任务。
+			- 优势：
+				- 使用已有线程处理请求，比创建新线程更快；
+				- 限制程序中的线程数量。
+		- **Thread-Local Storage（TLS，线程本地存储）**
+			- 每个线程拥有自己的数据副本。
+			- 特点：
+				- 类似 Static Data（静态数据）；
+				- 但每个 Thread 独立保存。
+			- 适用：
+				- 无法控制线程创建过程时；
+				- 例如 Thread Pool（线程池）。
+		- **Scheduler Activations（调度激活）**
+			- 用于 Many-to-Many（多对多）模型和 Two-level Model（两级模型）。
+			- 提供 Kernel（内核）与 Thread Library（线程库）的通信机制。
+		- **LWP（Lightweight Process，轻量级进程）**
+			- 连接 Kernel Thread（内核线程）和应用线程的虚拟处理器。
+		- **Upcall（向上调用）**
+			- Kernel 通知 Thread Library 发生事件。
+	- **Pthreads**
+	- **Windows XP Threads**
+	- **Linux Threads**
+	- **Java Threads**
