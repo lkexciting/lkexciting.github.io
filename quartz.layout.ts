@@ -61,5 +61,5 @@ export const defaultListPageLayout: PageLayout = {
     }),
     Component.Explorer({ title: "笔记目录" }),
   ],
-  right: [],
+  right: [Component.Graph()],
 }

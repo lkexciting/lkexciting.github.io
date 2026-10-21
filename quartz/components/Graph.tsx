@@ -95,6 +95,7 @@ export default ((opts?: Partial<GraphOptions>) => {
             </svg>
           </button>
         </div>
+        <p class="graph-hint">连线表示笔记链接与课程归属，点击节点可阅读。</p>
         <div class="global-graph-outer">
           <div class="global-graph-container" data-cfg={JSON.stringify(globalGraph)}></div>
         </div>
