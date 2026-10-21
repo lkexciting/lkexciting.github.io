@@ -8,6 +8,7 @@ import { KatexOptions } from "katex"
 import { Options as MathjaxOptions } from "rehype-mathjax/svg"
 //@ts-ignore
 import { Options as TypstOptions } from "@myriaddreamin/rehype-typst"
+import { normalizeMathBlocks } from "../../util/mathBlocks"
 
 interface Options {
   renderEngine: "katex" | "mathjax" | "typst"
@@ -28,6 +29,9 @@ export const Latex: QuartzTransformerPlugin<Partial<Options>> = (opts) => {
   const macros = opts?.customMacros ?? {}
   return {
     name: "Latex",
+    textTransform(_ctx, source) {
+      return normalizeMathBlocks(source)
+    },
     markdownPlugins() {
       return [remarkMath]
     },
