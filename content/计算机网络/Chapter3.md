@@ -5,7 +5,6 @@ aliases:
 ---
 # THE DATA LINK LAYER（数据链路层）
 
-> 按所给模板整理，依据课件第 1–112 页。中文解释保留英文专业名词；图示取自原课件，页码为 PDF 页码。公式条件与易错提醒属于帮助理解的补充说明。
 
 ## 1. Data Link Layer Design Issues
 
@@ -21,10 +20,10 @@ aliases:
 
 ### 1.2 Services provided to the network layer
 
-| Service | 是否先建立连接 | 是否确认 | 特点与课件示例 |
+| Service | 是否先建立连接 | 是否确认 | 特点与示例 |
 |---|---|---|---|
-| Unacknowledged connectionless service | 否 | 否 | 独立发送 Frame，链路层不恢复丢失；适合低差错链路或重视时效的业务，课件以 Ethernet 为例 |
-| Acknowledged connectionless service | 否 | 是 | 每帧有确认机制，无须先建立连接；适合不可靠信道，课件以 WiFi 为例 |
+| Unacknowledged connectionless service | 否 | 否 | 独立发送 Frame，链路层不恢复丢失；适合低差错链路或重视时效的业务，本节以 Ethernet 为例 |
+| Acknowledged connectionless service | 否 | 是 | 每帧有确认机制，无须先建立连接；适合不可靠信道，本节以 WiFi 为例 |
 | Acknowledged connection-oriented service | 是 | 是 | 在连接中编号、确认，目标是按序且不重复地交付 |
 
 **理解：Connection 与 Acknowledgement 是两个维度。** 无连接也可以有确认；“有确认”本身不等于“面向连接”。这里描述的是服务模型，不能把所有实际协议行为简化为表中一句话。
@@ -42,10 +41,10 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - 用 **FLAG** byte 标记边界。
 - 若数据中出现 FLAG 或 **ESC**，在前面插入 ESC；接收方恢复原数据。
 - 目的：让数据中的特殊 byte 不被误判为控制标记，称为 **Data transparency**。
-- 课件抽象规则：数据 `A B ESC FLAG` → `FLAG A B ESC ESC ESC FLAG FLAG`。
+- 抽象规则：数据 `A B ESC FLAG` → `FLAG A B ESC ESC ESC FLAG FLAG`。
 - 不同协议的具体 escape 编码可能不同，答题采用题目定义。
 
-![Byte stuffing：边界 FLAG 与数据中的 FLAG/ESC，PDF 第 10 页](Chapter3-page-010.png)
+![Byte stuffing：边界 FLAG 与数据中的 FLAG/ESC](Chapter3-page-010.png)
 
 #### Flag bits with bit stuffing
 
@@ -55,11 +54,11 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - FLAG 本身不参与 stuffing；这是按 bit 处理，不需要 byte 对齐。
 - 例：`0111101111101111110` → `011110111110011111010`，这里只列填充后的数据，不包括首尾 FLAG。
 
-![Bit stuffing 与 destuffing，PDF 第 12 页](Chapter3-page-012.png)
+![Bit stuffing 与 destuffing](Chapter3-page-012.png)
 
 #### Physical layer encoding violation
 
-利用 Physical Layer 编码中不用于普通数据的符号标记 Frame 边界。例如课件中 high-low、low-high 表示数据，而 high-high、low-low 可作为特殊标记。前提是底层编码有可用的冗余符号。
+利用 Physical Layer 编码中不用于普通数据的符号标记 Frame 边界。例如示例中 high-low、low-high 表示数据，而 high-high、low-low 可作为特殊标记。前提是底层编码有可用的冗余符号。
 
 实际系统也可组合使用长度、定界符与校验来提高可靠性。
 
@@ -132,7 +131,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Sender 编码步骤：**
 
-1. 明确位编号方向。课件主例从左向右编号，Homework 中有从右向左编号，不能混用。
+1. 明确位编号方向。主例从左向右编号，Homework 中有从右向左编号，不能混用。
 2. 编号 `1,2,4,8,…` 放 check bits，其余位置放 data bits。
 3. 将位置 k 写成二进制；某一位为 1，就由对应 check bit 检查。
 4. 按指定 even parity 或 odd parity 设置 check bits。
@@ -141,7 +140,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Receiver 解码步骤：**重新检查各 parity group，把失败组对应的位置值相加，形成 **Syndrome**。在“至多一个 bit 错误”的条件下，非零 Syndrome 就是错误位置；翻转该 bit 即可恢复。
 
-课件例：收到 `0xE4F = 1110 0100 1111`，从左编号并使用 even parity。只有 group 2 失败，因此翻转第 2 位：
+例：收到 `0xE4F = 1110 0100 1111`，从左编号并使用 even parity。只有 group 2 失败，因此翻转第 2 位：
 
 - 修复后的完整 Codeword：`0xA4F`。
 - 去掉位置 1、2、4、8 的 check bits，得到 data：`0xAF`。
@@ -153,11 +152,11 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 输出依赖当前和过去的输入，Encoder 有 memory，常用 shift registers 实现。
 
 - **Code rate** 为每次输入 bit 数与输出 bit 数之比。
-- **Constraint length** 在课件实例中取 K=registers+1=7，包含当前输入与 6 个过去输入。
-- 课件 rate=1/2 的编码器：输入 `111`，初始 state 为全零，输出依次为 `11、10、01`。
+- **Constraint length** 在实例中取 K=registers+1=7，包含当前输入与 6 个过去输入。
+-  rate=1/2 的编码器：输入 `111`，初始 state 为全零，输出依次为 `11、10、01`。
 - 具体输出取决于 generator/tap 配置，不是所有 Convolutional codes 都产生这个序列。
 
-![Convolutional code 编码器示例，PDF 第 32 页](Chapter3-page-032.png)
+![Convolutional code 编码器示例](Chapter3-page-032.png)
 
 #### Reed-Solomon code
 
@@ -172,13 +171,13 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Low-Density Parity-Check code** 是由稀疏 parity-check matrix 定义的 Linear block code，使用迭代解码，适合较大 block，具有较强纠错能力。
 
-课件用“每个输出只涉及少量输入”作直观描述；严谨的稀疏性定义落在 parity-check matrix 上，并不要求 generator matrix 同样稀疏。
+这里用“每个输出只涉及少量输入”作直观描述；严谨的稀疏性定义落在 parity-check matrix 上，并不要求 generator matrix 同样稀疏。
 
 #### Detection + Retransmission 与 Correction 对比
 
 低差错率且能方便重传时，检错加重传可能更省冗余；高延迟、缺少反馈或不宜重传时，纠错更有价值。
 
-课件估算：1000 个 block，每个 1000 data bits，bit error rate 为 10⁻⁶，期望约 1 个错误。
+估算：1000 个 block，每个 1000 data bits，bit error rate 为 10⁻⁶，期望约 1 个错误。
 
 - 单错纠正：每 block 10 check bits，总计 10000 bits。
 - 单错检测加一次重传：1000 parity bits 加一个 1001-bit block，约 2001 bits。
@@ -191,15 +190,15 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Parity bit** 使整个组中 `1` 的数量保持 even 或 odd。
 
-**Interleaving** 将相邻传输 bits 分散到不同校验组，使短 Burst 不至于集中破坏同一组。按课件矩阵安排，长度不超过列数的单个 Burst 至多在每列造成一个错误，因此可由逐列 parity 检出。此保证依赖具体排列与 Burst 模型。
+**Interleaving** 将相邻传输 bits 分散到不同校验组，使短 Burst 不至于集中破坏同一组。按本节约定矩阵安排，长度不超过列数的单个 Burst 至多在每列造成一个错误，因此可由逐列 parity 检出。此保证依赖具体排列与 Burst 模型。
 
-![Parity interleaving，PDF 第 40 页](Chapter3-page-040.png)
+![Parity interleaving](Chapter3-page-040.png)
 
 #### Checksum
 
 把数据划分为固定宽度 words，通过加和形成校验值。不同 Checksum 定义不同。
 
-- 课件给出普通 modulo sum 的一般思路。
+- 本节给出普通 modulo sum 的一般思路。
 - **Internet checksum** 使用 16-bit one's-complement sum：最高位产生的 carry 回加到最低位，再对结果取反。
 - Receiver 按同样规则求和，包括 checksum，合法结果通常为全 `1`。
 - 某些有规律的变化可能保持校验值不变，因此不能检测所有差错。
@@ -218,9 +217,9 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Receiver：**用 G(x) 除完整接收 Frame。余数非零表示检测到差错；余数为零表示未检测到差错，不能证明绝对无错。
 
-课件例：data=`1101011011`，G=`10011`，r=4，remainder=`1110`，发送 `11010110111110`。
+例：data=`1101011011`，G=`10011`，r=4，remainder=`1110`，发送 `11010110111110`。
 
-![CRC modulo-2 division，PDF 第 46 页](Chapter3-page-046.png)
+![CRC modulo-2 division](Chapter3-page-046.png)
 
 **检错能力：**接收结果为 T(x)+E(x)，由于 T(x) 可整除，是否漏检取决于 E(x) 是否被 G(x) 整除。
 
@@ -234,7 +233,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 ### 3.1 协议运行模型
 
-课件把 Physical Layer、Data Link Layer、Network Layer 看作独立进程，以事件传递协作。Sender 取 Packet、封装 Frame、发送；Receiver 等待事件，校验和解析 Frame，再向上交付 Packet。课件假设机器本身不会崩溃。
+这里把 Physical Layer、Data Link Layer、Network Layer 看作独立进程，以事件传递协作。Sender 取 Packet、封装 Frame、发送；Receiver 等待事件，校验和解析 Frame，再向上交付 Packet。假设机器本身不会崩溃。
 
 ### 3.2 Protocol 1: A Utopian Simplex Protocol
 
@@ -253,11 +252,11 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - 本协议没有应对丢帧的机制，因为仍假设信道无错。
 - 数据单向不意味着没有反向控制信息。
 
-![Stop-and-Wait 正常过程，PDF 第 63 页](Chapter3-page-063.png)
+![Stop-and-Wait 正常过程](Chapter3-page-063.png)
 
 ### 3.4 Protocol 3: A Simplex Protocol for a Noisy Channel
 
-取消 error-free 假设，加入 **ARQ（Automatic Repeat reQuest）**，课件也称 **PAR（Positive Acknowledgement with Retransmission）**。
+取消 error-free 假设，加入 **ARQ（Automatic Repeat reQuest）**，也称 **PAR（Positive Acknowledgement with Retransmission）**。
 
 关键机制：ACK、Timer、Retransmission、Sequence number。
 
@@ -266,7 +265,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - Sequence number 只需 1 bit，交替使用 0、1，即 **Alternating-bit protocol**。
 - “只需 1 bit”的结论建立在标准 Stop-and-Wait 的顺序和旧副本寿命假设上，不能处理无限滞留的任意旧副本。
 
-![ACK 丢失与重复帧处理，PDF 第 70 页](Chapter3-page-070.png)
+![ACK 丢失与重复帧处理](Chapter3-page-070.png)
 
 ### 3.5 Protocol 4: A One-bit Sliding Window Protocol
 
@@ -276,7 +275,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 Frame 中 `seq` 描述本方向发送数据的编号，`ack` 描述对反方向数据的确认，它们是两个独立方向的状态。
 
-课件用 `(seq, ack, packet)` 表示帧，`*` 表示 Packet 被交付 Network Layer。双方同时启动时，课件实现可能产生较多重复 Frame，但重复 Frame 不应重复向上交付。
+这里用 `(seq, ack, packet)` 表示帧，`*` 表示 Packet 被交付 Network Layer。双方同时启动时，实现可能产生较多重复 Frame，但重复 Frame 不应重复向上交付。
 
 ### 3.6 Protocol 1–4 对比
 
@@ -300,9 +299,9 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 - **Receiver window**：约束当前可接受的 Sequence numbers。
 - ACK 推动窗口向前移动，释放 Sender buffer；序号按 modulo 运算循环。
 
-**课件术语提醒：**图中“window shrinks”描述可继续发送的位置减少。许多教材用固定最大窗口 W 表示“已发送未确认 + 尚可发送”的总范围。答题应区分最大窗口大小、Outstanding 数量与剩余发送名额。
+**术语提醒：**图中“window shrinks”描述可继续发送的位置减少。许多教材用固定最大窗口 W 表示“已发送未确认 + 尚可发送”的总范围。答题应区分最大窗口大小、Outstanding 数量与剩余发送名额。
 
-![Sender window 的变化，PDF 第 86 页](Chapter3-page-086.png)
+![Sender window 的变化](Chapter3-page-086.png)
 
 ### 4.2 Cumulative acknowledgement
 
@@ -338,7 +337,7 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 例：0、1、2、3、4 中 Frame 2 丢失。Receiver 可交付 0、1，但丢弃提前到达的 3、4。Sender 随后重发 2、3、4。
 
-![Go-Back-N ARQ，PDF 第 92 页](Chapter3-page-092.png)
+![Go-Back-N ARQ](Chapter3-page-092.png)
 
 **k-bit Sequence number：**序号空间 M=2^k，最大 `W_s ≤ 2^k−1`。不能把整个序号空间都用作 Sender window，否则 ACK 全丢失后的旧帧可能与下一轮新帧混淆。
 
@@ -351,9 +350,9 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 例：Frame 2 丢失，3、4 可暂存。只重传 2；2 到达后再按序交付 2、3、4。
 
-![Selective Repeat ARQ，PDF 第 94 页](Chapter3-page-094.png)
+![Selective Repeat ARQ](Chapter3-page-094.png)
 
-**课件使用对称窗口：**`W_s=W_r=W ≤ 2^(k−1)`，即窗口不能超过序号空间的一半，防止旧 Frame 落入新接收窗口后被当作新数据。
+**本节使用对称窗口：**`W_s=W_r=W ≤ 2^(k−1)`，即窗口不能超过序号空间的一半，防止旧 Frame 落入新接收窗口后被当作新数据。
 
 在采用不同发送/接收窗口的通用模型中，通常要求 `W_s+W_r ≤ 2^k`。计算题按具体协议模型使用。
 
@@ -372,7 +371,7 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 ### 5.1 PPP（Point-to-Point Protocol）
 
-课件以 **Packet over SONET** 和 **ADSL** 为例说明 PPP 在不同物理承载上的使用。
+本节以 **Packet over SONET** 和 **ADSL** 为例说明 PPP 在不同物理承载上的使用。
 
 PPP 的三项核心功能：
 
@@ -382,7 +381,7 @@ PPP 的三项核心功能：
 
 ### 5.2 PPP Frame format
 
-课件给出的未编号基本格式为：
+本节给出的未编号基本格式为：
 
 `Flag | Address | Control | Protocol | Payload | FCS | Flag`
 
@@ -395,48 +394,48 @@ PPP 的三项核心功能：
 | Payload | 可变长度，受协商参数约束 |
 | FCS | CRC 检错值 |
 
-![PPP Frame format，PDF 第 100 页](Chapter3-page-100.png)
+![PPP Frame format](Chapter3-page-100.png)
 
-**复习重点：**课件的基本 PPP 未编号模式提供检错，但不提供 GBN/SR 式可靠重传、编号去重或滑动窗口 Flow control。检测到损坏通常丢弃，由上层承担必要的恢复。
+**复习重点：**示例的基本 PPP 未编号模式提供检错，但不提供 GBN/SR 式可靠重传、编号去重或滑动窗口 Flow control。检测到损坏通常丢弃，由上层承担必要的恢复。
 
 ### 5.3 PPP 链路生命周期
 
 简化顺序：**Physical connection → LCP negotiation → 必要时 Authentication → NCP configuration → Data transfer**。
 
-释放通常按相反层次处理：关闭网络层配置，再终止链路，最后释放物理连接。课件状态图用于说明阶段转换，并非每次都需要认证。
+释放通常按相反层次处理：关闭网络层配置，再终止链路，最后释放物理连接。状态图用于说明阶段转换，并非每次都需要认证。
 
-![PPP 状态转换，PDF 第 101 页](Chapter3-page-101.png)
+![PPP 状态转换](Chapter3-page-101.png)
 
-**课件修正提醒：**NCP 不是 DHCP 或 NAT。IPCP 是 IPv4 对应的 NCP，可协商包括 IP address 在内的相关配置；DHCP、NAT 是不同机制。课件第 102 页括号中的 DHCP、NAT 不能当作 NCP 定义。
+**修正提醒：**NCP 不是 DHCP 或 NAT。IPCP 是 IPv4 对应的 NCP，可协商包括 IP address 在内的相关配置；DHCP、NAT 是不同机制。括号中的 DHCP、NAT 不能当作 NCP 定义。
 
 ### 5.4 Packet over SONET
 
-**SONET（Synchronous Optical Network）** 是同步光传输体系。课件通过协议栈与 Frame 关系说明：IP Packet 经 PPP 封装，再由 SONET 承载；不同层的 Frame/Packet 是逐层封装关系。
+**SONET（Synchronous Optical Network）** 是同步光传输体系。通过协议栈与 Frame 关系说明：IP Packet 经 PPP 封装，再由 SONET 承载；不同层的 Frame/Packet 是逐层封装关系。
 
-![Packet over SONET 协议栈与封装关系，PDF 第 98 页](Chapter3-page-098.png)
+![Packet over SONET 协议栈与封装关系](Chapter3-page-098.png)
 
-课件拨号建立连接的故事用于解释 PPP 阶段，不能理解为 SONET 光链路本身需要拨号 Modem。
+拨号建立连接的故事用于解释 PPP 阶段，不能理解为 SONET 光链路本身需要拨号 Modem。
 
 ### 5.5 ADSL
 
-**ADSL（Asymmetric Digital Subscriber Line）** 使用用户铜线接入，上下行速率不对称。课件标题中的 Loop 描述其所用 local loop，常用标准名称是 Line。
+**ADSL（Asymmetric Digital Subscriber Line）** 使用用户铜线接入，上下行速率不对称。标题中的 Loop 描述其所用 local loop，常用标准名称是 Line。
 
-课件示例协议栈：`IP → PPP → AAL5 → ATM → ADSL`。
+示例协议栈：`IP → PPP → AAL5 → ATM → ADSL`。
 
 - **ATM（Asynchronous Transfer Mode）** 使用固定 53-byte cell：5-byte Header 加 48-byte Payload。
 - **AAL5（ATM Adaptation Layer 5）** 把较长上层数据组织为含 Padding 和 Trailer 的 PDU，再划分到多个 ATM cell Payload 中；接收端重组。
 - 不要理解为“一个 PPP Frame 必须恰好对应一个 ATM cell”。
-- 这是课件展示的 ATM-based ADSL 架构，不能推断所有 DSL 接入均使用同一协议栈。
+- 这是上述模型展示的 ATM-based ADSL 架构，不能推断所有 DSL 接入均使用同一协议栈。
 
-![ADSL 协议栈，PDF 第 104 页](Chapter3-page-104.png)
+![ADSL 协议栈](Chapter3-page-104.png)
 
-![AAL5 承载 PPP 数据，PDF 第 105 页](Chapter3-page-105.png)
+![AAL5 承载 PPP 数据](Chapter3-page-105.png)
 
 ## 6. Typical Calculations and Review Checklist
 
 ### 6.1 Utilization 例题
 
-**课件第 82 页：**
+****
 
 1. 1-km link，T_p=5 μs，L=4000 bits，B=10 Mbps。
    - T_f=400 μs。
@@ -446,9 +445,9 @@ PPP 的三项核心功能：
    - T_f≈71.43 ms。
    - 忽略 ACK 发送时间：U=71.43/(71.43+540)≈**11.68%**。
 
-**课件第 106–108 页 GBN 练习：**采用 ACK=Next expected 的约定，3-bit 序号，最大 W=7。
+**GBN 练习：**采用 ACK=Next expected 的约定，3-bit 序号，最大 W=7。
 
-![GBN 双向传输练习，PDF 第 107 页](Chapter3-page-107.png)
+![GBN 双向传输练习](Chapter3-page-107.png)
 
 - 图(a)：ACK 达到 3，因此确认收到的是 `S0,0、S1,0、S2,0`，共 3 帧。
 - t₁ 时还有序号 3、4 两帧未确认，因此还能发送 5 个新 Frame。收到的 R0、R1 连续有效，R3 因缺少 R2 被丢弃，下一帧期望为 2。新发送 Frame 从 **S5,2** 到 **S1,2**，序号依次 5、6、7、0、1。
@@ -458,7 +457,7 @@ PPP 的三项核心功能：
 
 ### 6.2 CRC 练习
 
-课件 Homework：data=`110111011011`，G(x)=x⁴+x+1，即 G=`10011`。
+ Homework：data=`110111011011`，G(x)=x⁴+x+1，即 G=`10011`。
 
 - r=4，先补 4 个 `0`。
 - Modulo-2 division 的 remainder=`0101`。
@@ -468,7 +467,7 @@ PPP 的三项核心功能：
 
 步骤：先算 RTT 和 T_f，再算 W_min，最后用 GBN/SR 的序号限制求 k。
 
-课件第 111 页：3000 km，传播时间 6 μs/km，B=1.536 Mbps，L=64 bytes。
+3000 km，传播时间 6 μs/km，B=1.536 Mbps，L=64 bytes。
 
 - 单程 T_p=18 ms，RTT=36 ms。
 - T_f=512/1536000 s≈0.3333 ms。
@@ -492,4 +491,3 @@ PPP 的三项核心功能：
 - 熟记 GBN：W_r=1、W_s≤2^k−1；SR 对称时：W≤2^(k−1)。
 - Utilization 先统一 bits/bytes、ms/s，RTT 与单程 delay 不混用。
 - 能说明 PPP 的 Framing、LCP、NCP 三项功能，并识别 NCP 与 DHCP/NAT 的区别。
-

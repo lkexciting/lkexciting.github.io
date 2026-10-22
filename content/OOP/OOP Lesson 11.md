@@ -3,76 +3,100 @@ title: OOP Lesson 11
 aliases:
   - OOP/notes/OOP Lesson 11
 ---
-# Templates
-- **为什么需要模板?**:    
-    - 假设你需要一个存放 X 的列表和一个存放 Y 的列表。代码很相似，只是类型不同。        
-    - **选择**:        
-        1. **复制代码**: 虽保留类型安全，但难以维护。            
-        2. **公共基类**: 可能不合适（强耦合）。       
-        3. 无类型列表 (void)*: 类型不安全。
-- **模板的作用**:    
-    - **重用源代码**。        
-    - **泛型编程 (Generic programming)**。        
-    - 在类或函数定义中使用“类型”作为参数。        
-	- **函数模板**: 例如 sort 函数。    
-	- **类模板**: 例如容器 stack, list, queue。栈的操作与栈中存储的数据类型无关。![[Pasted image 20251208133920.png]]
-- **模板语法**:    
-    - 类型参数可以代表：        
-        - 函数的参数类型。            
-        - 函数的返回类型。            
-        - 函数内部定义的变量类型。
-- **模板实例化 (Template instantiation)**:    ==“想象为套用公式的类似”==
-    - 根据模板和参数生成具体的函数或类定义的过程。        
-    - 类型被替换进模板。        
-    - 生成新的函数体或类定义（编译器会在此检查语法错误和类型）。        
-    - **特化 (Specialization)**: 针对特定参数的模板版本。
-- 示例![[Pasted image 20251208134324.png]]
-	- 比如这一个例子中，它会变化为
-		```c++
-		void swap(int,int);
-		void swap(float,float);
-		```
-		这两个函数
-- **交互规则**:    
-    - 只使用**精确匹配**的类型。        
-    - **不应用转换操作**：        
-        - Swap(int, int) -> OK            
-        - Swap(int, double) -> **Error!** (因为==模板参数 T 不能同时是 int 又是 double==)。
-    - ==也就是说只出现一个template T的时候仅代表一个数据类型，而不是同时可以指代多个数据类型！==
-    - 即使是==隐式转换也会被忽略==。
-- **重载规则**：    
-    1. 优先匹配完全符合的普通函数。        
-    2. 其次匹配函数模板（模板要求类型**精确匹配**，不进行自动类型转换）。        
-    3. 最后才考虑需要隐式转换的普通函数。
-	- ==当且仅当出现不存在可以使用的函数的时候才会使用模板==
-- **类模板 (Class templates)**:    
-    - 用类型参数化的类。        
-    - 将操作从操作的数据类型中抽象出来。        
-    - 定义了潜在的无穷多个类。        
-    - 典型用途：容器类 (stack\<int\>, list\<Person*\>)。
-- 以Vector为例
-	- ![[Pasted image 20251208140330.png]]
-	- ![[Pasted image 20251208140337.png]]
-	- ![[Pasted image 20251208140344.png]]
-	- ==T & Vector\<T\> :: operator[]\(int index)==必须添加这个T & 来表示这是谁的构造函数
-	- ![[Pasted image 20251208140400.png]]
-	- ![[Pasted image 20251208140405.png]]
-- **多参数与嵌套**:    
-    - 模板可以有多个参数：template <class Key, class Value>。        
-    - 模板可以嵌套（作为新类型）：Vector<Vector<double*> > ==(注意：在旧标准中 >> 之间需要空格，否则会被识别为右移操作符==)。        
-    - 类型参数可以很复杂（如函数指针）。
-- **非类型参数 (Non-Type parameters)**:    
-    - 模板参数可以是常量表达式（如整数），而不仅仅是类型。        
-    - 示例：FixedVector 使用 int bounds 作为参数来定义固定大小的数组 T elements\[bounds]。        
-    - **用法**: FixedVector<int, 50> v1;        
-    - **总结**:        
-        - 优点：可能代码更快（数组在栈上，无动态分配）。            
-        - 缺点：代码膨胀（Vector<int, 50> 和 Vector<int, 51> 是两个完全不同的类），且大小写死不灵活。
-- **模板与继承**:    
-    - 模板类可以继承自非模板类。        
-    - 模板类可以继承自模板类。        
-    - 非模板类可以继承自模板类（例如 SupervisorGroup 继承自 List<Employee*>）。![[Pasted image 20251208142852.png]]
-- **CRTP (奇异递归模板模式)**:    
-    - **Curiously Recurring Template Pattern**: class Derived : public Base\<Derived>。     
-    - **用途**: 在泛型编程中模拟虚函数（静态多态）。![[Pasted image 20251208143136.png]]        
-    - 代码展示了基类如何通过 static_cast\<T*>(this) 调用派生类的实现。这发生在编译期，避免了虚函数表的运行时开销。
+# Templates：把类型作为程序参数
+
+## 1. 模板解决什么问题
+
+若整数栈和字符串栈的入栈、出栈逻辑相同，复制两份实现会使修改和修复成倍增加。`void*` 容器又丢失类型检查。模板把类型作为参数，让编译器针对实际类型生成并检查具体实现。
+
+## 2. 函数模板与类型推导
+
+```cpp
+#include <utility>
+
+template<class T>
+void exchange_values(T& a, T& b) {
+    T temp = std::move(a);
+    a = std::move(b);
+    b = std::move(temp);
+}
+
+int main() {
+    int a = 1, b = 2;
+    exchange_values(a, b); // T 推导为 int，实参随后变为 2、1
+}
+```
+
+模板形参 `T` 在一次实例化中代表一个确定类型。对 `template<class T> T max_value(T,T)`，`max_value(1,2.0)` 会尝试把同一个 T 推导成 int 和 double，因冲突而失败。可以显式写 `max_value<double>(1,2.0)`，或者重新设计为两个类型参数。
+
+“推导时通常不靠任意用户定义转换求出 T”，不等于“模板函数永远不能发生类型转换”。模板实参已确定后，调用仍要按通常规则检查实参转换。
+
+## 3. 模板函数不是最后的候补
+
+重载决议先比较可行候选的匹配质量；只有匹配等条件相同时，非模板函数相对函数模板的优先规则才可能决定结果。
+
+```cpp
+void f(double);
+template<class T> void f(T);
+// f(1) 选择 f<int>：精确匹配优于 int 到 double 的转换。
+// f(1.0) 两者都精确匹配，这里选择非模板 f(double)。
+```
+
+因此，“只有找不到普通函数才会用模板”是不准确的。
+
+## 4. 类模板与类外成员定义
+
+```cpp
+#include <array>
+#include <cstddef>
+
+template<class T, std::size_t N>
+class FixedVector {
+    std::array<T, N> values_{};
+public:
+    T& operator[](std::size_t index);
+    constexpr std::size_t size() const { return N; }
+};
+
+template<class T, std::size_t N>
+T& FixedVector<T, N>::operator[](std::size_t index) {
+    return values_[index];
+}
+```
+
+`T&` 是 `operator[]` 的返回类型；`FixedVector<T,N>::` 说明它属于哪个类实例，不是“标记构造函数”。该实现没有边界检查，调用者必须保证 `index<N`。
+
+模板定义通常放在头文件，让使用者在实例化处看到定义；也可使用明确控制实例化的组织方式。把普通类的声明/实现分文件方式机械套用到模板，容易产生链接错误。
+
+## 5. 类型参数、非类型参数与嵌套
+
+`FixedVector<int,50>` 的 `int` 是类型参数，`50` 是非类型参数。`FixedVector<int,50>` 与 `FixedVector<int,51>` 是不同类型。固定尺寸便于优化，但不能在运行时任意改变。
+
+`std::vector<std::vector<double>>` 表示嵌套容器。C++11 及以后，结尾的 `>>` 可以按两个模板右尖括号解析；老代码常写成 `> >`。
+
+## 6. 特化、继承与 CRTP
+
+类模板可以继承普通类或另一个类模板，普通类也能继承某个已实例化的模板类。特化则是针对某些模板参数提供不同实现；它和继承不是同一机制。
+
+```cpp
+template<class Derived>
+struct Printable {
+    void print() const {
+        static_cast<const Derived*>(this)->print_impl();
+    }
+};
+struct Item : Printable<Item> {
+    void print_impl() const { /* 具体输出逻辑 */ }
+};
+```
+
+这种 `Derived : Base<Derived>` 形式称为 CRTP。基类在编译期获知派生类型，能组织静态多态；它并不提供通过任意基类指针替换运行时对象类型的能力。需要运行时多态时仍应考虑虚函数。
+
+## 7. 自测
+
+1. 一个 T 能否在同一次实例化中同时是 int 和 double？——不能。
+2. 普通函数需要转换、模板精确匹配时，是否必选普通函数？——不是。
+3. `T& Vector<T>::operator[](OOP/notes/...)` 中，T& 表示什么？——返回元素引用。
+4. 模板参数的正确性何时检查？——定义时检查非依赖部分，依赖具体类型的要求还需在相应实例化阶段检查。
+
+进一步查阅：[C++ 标准草案的函数模板实参推导](https://eel.is/c++draft/temp.deduct.call)。

@@ -9,10 +9,10 @@ aliases:
 	- 对象可以构建其他的对象，可以通过==完全包含==和==通过引用包含==的方法，其中通过引用包含可以共享
 	![[Pasted image 20251103135801.png]]
 	![[Pasted image 20251103135933.png]]
-	- 上图是一个简单的雇佣关系的例子
+	- 雇佣关系可以建模为 Company 关联多个 Employee；关联不必表示公司独占员工对象的生命周期。
 	![[Pasted image 20251103140131.png]]
 	![[Pasted image 20251103140148.png]]
-	- 这事一个在银行存钱的例子
+	- 银行账户可以组合余额、账户编号和交易记录；组合对象通过自己的接口维护这些成员的约束。
 	- **Embedded objects（嵌入对象）**
 		- 所有嵌入对象都必须被初始化    
 	    - 在以下情况下会调用默认构造函数：        
@@ -28,7 +28,7 @@ aliases:
 		- const只能通过列表进行修改，否则就会造成修改不了的情况
 	- 尽量使用Private而不是Public，这样可以控制接口的安全性，是底层实现的一部分
 - ==`Inheritance（继承）`==
-	- **继承**是获取现有的类，克隆它，然后对这个克隆进行添加和修改。    
+	- **继承**定义一个包含基类子对象的派生类型，并可增加成员或重写允许重写的行为；它不是在运行时克隆某个已有对象。    
 	- 这是 _**is-a**_（是一个）的关系
 	- 是一种语言实现技术	    
 	- 也是面向对象设计方法学的重要组成部分	    
@@ -66,7 +66,7 @@ aliases:
 	- 由于衍生类包含所有父类拥有的函数，所以在使用时加上前缀防止“认错”，如：
 	![[Pasted image 20251103144906.png]]
 	- 可以看到==Employee::print(out);==的存在，这就是调用父函数的前缀要求！
-	- 当两者的函数名称相同时，他将只会看到子类的print而不是父类的print函数，这就是==Name hiding==现象（如下图）！
+	- 当两者的函数名称相同时，他将只会看到子类的print而不是父类的print函数，这就是==Name hiding==现象：派生作用域中查找到同名声明时，会隐藏基类同名声明；需要时可用 `using Base::print` 引入基类重载集合！
 	![[Pasted image 20251103145541.png]]
 	- “为什么bill里面的get_name可以被使用呢？”因为子类中没有这个函数！
 	- ==Name Hiding：如果你在派生类中重定义了一个成员函数，那么基类中所有其他重载的函数都将变得不可访问。==
@@ -122,3 +122,22 @@ aliases:
 		- 向上转型是指从派生类的引用或指针转换为基类的引用或指针的行为。（子类到父类的，如果反过来会有机会出现错误！）
 		- 用处是将派生类对象视为基类对象，但==仅对引用和指针有效==！
 		- 举例：学生是人类。你们是学生，所以你们是人类（有种三段论？）。
+
+## 独立示例：初始化顺序与名字隐藏
+
+```cpp
+#include <string>
+struct Person {
+    explicit Person(std::string n) : name(n) {}
+    void print(int) const {}
+    std::string name;
+};
+struct Employee : Person {
+    explicit Employee(std::string n, int id) : Person(n), number(id) {}
+    using Person::print;
+    void print() const {}
+    int number;
+};
+```
+
+Employee 先构造 Person 基类子对象，再按成员声明顺序构造自己的成员，最后执行构造函数体。初始化列表的书写顺序不能改变这个规则。去掉 `using Person::print` 时，Employee 的 `print()` 会隐藏基类的同名重载，`employee.print(1)` 不会自动绕过派生作用域去选基类版本。

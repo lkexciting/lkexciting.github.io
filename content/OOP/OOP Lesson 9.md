@@ -103,7 +103,7 @@ aliases:
 - **运算符的原型**![[Pasted image 20251124140859.png]]
 - **Operators ++ and --**
 	- Postfix（后缀形式） forms take an int argument —— compiler will pass in 0 as that int![[Pasted image 20251124141112.png]]
-	- 如上图，我们可以发现后缀的地方都在括号内加上了（int）以作区分，并且前缀的时候要添加“&”（虽然不知道为啥）
+	- 前置 `++x` 通常返回修改后的对象引用 `T&`，便于保持左值语义并避免复制；后置 `x++` 用虚设的 `int` 参数区分重载，先保存旧值，再修改自身，按值返回旧对象。
 	- 下面给出一个例子：![[Pasted image 20251124142036.png]]
 	- 使用重载的++和--![[Pasted image 20251124142402.png]]
 	- 用户定义的前缀比后缀更高效。
@@ -157,3 +157,20 @@ aliases:
 	- ![[Pasted image 20251124145800.png]]
 - **防止隐式转换**
 	- ==新关键字：explicit==![[Pasted image 20251124145956.png]]
+
+## 运算符完整示例：前置、后置与输出
+
+```cpp
+#include <ostream>
+class Counter {
+    int value_ = 0;
+public:
+    Counter& operator++() { ++value_; return *this; }
+    Counter operator++(int) { Counter old = *this; ++*this; return old; }
+    friend std::ostream& operator<<(std::ostream& out, const Counter& c) {
+        return out << c.value_;
+    }
+};
+```
+
+若 c 初值为 0，`Counter a=++c` 后 a 与 c 都为 1；随后 `Counter b=c++`，b 为 1、c 为 2。输出运算符返回流引用，使 `out<<a<<b` 能继续链接。重载不改变优先级、结合性或操作数数量，也不意味着必须给所有类型都定义所有运算符。
