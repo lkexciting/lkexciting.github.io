@@ -45,4 +45,32 @@
   loadJs(b + 'assets/katex/katex.min.js', function () {
     loadJs(b + 'assets/katex/auto-render.min.js', render);
   });
+
+  /* 版本自检：旧缓存页面里没有 version-check.js，这里补上同样的逻辑，
+     检测到线上已更新就带新查询串重载一次，免去手动 Ctrl+F5。 */
+  function checkVersion() {
+    if (!window.fetch || !window.sessionStorage || !window.localStorage) return;
+    if (sessionStorage.getItem('site_build_reloaded')) return;
+    fetch('/version.txt', { cache: 'no-store', credentials: 'omit' })
+      .then(function (r) { return r.ok ? r.text() : null; })
+      .then(function (t) {
+        if (!t) return;
+        var cur = t.trim();
+        if (!cur) return;
+        var prev = localStorage.getItem('site_build_version');
+        localStorage.setItem('site_build_version', cur);
+        if (!prev || prev === cur) return;
+        sessionStorage.setItem('site_build_reloaded', '1');
+        var u = new URL(window.location.href);
+        u.searchParams.set('_v', cur);
+        window.location.replace(u.href);
+      })
+      .catch(function () {});
+  }
+
+  if (document.readyState === 'complete') {
+    setTimeout(checkVersion, 50);
+  } else {
+    window.addEventListener('load', function () { setTimeout(checkVersion, 50); });
+  }
 })();

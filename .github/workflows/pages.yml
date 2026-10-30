@@ -23,6 +23,10 @@ jobs:
           cache: npm
       - run: npm ci --no-audit --no-fund
       - run: node quartz/bootstrap-cli.mjs build
+      - name: Stamp build version and inject auto-refresh check
+        run: node scripts/inject-version-check.js
+        env:
+          BUILD_VERSION: ${{ github.sha }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
