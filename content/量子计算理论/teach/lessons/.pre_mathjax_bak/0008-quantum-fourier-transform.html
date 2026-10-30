@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 08 课 · 量子傅里叶变换（QFT）</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+  <p class="lesson-no">LESSON 08</p>
+  <h1>量子傅里叶变换（QFT）</h1>
+  <p class="lede">经典里有离散傅里叶变换（DFT），把信号从时域变到频域。量子傅里叶变换（QFT）是它的量子版本：把计算基 |j⟩ 映射到"频域基"，把振幅序列 x_j 变成 y_k。它自身是一个重要算符，更是后面 QPE、Shor 算法的<strong>核心子模块</strong>。内容来自课件 <strong>03 · P1（P6–P24）</strong>。</p>
+
+  <h2>一、从 DFT 到 QFT</h2>
+  <p>离散傅里叶变换（DFT）是把离散信号从时域转换到频域的数学工具；逆变换（IDFT）反之（课件 03 · P1）。QFT 的作用正是将量子态从计算基 <span class="math">|j⟩</span> 映射至频域基 <span class="math">|k⟩</span>，使振幅序列 <span class="math">x_j</span> 经变换变为 <span class="math">y_k</span>。标准定义为：</p>
+  <div class="eq"><span class="math">QFT|j⟩ = (1/√N) Σ_{k=0}^{N-1} e^{2πi jk/N} |k⟩</span>，其中 <span class="math">N = 2ⁿ</span></div>
+  <p>QFT 不只是 DFT 的量子实现，更是 QPE、Shor 等众多量子算法的子模块（课件 03 · P7）。</p>
+
+  <h2>二、二进制记法</h2>
+  <p>为分析 n 比特下的 QFT 电路，课件规定（课件 03 · P8）：</p>
+  <ul>
+    <li>基态 <span class="math">|j⟩</span> 写成二进制 <span class="math">|j_{n-1}…j_0⟩</span>，其中 <span class="math">j = 2^{n-1}j_{n-1} + … + 2⁰j_0</span>。</li>
+    <li>用 <span class="math">0.j_0 j_1 … j_{n-1}</span> 表示二进制小数 <span class="math">j_0/2 + j_1/4 + … + j_{n-1}/2ⁿ</span>。</li>
+    <li>用 n 个量子比特做 QFT 时，共有 <span class="math">N = 2ⁿ</span> 个基态。</li>
+  </ul>
+  <p>基于这套记法，QFT 算符可写成<strong>张量积形式</strong>，便于据此构建电路并证明其幺正性（课件 03 · P8–P13 给出逐步证明：展开频域基 → 指数求和拆入张量积 → 交换求和与张量积顺序 → 利用 <span class="math">e^{2πi m}=1</span> 略去整数部分）。</p>
+
+  <h2>三、单比特与双比特情形</h2>
+  <p><strong>单比特</strong>：对计算基 <span class="math">|0⟩,|1⟩</span> 作用 QFT 后，由矩阵形式可知<strong>单比特 QFT 等于 H 门</strong>（课件 03 · P14–P15）。即对 <span class="math">|ψ⟩=α|0⟩+β|1⟩</span>，QFT 给出 <span class="math">(|α+β⟩ + (α−β)|1⟩)/√2</span>，正是 H 的效果。</p>
+  <p><strong>双比特</strong>：QFT 需要 H 门配合受控旋转门 <span class="math">R₂</span>（课件 03 · P16）。</p>
+
+  <h2>四、QFT 量子电路</h2>
+  <p>定义单比特相位旋转门后，QFT 可如下电路实现（课件 03 · P17）：</p>
+  <div class="keybox">
+    <span class="label">QFT 电路要点</span>
+    <p>① 电路<strong>只用 Hadamard 门和受控旋转门</strong>；所有门都是酉的，因此 QFT 本身是酉变换；<br>
+    ② 验证过程：对第 1 个比特加 H → 得到 <span class="math">|0⟩+e^{2πi·0.j_{n-1}}|1⟩</span>，再依次对其余比特施加受控旋转，最终得到一串形如 <span class="math">|0⟩+e^{2πi·0.j_{n-1}…j_0}|1⟩</span> 的张量积；<br>
+    ③ 电路末端的态与张量积形式<strong>顺序相反</strong>，再加一系列 <strong>SWAP 门</strong>即可对齐（课件 03 · P18–P22）；<br>
+    ④ 双比特 QFT 电路：H → 受控 R₂ → H → SWAP（课件 03 · P23–P24）。</p>
+  </div>
+  <p>复杂度：观察电路可知，QFT 的量子门复杂度为 <span class="math">O(n²)</span>（课件 03 · P23）。相比经典 DFT 的 <span class="math">O(N log N)=O(n 2ⁿ)</span>，这是指数级的加速潜力来源之一。</p>
+
+  <div class="warn">
+    <p><strong>易错点：</strong>QFT 电路输出端需要 SWAP 把比特顺序翻回来，否则得到的是"反序"的频域态。这是手写 QFT 电路时最容易漏掉的一步。</p>
+  </div>
+
+  <h2>五、即时小测</h2>
+
+  <div class="quiz" data-answer="c" data-explanation="QFT 把计算基 |j⟩ 映射到频域基 |k⟩，是 QPE/Shor 的子模块，课件 03 · P1、P7。">
+    <p class="quiz-q"><span class="qno">Q1</span>关于 QFT，正确的是？</p>
+    <div class="opts">
+      <button data-opt="a">QFT 是经典 DFT 的近似</button>
+      <button data-opt="b">QFT 只能作用在单比特上</button>
+      <button data-opt="c">QFT 将 |j⟩ 映射至频域基，是 QPE/Shor 的核心子模块</button>
+      <button data-opt="d">QFT 不是酉变换</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="a" data-explanation="单比特 QFT 的矩阵与 H 门等价，课件 03 · P14–P15。">
+    <p class="quiz-q"><span class="qno">Q2</span>单比特下的 QFT 算符等价于？</p>
+    <div class="opts">
+      <button data-opt="a">H 门</button>
+      <button data-opt="b">X 门</button>
+      <button data-opt="c">CNOT</button>
+      <button data-opt="d">Z 门</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="d" data-explanation="QFT 电路只用 H 门与受控旋转门，全为酉门故 QFT 为酉变换，课件 03 · P17。">
+    <p class="quiz-q"><span class="qno">Q3</span>QFT 的量子电路由哪些门构成？</p>
+    <div class="opts">
+      <button data-opt="a">只用 CNOT</button>
+      <button data-opt="b">只用 Toffoli</button>
+      <button data-opt="c">只用测量门</button>
+      <button data-opt="d">Hadamard 门 + 受控旋转门</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="b" data-explanation="QFT 门复杂度为 O(n²)，而经典 DFT 为 O(N log N)，课件 03 · P23。">
+    <p class="quiz-q"><span class="qno">Q4</span>QFT 的量子门复杂度约为？</p>
+    <div class="opts">
+      <button data-opt="a">O(n)</button>
+      <button data-opt="b">O(n²)</button>
+      <button data-opt="c">O(2ⁿ)</button>
+      <button data-opt="d">O(n!)</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="ask">
+    <p><strong>卡住了就直接问我。</strong>比如"张量积形式是怎么推的""受控旋转门 R₂ 具体转多少角度"——都可以在对话里追问。</p>
+  </div>
+
+  <h2>六、这节课你应该能独立完成</h2>
+  <ul>
+    <li>写出 QFT 的定义式，说明它与 DFT 的关系及二进制记法。</li>
+    <li>说明单比特 QFT = H，并画出双比特 QFT 电路的关键结构（H + 受控旋转 + SWAP）。</li>
+    <li>记住 QFT 只用酉门、复杂度为 O(n²)，且是 QPE/Shor 的子模块。</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>主资源：</strong>本课正文均来自课件 <strong>03 · P1（P6–P24）</strong>。下一课用 QFT 做"逆运算"——量子相位估计（QPE）。</p>
+  </div>
+
+  <p class="lesson-footer">
+    下一课：<a href="0009-quantum-phase-estimation.html"><strong>量子相位估计（QPE）</strong></a>——用受控 U 与逆 QFT 估计酉矩阵本征值的相位。
+  </p>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

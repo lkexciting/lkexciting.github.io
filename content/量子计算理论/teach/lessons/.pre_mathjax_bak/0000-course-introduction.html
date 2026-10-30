@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 00 课 · 课程引言：从计算本质到量子硬件</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+  <p class="lesson-no">LESSON 00</p>
+  <h1>课程引言：从计算本质到量子硬件</h1>
+  <p class="lede">这门课的主线是"态 → 门 → 测量 → 算法"。在钻进公式前，先用一节课建立地图：计算到底是什么、量子计算从哪来、靠什么物理系统实现、浙大在走哪条路线。本课对应课件 00（计算机简史与先进计算），是后面 01–03 所有技术内容的背景板。</p>
+
+  <div class="keybox">
+    <span class="label">一句话</span>
+    <p>经典计算处理"开关"，量子计算处理"相干叠加的开关"；前者受摩尔定律放缓所困，后者试图用叠加与纠缠突破算力天花板。但无论经典还是量子，<strong>计算 = 编码规则 + 物理实现</strong>。</p>
+  </div>
+
+  <h2>一、课程地图（课件 00 · 大纲 P57）</h2>
+  <p>课件 00 给出的全课程大纲，帮你建立全局视野。本套课件（00–03）重点覆盖其中带 ★ 的部分；物理实现、编程框架与量子应用是后续专题：</p>
+  <table>
+    <thead><tr><th>模块</th><th>主题</th><th>本套覆盖</th></tr></thead>
+    <tbody>
+      <tr><td>起源</td><td>01 计算起源与课程引言</td><td>★ 本课</td></tr>
+      <tr><td rowspan="3">量子线代</td><td>02 量子态与……</td><td>★ 第 01 课</td></tr>
+      <tr><td>03 泡利矩阵</td><td>★ 第 02 课</td></tr>
+      <tr><td>04 特征值求……</td><td>★ 第 02 课（任意单比特分解）</td></tr>
+      <tr><td>算法</td><td>量子算法（QFT / QPE / Shor / Grover）</td><td>★ 第 08–11 课</td></tr>
+      <tr><td>硬件</td><td>09 物理实现与天目芯片</td><td>★ 本课第四节</td></tr>
+      <tr><td>体系结构</td><td>10–12 经典/量子计算机体系结构</td><td>本课铺垫 + 第 07 课</td></tr>
+      <tr><td>软件</td><td>17 编译器 · 18 Qiskit · 19 太元云平台 · 20 编程案例</td><td>编程作业专题</td></tr>
+      <tr><td>应用</td><td>25–28 量子金融 / 量子机器学习</td><td>后续专题</td></tr>
+    </tbody>
+  </table>
+
+  <h2>二、计算的本质（课件 00 · 01）</h2>
+  <p>所谓"计算"，就是<strong>利用信息解决问题的过程</strong>（课件 00 · P70）。它有两个不可分割的部分：</p>
+  <ul>
+    <li><strong>编码规则</strong>——如何表达和记录信息（结绳、算筹、二进制……）；</li>
+    <li><strong>物理实现</strong>——编码规则落在什么物理载体上（算盘、CMOS 电流、超导量子……）。</li>
+  </ul>
+  <p>把经典与量子的"计算三要素"摆在一起看，差异一目了然（课件 00 · P125–141）：</p>
+  <table>
+    <thead><tr><th>计算要素</th><th>经典体系</th><th>量子体系</th></tr></thead>
+    <tbody>
+      <tr><td>计算理论</td><td>通用经典图灵机</td><td>通用量子图灵机</td></tr>
+      <tr><td>编码规则</td><td>二进制（0 / 1）</td><td>量子比特（|0⟩, |1⟩ 及其叠加）</td></tr>
+      <tr><td>物理实现</td><td>CMOS 电流的开闭表示 0 / 1</td><td>超导量子、光量子、离子阱等</td></tr>
+    </tbody>
+  </table>
+
+  <h2>三、经典计算机发展简史（课件 00 · 02，铺垫）</h2>
+  <p>这一节是背景铺垫，考试重点在量子部分，先极简过一遍脉络：从结绳/算筹，到 <strong>ENIAC</strong> 为代表的电子管计算机，再到<strong>晶体管（1947）</strong>、<strong>集成电路</strong>，由 <strong>摩尔定律</strong>驱动指数级集成度提升，底层是<strong>冯·诺依曼体系结构</strong>（存储与计算分离、指令顺序执行）。当摩尔定律逼近物理极限，"后摩尔"时代把目光投向了量子等先进计算。</p>
+
+  <h2>四、量子力学简史与思想实验（课件 00 · 04）</h2>
+  <p>量子计算不是凭空出现的，它站在量子力学百年地基上。关键里程碑（课件 00 · P634）：</p>
+  <div class="eq">
+    1900 普朗克（能量量子化） → 1905 爱因斯坦（光量子 / 光电效应） → 1913 玻尔（原子轨道）<br>
+    → 1924 德布罗意（波粒二象性） → 1925 海森堡（矩阵力学） → 1926 薛定谔（波动方程）<br>
+    → 1932 冯·诺依曼（量子力学公理化、测量理论）
+  </div>
+  <div class="note">
+    <p><strong>爱因斯坦 vs 玻尔（"上帝掷骰子吗？"，课件 00 · P649）：</strong>爱因斯坦相信决定论与"隐变量"——粒子的路径在被观测前就已确定；玻尔认为路径不是预先确定的，<strong>是否去观测本身决定了结果</strong>——不看时粒子处于"左缝/右缝"的相干叠加。这场争论由<strong>贝尔定理</strong>给出实验判据。</p>
+  </div>
+  <div class="warn">
+    <p><strong>贝尔定理与 2022 诺奖（课件 00 · P676）：</strong>1964 年 Bell 定义可观测量，局域隐变量理论预言其值 ≤ 2，而量子力学预言可超过它。实验历经 Clauser（1972）、Aspect（1982）不断改进，最终否定局域隐变量理论、确证量子力学的非定域性，三人获 2022 年诺贝尔物理学奖。注意：课件原文写"最大值可以到 2"，标准 CHSH 上界实际为 <span class="math">2√2 ≈ 2.828</span>，课件此处为简写/笔误，考场若考"贝尔不等式经典上界"答 2、若考"量子可违反到的上界"答 <span class="math">2√2</span>。</p>
+  </div>
+
+  <h2>五、量子计算模型的诞生（课件 00 · P51）</h2>
+  <ul>
+    <li><strong>1989 年 David Deutsch</strong> 提出<strong>量子图灵机</strong>，第一次把"计算"建立在量子力学之上；</li>
+    <li><strong>1993 年姚期智</strong>证明<strong>量子线路模型与量子图灵机等价</strong>；</li>
+    <li>由于量子线路模型"比量子图灵机更有可操作性"，本课程（及业界）统一采用<strong>量子线路模型</strong>作为描述语言（呼应第 07 课）。</li>
+  </ul>
+
+  <h2>六、量子计算的物理实现（课件 00 · P52–55，考试重点）</h2>
+  <p>量子比特到底"长"在什么上面？课件列举了多条技术路线，各自的<strong>优势与瓶颈</strong>是常考点：</p>
+  <table>
+    <thead><tr><th>路线</th><th>优势</th><th>主要问题</th></tr></thead>
+    <tbody>
+      <tr><td>超导量子（Superconducting）</td><td>最受关注、发展最快、最有前途的通用候选</td><td>受宇宙射线和纳米氢化物影响</td></tr>
+      <tr><td>离子阱（Ion Trap）</td><td>比特品质高、相干时间长、制备/读出效率高</td><td>扩展性较差</td></tr>
+      <tr><td>光子（Photonic）</td><td>不需要特殊环境（室温）</td><td>量子纠缠比较困难</td></tr>
+      <tr><td>中性原子（Neutral Atom）</td><td>超高真空囚禁超冷原子实现</td><td>控制要求高（磁/电/光场）</td></tr>
+      <tr><td>半导体（Semiconductor）</td><td>有半导体制造经验、更稳定、相干更长</td><td>量子纠缠数量较少</td></tr>
+      <tr><td>拓扑量子（Topological）</td><td>容错潜力，有望解决退相干与容错难题</td><td>初级阶段，马约拉纳态等未完全解决</td></tr>
+      <tr><td>金刚石 NV 色心</td><td>室温零声子线、发光稳定、相干时间长</td><td>扩展性较差</td></tr>
+      <tr><td>量子退火（Quantum Annealer）</td><td>用伊辛模型、不经逻辑门</td><td>D-Wave 2021 已转向门路线</td></tr>
+      <tr><td>相干伊辛机（CIM）</td><td>光学器件、无需低温、稳定可控</td><td>缺乏实际应用评测</td></tr>
+    </tbody>
+  </table>
+  <div class="note">
+    <p><strong>退相干与相干时间（核心难题）：</strong>量子态一旦与周围环境耦合就会丢失相干性，这叫<strong>退相干</strong>，是量子计算实用化的最大障碍。衡量指标是<strong>相干时间</strong>——浙大超导量子相干时间约 <strong>150 微秒</strong>。趋势是：多量子位芯片、增加相干时间、提高门保真度、高集成度测控系统、多芯片技术。</p>
+  </div>
+  <div class="keybox">
+    <span class="label">浙大成果</span>
+    <p>2021 年 12 月浙大发布"<strong>莫干 1 号</strong>""<strong>天目 1 号</strong>"超导量子芯片；软件侧有<strong>太元量子云平台 1.0</strong>（janusq.zju.edu.cn），打通"全流程芯片加工测控 + 云平台"软硬件基础。</p>
+  </div>
+
+  <h2>七、量子产业链与软件栈（课件 00 · P52, P55）</h2>
+  <ul>
+    <li><strong>量子应用</strong>：模拟计算（医药、电池、流体、金融）、人工智能（优化、反洗钱）、密码学（保密通信、密钥）；</li>
+    <li><strong>量子软件/算法</strong>：国际已有 100 多家公司，中国较少；</li>
+    <li><strong>量子云服务</strong>：IBM-Q、D-Wave 的 Leap、国内本源量子等；</li>
+    <li><strong>量子芯片</strong>：分"量子门"与"非量子门"两类，<strong>量子门路线占主导</strong>。</li>
+  </ul>
+
+  <h2>随堂测</h2>
+  <div class="quiz" data-answer="b" data-explanation="1993 年姚期智证明量子线路模型与量子图灵机等价（课件 00 · P51）。Deutsch 提出的是量子图灵机本身（1989）。">
+    <p class="quiz-q"><span class="qno">Q1</span>证明"量子线路模型与量子图灵机等价"的是？</p>
+    <div class="opts">
+      <button data-opt="a">David Deutsch</button>
+      <button data-opt="b">姚期智</button>
+      <button data-opt="c">爱因斯坦</button>
+      <button data-opt="d">John Bell</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="b" data-explanation="离子阱（Ion Trap）品质高、相干时间长、制备读出效率高，但扩展性较差（课件 00 · P860）。">
+    <p class="quiz-q"><span class="qno">Q2</span>下列物理实现中，"扩展性较差"但"品质高、相干时间长"的是？</p>
+    <div class="opts">
+      <button data-opt="a">超导量子</button>
+      <button data-opt="b">离子阱</button>
+      <button data-opt="c">光子</button>
+      <button data-opt="d">半导体</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="c" data-explanation="贝尔定理实验（Clauser/Aspect，2022 诺奖）违反贝尔不等式，否定局域隐变量理论、确证量子力学的非定域性（课件 00 · P676）。">
+    <p class="quiz-q"><span class="qno">Q3</span>2022 诺奖的贝尔定理实验，实质验证的是？</p>
+    <div class="opts">
+      <button data-opt="a">相对论</button>
+      <button data-opt="b">局域隐变量理论正确</button>
+      <button data-opt="c">量子力学的非定域性</button>
+      <button data-opt="d">摩尔定律</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="c" data-explanation="浙大 2021.12 发布“莫干 1 号”“天目 1 号”超导量子芯片（课件 00 · P890）。九章/祖冲之是光量子/超导路线代表（中科大），悬铃木是 Google。">
+    <p class="quiz-q"><span class="qno">Q4</span>浙大 2021 年 12 月发布的超导量子芯片是？</p>
+    <div class="opts">
+      <button data-opt="a">祖冲之</button>
+      <button data-opt="b">九章</button>
+      <button data-opt="c">莫干 1 号 / 天目 1 号</button>
+      <button data-opt="d">悬铃木</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <p class="lesson-footer">
+    下一课：<a href="0001-quantum-state-as-unit-vector.html"><strong>单量子比特与量子态</strong></a>——正式进入技术主线，先背下"量子术语 = 线代术语"对照表，再从 <span class="math">|ψ⟩ = α|0⟩ + β|1⟩</span> 开始。
+  </p>
+
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

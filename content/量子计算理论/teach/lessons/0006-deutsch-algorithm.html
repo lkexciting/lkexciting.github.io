@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>第 06 课 · Deutsch 算法</title>
+<link href="../assets/course.css" rel="stylesheet"/>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<body>
+<div class="page">
+<p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+<p class="lesson-no">LESSON 06</p>
+<h1>Deutsch 算法</h1>
+<p class="lede">这是课件 01 里第一个真正的量子算法。它要解决一个看似平凡的问题：一个未知函数 f:{0,1}→{0,1} 究竟是"常数函数"还是"平衡函数"？经典做法最坏要查两次，而 Deutsch 算法<strong>只查一次</strong>就能判定。关键就在于"叠加态里的并行计算"加上"一次测量抽取全局性质"。内容来自课件 <strong>01 · P57–P68</strong>。</p>
+<h2>一、并行性是怎样的，又为什么不够</h2>
+<p>把输入制备到叠加态、再用一个实现 f 的酉门 U_f 作用，可以让 f 在所有输入上"同时"被计算（课件 01 · P57）。但这种并行性<strong>并不直接有用</strong>：如果对输出做测量，每次测量只能得到一个 \(x_{i}\) 下的函数值，这与经典计算相比并无优势。量子计算要的不仅是并行，更是<strong>更强的信息抽取能力</strong>——这正是 Deutsch 算法要展示的（课件 01 · P58）。</p>
+<h2>二、Deutsch 问题</h2>
+<p>考虑映射 \(f:\{0,1}\to\{0,1}\)，它只可能是四种操作之一，归为两类（课件 01 · P58）：</p>
+<div class="keybox">
+<span class="label">两类函数</span>
+<p><strong>常数函数（constant）：</strong>\(f(x) \equiv 0\) 或 \(f(x) \equiv 1\)（两个输入的函数值相同）。<br/>
+<strong>平衡函数（balanced）：</strong>\(f(0) \neq f(1)\)（一个取 0、一个取 1，各占一半）。</p>
+</div>
+<p>问题：只知 f 是这四种之一，最少测几次才能判断它是常数还是平衡？</p>
+<h2>三、经典 vs 量子</h2>
+<p><strong>经典计算机</strong>：对 n 位输入，最多有 \(2^{n}\) 个数，需要尝试 \(2^{n}/2 + 1\) 次（一半多一次）才能确保判定（课件 01 · P58–P59）。当 \(n=1\) 时就是 <strong>2 次</strong>：查 \(f(0)\) 和 \(f(1)\)，若相同则为常数、不同则为平衡。</p>
+<p><strong>量子计算机</strong>：只需 <strong>1 次</strong>查询 U_f，再测一次，就能得到全局结论（课件 01 · P59）。</p>
+<div class="note">
+<p><strong>单比特四种操作（课件 01 · P59）：</strong>平衡函数两种（输出随输入翻转/取反），常数函数两种（输出恒 0 或恒 1）。U_f 就是把这些行为实现为量子门。</p>
+</div>
+<h2>四、Deutsch 电路与推导</h2>
+<p>电路如下（课件 01 · P60–P63）：两个比特初始为 \(|0\rangle|1\rangle\)，各自过 H 门后变成</p>
+<div class="eq">\[|\psi_{0}\rangle = (|0\rangle+|1\rangle)/\sqrt{2} \otimes (|0\rangle-|1\rangle)/\sqrt{2} = |+\rangle|-\rangle\]</div>
+<p>U_f 的定义为 \(|x\rangle|y\rangle \to |x\rangle|y\oplus f(x)\rangle\)。由于第二寄存器处于 \(|-\rangle\)，U_f 会在第一寄存器上留下相位 \((-1)^{f(x)}\)（相位反冲），于是</p>
+<div class="eq">\[|\psi_{1}\rangle = [|0\rangle(-1)^{f(0)} + |1\rangle(-1)^{f(1)}]\otimes|-\rangle / \sqrt{2}\]</div>
+<p>提取公共因子并令 \(s = f(0)\oplus f(1)\)，第一寄存器变为</p>
+<div class="eq">\[(-1)^{f(0)}[|0\rangle + (-1)^{s}|1\rangle]/\sqrt{2}\]</div>
+<p>分类讨论：</p>
+<ul>
+<li><strong>常数函数</strong>（\(f(0)=f(1)\)，故 \(s=0\)）：第一寄存器 = \((|0\rangle+|1\rangle)/\sqrt{2} = |+\rangle\)；</li>
+<li><strong>平衡函数</strong>（\(f(0)\neq f(1)\)，故 \(s=1\)）：第一寄存器 = \((|0\rangle-|1\rangle)/\sqrt{2} = |-\rangle\)。</li>
+</ul>
+<p>再对第一寄存器作用 H 门：\(H|+\rangle=|0\rangle\text{，}H|-\rangle=|1\rangle\)。于是<strong>只需测量第一比特</strong>：</p>
+<div class="keybox">
+<span class="label">判定规则（正确版）</span>
+<p>测第一比特得 \(|0\rangle\) → <strong>常数函数</strong>；<br/>
+    测第一比特得 \(|1\rangle\) → <strong>平衡函数</strong>。</p>
+</div>
+<div class="tool" data-widget="deutsch-phase"></div>
+<div class="warn">
+<p><strong>⚠ 课件 p64 此处结论写反了。</strong>原幻灯片写"测到 |0⟩ 说明是平衡函数、反之是常数函数"，与上面正确推导相反。按标准 Deutsch 算法（以及本课的相位推导），<strong>|0⟩ 对应常数、|1⟩ 对应平衡</strong>。考试/作业请以正确推导为准；若老师按课件原话出题，请同时理解两种表述的来源。</p>
+</div>
+<h2>五、Oracle（黑盒）视角</h2>
+<p>课件 01（P64–P68）把 U_f 抽象为 <strong>Oracle（神谕/黑盒）</strong>：我们只知道它的行为（输入 x，输出 1 或 0 表示 yes/no），不知道内部如何实现，目标是以<strong>尽可能少的调用次数</strong>完成判定。其线路用异或 \(\oplus\) 表示：\(y \oplus f(x)\)。</p>
+<p>两个有用的化简（课件 01 · P68）：\(H^{2} = I\)，以及 \(HXH = Z\)。因此常数函数 \(f(x)=0\) 与 \(f(x)=1\) 的线路可分别简化为"什么都不做"和"作用一个 Z 门"。这也提示我们：很多 Oracle 的本质只是某个单比特门（如 Z）被叠加态"分摊"到了第一寄存器上。</p>
+<h2>六、即时小测</h2>
+<div class="quiz" data-answer="c" data-explanation="Deutsch 问题要判断未知函数 f:{0,1}→{0,1} 是常数函数还是平衡函数，课件 01 · P58。">
+<p class="quiz-q"><span class="qno">Q1</span>Deutsch 算法要解决的核心问题是？</p>
+<div class="opts">
+<button data-opt="a">计算 f(0)+f(1) 的具体数值</button>
+<button data-opt="b">求出 f 的解析表达式</button>
+<button data-opt="c">判断 f 是常数函数还是平衡函数</button>
+<button data-opt="d">把 f 编译成量子线路</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="a" data-explanation="经典最坏需 2ⁿ/2+1 次；n=1 时为 2 次，课件 01 · P58–P59。">
+<p class="quiz-q"><span class="qno">Q2</span>经典计算机判定 n=1 的 Deutsch 问题，最坏要查询几次？</p>
+<div class="opts">
+<button data-opt="a">2 次</button>
+<button data-opt="b">1 次</button>
+<button data-opt="c">4 次</button>
+<button data-opt="d">0 次</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="d" data-explanation="Deutsch 算法只需 1 次 U_f 查询加 1 次测量，课件 01 · P59。">
+<p class="quiz-q"><span class="qno">Q3</span>Deutsch 算法判定函数性质，需要几次 U_f 查询？</p>
+<div class="opts">
+<button data-opt="a">2 次</button>
+<button data-opt="b">4 次</button>
+<button data-opt="c">0 次</button>
+<button data-opt="d">1 次</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="b" data-explanation="正确推导：第一比特测得 |0⟩ 对应常数函数、|1⟩ 对应平衡函数（注意课件 p64 写反了），课件 01 · P63。">
+<p class="quiz-q"><span class="qno">Q4</span>Deutsch 算法中，若测量第一比特得到 \(|0\rangle\)，说明 f 是？</p>
+<div class="opts">
+<button data-opt="a">平衡函数</button>
+<button data-opt="b">常数函数</button>
+<button data-opt="c">无法确定</button>
+<button data-opt="d">既不是常数也不是平衡</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="ask">
+<p><strong>卡住了就直接问我。</strong>比如"相位反冲 (−1)^{f(x)} 是怎么来的""为什么 H|+⟩=|0⟩"——都可以在对话里追问，我会就这一步重讲。</p>
+</div>
+<h2>七、这节课你应该能独立完成</h2>
+<ul>
+<li>说清常数函数与平衡函数的定义，以及经典为何要查 2 次。</li>
+<li>复述 Deutsch 电路（|0⟩|1⟩ → 双 H → U_f → 单 H → 测量第一比特）并解释相位反冲。</li>
+<li>记住正确判定规则：\(|0\rangle\)→常数、\(|1\rangle\)→平衡，并知道课件 p64 结论写反。</li>
+</ul>
+<div class="note">
+<p><strong>主资源：</strong>本课正文与推导均来自课件 <strong>01 · P57–P68</strong>。下一课进入量子图灵机与量子电路模型（课件 02 · P24 起），看量子计算更底层的计算模型。</p>
+</div>
+<p class="lesson-footer">
+    下一课：<a href="0007-quantum-turing-machine-and-circuit-model.html"><strong>量子图灵机与量子电路模型</strong></a>——从经典图灵机到 Benioff / Deutsch / 姚期智的量子计算模型。
+  </p>
+</div>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/deutsch-phase.js"></script>
+</body>
+</html>

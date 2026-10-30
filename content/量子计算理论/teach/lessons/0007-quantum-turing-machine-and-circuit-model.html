@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>第 07 课 · 量子图灵机与量子电路模型</title>
+<link href="../assets/course.css" rel="stylesheet"/>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<body>
+<div class="page">
+<p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+<p class="lesson-no">LESSON 07</p>
+<h1>量子图灵机与量子电路模型</h1>
+<p class="lede">前面六课讲"量子比特、量子门、测量、算法"——这是工程视角。这一课退一步看计算模型本身：从 1936 年的经典图灵机，到 1980–1993 年 Benioff、Deutsch、姚期智把计算搬进量子世界，最终收敛到今天默认使用的<strong>量子电路模型</strong>。内容来自课件 <strong>02 · P43–P51</strong>。</p>
+<h2>一、经典图灵机</h2>
+<p>1936 年，图灵在《论可计算数及其在判定性问题上的应用》中提出图灵机模型；1949 年冯·诺依曼基于此造出第一台通用电子计算机（课件 02 · P43–P44）。它由以下要素组成：</p>
+<div class="keybox">
+<span class="label">经典图灵机五要素</span>
+<p>① <strong>无限长纸带（tape）</strong>：划分为离散单元格，可写符号；<br/>
+    ② <strong>读写头（head）</strong>：在纸带上水平移动，读/写符号；<br/>
+    ③ <strong>状态集合（states）</strong>：一组离散内部状态；<br/>
+    ④ <strong>转移函数（transition function）</strong>：规定"当前状态+读到符号→如何改状态、移动头、写符号"；<br/>
+    ⑤ <strong>停机状态（halting state）</strong>：进入即终止计算。</p>
+</div>
+<h2>二、量子图灵机的历史</h2>
+<p>把计算"量子化"的关键节点（课件 02 · P46）：</p>
+<ul>
+<li><strong>1980 / 1982 年</strong>：物理学家 Paul Benioff 首次描述图灵机的量子力学模型。</li>
+<li><strong>1985 年</strong>：量子计算奠基人 Deutsch 进一步发展量子图灵机概念，提出量子门可像经典二进制逻辑门一样运行。</li>
+<li><strong>1989 年</strong>：Deutsch 又提出更底层的<strong>量子电路模型</strong>。</li>
+<li><strong>1993 年</strong>：姚期智（Andrew Yao）证明<strong>每个量子图灵机都能用量子电路模拟</strong>。</li>
+<li>本世纪以来，量子图灵机逐渐过时，提到量子计算基本默认是<strong>量子电路模型</strong>，并据此发展出多种复杂度理论。</li>
+</ul>
+<h2>三、量子图灵机及其问题</h2>
+<p>量子图灵机与经典图灵机基本类似，区别在于<strong>纸带上的字符与寄存的状态都变成了叠加态的量子比特</strong>（课件 02 · P47）。但它一直存在几个难以解决的问题：</p>
+<ul>
+<li>难以保证<strong>每一步操作都是幺正的</strong>；</li>
+<li><strong>停机（halt）问题</strong>：量子图灵机一直处于叠加态，不知道"什么时候结束"；</li>
+<li>它只告诉我们量子计算机的下限（至少和经典一样快），却没说清楚到底能快多少。</li>
+</ul>
+<div class="note">
+<p><strong>为什么提它：</strong>量子图灵机是"量子计算可行"的理论证明起点，但它不够好用，于是电路模型取而代之。</p>
+</div>
+<h2>四、量子电路模型（姚期智，1993）</h2>
+<p>量子电路模型由姚期智于 1993 年提出，是基于<strong>量子比特</strong>与<strong>量子门操作</strong>的计算框架（课件 02 · P48–P50）。关键概念：</p>
+<ul>
+<li><strong>量子比特</strong>：信息基本单元，可处于 0 和 1 的叠加态，比经典比特信息表示能力更丰富。</li>
+<li><strong>量子门操作</strong>：在量子比特上做变换，如 H 门、相位门、CNOT 门等（即前面各课讲的内容）。</li>
+<li><strong>量子电路</strong>：由一系列量子门按特定顺序组成，描述量子比特间的相互作用与信息流动。</li>
+<li><strong>量子测量</strong>：允许在末端测量，把量子比特投影到经典态，得到一个经典比特值（呼应第 04 课）。</li>
+</ul>
+<p>在电路模型中，每个量子比特用一条线表示，每个量子门用一个符号表示，<strong>整个电路可用一个矩阵表示</strong>。它能清晰展示量子计算的<strong>并行性、可逆性、干涉性</strong>，也方便分析算法的复杂度与正确性（课件 02 · P50–P51）。</p>
+<h2>五、量子图灵机 vs 量子电路模型</h2>
+<table class="cell">
+<tr><th>对比维度</th><th>量子图灵机</th><th>量子电路模型</th></tr>
+<tr><td>计算方式</td><td>迭代式：读写头移动 + 纸带符号变化</td><td>顺序式：量子门按要求依次作用于比特</td></tr>
+<tr><td>定位</td><td>通用、底层的抽象框架</td><td>直观、可可视化的实用框架</td></tr>
+<tr><td>侧重点</td><td>研究量子计算的性质与能力</td><td>描述比特间相互作用与变换</td></tr>
+</table>
+<h2>六、即时小测</h2>
+<div class="quiz" data-answer="c" data-explanation="量子图灵机把纸带字符与寄存状态都改为叠加态的量子比特，课件 02 · P47。">
+<p class="quiz-q"><span class="qno">Q1</span>量子图灵机与经典图灵机的核心区别是？</p>
+<div class="opts">
+<button data-opt="a">纸带变短了</button>
+<button data-opt="b">取消了停机状态</button>
+<button data-opt="c">纸带字符与状态改为叠加态的量子比特</button>
+<button data-opt="d">不再需要转移函数</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="a" data-explanation="1993 年姚期智证明每个量子图灵机都能用量子电路模拟，课件 02 · P46。">
+<p class="quiz-q"><span class="qno">Q2</span>证明"量子图灵机可等价模拟于量子电路"的是？</p>
+<div class="opts">
+<button data-opt="a">姚期智（Andrew Yao，1993）</button>
+<button data-opt="b">图灵（1936）</button>
+<button data-opt="c">Benioff（1980）</button>
+<button data-opt="d">冯·诺依曼</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="d" data-explanation="量子电路模型中每个量子比特一条线、每个门一个符号、整个电路一个矩阵，课件 02 · P50。">
+<p class="quiz-q"><span class="qno">Q3</span>关于量子电路模型，正确的是？</p>
+<div class="opts">
+<button data-opt="a">它没有测量环节</button>
+<button data-opt="b">量子门不能写成矩阵</button>
+<button data-opt="c">只描述单比特系统</button>
+<button data-opt="d">每个电路可用一个矩阵表示，能展示并行性/可逆性/干涉性</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="b" data-explanation="量子图灵机长期受困于幺正性难保证与停机问题，课件 02 · P47。">
+<p class="quiz-q"><span class="qno">Q4</span>量子图灵机逐渐过时的原因不包括？</p>
+<div class="opts">
+<button data-opt="a">难以保证每步操作幺正</button>
+<button data-opt="b">它比电路模型更快</button>
+<button data-opt="c">存在停机（halt）问题</button>
+<button data-opt="d">只给出能力下限、说不清能快多少</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="ask">
+<p><strong>卡住了就直接问我。</strong>比如"幺正性为什么难保证""姚期智的等价性证明意味着什么"——都可以在对话里追问。</p>
+</div>
+<h2>七、这节课你应该能独立完成</h2>
+<ul>
+<li>说出经典图灵机的五要素，以及量子图灵机相对它的改动（叠加态化）。</li>
+<li>梳理历史脉络：Benioff(1980/82) → Deutsch(1985/89) → 姚期智(1993)。</li>
+<li>复述量子图灵机的三个缺陷，以及量子电路模型的四个关键概念与二者区别。</li>
+</ul>
+<div class="note">
+<p><strong>主资源：</strong>本课正文均来自课件 <strong>02 · P43–P51</strong>。下一站进入课件 03 的量子算法专题：QFT、相位估计、Shor 与 Grover（即将发布）。</p>
+</div>
+<p class="lesson-footer">
+    下一课：<a href="0008-quantum-fourier-transform.html"><strong>量子傅里叶变换（QFT）</strong></a>——从 DFT 到 QFT 的电路实现，为 QPE / Shor / Grover 打基础（课件 03）。
+  </p>
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>
