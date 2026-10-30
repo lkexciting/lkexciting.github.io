@@ -11,7 +11,7 @@
       '<h4>CNOT 制备贝尔态</h4>',
       '<p style="font-size:0.9rem;color:var(--ink-soft);margin:0 0 0.9rem">从 ' + MQ('|q0 q1⟩') + ' 出发（q1 固定为 ' + MQ('|0⟩') + '）。先选 q0 初态，再分步施加 H(q0) 与 CNOT(q0→q1)，观察态如何变成纠缠的贝尔态。态写作 ' + MQ('a|00⟩+b|01⟩+c|10⟩+d|11⟩') + '。</p>',
       '<div class="row">',
-      '  <div class="field"><label>q0 初态</label><select data-q0><option value="0">' + MQ('|0⟩') + '</option><option value="1">' + MQ('|1⟩') + '</option></select></div>',
+      '  <div class="field"><label>q0 初态</label><select data-q0><option value="0">|0⟩</option><option value="1">|1⟩</option></select></div>',
       '  <button data-h>H(q0)</button>',
       '  <button data-cnot>CNOT(q0→q1)</button>',
       '  <button data-reset>重置</button>',
