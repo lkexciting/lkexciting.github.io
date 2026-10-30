@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 章 · 物联网硬件平台</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 2 章 · 课件提炼</span>
+  <h1>物联网硬件平台</h1>
+  <p class="subtitle">严格依据你的课件《第二章_169(1)》整理，教材官方 PPT 补细节、课后习题答案出小测。主线：概述 → 四个关键特性 → 六大平台 → 案例开发 → 研究前沿。配课件思考题详解与 8 道小测。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>——下文【课件原文】部分即考试边界。① 课件《第二章_169(1)》（第一来源）；② 教材官方 PPT 第二章（仅助理解，标"教材 PPT 补充"）；③ 教材配套《第二章课后习题及答案》（思考题详解与小测出处）。所有数字、结论均出自以上材料，未额外引入。</p>
+  </div>
+
+  <h2>一、概述：三类硬件平台（必考表格）</h2>
+  <p>课件开篇：据预测，<strong>到 2025 年全世界的物联网设备将达 270 亿</strong>。生活中的例子：燃气报警器、智能车锁、智能电表。发展趋势两句话：<strong>体积越来越小、价格越来越低</strong>（智能物联网芯片）。</p>
+  <p>核心考点是按<strong>属性</strong>把硬件平台分三类，数量、处理器、操作系统、运行环境、典型设备一一对应：</p>
+  <table>
+    <tr><th>属性</th><th>类 PC 的嵌入式设备<br>≈1 亿台</th><th>智能物件<br>≈8 亿台</th><th>物件<br>≈90 亿台</th></tr>
+    <tr><td>典型处理器</td><td>Intel Core</td><td>ARM Cortex-A7、Intel Atom</td><td>MCU</td></tr>
+    <tr><td>典型操作系统</td><td>Windows Embedded、Linux</td><td>Linux、Wind River、Android Things</td><td>Contiki、RIOT、HarmonyOS</td></tr>
+    <tr><td>典型运行环境</td><td>Win32、Linux</td><td>Node.js、Python、C APIs</td><td>C APIs</td></tr>
+    <tr><td>典型设备</td><td>自动取款机、零售服务点</td><td>可编程逻辑控制器、边缘网关</td><td>温度传感器、智能灯泡</td></tr>
+    <tr><td>功能定位</td><td>功能强大，其实就是"缩小版"的 PC 机</td><td>功能相对强大，可执行相对复杂的智能运算</td><td>功能比较弱小</td></tr>
+  </table>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：什么叫"硬件平台"</div>
+    <p><strong>狭义</strong>：开发板（PCB、SoC）；<strong>广义</strong>：开发板（PCB、SoC）+ 外接传感设备或通信模块。物联网硬件平台<strong>异构性强、功能差异大</strong>。</p>
+  </div>
+
+  <h2>二、关键特性 1：低成本与微型化</h2>
+  <p>节点价格低廉、微型化 → <strong>更高的部署密度</strong>。课件给出五块开发板的价格与尺寸（价格参考 2022 年 3 月淘宝平台售价）：</p>
+  <table>
+    <tr><th>开发板</th><th>价格/元</th><th>尺寸/mm（长×宽）</th></tr>
+    <tr><td>TelosB</td><td>850</td><td>63.75 × 32</td></tr>
+    <tr><td>Arduino UNO</td><td>130</td><td>68.8 × 53.4</td></tr>
+    <tr><td>Arduino GEMMA</td><td>90</td><td>27.94 × 27.94</td></tr>
+    <tr><td>STM32F103</td><td>268</td><td>130 × 100</td></tr>
+    <tr><td>树莓派 4B</td><td>735</td><td>88 × 58</td></tr>
+  </table>
+
+  <h2>三、关键特性 2：功耗/能耗（必会计算）</h2>
+  <p>物联网节点一般<strong>周期性采集并上报数据</strong>，其余大部分时间处于休眠状态以延长生命周期——所以<strong>功耗越低，运行时间越长</strong>。每个模块（如计算模块、通信模块）的功耗：</p>
+  <div class="calc">ΔE = Σ (i = 1 → n) Δtᵢ · Iᵢ · pᵢ
+
+n    ：模块能耗状态的数量
+Δtᵢ  ：模块在能耗状态 i 下的工作时间
+pᵢ   ：模块在能耗状态 i 下的功率
+Iᵢ   ：指示变量。Δtᵢ &gt; 0 时 Iᵢ = 1；Δtᵢ = 0 时 Iᵢ = 0</div>
+  <p>课件例题（一步步照做）：使用 Arduino UNO，电压保持 5V 不变，运行 1s，其中 0.5s 休眠、0.5s 工作：</p>
+  <div class="calc">i=1 睡眠：p₁ = 0.1μA × 5V = 5 × 10⁻⁷ W
+i=2 工作：p₂ = 0.2mA × 5V = 1 × 10⁻³ W
+
+ΔE = 0.5s×1×5×10⁻⁷ + 0.5s×1×1×10⁻³ = <b>0.50025 × 10⁻³ J</b></div>
+  <p>两块板的 MCU 能耗参数（后面思考题反复用到）：</p>
+  <table>
+    <tr><th>开发板</th><th>MCU</th><th>供电电压/V</th><th>睡眠能耗/μA</th><th>工作能耗/mA</th></tr>
+    <tr><td>TelosB</td><td>MSP430</td><td>1.8～3.6</td><td>2.6</td><td>0.5</td></tr>
+    <tr><td>Arduino UNO</td><td>ATmega328</td><td>1.8～5.5</td><td>0.1</td><td>0.2</td></tr>
+  </table>
+
+  <h2>四、关键特性 3：运算速度和内存大小</h2>
+  <ul>
+    <li>运算速度一般用 <strong>CPU 主频</strong>来描述。</li>
+    <li><strong>能耗与主频</strong>的关系：<strong>P = CV²FT</strong>。</li>
+    <li>指令执行估算：若一条指令需要 20 个时钟周期，16MHz 的 Arduino MCU 每秒对应 16×10⁶ 个时钟周期，可执行 <strong>16×10⁶ / 20 条</strong>这样的指令。</li>
+    <li><strong>内存</strong>：<strong>RAM 存数据，易失性</strong>；<strong>Flash 存程序，非易失性</strong>——断电后 Flash 上的程序依然存在。</li>
+  </ul>
+  <table>
+    <tr><th>开发板</th><th>MCU</th><th>主频</th><th>位数</th><th>RAM</th><th>Flash</th></tr>
+    <tr><td>TelosB</td><td>MSP430</td><td>8MHz</td><td>8</td><td>10KB</td><td>48KB</td></tr>
+    <tr><td>Arduino UNO</td><td>ATmega328</td><td>16MHz</td><td>8</td><td>2KB</td><td>32KB</td></tr>
+    <tr><td>STM32F103</td><td>Cortex-M3</td><td>72MHz</td><td>32</td><td>64KB</td><td>512KB</td></tr>
+    <tr><td>树莓派 4B</td><td>BCM2711</td><td>1.5GHz</td><td>64</td><td>1/2/4/8GB</td><td>由外接 SD 卡决定</td></tr>
+  </table>
+
+  <h2>五、关键特性 4：接口类型</h2>
+  <h3>5.1 物理接口：引脚 vs Grove port</h3>
+  <div class="grid cols-2">
+    <div class="card"><h4>引脚</h4><p>通过杜邦线连接，过程复杂且易出错；引脚接错可能导致程序无法工作，甚至烧坏外设和主板。</p></div>
+    <div class="card"><h4>连接套接口 / Grove port</h4><p>通过 Grove port 线连接，外设接入容易、快速且不易出错。</p></div>
+  </div>
+
+  <h3>5.2 通信协议：常见 6 种</h3>
+  <table>
+    <tr><th>协议</th><th>课件定义（背）</th></tr>
+    <tr><td>模拟信号 Analog</td><td>使用模拟量表示数据的信号，<strong>需要 ADC 转化</strong>（处理器不能直接解析）</td></tr>
+    <tr><td>数字信号 Digital</td><td>使用序列离散值表示数据的信号</td></tr>
+    <tr><td>PWM</td><td>基于数字信号的<strong>脉冲调制</strong>技术</td></tr>
+    <tr><td>UART</td><td>用于<strong>异步逐位</strong>传输数据的<strong>全双工</strong>通信接口标准</td></tr>
+    <tr><td>I2C</td><td>Phillips 公司推出的高性能<strong>串行总线</strong></td></tr>
+    <tr><td>SPI</td><td><strong>高速、全双工、同步</strong>的通信总线</td></tr>
+  </table>
+  <p>教材 PPT 补充的关键细节：</p>
+  <ul>
+    <li><strong>Digital 编码方式</strong>：不归零编码（NRZ）、归零编码（RZ）、曼彻斯特编码、差分曼彻斯特编码。</li>
+    <li><strong>PWM 两要素</strong>：频率（决定信号周期）+ 占空比（决定单个周期内高电平持续时间）；用途：控制 LED 灯或电机功率，降低能耗。</li>
+    <li><strong>UART</strong>：全双工 = 同一时刻用 RX、TX 两个引脚分别收发；异步 = 无时钟同步，收发方规定好数据位长和波特率即可通信。</li>
+    <li><strong>I2C</strong>：两根线——SDA 数据线 + SCL 时钟线；<strong>半双工</strong>（同一时刻 SDA 只有一个方向），总线调度<strong>先来先服务</strong>；地址字节<strong>高 7 位是从设备地址</strong>、最低位是方向（"0"写、"1"读）；速率 100k / 400k / 1M / 3.4M bps，最大长度 7.62m，支持 127 个设备。</li>
+    <li><strong>SPI</strong>：两根数据线 MISO、MOSI 允许双向通信；配置复杂——控制寄存器配置工作模式、波特率寄存器配置传输率。</li>
+  </ul>
+
+  <h3>5.3 UART 缓存计算（课件例题 + 思考题 2）</h3>
+  <div class="calc">每次 UART 传输 11 位 = 8 数据位 + 2 标识位 + 1 校验位
+
+课件例（波特率 B=9600，中断处理 1ms，缓存只存数据位）：
+  传输 1 位时间 = 1/B
+  中断时间内到达的数据 = (1/1000) / (1/B) = B/1000 位
+  数据位 = B/1000 × 8/11
+  缓存字节 = B/1000 × 8/11 / 8 = B/11000 → 向上取整 <b>1 字节</b>
+
+思考题 2（中断 2ms）：2 × B/11000 = 2×9600/11000 ≈ 1.745
+  → 向上取整 <b>2 字节</b>（习题答案一致）</div>
+
+  <h3>5.4 可扩展性</h3>
+  <p>定义：<strong>开发板对接入外接设备种类和数量的支持程度</strong>；<strong>接口数量和接口类型</strong>是评估的重要指标。</p>
+  <table>
+    <tr><th>开发板</th><th>Digital</th><th>Analog</th><th>PWM</th><th>UART</th><th>I2C</th><th>SPI</th></tr>
+    <tr><td>树莓派 4B</td><td>28</td><td>0</td><td>2</td><td>6</td><td>6</td><td>5</td></tr>
+    <tr><td>BeagleBone Black</td><td>65</td><td>7</td><td>8</td><td>4</td><td>2</td><td>2</td></tr>
+  </table>
+  <p>课件结论：<strong>BeagleBone Black 平台的可扩展性要优于树莓派</strong>。（教材 PPT：考虑后续功能扩充，往往需要在硬件平台预留几个常用类型的通信接口。）</p>
+
+  <h2>六、常见的物联网硬件平台（六大平台）</h2>
+  <table>
+    <tr><th>平台</th><th>分类</th><th>生产厂商</th><th>课件说明</th></tr>
+    <tr><td>传感节点</td><td>物件/Things</td><td>加州大学伯克利分校</td><td>高度集成，专为低功耗和无线传感网络设计</td></tr>
+    <tr><td>STM32</td><td>物件/Things</td><td>意法半导体（ST）</td><td>基于 ARM Cortex-M 系列微控制器，型号选择广泛，开发工具和库丰富，适合快速开发和原型设计</td></tr>
+    <tr><td>ESP32</td><td>物件/Things</td><td>乐鑫科技（Espressif）</td><td>集成 Wi-Fi 和蓝牙功能的微控制器，双核处理器、低功耗特性</td></tr>
+    <tr><td>Arduino</td><td>物件/Things</td><td>Arduino Srl 生产</td><td>开源电子原型平台，编程模型简单、社区支持广泛，适合初学者和教育用途</td></tr>
+    <tr><td>树莓派</td><td>智能物件/Smart Things</td><td>英国树莓派基金会</td><td>基于 ARM 的单板计算机，有完整操作系统和较高处理能力</td></tr>
+    <tr><td>Jetson</td><td>智能物件/Smart Things</td><td>NVIDIA</td><td>基于 NVIDIA GPU，强大的图形和并行计算能力；支持 CUDA、OpenCV 等高级库</td></tr>
+  </table>
+
+  <h3>6.1 传感节点平台（TelosB 等）</h3>
+  <p>发展缓慢的三个原因：<strong>技术发展不均衡、功耗的制约、成本的制约</strong>。平台分三代：</p>
+  <table>
+    <tr><th>代</th><th>代表节点</th><th>处理器频率</th><th>位数</th><th>RAM</th><th>Flash</th></tr>
+    <tr><td>第一代</td><td>Mica / MicaZ</td><td>4MHz</td><td>8</td><td>4KB</td><td>128KB</td></tr>
+    <tr><td>第二代</td><td>TelosB</td><td>4MHz</td><td>16</td><td>10KB</td><td>48KB</td></tr>
+    <tr><td>第三代</td><td>Firestorm / Imote2 / Hamilton</td><td>48 / 104 / 48MHz</td><td>32</td><td>64 / 256 / 32KB</td><td>512KB / 32MB / 256KB</td></tr>
+  </table>
+  <p><strong>主要特点（四条）</strong>：<strong>低功耗</strong>（TelosB 睡眠电流仅 5.1μA）、<strong>体积小</strong>（TelosB 63.75×32mm；最初为军事探测系统设计，隐蔽性高）、<strong>集成度高</strong>（单节点集成 MCU + 传感模块 + 通信模块，TelosB 集成温度/湿度/光照等）、<strong>低成本</strong>（最新的 Hamilton 节点单价也只有 6.75 美元）。</p>
+
+  <h3>6.2 STM32 平台</h3>
+  <p>ST（意法半导体，1987 年由意大利 SGS 微电子与法国 Thomson 半导体合并而成）推出的 <strong>ARM Cortex-M 内核</strong>单片机：内核有 Cortex-M0、M3、M4、M7，每个内核又分<strong>主流、高性能、低功耗</strong>三个档。</p>
+  <div class="callout def">
+    <div class="label">名词解释：CPU / MCU / MPU（课件原文）</div>
+    <p><strong>CPU</strong>：Central Processing Unit，计算机系统的运算和控制核心，信息处理、程序运行的最终执行单元。<br>
+    <strong>MCU</strong>：Micro Controller Unit，把 CPU、内存、I/O 接口和时钟电路等基本组件<strong>集成在一个芯片上</strong>；通常设计为低功耗设备，适合长时间运行和电池供电。<br>
+    <strong>MPU</strong>：Micro Processing Unit，相比 MCU 更侧重<strong>高性能计算和复杂任务处理</strong>，时钟速度更高、内存更大、计算能力更强。</p>
+  </div>
+  <ul>
+    <li><strong>开发板组成</strong>：主控芯片、USB 电源、扩展接口、电源接口、下载接口、复位按键。</li>
+    <li><strong>三种低功耗模式（必背）</strong>：<strong>睡眠</strong>——内核停止运行、外设保持运行，适合等待外设中断时降功耗；<strong>停机</strong>——所有时钟停止，约 20μA；<strong>待机</strong>——功耗最低，约 2μA，关闭所有时钟并完全关闭 1.2V 区域电源。</li>
+    <li><strong>接口数量</strong>：STM32F103C8T6 — Digital 32 / PWM 6 / UART 3 / I2C 2 / SPI 2；STM32F103VET6 — 100 / 14 / 3 / 2 / 2。</li>
+    <li><strong>常见开发板</strong>：STM32 最小系统板（C8T6/72MHz，64/20KB，53×23mm，5V）；野火指南者（VET6，512/64KB，130×100mm）；正点原子精英（ZET6，512/64KB，115×117mm）。</li>
+    <li><strong>主要特点</strong>：开发方便（库文件开发、程序模块化，一个串口即可烧写）；丰富通信接口（I2C、USART、SPI、CAN、USB 2.0 全速）；调试简单（20 脚 JTAG + 针对 Cortex-M3 的 SWD 串行单线调试）；低功耗（睡眠/停机/待机三种模式间取得平衡）。</li>
+  </ul>
+
+  <h3>6.3 ESP32 平台</h3>
+  <p>中国<strong>乐鑫信息科技</strong>（2008 年成立于上海张江，无晶圆厂半导体公司）设计的<strong>集成 2.4GHz Wi-Fi 和蓝牙双模的单芯片方案</strong>。发展史：2013 ESP8089（平板/机顶盒 Wi-Fi SoC）→ 2014 ESP8266EX（首款物联网 SoC，超低功耗）→ 2016 ESP32（旗舰，Wi-Fi + Bluetooth SoC）→ 2018 Wi-Fi MCU 市场全球领先 → 2023 IoT 芯片全球出货量突破 10 亿颗。</p>
+  <ul>
+    <li><strong>CPU/存储</strong>：低功耗 Xtensa LX6 32-bit 单/双核处理器，最高 240MHz；片上 448KB ROM + 520KB SRAM。</li>
+    <li><strong>外设接口</strong>：34 个 GPIO、3 组 SPI、2 个 I2C、2 个 I2S、3 个 UART、2 个 12-bit SAR ADC、2 个 8-bit DAC、10 个触摸传感器等。</li>
+    <li><strong>五种能耗模式（按功耗从高到低）</strong>：Active（射频工作）→ Modem-sleep（CPU 运行，Wi-Fi/蓝牙基带和射频关闭）→ Light-sleep（CPU 暂停；RTC 存储器、外设、ULP 协处理器运行，可被定时器/外部中断唤醒）→ Deep-sleep（CPU 和大部分外设掉电）→ Hibernation（内置 8MHz 振荡器和 ULP 协处理器均被禁用）。</li>
+    <li><strong>主要特点</strong>：性能稳定（工作温度 −40°C～+125°C，自校准电路动态电压调整）；高度集成（天线开关、RF balun、功放、低噪放、滤波器、电源管理集于一体）；超低功耗（精细分辨时钟门控、省电模式、动态电压调整）；双模解决方案（可作独立系统，或作主机 MCU 的从设备，经 SPI/SDIO 或 I2C/UART 提供 Wi-Fi 和蓝牙）。</li>
+  </ul>
+
+  <h3>6.4 Arduino 平台</h3>
+  <p><strong>2005 年第一块 Arduino 问世</strong>，名字来源于意大利一家酒吧。Arduino 不仅仅是一块开发板，还包括<strong>软件、开发团队、开源社区和设计原理</strong>。开发板组成：<strong>MCU、USB 串口、扩展插座、电源</strong>。</p>
+  <table>
+    <tr><th>参数</th><th>ATmega328（UNO）</th><th>ATmega2560（Mega 2560）</th></tr>
+    <tr><td>时钟频率/MHz</td><td>0～20</td><td>0～16</td></tr>
+    <tr><td>RAM/KB</td><td>2</td><td>8</td></tr>
+    <tr><td>Flash/KB</td><td>32</td><td>256</td></tr>
+    <tr><td>能耗（1MHz 时钟）</td><td>0.1μA～0.2mA</td><td>3μA～0.8mA</td></tr>
+    <tr><td>接口 Digital/Analog/PWM/UART/I2C/SPI</td><td>14/6/6/1/1/1</td><td>54/16/14/4/1/1</td></tr>
+  </table>
+  <ul>
+    <li><strong>AVR 体系结构</strong>：挪威理工学院 Alf-Egil Bogen 和 Vegard Wollan 开发的 <strong>RISC（精简指令集计算机）</strong>体系结构；存储体系结构是<strong>哈佛结构</strong>——具有分离的数据寻址空间和程序寻址空间。</li>
+    <li><strong>盾板（Shield）</strong>：为 Arduino 提供非常强大的扩展能力（如 Base Shield、Grove 扩展板、WiFi 盾板）。</li>
+    <li><strong>主要特点（五条）</strong>：上手容易（设计初衷是给学生一款便宜好用的平台，对底层电路做了很高的封装）；开发简单（旗下不同开发板统一编程接口，应用可快速移植）；可扩展性强（盾板扩展功能和接口）；低功耗（主频和性能远小于树莓派、BeagleBone 等高性能平台）；开源创新（软硬件全部开源并使用 CC 授权，个人可用面包板 + AVR 处理器自制简单 Arduino）。</li>
+  </ul>
+
+  <h3>6.5 树莓派平台</h3>
+  <p>树莓派是一款<strong>微型计算机</strong>，性能几乎和一台计算机相同。发展线：2006 年原型（22.1MHz 的 ATmega 664，整板 25 美元）→ 2011 年集成 HDMI、USB、以太网 → 2012 年二代换 BCM 2836 → 2016 年三代集成 WiFi 和 BLE（BCM 2837）→ 2019 年四代支持 BLE5.0（BCM2711）。</p>
+  <ul>
+    <li><strong>组成</strong>：微控制器、扩展接口、USB 电源、SD 卡、HDMI、音频接口、以太网口、USB 接口——接上电源、插上键盘鼠标显示器就能开机办公。</li>
+    <li><strong>树莓派 4B</strong>：1.5GHz、1/2/4/8GB RAM、40 个数字引脚 / 0 个模拟引脚，集成以太网、WiFi、BLE、BLE5.0、HDMI；尺寸 88×58mm。</li>
+    <li><strong>能耗（5V，按 CPU 负载）</strong>：0% 负载 760mA → 单核 100% 900mA → 四核 100% 1200mA；<strong>树莓派属于高功耗类型</strong>。</li>
+    <li><strong>盾板</strong>：<strong>GrovePi+</strong> 让原本<strong>不支持 Analog 外设</strong>的树莓派可以接入 Analog 外设——它通过 <strong>I2C</strong> 与树莓派通信，Analog 类型 Grove port 收到的传感数据经 I2C 转发给树莓派（兼容树莓派 2/3/4/Zero）；另有 Grove Base HAT（兼容 2/3/4）。</li>
+    <li><strong>主要特点</strong>：开发简单（支持 C、Python、JavaScript 等跨平台高级语言）；上手容易（就是一台微型计算机）；功能强大（Cortex-A 高频 MCU，主频可达 1.5GHz、最高 8GB 内存，HDMI/USB/AV/以太网等接口堪比普通计算机）。</li>
+  </ul>
+
+  <h3>6.6 Jetson 平台</h3>
+  <p>NVIDIA 推出的<strong>嵌入式 AI 计算平台</strong>，主要用于<strong>边缘计算和人工智能（AI）应用</strong>，已在制造、物流、零售、服务、农业、智慧城市、医疗保健和生命科学领域广泛应用。</p>
+  <div class="callout def">
+    <div class="label">名词解释：三个"算力单位"（课件原文）</div>
+    <p><strong>TOPS</strong>：Tera Operations Per Second，1 TOPS = 处理器每秒进行一万亿次（10¹²）操作，通常默认对 INT8 整型数的处理次数。<br>
+    <strong>TFLOPS</strong>：每秒万亿次（10¹²）<strong>浮点</strong>运算（FLOPS = Floating-point Operations Per Second，通常 FP32）。<br>
+    <strong>GFLOPS</strong>：每秒十亿次（10⁹）浮点运算数。</p>
+  </div>
+  <table>
+    <tr><th>型号</th><th>AI 性能</th><th>GPU</th><th>功耗</th></tr>
+    <tr><td>Jetson Nano</td><td>472 GFLOPS</td><td>128 核 Maxwell</td><td>5-10 瓦</td></tr>
+    <tr><td>Jetson TX2</td><td>1.26-1.33 TFLOPS</td><td>256 核 Pascal</td><td>7.5-20 瓦</td></tr>
+    <tr><td>Jetson Xavier NX</td><td>21 TOPS</td><td>384 核 Volta</td><td>10-20 瓦</td></tr>
+    <tr><td>Jetson AGX Xavier</td><td>30/32 TOPS</td><td>512 核 Volta</td><td>10-40 瓦</td></tr>
+    <tr><td>Jetson Orin Nano</td><td>20/40 TOPS</td><td>512/1024 核 Ampere</td><td>7-15 瓦</td></tr>
+    <tr><td>Jetson Orin NX</td><td>70/100 TOPS</td><td>1024 核 Ampere</td><td>10-25 瓦</td></tr>
+    <tr><td>Jetson AGX Orin</td><td>200/248/275 TOPS</td><td>1792/2048 核 Ampere</td><td>15-75 瓦</td></tr>
+  </table>
+  <p>AI 模型部署参考（课件原表）：Orin Nano 8GB → Llama-7B（40 TOPS，7-15W，$299）；Orin NX 16GB → Llama-13B（100 TOPS，$599）；AGX Orin 32GB → Llama-33B（200 TOPS，$899）；AGX Orin 64GB → Llama-70B（275 TOPS，$1599）。</p>
+  <p><strong>主要特点</strong>：强大的计算能力（Nano 472 GFLOPs FP16，AGX Xavier 超过 32 TFLOPs）；低功耗设计（Nano 仅 5 瓦，适合无人机、机器人等严格要求功耗的场景）；高度集成（TX2 仅信用卡大小）；支持多种 AI 框架（TensorFlow、PyTorch、Caffe/Caffe2、Keras、MXNet 等）。</p>
+
+  <h2>七、开发环境与案例：室内环境监测</h2>
+  <p>各平台<strong>原生开发环境</strong>与支持的 OS（课件原表，选择填空高发）：</p>
+  <table>
+    <tr><th>硬件平台</th><th>原生开发环境</th><th>支持其他 OS</th></tr>
+    <tr><td>传感节点（MicaZ、TelosB）</td><td>TinyOS</td><td>Contiki OS 等</td></tr>
+    <tr><td>STM32</td><td>STM32CubeMX（ST 推荐的图形化配置工具，可生成 C 初始化代码）</td><td>RIOT、Zephyr</td></tr>
+    <tr><td>ESP32</td><td>ESP-IDF（Espressif IoT Development Framework），默认集成 FreeRTOS</td><td>RIOT、Contiki OS、Zephyr 和 RTThread</td></tr>
+    <tr><td>Arduino</td><td>Arduino IDE（编写、编译、下载烧录、串口通信）</td><td>Zephyr</td></tr>
+    <tr><td>树莓派</td><td>Raspbian OS 和相应的开发工具</td><td>Windows 10 IoT Core</td></tr>
+    <tr><td>Jetson</td><td>NVIDIA 提供的软件开发工具和库</td><td>Ubuntu 和其他 Linux 发行版</td></tr>
+  </table>
+  <p>案例任务：周期性采集温湿度，<strong>间隔 3s</strong> 打印到控制台或串口。</p>
+
+  <h3>7.1 Arduino 版（六步）</h3>
+  <ol>
+    <li><strong>硬件方案</strong>：UNO 只包含 MCU 和执行模块 LED，<strong>没有集成任何传感模块</strong> → 外接温湿度模块 <strong>DHT11</strong>（数据引脚接 2 号引脚）。</li>
+    <li><strong>开发环境</strong>：Arduino IDE（软件库支持、交叉编译、程序烧写、串口通信；支持 Windows / Mac OS / Linux）。</li>
+    <li><strong>编程</strong>：<strong>setup-loop 结构</strong>——setup 是程序入口函数，仅执行一次，用于初始化；loop 是循环体，setup 返回后被重复执行。</li>
+    <li><strong>交叉编译</strong>：工具 → 开发板 → Arduino UNO，单击"验证"。</li>
+    <li><strong>烧写程序</strong>（USB 连接开发板）。</li>
+    <li><strong>测试验证</strong>：打开串口，波特率 9600，查看实时数据。</li>
+  </ol>
+  <div class="calc">#include "DHT.h"
+DHT dht(2, DHT11);            // DHT11 数据引脚接 2 号引脚
+void setup(){                 // 初始化，仅执行一次
+  Serial.begin(9600);         // 串口波特率 9600 Bd/s
+  dht.begin();                // 初始化 DHT11 模块
+}
+void loop(){                  // 循环体，重复执行
+  float h = dht.readHumidity();      // 读湿度
+  float t = dht.readTemperature();   // 读温度
+  Serial.print("Humidity: "); Serial.println(h);
+  Serial.print("Temperature: "); Serial.println(t);
+  delay(3000);                // 每隔 3s 打印一次
+}</div>
+  <p>DHT11 库（课件给出）：github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor</p>
+
+  <h3>7.2 树莓派 4B 版</h3>
+  <ol>
+    <li><strong>硬件方案</strong>：4B 只包含 MCU 和通信模块（WiFi/BLE/以太网），同样没有传感模块 → 外接 DHT11。</li>
+    <li><strong>软件方案</strong>：选 <strong>Raspbian Stretch with desktop</strong> 系统；Linux 下两个常用开源库——<strong>WiringPi</strong>（GPIO 操作的 C++ 库）与 <strong>GrovePi</strong>（针对扩展板 GrovePi/GrovePi+ 的软件库，提供驱动和较完整的编程接口，支持 C++/Java/C#/Go/Node.js/Python 等主流语言）。本案例选 <strong>GrovePi + Python</strong>，通过 <strong>SSH 远程登录</strong>开发。</li>
+    <li><strong>编程</strong>（indoorEnv.py）：<code>grovepi.dht(sensor, blue)</code> 读温湿度 → <code>math.isnan()</code> 校验 → 打印 → <code>time.sleep(3)</code>。</li>
+    <li><strong>运行 &amp; 测试</strong>：<code>python indoorEnv.py</code>，控制台输出 temperature = 27.00 C / humidity = 95.00% 等。</li>
+  </ol>
+
+  <h2>八、研究前沿（两句话 + 两个系统）</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>高性能</h4><p>边缘计算、特别是 AI 的发展对处理能力提出更高要求；处理器工艺进步使芯片计算能力增强、功耗降低。（教材 PPT 举例：谷歌 Edge TPU、华为昇腾 310。）</p></div>
+    <div class="card"><h4>模块化</h4><p>提高硬件<strong>可定制性</strong>（选不同模块搭建适合应用的硬件平台）与模块<strong>可重用性</strong>（避免重复设计相同功能的电路模块）。</p></div>
+  </div>
+  <p>课件例子：<strong>Signpost</strong>（IPSN'18，城市感知节点，模块化组件，用户可方便更换某一模块以匹配应用）；另一工作（SenSys'08）把硬件节点分为<strong>控制、供电、存储、通信、传感</strong>等模块，模块间用标准数据传输接口连接，按需组装定制。</p>
+
+  <h2>九、课件思考题（先自己答，再点开对照）</h2>
+  <div class="exam">
+    <h3>思考题 1（MCU 属性表题）</h3>
+    <p>两块 MCU：Msp430F2618（1.8～3.6V，RAM 8KB，Flash 116KB，工作 0.5mA，睡眠 1.1μA）；Msp430F5437（1.8～3.6V，RAM 16KB，Flash 256KB，工作 0.28mA，睡眠 1.7μA）。电压恒定 3V，给定程序都执行 10s。</p>
+    <p><strong>问 ①</strong>：程序中声明了 <code>char buf[10240]</code>（10240 字节），应该选择哪块 MCU？</p>
+    <details><summary>点开看问 ① 的答案</summary>
+      <p>数据段存在于 MCU 的 RAM 中。10240 字节 &gt; 8KB（F2618 放不下），≤ 16KB（F5437 满足）→ 选 <strong>Msp430F5437</strong>。（课后习题答案原解）</p>
+    </details>
+    <p><strong>问 ②</strong>：占空比为 80% 时，谁的能耗低？</p>
+    <details><summary>点开看问 ② 的答案</summary>
+      <p>80% = 8s 工作 + 2s 睡眠：E(F2618) = 2×3.3×10⁻⁶ + 8×1.5×10⁻³ = <strong>0.012 J</strong>；E(F5437) = 2×5.1×10⁻⁶ + 8×0.84×10⁻³ = <strong>0.0067 J</strong> → <strong>F5437 能耗低</strong>（工作占主导，比工作功率）。（课后习题答案原解）</p>
+    </details>
+    <p><strong>问 ③</strong>：占空比为 0.1% 时，谁的能耗低？</p>
+    <details><summary>点开看问 ③ 的答案</summary>
+      <p>0.1% = 0.01s 工作 + 9.99s 睡眠：E(F2618) = 9.99×3.3×10⁻⁶ + 0.01×1.5×10⁻³ = <strong>4.7967×10⁻⁵ J</strong>；E(F5437) = 9.99×5.1×10⁻⁶ + 0.01×0.84×10⁻³ = <strong>5.9349×10⁻⁵ J</strong> → <strong>F2618 能耗低</strong>（睡眠占主导，比睡眠功率）。</p>
+      <p><strong>结论口诀</strong>：占空比高比"工作功率"，占空比低比"睡眠功率"。</p>
+    </details>
+    <h3>思考题 2（UART 缓存）</h3>
+    <p>波特率 9600Bd/s、接收中断处理 2ms，接收缓存应为多少字节？（每次 11 位 = 8 数据 + 2 标识 + 1 校验，缓存只存数据位）</p>
+    <details><summary>点开看答案</summary>
+      <p>2ms 内到达数据 = 2/1000 ÷ (1/9600) = 19.2 位；数据位 = 19.2 × 8/11 ≈ 13.96 位 ≈ 1.75 字节 → 向上取整 = <strong>2 字节</strong>（习题答案第 6 题同款计算，结果一致）。习题还要求画 UART 传"10101"的波形（含起始/结束标志位与校验位）。</p>
+    </details>
+    <h3>思考题 3（九连问，每问独立）</h3>
+    <p><strong>问 1</strong>：哪些硬件平台属于 Things 类别？哪些属于 Smart Things 类别？</p>
+    <details><summary>点开看问 1 的答案</summary>
+      <p>按课件平台分类表：<strong>Things 类</strong>——传感节点、STM32、ESP32、Arduino；<strong>Smart Things 类</strong>——树莓派、Jetson。</p>
+    </details>
+    <p><strong>问 2</strong>：RAM 和 Flash 有区别吗？</p>
+    <details><summary>点开看问 2 的答案</summary>
+      <p>RAM 存数据、易失性；Flash 存程序、非易失性（断电程序仍在）。</p>
+    </details>
+    <p><strong>问 3</strong>：程序声明了 4100 字节的数据，能否运行在 MicaZ 节点上？</p>
+    <details><summary>点开看问 3 的答案</summary>
+      <p>不能。MicaZ 的 RAM 只有 4KB = 4096 字节 &lt; 4100，数据放不下。</p>
+    </details>
+    <p><strong>问 4</strong>：Atmega 系列处理器属于什么架构？有什么特点？</p>
+    <details><summary>点开看问 4 的答案</summary>
+      <p>AVR 体系结构——RISC（精简指令集）；存储采用哈佛结构，数据寻址空间与程序寻址空间分离。</p>
+    </details>
+    <p><strong>问 5</strong>：STM32 中一般有几种低功耗模式？哪种功耗最低？</p>
+    <details><summary>点开看问 5 的答案</summary>
+      <p>3 种：睡眠、停机、待机；<strong>待机</strong>功耗最低（约 2μA）。</p>
+    </details>
+    <p><strong>问 6</strong>：盾板的功能作用是什么？适用于哪些硬件平台？</p>
+    <details><summary>点开看问 6 的答案</summary>
+      <p>像盾一样插在主板上，为平台扩展功能和接口；适用 Arduino（Base Shield 等）与树莓派（GrovePi+、Grove Base HAT）。注意：插上盾板后会完全覆盖主板，此时无法再用杜邦线在引脚上接传感器（习题答案第 4 题）。</p>
+    </details>
+    <p><strong>问 7</strong>：ESP32 集成无线模块有哪些？这些无线协议能否同时运行？</p>
+    <details><summary>点开看问 7 的答案</summary>
+      <p>集成 2.4GHz Wi-Fi + 蓝牙双模（课件原文）。"能否同时运行"课件未给出标准答案，建议向老师确认，勿自行作答。</p>
+    </details>
+    <p><strong>问 8</strong>：Jetson 硬件平台的主要特点是什么？适用于哪些场景？</p>
+    <details><summary>点开看问 8 的答案</summary>
+      <p>强大计算能力、低功耗设计、高度集成、支持多种 AI 框架；适用于边缘计算与 AI（制造、物流、零售、服务、农业、智慧城市、医疗保健等）。</p>
+    </details>
+    <p><strong>问 9</strong>：1.3 TFLOPS 是什么意思？</p>
+    <details><summary>点开看问 9 的答案</summary>
+      <p>每秒 1.3 万亿次（10¹²）浮点运算（FLOPS 通常按 FP32 计）。</p>
+    </details>
+    <h3>其他高频习题（出自课后习题答案，每题独立）</h3>
+    <p><strong>选型 1</strong>：环境监测（温湿度、光照强度），要求节点可以放置在 40×70 的底座内。</p>
+    <details><summary>点开看选型 1 的答案</summary>
+      <p>符合尺寸的是 <strong>TelosB（63.75×32）、STM32F103（53×23）</strong>（树莓派 85×56、UNO 68.8×53.4、Mega 101.52×53.3 都放不下）。</p>
+    </details>
+    <p><strong>选型 2</strong>：环境监测，要求节点在无源环境下可以长时间工作，在此基础上找价格最低的一款。</p>
+    <details><summary>点开看选型 2 的答案</summary>
+      <p>选 <strong>Arduino UNO</strong>（149.25 元，低于 TelosB 850 元、Mega 439.65 元；树莓派高功耗不考虑）。</p>
+    </details>
+    <p><strong>选型 3</strong>：环境监测（温湿度、光照强度、PM2.5），并预留各类型的接口以防将来扩展。</p>
+    <details><summary>点开看选型 3 的答案</summary>
+      <p>选 <strong>Arduino Mega 2560</strong>（54 Digital/16 Analog/14 PWM/4 UART，接口最多）。</p>
+    </details>
+    <p><strong>选型 4</strong>：人脸识别，将摄像头采集的图片进行人脸识别，并截取人脸图片上传至云端。</p>
+    <details><summary>点开看选型 4 的答案</summary>
+      <p>选 <strong>树莓派 4B</strong>（计算能力最强）。</p>
+    </details>
+    <p><strong>计算题（习题 7）</strong>：以写数据"10101"到 0x0B 设备为例，按步描述 I2C 的传输过程，要求画出传输信号波形。</p>
+    <details><summary>点开看 I2C 题的答案</summary>
+      <p>主机先发 8 位指令——高 7 位 = 0x0B 的地址、最低位 = 0 表示写；SCL 保持高电平时 SDA 从 1 跳到 0 = 开始传输（总线"忙"），SCL 开始振荡逐位送数据；结束时 SCL 高电平期间 SDA 从 0 跳到 1 = 传输结束（总线"闲"）。考试要求画出 SDA/SCL 波形。</p>
+    </details>
+    <p><strong>计算题（习题 8）</strong>：SPI 传输中，SPPR 和 SPR 分别设置为 010 和 100，总线时钟频率至少为多少才能保证数据传输率为 200Kbps？</p>
+    <details><summary>点开看 SPI 题的答案</summary>
+      <p>BRD = (SPPR+1) × 2^(SPR+1) = (2+1) × 2⁵ = 96；fBUS = BR × BRD = 200K × 96 = <strong>19.2MHz</strong>。</p>
+    </details>
+  </div>
+
+  <h2>十、即时小测（全部出自课件与课后习题答案）</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score"></div>
+
+  <div class="ask">
+    <strong>有不懂的随时问我。</strong> 这一章数字表格多，建议先记"三类平台表"和"能耗公式"两个锚点，再往下铺。下一章我们进 <strong>第 3 章 物联网操作系统</strong>（Contiki、RIOT、FreeRTOS 这些名字本章已经露脸了）。
+  </div>
+
+  <footer>
+    主源：课件《第二章_169(1)》· 教材配套 PPT/习题答案 第二章（董玮等《从创意到原型（第2版）》）
+    · 速查：<a href="../reference/硬件平台速查.html">硬件平台速查</a>
+    · 术语：<a href="../GLOSSARY">GLOSSARY</a>
+    · 上一课：<a href="0001-物联网概述.html">第 1 章 概述</a>
+    · 下一课：<a href="0301-操作系统概述与构成.html">第 3 章 操作系统（小课 0301 起）</a>
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "课件三类硬件平台中，数量约 90 亿台的“物件”类，典型处理器是？",
+    options: [
+      "Intel Core 处理器",
+      "ARM Cortex-A7 处理器",
+      "MCU 微控制器"
+    ],
+    answer: 2,
+    explain: "类PC≈1亿台用 Intel Core；智能物件≈8亿台用 ARM Cortex-A7/Intel Atom；物件≈90亿台用 MCU，典型设备如温度传感器、智能灯泡。"
+  },
+  {
+    prompt: "能耗例题：Arduino UNO 电压恒定 5V，工作电流 0.2mA，工作状态的功率 p₂ = ？",
+    options: [
+      "0.1μA × 5V = 5×10⁻⁷ W",
+      "0.2mA × 5V = 1×10⁻³ W",
+      "0.5mA × 5V = 2.5×10⁻³ W"
+    ],
+    answer: 1,
+    explain: "课件例：睡眠 p₁=0.1μA×5V=5×10⁻⁷W；工作 p₂=0.2mA×5V=1×10⁻³W。ΔE = 0.5s×5×10⁻⁷ + 0.5s×1×10⁻³ = 0.50025×10⁻³ J。"
+  },
+  {
+    prompt: "关于 RAM 和 Flash，课件的说法是？",
+    options: [
+      "RAM 存数据、易失性；Flash 存程序、非易失性",
+      "RAM 存程序、非易失性；Flash 存数据、易失性",
+      "两者都断电不丢数据，只是读写速度不同"
+    ],
+    answer: 0,
+    explain: "课件原文：RAM 存数据、易失性；Flash 存程序、非易失性——断电后 Flash 上的程序依然存在。"
+  },
+  {
+    prompt: "STM32F103 的三种低功耗模式中，功耗最低的是？",
+    options: [
+      "睡眠模式：内核停止，外设保持运行",
+      "停机模式：所有时钟都停止，约 20μA",
+      "待机模式：约 2μA，1.2V 区域电源完全关闭"
+    ],
+    answer: 2,
+    explain: "课件：睡眠（内核停、外设跑）、停机（所有时钟停，约 20μA）、待机（功耗最低约 2μA，关闭所有时钟和 1.2V 区域电源）。"
+  },
+  {
+    prompt: "树莓派 4B 原生不支持 Analog 外设，课件给出的接入办法是？",
+    options: [
+      "把 Analog 外设直接接到 40 个数字引脚上",
+      "通过 GrovePi+ 盾板，传感数据经 I2C 转发给树莓派",
+      "换用支持 Analog 的树莓派 Zero W"
+    ],
+    answer: 1,
+    explain: "课件：GrovePi+ 让原本不支持 Analog 外设的树莓派可以接入 Analog 外设；它通过 I2C 和树莓派通信，把 Analog Grove port 收到的传感数据经 I2C 转发。"
+  },
+  {
+    prompt: "UART 波特率 9600Bd/s，接收中断处理 2ms，每次传输 11 位（8 数据+2 标识+1 校验），接收缓存至少多大？",
+    options: [
+      "向上取整为 2 字节",
+      "1 字节（与中断 1ms 时相同）",
+      "11 字节（按一次传输位数计）"
+    ],
+    answer: 0,
+    explain: "2ms 内到达 2/1000×9600 = 19.2 位，数据位 = 19.2×8/11 ≈ 1.75 字节 → 向上取整 2 字节（课件 1ms 例题为 B/11000 → 1 字节，习题答案第 6 题结果一致）。"
+  },
+  {
+    prompt: "选型：要求人脸识别，并把截取的人脸图片上传云端，最合适的一款是？",
+    options: [
+      "Arduino Mega 2560：54 个 Digital、16 个 Analog",
+      "TelosB：63.75×32mm、睡眠仅 5.1μA",
+      "树莓派 4B：1.5GHz、最高 8GB 内存"
+    ],
+    answer: 2,
+    explain: "习题答案第 11 题：人脸识别需要强计算能力 → 树莓派 4B（BCM2711，1.5GHz，1/2/4/8GB RAM）。"
+  },
+  {
+    prompt: "Msp430F2618（睡眠 1.1μA/工作 0.5mA）与 F5437（睡眠 1.7μA/工作 0.28mA）各执行 10s：占空比 80% 与 0.1% 时谁能耗低？",
+    options: [
+      "80% 时 F2618 低；0.1% 时 F5437 低",
+      "80% 时 F5437 低；0.1% 时 F2618 低",
+      "两种占空比下都是 F5437 低"
+    ],
+    answer: 1,
+    explain: "占空比高时工作功率占主导：80% 时 E(F2618)=0.012J > E(F5437)=0.0067J；占空比低时睡眠功率占主导：0.1% 时 E(F2618)=4.7967×10⁻⁵J < E(F5437)=5.9349×10⁻⁵J（习题答案第 2 题）。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 硬件平台这章稳了。" : " —— 回头看标红的解析，重点复习能耗计算与平台对比。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

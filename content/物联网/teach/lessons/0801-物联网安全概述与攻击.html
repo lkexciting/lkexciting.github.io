@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 物联网安全概述与攻击</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 小课 1/6 · 课件提炼</span>
+  <h1>物联网安全概述与攻击分类</h1>
+  <p class="subtitle">一句话：物联网攻击面比传统网络更广大，本节把"网络层面"与"硬件层面"的攻击按被动/主动分好类——这是本章所有防护机制的"靶子"。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第八章-v2(2)》第 1–2 节（概述 / 物联网安全主要方面·攻击部分）【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第八章-v2(2).pdf</p>
+  </div>
+
+  <h2>一、安全现状：为什么物联网更危险</h2>
+  <p>课件开篇结论（必背）：物联网设备<strong>部署广泛、应用场景多样</strong>；与传统网络相比，物联网的<strong>攻击面更为广大</strong>，面临更为严峻的安全挑战。</p>
+  <p>两个典型安全事件（课件原文，可能出选择/案例题）：</p>
+  <div class="grid cols-2">
+    <div class="card"><h4>事件 1：智能家庭摄像头</h4><p>2016 年 6 月 18 日央视新闻：智能家庭摄像头泄露隐私已成为火热的生意，只要将<strong>被破解的 IP 地址</strong>输入播放软件，就可以实现偷窥，不被察觉。</p></div>
+    <div class="card"><h4>事件 2：智能电表系统</h4><p>无线电表被广泛部署。攻击路径三步：<strong>反工程</strong>破解电表帐号及读数 → <strong>截获电表数据包</strong>实时监视用电量 → <strong>发射假包</strong>改变用电量统计。</p></div>
+  </div>
+
+  <h2>二、网络层面攻击：被动 vs 主动（必考表格）</h2>
+  <table>
+    <tr><th>类别</th><th>特征</th><th>具体攻击（课件定义要点）</th></tr>
+    <tr><td><strong>被动式攻击</strong></td><td>不引起合法用户或系统觉察，目标涵盖端口、信道和潜在漏洞</td><td><strong>嗅探</strong>：用嗅探器侦听网络上流经的数据包；<strong>扫描</strong>：对端口发送消息，从响应包探寻漏洞或攻击渠道并利用其侵入；<strong>窃听</strong>：无线信道是开放信道，有适当无线设备即可窃听且难以发现</td></tr>
+    <tr><td><strong>主动式攻击</strong></td><td>造成系统和信息的更改或转换，既泄露信息，又威胁完整性与可用性</td><td><strong>假冒攻击/Sybil</strong>：截获、伪造或篡改合法用户身份信息来假冒合法用户；<strong>信息篡改</strong>：修改窃听到的信息（删除/替代部分或全部）再传给接收者；<strong>重放/重传攻击</strong>：窃听到的信息经过一段时间后再传给接收者；<strong>拒绝服务 DoS/DDoS</strong>：使目标节点无法向合法节点提供正常服务；<strong>干扰攻击 Jamming</strong>：发出干扰射频破坏无线通信；<strong>病毒与恶意软件</strong>：破坏节点正常运行或传递指令使节点按攻击者意图运行</td></tr>
+  </table>
+  <div class="callout">
+    <div class="label">记忆口诀</div>
+    <p>被动"听看扫"（嗅探、窃听、扫描），主动"改冒重断扰毒"——主动攻击多了"改与断"，所以同时威胁<strong>完整性</strong>和<strong>可用性</strong>。</p>
+  </div>
+
+  <h2>三、硬件层面攻击：四种（名字 + 一句话原理）</h2>
+  <table>
+    <tr><th>攻击</th><th>课件要点</th></tr>
+    <tr><td>故障注入攻击</td><td>引入外部因素使运算或操作出错，从而泄露敏感信息；<strong>常见于对加密保护机制的攻击</strong>——故障引起加密过程状态值改变，攻击者据此直接得到或计算出密钥。课件例子：对 MCU 和无线 SoC 进行<strong>激光故障注入</strong>、对供电电压降低或干扰 → 触发系统打开受保护寄存器获取机密。手段还包括更改频率、植入错误触发信号、更改系统时钟信号电平</td></tr>
+    <tr><td>接口植入攻击</td><td>开发时为方便硬件调试，板上接口（如 <strong>UART、JTAG、I2C</strong>）保持打开状态；攻击者通过串口连接获得 <strong>shell、日志输出</strong>等关键信息。例子：找到连接 MCU UART RX/TX 引脚的引脚 → 电平转换工具连计算机 → 打开 xshell 或 secureCRT，设置端口和波特率 → 通电后串口输出启动信息并执行命令</td></tr>
+    <tr><td>逆向工程</td><td><strong>固件</strong> = 硬件设备中作为只读软件留存的指令/数据集合。逆向工程 = 读取硬件存储器中的固件得到用户关键信息；还可<strong>重打包刷回芯片</strong>，使设备执行修改后的固件。例子：分析摄像头 PCB 上各 IC 找到 Flash 存储芯片 → 夹具连接引脚、连编程器读取固件</td></tr>
+    <tr><td>侧信道攻击（SCA）</td><td>硬件加密运算时产生<strong>声音、温度、功耗、电磁</strong>等侧信道信息，体现计算或操作的特征；加以利用可窥探硬件上执行的计算信息。例子：<strong>简单功耗分析（SPA）</strong>采集单条功耗曲线直接推断密钥位值，适用于<strong>与密钥相关跳转指令且功耗差别较大</strong>的密码算法，如 <strong>RSA、ECC</strong></td></tr>
+  </table>
+  <div class="callout">
+    <div class="label">教材 PPT 补充</div>
+    <p>① 故障注入攻击英文全称 Fault Injection Attack（FIA）；侧信道攻击 Side Channel Attack（SCA），常见侧信道还有震动。② 常见硬件调试接口除 UART、JTAG、I2C 外还有 <strong>SPI</strong>。</p>
+  </div>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>故障注入攻击和侧信道攻击有何异同？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p><strong>相同点</strong>：都在于硬件加密过程中的信息泄露，通过这种泄露来推测密钥。</p>
+      <p><strong>区别</strong>：故障注入攻击是通过<strong>引入外部因素</strong>（例如电磁注入等）来改变硬件的计算逻辑，导致硬件运行出现错误，泄露系统敏感信息；侧信道攻击是通过硬件运行过程中<strong>泄露的物理量</strong>（例如泄露的电磁波等）来破解密钥。（教材课后习题答案第 2 题原解）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/安全速查.html">安全速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0706-Tuya平台与联合开发案例.html">第 7 章 末课 0706</a> · 下一课：<a href="0802-硬件安全机制.html">0802 硬件安全机制</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "下列攻击中，全部属于被动式攻击的一组是？",
+    options: [
+      "嗅探、扫描、窃听",
+      "假冒、信息篡改、重放",
+      "干扰攻击、拒绝服务、病毒"
+    ],
+    answer: 0,
+    explain: "课件'物联网攻击：网络层面1'：被动式攻击包括嗅探（侦听数据包）、扫描（发消息看响应找漏洞）、窃听（开放无线信道难以发现）；假冒、篡改、重放、DoS、干扰、病毒都属于主动式攻击。"
+  },
+  {
+    prompt: "主动式攻击与被动式攻击的核心区别，课件的说法是？",
+    options: [
+      "主动攻击只针对无线信道，被动攻击只针对有线信道",
+      "主动攻击会造成系统和信息的更改或转换，还威胁完整性与可用性",
+      "被动攻击需要破解密钥，主动攻击不需要"
+    ],
+    answer: 1,
+    explain: "课件原文：主动式攻击通常会造成系统和信息的更改或转换，因此不仅产生信息泄漏，还会对系统的完整性和可用性构成威胁；被动式攻击则不引起合法用户或系统的觉察。"
+  },
+  {
+    prompt: "侧信道攻击中的简单功耗分析（SPA）能通过单条功耗曲线直接推断密钥位值，课件指出它适用于哪类密码算法？",
+    options: [
+      "分组长度 128 位的对称算法（如 AES）",
+      "与密钥相关跳转指令且功耗消耗差别较大的算法，如 RSA、ECC",
+      "基于循环冗余校验的校验算法（如 CRC）"
+    ],
+    answer: 1,
+    explain: "课件'硬件层面4'：SPA 适用于使用一些和密钥相关跳转指令且功耗消耗差别较大密码算法，如 RSA、ECC。128 位 AES 是 ZigBee 的加密算法（见 0804），不是 SPA 的适用对象。"
+  },
+  {
+    prompt: "智能电表安全事件中，攻击者'发射假包'的目的是？",
+    options: [
+      "实时监视用电量",
+      "破解电表帐号及读数",
+      "改变用电量统计"
+    ],
+    answer: 2,
+    explain: "课件'典型物联网安全事件2'三步：反工程破解电表帐号及读数 → 截获电表数据包实时监视用电量 → 发射假包改变用电量统计。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 攻击分类已经拿下，下一课看防护。" : " —— 回头看标红的解析，重点复习被动/主动与四种硬件攻击。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

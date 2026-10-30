@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 安全框架案例与前沿</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 小课 6/6 · 课件提炼</span>
+  <h1>典型安全开发框架、案例与研究前沿</h1>
+  <p class="subtitle">一句话：AWS / 阿里云 / 百度三大安全框架 + 温度监控安全版开发案例 + 四个学术前沿——本章收官，案例是最后一道大题的候选。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第八章-v2(2)》第 3–5 节（典型安全开发框架 / 案例开发 / 学术研究前沿）【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第八章-v2(2).pdf</p>
+  </div>
+
+  <h2>一、三大典型安全开发框架（对比表）</h2>
+  <table>
+    <tr><th>框架</th><th>核心机制（课件原文要点）</th></tr>
+    <tr><td><strong>AWS IoT</strong><br>（亚马逊）</td><td>支持三种类别身份验证：<strong>X.509 证书、IAM 用户/组和角色、Amazon Cognito 身份</strong>。通常：Web 应用程序和桌面应用程序使用 IAM 或联合身份；移动应用程序使用 Amazon Cognito 身份；<strong>IoT 设备使用 X.509 证书</strong>。云侧提供身份验证、IAM（Identity and Access Management）角色与策略配置等；<strong>在没有验证身份的情况下，AWS IoT 永远不会在设备和云之间交换数据</strong>；开发者可将所选角色或策略映射到每个证书，授予或撤销对设备、应用程序的访问权限</td></tr>
+    <tr><td><strong>阿里云 Link ID2</strong><br>（IoT Device ID）</td><td>专门用于物联网设备身份认证的系统，通过可信计算和密码技术提供设备安全认证、安全连接、业务数据加密等<strong>端到端的可信接入能力</strong>。四大安全功能：<strong>设备身份认证</strong>（唯一身份标识、双向身份认证，防篡改仿冒）、<strong>安全连接</strong>（兼容 TLS 和 DTLS 的轻量级安全协议 <strong>iTLS/iDTLS</strong>）、<strong>业务数据保护</strong>（基于设备可信根派生的密钥支持多种加密算法，防护固件、业务数据、应用授权等敏感数据）、<strong>密钥管理</strong>（集中管理：密钥生成、密钥销毁、端到端的密钥安全分发）。认证方式两种：<strong>基于挑战-应答</strong>与<strong>基于时间戳</strong>；挑战-应答机制由三部分组成：<strong>设备端、业务服务端、ID² 认证服务端</strong></td></tr>
+    <tr><td><strong>百度函谷 HISK</strong></td><td>基于 <strong>GP（Global Platform）国际安全标准</strong>，提供覆盖设备端、边缘、云端、移动 App 及各链路安全的体系及服务。分为<strong>基础服务和 PKI 证书服务</strong>：基础服务从<strong>证书和密钥保护</strong>的角度解决物联网安全问题，赋予设备唯一身份标识，提供设备身份认证服务和敏感数据安全传输服务；PKI 证书服务可为物联网设备签发数字证书，建立 <strong>TLS 双向认证</strong></td></tr>
+  </table>
+
+  <h2>二、开发案例：温度监控（安全版）</h2>
+  <p>目标：物联网节点在 <strong>TEE</strong> 中用 <strong>DHT11</strong> 传感器监控温度，数据经<strong>非对称加密（RSA）</strong>后通过 <strong>MQTT</strong> 上传云平台；云平台在 TEE 中解密并打印。<strong>硬件平台：树莓派 3B</strong>（支持 TrustZone，BCM2837、4 核 ARM Cortex A53 @1.2GHz、1GB RAM）；<strong>软件平台：Raspberry Pi OS（REE OS）+ OP-TEE（TEE OS）</strong>。</p>
+  <ul>
+    <li><strong>角色分工</strong>：发布者（树莓派）侧——REE 中 CA 应用负责 MQTT 发布，TEE 中 TA 应用负责加密采集数据，经 TEE Client API / TEE Internal API 交互；DHT11 驱动以 <strong>pseudo TA（PTA）</strong>形式存在于安全世界，TA 调用 PTA 的方式与 CA 调用 TA 类似（PTA 也有独一无二 uuid）。</li>
+    <li><strong>CA ↔ TA 接口对应表</strong>（课件原表，5 组必背）：<code>TEEC_InitializeContext()</code> ↔ <code>TA_CreateEntryPoint()</code>（构造 TA 并初始化上下文，仅一次）；<code>TEEC_OpenSession()</code> ↔ <code>TA_OpenSessionEntryPoint()</code>（建立会话，连接 REE 和 TEE）；<code>TEEC_InvokeCommand()</code> ↔ <code>TA_InvokeCommandEntryPoint()</code>（CA 调用 TA 命令）；<code>TEEC_CloseSession()</code> ↔ <code>TA_CloseSessionEntryPoint()</code>（关闭会话）；<code>TEEC_CloseSession()</code> ↔ <code>TA_DestroyEntryPoint()</code>（销毁 TA）。TA 用 <code>TEEC_UUID</code> 标识，定义于 RFC4122。</li>
+    <li><strong>参数类型</strong>：<code>TEEC_VALUE_INPUT/OUTPUT/INOUT</code>——整数数据，INPUT 从 REE 传至 TEE、OUTPUT 从 TEE 传至 REE、INOUT 双向；<code>TEEC_MEMREF_TEMP_*/PARTIAL_*</code>——数据分配到共享内存，TEMP 为临时内存引用，PARTIAL 为父共享内存块的分区。一次调用只能传 4 个参数，不传的用 <code>TEEC_NONE</code>。</li>
+    <li><strong>底层机制</strong>：CA 调用 <code>TEEC_InvokeCommand()</code> 后，OP-TEE 底层用 <strong>SMC 指令</strong>将 CPU 从非安全状态切换到安全状态，进入 TA 的 <code>TA_InvokeCommandEntryPoint</code> 按宏定义（如 <code>CMD_RSA_ENC_PKCS1_OPER</code>，CA 与 TA 头文件中定义一致）调用对应安全函数。RSA 加密：N 和 E 两个数组组成 RSA 公钥，用 <code>TEE_AllocateOperation(TEE_ALG_RSAES_PKCS1_V1_5, TEE_MODE_ENCRYPT, …)</code> + <code>TEE_AsymmetricEncrypt()</code> 完成加密（API 由 GlobalPlatform 组织定义，不同 TEE OS 均暴露统一接口）。</li>
+    <li><strong>传输与云端</strong>：CA 用 <code>mosquitto_pub</code> 把加密数据发布到服务器（ip 192.168.31.160，<strong>port 8883</strong>），带 <code>--cafile ca.crt --cert clientpub.crt --key clientpub.key</code>（TLS 加密传输）；云平台 CA 用 <code>MQTTClient</code> 订阅（SSL 证书 trustStore/privateKey/keyStore），收到消息触发回调 <code>msgarrvd</code> → 调用 RSA 解密 TA（设 RSA 私钥句柄 + <code>TEE_AsymmetricDecrypt</code> 类 API）打印解密数据。每 3 秒采样一次。</li>
+  </ul>
+
+  <h2>三、学术研究前沿（四项，记名字 + 一句话）</h2>
+  <table>
+    <tr><th>方向</th><th>课件内容</th></tr>
+    <tr><td>1. 基于 TEE 的端设备安全</td><td><strong>dTEE</strong>：A Declarative Approach to Secure IoT Applications Using TrustZone（基于 TrustZone 的声明式安全物联网应用方法）</td></tr>
+    <tr><td>2. 基于 WebAssembly 的端设备安全隔离</td><td><strong>Bring WebAssembly to Resource-constrained IoT Devices、MiTEE</strong></td></tr>
+    <tr><td>3. 去中心化设备接入认证与全生命周期安全</td><td>2019：CHIP（connected home over IP），Google、Apple 与 ZigBee 联盟；2021-5：CHIP → <strong>Matter</strong>，ZigBee 联盟 → <strong>CSA</strong>（connectivity standards alliance）；2022-10：CSA 正式发布 <strong>Matter 1.0 标准</strong>。（各版本具体安全机制课件未展开）</td></tr>
+    <tr><td>4. 智能语音系统安全：<strong>海豚音攻击</strong></td><td>DolphinAttack: Inaudible Voice Commands，CCS 2017（Best Paper Award）。原理：利用<strong>人耳听不到的超声波频段</strong>（>20kHz 可听上限）注入攻击指令；超声波信号之所以能生效，一是<strong>滤波器非完美滤波特性</strong>——过渡带内的信号不会被滤掉；二是经 <strong>AM（幅度调制）</strong>调制的基带信号会经麦克风和放大器的<strong>非线性作用</strong>还原出来。器件非线性：麦克风、放大器及滤波器等是输入/输出传输特性中具有平方及多次项非线性的组件，线性分量输出同频信号，非线性会产生<strong>谐波和叉积</strong>、带来新的频率，通过精心设计的输入信号可利用这些新频率恢复出基带信号（攻击指令）。涉及 MEMS 麦克风频率响应（100–10kHz 与 >15kHz）。</td></tr>
+  </table>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>1. AWS IoT 设备如何进行身份认证？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>AWS IoT 在所有连接点处提供<strong>相互身份验证和加密</strong>。AWS IoT 支持 AWS 身份验证方法（称为 "SigV4"）以及基于身份验证的 X.509 证书。使用 AWS IoT 生成的证书以及由首选证书颁发机构（CA）签署的证书，将所选的角色和/或策略映射到每个证书，以便授予设备或应用程序访问权限，或撤消访问权限。（教材课后习题答案第 7 题原解；课件另指出通常 IoT 设备使用 X.509 证书，移动应用程序使用 Amazon Cognito 身份）</p>
+    </details>
+    <p><strong>2. 简述 Link ID2 在安全方面的优势。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p><strong>设备身份认证</strong>：为每个 IoT 设备提供唯一的身份标识，基于 Link ID2 提供双向身份认证服务，防止设备被篡改或仿冒。<strong>安全连接</strong>：提供兼容 TLS 和 DTLS 的轻量级安全协议 iTLS/iDTLS，更适合物联网设备，在保障安全性的同时大幅减少 IoT 设备的资源消耗。<strong>业务数据保护</strong>：基于设备可信根派生的密钥支持多种加密算法，为设备固件、业务数据、应用授权等敏感数据提供安全防护。<strong>密钥管理</strong>：为 IoT 系统中的设备、应用、业务所使用的密钥提供集中管理，包括密钥生成、密钥销毁、端到端的密钥安全分发。（教材课后习题答案第 8 题原解）</p>
+    </details>
+    <p><strong>3. 以百度函谷物联系统为例，说明如何从证书和密钥保护角度解决物联网安全问题。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>函谷物联安全系统 HISK 基于 GP（Global Platform）国际安全标准。通过<strong>保护证书和密钥并提供统一的安全接口服务</strong>的方式来为上层应用提供安全能力，并赋予设备唯一身份标识，提供设备身份认证服务和敏感数据安全传输服务，进而实现端云一体的安全保障；其 PKI 证书服务还可为物联网设备签发数字证书，建立 TLS 双向认证。（教材课后习题答案第 9 题原解 + 课件原文）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/安全速查.html">安全速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0805-认证传输与隐私保护.html">0805 认证传输与隐私保护</a> · 下一课：全课程完结 🎉 · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "AWS IoT 支持的三种类别身份验证中，IoT 设备通常使用的是？",
+    options: [
+      "Amazon Cognito 身份",
+      "X.509 证书",
+      "IAM 用户、组和角色"
+    ],
+    answer: 1,
+    explain: "课件：通常情况下 Web 应用程序和桌面应用程序使用 IAM 或联合身份，移动应用程序使用 Amazon Cognito 身份，IoT 设备使用 X.509 证书；且在没有验证身份的情况下，AWS IoT 永远不会在设备和云之间交换数据。"
+  },
+  {
+    prompt: "阿里云 Link ID2 提供的兼容 TLS 和 DTLS 的轻量级安全协议是？",
+    options: [
+      "iTLS / iDTLS",
+      "SM4 / HKDF",
+      "AM / CMAC"
+    ],
+    answer: 0,
+    explain: "课件：Link ID2 的安全连接功能提供兼容 TLS 协议和 DTLS 协议的轻量级安全协议 iTLS/iDTLS；认证方式有基于挑战-应答与基于时间戳两种，挑战-应答由设备端、业务服务端、ID² 认证服务端三部分组成。"
+  },
+  {
+    prompt: "温度监控（安全版）案例中，CA 调用 TEEC_InvokeCommand() 后，CPU 从非安全状态切换到安全状态依靠的是？",
+    options: [
+      "重新上电启动",
+      "TLS 握手协议",
+      "SMC 指令（OP-TEE 底层）"
+    ],
+    answer: 2,
+    explain: "课件：CA 调用 TEEC_InvokeCommand() 函数后，OP-TEE 底层会使用 SMC 指令将 CPU 从非安全状态切换到安全状态，之后进入 TA 中的 TA_InvokeCommandEntryPoint，根据匹配到的宏定义调用对应安全函数。"
+  },
+  {
+    prompt: "海豚音攻击利用超声波注入指令，超声波信号能被还原成攻击指令的两个关键原因是？",
+    options: [
+      "麦克风灵敏度过高 + 放大器增益过大",
+      "滤波器非完美滤波特性 + 器件非线性作用还原调制信号",
+      "蓝牙密钥过短 + WiFi 信道开放"
+    ],
+    answer: 1,
+    explain: "课件：Q1 滤波器非完美滤波特性导致过渡带内的信号不会被滤掉；Q2 利用调制方法，经 AM（幅度调制）调制的基带信号会经过麦克风和放大器的非线性作用还原出来。非线性会产生谐波和叉积、带来新的频率。出处：DolphinAttack, CCS 2017 Best Paper。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 恭喜，第 8 章收官，全课程完结！" : " —— 回头看标红的解析，重点复习三大框架对比与案例接口表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

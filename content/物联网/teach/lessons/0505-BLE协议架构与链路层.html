@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 章 · BLE 协议架构与链路层</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 5 章 · 小课 5/9 · 课件提炼</span>
+  <h1>BLE 协议架构与链路层</h1>
+  <p class="subtitle">一句话：从 piconet 星型组网到 GATT 服务表，BLE 协议栈五层 + 链路层工作流程（学习目标点名"掌握"）都在这一节。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件"蓝牙低功耗协议（BLE）"一节中的"通信场景、协议栈、物理层协议、链路层协议、L2CAP、ATT 与 GATT"部分【教材 PPT 补充单独标注】。BLE Mesh 与蓝牙 5.x 见下一课。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第五章 低功耗无线协议2026.pdf</p>
+  </div>
+
+  <h2>一、组网场景：piconet 星型网络</h2>
+  <ul>
+    <li>BLE 设备构成星型网络（<strong>piconet</strong>）：<strong>一个 master，多个 slave</strong>；master 负责整个 piconet 的通信协调，<strong>slave 只能和 master 通信</strong>；一个 piconet 中<strong>每个 slave 使用不同的通信信道</strong>。</li>
+    <li>一个 BLE 设备可以<strong>同时</strong>为一个 piconet 的 slave，同时为另一个 piconet 的 slave 或 master。</li>
+  </ul>
+  <h3>1.1 BLE 协议栈（自下而上五层）</h3>
+  <table>
+    <tr><th>层</th><th>职责（课件原文）</th></tr>
+    <tr><td>低功耗物理层</td><td><strong>40 个跳频信道：37 个数据传输信道 + 3 个广播信道</strong></td></tr>
+    <tr><td>低功耗链路层</td><td>周期性醒睡</td></tr>
+    <tr><td>L2CAP</td><td>数据包融合/分割；控制数据包重传</td></tr>
+    <tr><td>GATT、ATT</td><td>服务交换的数据结构</td></tr>
+    <tr><td>SMP</td><td>密钥生成与分发</td></tr>
+  </table>
+
+  <h2>二、物理层协议</h2>
+  <h3>2.1 信道分配与跳频</h3>
+  <p>从 <strong>2.4GHz 到 2.480GHz</strong>，每个信道 <strong>2MHz</strong>，总共 <strong>40 个信道（0~39）</strong>；<strong>37、38、39 为广播信道</strong>，其他为数据传输信道。为减少数据传输阶段的干扰使用<strong>跳频</strong>：</p>
+  <ul>
+    <li><strong>基础信道跳频</strong>：每一对 master 和 slave 以同一种伪随机序列的方式切换信道；下一次跳频的信道由 <strong>gMap、c 和 hop</strong> 决定。</li>
+    <li><strong>自适应跳频</strong>：master 和 slave 维护信道质量数组 <strong>ChM</strong>；gMap 根据 ChM 对每个信道的标记情况更新可用信道。</li>
+  </ul>
+  <h3>2.2 GFSK 调制</h3>
+  <p>BLE 调制方式：<strong>GFSK（高斯频移键控）</strong>——先对原始数据做高斯滤波再进行 FSK 调制；作用：<strong>降低不同频率调制之间的干扰</strong>（频谱图上 GFSK 旁瓣能量明显小于 FSK）。</p>
+  <h3>2.3 物理帧结构</h3>
+  <table>
+    <tr><th>字段</th><th>说明</th></tr>
+    <tr><td>Preamble</td><td>0、1 交替，首位 bit 与 Access Address 的首位 bit 相同；1Mbps 模式下 8 位 <strong>10101010</strong></td></tr>
+    <tr><td>Access Address（AA）</td><td>广播包：<strong>固定值 0x8E89BED6</strong>；数据包：连接建立过程中确定，<strong>每一对链路唯一</strong></td></tr>
+    <tr><td>PDU</td><td>广播包：最多 <strong>37 字节</strong>、最少 6 字节；数据包：最多 <strong>257 字节</strong>、最少 2 字节</td></tr>
+  </table>
+
+  <h2>三、链路层协议（工作流程，重点）</h2>
+  <ul>
+    <li><strong>数据校验</strong>：CRC；BLE 的 CRC 生成多项式为 <strong>x²⁴+x¹⁰+x⁹+x⁶+x⁴+x³+x¹+x⁰</strong>。</li>
+    <li><strong>数据白化</strong>：二进制数据与伪随机序列异或；BLE 用 <strong>7bit 长的随机序列</strong>。</li>
+    <li><strong>链路层状态机五状态</strong>：<strong>扫描 Scanning</strong>（对广播信道 37、38、39 轮流扫描）、<strong>待机 Standby</strong>（可向其他状态切换的中间状态）、<strong>广播 Advertising</strong>（纯广播或可被连接）、<strong>发起 Initiating</strong>（监听指定 device 信道，等待发送连接反馈）、<strong>连接 Connection</strong>（从广播或初始化状态通过发送 CONNECT_REQ 切换）。</li>
+  </ul>
+  <h3>3.1 广播包类型与连接建立</h3>
+  <table>
+    <tr><th>PDU type</th><th>含义与配对</th></tr>
+    <tr><td>ADV_IND</td><td>可连接 ↔ CONNECT_REQ（连接请求）</td></tr>
+    <tr><td>ADV_DIRECT_IND</td><td>定向可连接 ↔ CONNECT_REQ</td></tr>
+    <tr><td>ADV_SCAN_IND</td><td>可扫描 ↔ SCAN_REQ（扫描请求）/ SCAN_RSP（扫描反馈）</td></tr>
+    <tr><td>ADV_NONCONN_IND</td><td>不可连接</td></tr>
+  </table>
+  <p>Header 还含 <strong>TxAdd/RxAdd</strong>（发送/接收方地址类型：0→厂商分配的静态地址，1→自己生成的随机地址）与 RFU（保留位）。</p>
+  <p><strong>邻居发现</strong>：连接前先扫描发现潜在可连接设备（如设备 A 在扫描信道 38 时发现设备 B，向 B 发送扫描反馈数据包），随后进入连接建立。<strong>连接建立</strong>：master 发送 CONNECT_REQ → <strong>1.25ms + WinOffset</strong> 后向该 slave 发送初始连接事件同步数据包。失败判定两条：<strong>slave 没有在 WinSize 时间窗口内收到 master 的初始连接事件数据包</strong>；或 <strong>master 没有在 Timeout 时延内收到 slave 的反馈</strong>。</p>
+  <p><strong>CONNECT_REQ 结构</strong>：initA（发起者地址）、AdvA（接收方地址）、LLData——<strong>AA</strong>（连接后链路的唯一标记）、<strong>WinSize/WinOffset</strong>（处理多连接的缓冲时间）、<strong>Interval</strong>（连接事件间隔）、<strong>Latency</strong>（slave 隔多少个连接事件再反馈 master）、<strong>Timeout</strong>（等待反馈的延迟）、<strong>ChM</strong>（40 bits，每 bit 对应一个信道，与 gMap 对应）、<strong>Hop</strong>（随机跳频的增量因子）。</p>
+  <h3>3.2 数据信道包与连接事件</h3>
+  <p>Header 关键字段：<strong>LLID</strong>（数据包或控制包）、<strong>NESN</strong>（下一个期望的包序号，停等协议，序号 0/1）、<strong>SN</strong>（包序号，停等协议）、<strong>MD</strong>（more data，是否还有后续数据包）；另有 <strong>MIC</strong>（完整性校验）。</p>
+  <ul>
+    <li><strong>Connection Interval：7.5ms 到 4s 之间，1.25ms 的倍数</strong>；master 发起每次通信事件，slave 反馈。</li>
+    <li>即使没有实际数据，也周期性发送/反馈<strong>空数据包</strong>；slave 可设定 latency 节约能量；有 Supervision Timeout（监督超时）；slave 在一个连接事件间隔内可<strong>连续发送多个数据包</strong>；<strong>通信完成立刻进入休眠</strong>。</li>
+    <li><strong>多连接维持</strong>：master 采用 <strong>TDMA（时分复用）</strong>调度；master 和 slave 跳频以 <strong>0.625ms 的 slot</strong> 为单位同步；master 一个连接事件间隔内处理完所有 slave 通信并执行扫描；<strong>piconet 中 slave 越多，连接事件间隔越长</strong>；transmitWindowSize（1.25ms 倍数，≤ Interval）、transmitWindowOffset（错开多连接，&lt; Interval）。</li>
+  </ul>
+
+  <h2>四、L2CAP 与 ATT/GATT</h2>
+  <h3>4.1 L2CAP：数据包分割和重组</h3>
+  <p>帧格式：<strong>Length</strong>（数据帧长度）、<strong>Channel ID</strong>（唯一标识当前通信链路）、<strong>L2CAP SDU length</strong>（重组后总长度；<strong>每个子数据帧最大 251 字节</strong>）。课件示例：发送 90 字节数据，CID 为 0x4b，每个子数据帧最大 44 字节（含包头，master/slave 协商达成）；<strong>子数据帧没有偏移编号，因为 BLE 使用停等协议</strong>。</p>
+  <h3>4.2 ATT 与 GATT</h3>
+  <ul>
+    <li><strong>ATT（Attribute Protocol）</strong>：提供对<strong>服务的检索</strong>功能；<strong>GATT（Generic Attribute Profile）</strong>：定义了<strong>服务存储的数据结构</strong>。</li>
+    <li>层级：<strong>Profile</strong>（slave 提供的一系列服务的组合）→ <strong>服务</strong>（一系列具体功能的集合，如 SIG 定义的 Battery 0x180F、Heart Rate 0x180D）→ <strong>特征</strong>（提供的功能）。</li>
+    <li>四个属性字段：<strong>Handler</strong>（句柄，唯一确定，区分不同服务或特征）、<strong>UUID</strong>（服务/特征标志，可用系统默认或自定义）、<strong>Value</strong>（对应的值）、<strong>Permission</strong>（可读、可写等）。每个<strong>服务以 UUID=0x2800 表示开始和结束</strong>，服务中的 value 包含其特征的 UUID 和 handler。ATT 协议定义了如何解析 GATT 数据结构中的数据。</li>
+  </ul>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：SMP</div>
+    <p>SMP（安全管理协议）负责 BLE 的密钥生成与分发（协议栈顶层）。</p>
+  </div>
+
+  <div class="exam">
+    <h3>课件思考题（本课）</h3>
+    <p><strong>简答题</strong>：简述 GFSK 和 FSK 的异同。</p>
+    <details><summary>点开看答案</summary>
+      <p>GFSK（高斯频移键控）是在调制之前通过一个<strong>高斯低通滤波器</strong>限制信号的频谱宽度：先对原始数据进行高斯滤波处理，再进行传统 FSK 调制。与 FSK 相比，GFSK 调制信号在非调制信号频率上的能量更少，<strong>降低了对其他频率信号的干扰</strong>；但不同二进制数据之间的差别更加平滑，使得<strong>数据的误解调率提高了</strong>。（课后习题答案第四章第 8 题）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第五章 低功耗无线协议2026》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/通信协议速查.html">通信协议速查</a>
+    · 术语：<a href="../GLOSSARY">GLOSSARY</a>
+    · 上一课：<a href="0504-组网协议CTP与RPL.html">组网协议：6LoWPAN、CTP 与 RPL</a>
+    · 下一课：<a href="0506-BLE-Mesh与蓝牙5x.html">BLE Mesh 与蓝牙 5.x</a>
+    · <a href="../课程总目录.html">课程总目录</a><br>
+    有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "BLE 的 40 个信道中，广播信道是哪几个？",
+    options: [
+      "0、1、2 号信道",
+      "37、38、39 号信道",
+      "20、21、22 号信道"
+    ],
+    answer: 1,
+    explain: "课件：2.4~2.480GHz，每信道 2MHz，共 40 个信道（0~39）；37、38、39 为广播信道，其余 37 个为数据传输信道。"
+  },
+  {
+    prompt: "BLE 广播包的 Access Address 是？",
+    options: [
+      "固定的 0x8E89BED6",
+      "连接建立时随机生成",
+      "由厂商地址决定"
+    ],
+    answer: 0,
+    explain: "广播包 AA 固定为 0x8E89BED6；数据包的 AA 在连接建立过程中确定，每一对链路唯一（该值由 CONNECT_REQ 的 LLData 携带）。"
+  },
+  {
+    prompt: "BLE 连接事件间隔（Connection Interval）的取值范围是？",
+    options: [
+      "1.25ms 到 1s 之间",
+      "7.5ms 到 4s 之间，1.25ms 的倍数",
+      "0.625ms 到 2s 之间"
+    ],
+    answer: 1,
+    explain: "课件：Connection Interval 在 7.5ms 到 4s 之间，为 1.25ms 的倍数；master 发起每次通信事件，slave 反馈，通信完成立刻休眠。多连接跳频以 0.625ms slot 为单位。"
+  },
+  {
+    prompt: "数据信道包 Header 中，NESN 字段的含义是？",
+    options: [
+      "包自身的序号（停等协议 0/1）",
+      "是否还有后续数据包",
+      "下一个期望的包序号（停等协议 0/1）"
+    ],
+    answer: 2,
+    explain: "NESN=下一个期望的包序号，SN=包序号（停等协议，序号 0/1），MD=more data 是否还有后续数据包，LLID 区分数据包/控制包。"
+  },
+  {
+    prompt: "GATT 层级结构中，Battery 服务（0x180F）属于哪一层？",
+    options: [
+      "Profile",
+      "服务（Service）",
+      "特征（Characteristic）"
+    ],
+    answer: 1,
+    explain: "Profile 是 slave 提供的一系列服务的组合；服务是一系列具体功能的集合（SIG 示例：Battery 0x180F、Heart Rate 0x180D）；特征是提供的功能。服务以 UUID=0x2800 表示开始和结束。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— BLE 协议栈掌握了。" : " —— 回头看标红的解析，重点复习信道分配与链路层状态机。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 硬件安全机制</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 小课 2/6 · 课件提炼</span>
+  <h1>硬件安全机制</h1>
+  <p class="subtitle">一句话：熔断、看门狗、PUF、RoT、Secure Boot、TEE 六大硬件防护——名字 + 原理 + 代表实现，是本章名词解释高发区。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第八章-v2(2)》第 2 节"安全机制1：硬件安全机制"【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第八章-v2(2).pdf</p>
+  </div>
+
+  <h2>一、熔断机制与看门狗</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>熔断机制</h4><p>在 MCU/CPU 等芯片特定引脚外加<strong>高电平</strong>，电流烧断内部熔丝，使芯片里的程序变为<strong>不可读写、只能运行</strong>。一般依托芯片内<strong>一次性可编程区域（OTP, One-Time Programmable）或 EFUSE</strong>。典型实现：<strong>ARM Cortex-M 的 FLASH_OPTR.RDP（Read Protection）</strong>、<strong>ESP32 的 eFuse 模块</strong>；STM32 提供三级保护：<strong>RDP Level 0（无保护）、Level 1（调试接口锁定）、Level 2（完全不可调试、不可擦除）</strong>。</p></div>
+    <div class="card"><h4>看门狗 / Watchdog Timer</h4><p>本质是一个<strong>电子或软件计时器</strong>：系统正常运行时<strong>定期重置（喂狗）</strong>；若硬件故障或程序错误导致无法重置，达到超时条件时<strong>系统重启</strong>。分两类：<strong>硬件看门狗（HW WDT）</strong>由独立时钟驱动，CPU 故障时仍可工作；<strong>软件看门狗（SW WDT）</strong>由操作系统定期喂狗（如 Zephyr 的 <code>wdt_feed()</code> API）。课件 Zephyr 示例：超时 3 秒（<code>.window = { .max = 3000 }</code>，<code>WDT_FLAG_RESET_SOC</code> 超时自动重启），循环里每 1000ms 喂一次狗。</p></div>
+  </div>
+  <div class="callout">
+    <div class="label">课件重要结论</div>
+    <p>熔断机制近年<strong>渐渐退出历史舞台</strong>——因为测试分析仪器设备的更新换代，使芯片<strong>暴力破解的成本越来越低</strong>。</p>
+  </div>
+
+  <h2>二、PUF 与信任根 RoT（易混对比，必考）</h2>
+  <table>
+    <tr><th></th><th>物理非克隆函数 PUF</th><th>信任根 RoT</th></tr>
+    <tr><td>是什么</td><td>晶圆制造过程中，芯片等器件内创建的具有<strong>独特物理性质</strong>的模块，为半导体器件提供<strong>唯一身份标识</strong>——相当于每个 IC 的"指纹"或数字身份证明</td><td>建立<strong>信任链的来源</strong>，SoC 中的安全根基，所有后续组件的可信性都依赖于可信根的初始可信状态</td></tr>
+    <tr><td>核心特性</td><td><strong>不可复制性</strong>：即使相同工艺和材料重新创建相同 IC，生成的 PUF 也不同；PUF 密钥在<strong>系统启动时重新生成，不存储在闪存</strong>——天然安全优势</td><td>常见例子是<strong>硬件安全模块（HSM, hardware security module）</strong></td></tr>
+  </table>
+
+  <h2>三、安全启动 Secure Boot（信任链四层）</h2>
+  <p>Secure Boot 用于在<strong>设备启动阶段确保执行代码的完整性与可信性</strong>。流程必背：</p>
+  <div class="calc">Root Key（信任根 RoT）
+  → 存储在芯片安全区域（OTP、eFuse 或 HSM），整个信任链的起点
+1st Bootloader（一级引导程序）
+  → 存于受保护的只读存储区（ROM），上电后最先执行
+  → 用 Root Key 验证 2nd Bootloader 的【数字签名】，合法后解密并加载
+2nd Bootloader（二级引导程序）
+  → 验证通过后运行，进一步验证【应用镜像（Boot Image）】的签名与完整性
+Boot Image（系统固件）
+  → 只有通过层层签名验证的镜像才能被执行，确保启动到运行全链可信</div>
+
+  <h2>四、可信执行环境 TEE（本章案例开发的基础）</h2>
+  <p><strong>ARM TrustZone</strong> 将 SoC 的硬件和软件资源划分为<strong>安全世界和非安全世界</strong>：需要保密的操作（指纹识别、密码处理等）放在安全世界执行，其他在非安全世界执行。应用流程由 <strong>CA 发起</strong>，CA 调用 <strong>TA</strong>，切换为安全世界执行 TA 程序；TA 处理完成后切回非安全世界，通过<strong>共享内存</strong>把结果返回给 CA。</p>
+  <p>软件接口遵循 <strong>GlobalPlatform（GP）标准</strong>，核心组件表（必背）：</p>
+  <table>
+    <tr><th>组件</th><th>所在环境</th><th>作用</th></tr>
+    <tr><td>Client Application（CA）</td><td>REE</td><td>REE 中的应用程序（如支付 APP、指纹识别 APP），发起对 TEE 的安全请求</td></tr>
+    <tr><td>Trusted Application（TA）</td><td>TEE</td><td>TEE 中的可信应用，执行具体敏感操作（如密钥生成、指纹比对）</td></tr>
+    <tr><td>TEE Client API</td><td>REE</td><td>REE 侧接口库，提供 CA 调用 TEE 的函数（连接 TA、传递参数、获取结果）</td></tr>
+    <tr><td>TEE Internal API</td><td>TEE</td><td>TEE 侧接口库，提供 TA 与 TEE 系统交互能力（内存管理、加密服务）</td></tr>
+    <tr><td>TEE Manager</td><td>TEE</td><td>TEE 核心管理组件：TA 的加载、生命周期管理、CA 与 TA 的通信路由</td></tr>
+  </table>
+  <p>TEE 与 REE 交互流程（课件以"手机指纹解锁"为例，五步）：① <strong>发起请求</strong>：REE 中指纹解锁 APP（CA）经 TEE Client API 发请求；② <strong>权限校验</strong>：TEE Manager 验证 CA 合法性（如签名校验）；③ <strong>安全执行</strong>：TEE 加载启动 TA，TA 用 TEE 内部加密算法与安全存储（预存指纹模板）在隔离环境完成指纹采集与比对；④ <strong>结果返回</strong>：TA 将比对结果经 TEE Manager 传给 CA，同时<strong>销毁临时敏感数据</strong>（原始指纹图像）；⑤ <strong>操作完成</strong>：CA 据结果执行后续逻辑（解锁屏幕），敏感数据始终不暴露在 REE 中。</p>
+  <div class="callout">
+    <div class="label">教材 PPT 补充</div>
+    <p>TEE 芯片厂商：国外有高通、三星、LG，国内有展讯、联发科、威盛电子、华为海思等；开源 TEE OS 主要为 <strong>OP-TEE（面向移动设备）和 TF-M（面向低端物联网设备）</strong>；各家 TEE 内部实现不同，但都提供 GlobalPlatform 规范规定的 API，对开发者接口统一。</p>
+  </div>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>1. 简述导致物联网设备出现硬件安全的原因。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>物联网设备拥有大量传感器和控制器，采集的物联网数据会通过硬件的方式被恶意篡改，而硬件防护难以实施：一方面，不同企业根据产品需求和特性进行定制化的裁剪和开发，造成物联网设备与系统间巨大差异性，硬件安全防护方案很难直接移植至物联网中；另一方面，物联网中大量采用的开源组件或项目缺乏安全防护，却没有有效的对应策略或措施。因此物联网设备的硬件安全问题越来越难以解决。（教材课后习题答案第 1 题原解）</p>
+    </details>
+    <p><strong>2. 物理非克隆函数是什么？为什么建立物理非克隆函数？它与信任根的区别是什么？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p><strong>是什么</strong>：PUF 是在晶圆制造过程中于芯片内创建的具有独特物理性质的模块，为半导体器件提供唯一的身份标识；具有不可复制性——即使使用相同工艺和材料重新创建相同的 IC，生成的 PUF 也不同，因此非常安全并具有防篡改能力。</p>
+      <p><strong>为什么建立</strong>：为物联网设备提供保护，通常 PUF 密钥作为主密钥，对会话密钥、应用口令等进行加密处理，保证数据安全。</p>
+      <p><strong>与信任根的区别</strong>：两者都用于对数据加密、确保设备安全。区别在于：PUF 使用半导体器件的"指纹"作为密钥进行数据加密，信任根使用硬件安全模块来生成密钥；且 PUF 生成的密钥在系统启动时重新生成、不存储在闪存中，而信任根在硬件安全模块中生成密钥，该模块无法在计算机生态系统之外访问。（教材课后习题答案第 3 题原解）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/安全速查.html">安全速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0801-物联网安全概述与攻击.html">0801 安全概述与攻击</a> · 下一课：<a href="0803-软件与系统安全.html">0803 软件与系统安全</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "STM32 熔断保护的三级 RDP 中，'完全不可调试、不可擦除'对应哪一级？",
+    options: [
+      "RDP Level 0",
+      "RDP Level 1（调试接口锁定）",
+      "RDP Level 2"
+    ],
+    answer: 2,
+    explain: "课件：STM32 三级保护——Level 0 无保护、Level 1 调试接口锁定、Level 2 完全不可调试、不可擦除。熔断一般依托 OTP 或 EFUSE（典型实现如 ARM Cortex-M 的 FLASH_OPTR.RDP、ESP32 的 eFuse 模块）。"
+  },
+  {
+    prompt: "关于硬件看门狗（HW WDT）与软件看门狗（SW WDT），课件的区分是？",
+    options: [
+      "HW WDT 由独立时钟驱动，CPU 故障时仍可工作；SW WDT 由操作系统定期喂狗",
+      "HW WDT 运行在操作系统内核，SW WDT 运行在应用层",
+      "HW WDT 超时后仅报警，SW WDT 超时后重启系统"
+    ],
+    answer: 0,
+    explain: "课件原文：硬件看门狗由独立时钟驱动，CPU 故障时仍可工作；软件看门狗由操作系统定期喂狗（如 Zephyr 的 wdt_feed() API）。课件 Zephyr 示例为 3 秒超时、超时自动重启系统。"
+  },
+  {
+    prompt: "Secure Boot 信任链中，1st Bootloader 的职责是？",
+    options: [
+      "验证应用镜像（Boot Image）的签名与完整性",
+      "存放于 ROM、上电最先执行，用 Root Key 验证 2nd Bootloader 的数字签名",
+      "存储 Root Key 于 OTP/eFuse/HSM 安全区域"
+    ],
+    answer: 1,
+    explain: "课件流程：Root Key 存于芯片安全区域（OTP/eFuse/HSM）→ 1st Bootloader 存于受保护 ROM、上电最先执行、用 Root Key 验证 2nd Bootloader 签名 → 2nd Bootloader 验证应用镜像 → 只有层层验证通过的镜像才被执行。"
+  },
+  {
+    prompt: "TEE 与 REE 交互（手机指纹解锁案例）中，负责'验证 CA 合法性'的组件是？",
+    options: [
+      "TA（Trusted Application）",
+      "TEE Manager",
+      "TEE Internal API"
+    ],
+    answer: 1,
+    explain: "课件五步流程第 2 步：TEE Manager 接收请求后验证 CA 的合法性（如签名校验），确认其有权调用目标 TA；随后 TEE 加载并启动 TA 完成指纹采集与比对，结果经 TEE Manager 返回 CA，并销毁临时敏感数据。"
+  },
+  {
+    prompt: "关于 PUF 密钥的存储方式，课件的说法是？",
+    options: [
+      "存储在闪存中，系统启动时读取",
+      "系统启动时重新生成，而不是存储在闪存中",
+      "存储在硬件安全模块 HSM 中，无法在计算机生态系统之外访问"
+    ],
+    answer: 1,
+    explain: "课件：PUF 密钥在系统启动时重新生成，而不是存储在闪存中，因此具有天然的安全优势。选项 C 是信任根（RoT/HSM）的特点——这正是 PUF 与 RoT 的核心区别（习题答案第 3 题）。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 硬件防护六件套拿下。" : " —— 回头看标红的解析，重点复习 PUF vs RoT 与 Secure Boot 信任链。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 章 · TinyLink 开发平台</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 7 章 · 小课 4/6 · 课件提炼</span>
+  <h1>TinyLink 开发平台</h1>
+  <p class="subtitle">一句话：浙大出品、自顶向下 + 云端编译的快速开发平台——从"写代码"到"自动生成硬件配置 + 二进制程序"，硬件/软件两大生成系统是本节最深的考点。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第七章》第 3 节【典型平台：TinyLink（1.0 + 2.0）】（教材 PPT 补充单独标注）。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第七章.pdf</p></div>
+
+  <h2>一、TinyLink 是什么：从自底向上到自顶向下</h2>
+  <p><strong>简介</strong>：2017 年 3 月浙大 EmNets 实验室推出软硬件一体快速开发平台 <strong>TinyLink 1.0</strong>；2017 年 12 月推出 <strong>TinyLink 2.0</strong>——在 1.0 设备端开发的基础上，集成 Web 端应用和手机端应用开发，构成物联网一体化开发平台（设备端 + 云端 + 手机端）。</p>
+  <p><strong>传统物联网应用开发</strong>（编程模式：<strong>自底向上</strong>）：构思应用功能逻辑 → 选开发板/外设/扩展板并设计硬件连接图组装平台 → 开发程序（写入网络配置和外设管脚连接信息）→ 交叉编译得二进制文件 → 烧录开发板 → 观察运行结果并调试。课件以室内环境监测应用（Arduino+SDS018+Light+DHT11）为例，指出 PM2.5 传感器需<strong>自行封装读取函数</strong>（读串口→提取数据→CRC 校验→存缓冲区→返回滑动平均）。</p>
+  <p><strong>传统开发的不便（三方面，简答高频）</strong>：<strong>硬件选择</strong>——需要硬件知识、掌握硬件特性以保证兼容性；<strong>软件设计</strong>——需要掌握各外设在不同平台的驱动编写、选择合适的驱动库；<strong>软硬件协同</strong>——选型要考虑驱动库兼容性，软件要按硬件连接确定引脚端口，且物联网没有固定硬件平台、更换平台时软件迁移工作量大。</p>
+  <p><strong>TinyLink 1.0 开发过程（自顶向下）</strong>：应用需求分析 → 节点软件编程（TL_WiFi、TL_Light 等 API）→ 系统分析用户代码 → 硬件平台搭建。（论文：G. Guan, W. Dong*, et. al, TinyLink, ACM MobiCom 2017。）</p>
+
+  <h2>二、TinyLink 使用流程（五步，必背）</h2>
+  <p>准备：①下载 TinyLink 客户端并注册（http://tinylink.emnets.org）；②阅读 TinyLink 用户手册与 API 文档。之后：</p>
+  <ol>
+    <li><strong>①编写程序代码</strong>：本地文本编辑器编写（setup 里 TL_Serial.begin(9600)；loop 里 TL_PM25/TL_Temperature/TL_Humidity/TL_Light 各 .read()，打印 .data()，TL_Time.delayMillis(3000)）。</li>
+    <li><strong>②上传代码并编译</strong>：选择待上传文件 → 提交上传文件 → 生成硬件及代码编译结果。</li>
+    <li><strong>③获取硬件配置</strong>：得到硬件列表（例：开发板 Arduino MEGA 2560、扩展板 Mega Shield、外设 Grove Light Sensor / Grove 温湿度传感器 / SDS018，含购买链接）与硬件连接图（如 SDS018 接 UART Pin(D14,D15)，光照传感器接 Analog Port(A0,A1)）。</li>
+    <li><strong>④组装物联网平台</strong>：购买硬件列表中的硬件，按硬件连接示意图组装。</li>
+    <li><strong>⑤烧录应用程序</strong>：硬件平台经 USB 连电脑，点击 TinyLink 客户端<strong>一键烧写</strong>按钮。</li>
+  </ol>
+  <div class="callout def"><div class="label">特点小结（三条，简答必背）</div>
+  <p><strong>开发模式转变</strong>：自顶向下 vs 自底向上。<strong>自动</strong>：自动生成硬件配置和二进制代码；自动接入物联网平台（如 IBM Watson IoT、OneNet）；并能优化指定目标（如价格、功耗）。<strong>简单</strong>：编程简单（Arduino setup/loop + TinyLink APIs）；<strong>云编译</strong>——不需要复杂的本地编译环境。客户端大小对比：<strong>Arduino IDE+LinkIt One 包 420 MB、树莓派交叉编译链 266 MB、BBB 交叉编译链 302 MB、TinyLink 客户端仅 69 MB</strong>。</p></div>
+  <p><strong>推荐系统</strong>：为用户推荐可实现相同功能的不同硬件平台——上述例子选择 LinkIt One 平台后，推荐了 <strong>34 种</strong>不同可行硬件方案，其中 TinyLink 目前可支持编译的有 <strong>8 种</strong>。<strong>支持设备列表</strong>：开发板（Arduino UNO/Mega2560/DUE、LinkIt One/Smart 7688、树莓派 2/3、BeagleBone Black、Mbed TinyBLE、AliOS MK3060）；扩展板（Grove Base/WiFi/SD Shield、GrovePi+）；传感器（DHT22、DHT11、Grove UART WiFi、Grove GPS、SDS018、声音/灰尘/响度/光照传感器、Grove BLE、IMU 9DOF/10DOF、三轴加速度计/罗盘/陀螺仪等）。</p>
+
+  <h2>三、TinyLink 1.0 系统框架：硬件生成系统（计算题核心）</h2>
+  <p>两大系统：<strong>硬件生成系统</strong>——通过分析应用程序代码，结合硬件数据库的领域知识，自动生成硬件配置；<strong>软件生成系统</strong>——结合硬件配置和对应软件库，通过交叉编译链生成应用程序的二进制代码。</p>
+  <ul>
+    <li><strong>硬件数据库</strong>：包含已有硬件的信息及其特征，作为自动生成配置的关键信息源。表 4-3 例：组件（Arduino UNO 开发板 / WiFi 扩展板 V2.0 / 基础扩展板 V1.3 / Grove 光照传感器 / Grove UART WiFi 模块）×（ID、成本￥、提供接口、占用接口、功能如 WiFi/Light/LED）。</li>
+    <li><strong>用户约束条件</strong>：来自用户需求功能，如应用用到 WiFi，则"所有包含 WiFi 功能的模块总数量应该大于 1"（含 WiFi 的模块如主板 LinkIt One、扩展板 WiFi Shield V2.0、外设 Grove UART WiFi）。</li>
+    <li><strong>接口约束条件</strong>：对 {Analog, UART, I2C, SPI, USB, …} 中每一类型的接口，要求 <strong>提供 Port 的数量 ≥ 消耗 Port 的数量</strong>（均对主板∪扩展板∪外设求和）。</li>
+    <li><strong>问题规约</strong>：在 {主板 ∪ 扩展板 ∪ 外设} 里找到一组子集，满足用户约束 + 硬件约束（满足用户需求、保证硬件选型正确有效），优化目标为<strong>价格最小化</strong>；通常生成 <strong>210 条</strong>约束条件；该问题为经典的<strong>线性规划问题</strong>，使用经典线性规划求解器 <strong>lp_solver</strong> 进行求解。</li>
+  </ul>
+
+  <h2>四、软件生成系统与 TinyLink 2.0</h2>
+  <p><strong>软件生成系统</strong>：以<strong>硬件配置头文件</strong>衔接——<strong>硬件无关</strong>部分是用户代码，<strong>硬件相关</strong>部分是硬件配置 + 驱动和库文件。API 来源：从 <strong>116 个</strong>网上公开的 IoT 项目中提取出 <strong>225 个</strong>常用 API，按功能种类分组，实现 <strong>24 种类别</strong>的 API（包括 LED、温湿度、显示、WiFi 等）。调试两种：<strong>基础调试</strong>——代码中写 <code>#REQUIRE DBGPrint;</code>，IoT 平台一定会引入额外的 UART 接口打印所有调试信息；<strong>交互式调试</strong>——代码中写 <code>#REQUIRE DBG;</code>，若开发板原生系统支持交互式调试则可被选入硬件平台（树莓派和 Beaglebone 平台会利用 gdb 调试；TinyLink 同时提供项目源代码供深入调试）。</p>
+  <p><strong>TinyLink 2.0 三端开发</strong>：<strong>设备开发</strong>——基于软硬一体快速开发技术，添加领域特定元素（宏和数据类型），实现许多任务处理操作；高层 API 封装大量 1.0 的 API、隐藏不重要的细节；丰富系统功能如支持 LoRa 传输和程序并发执行。<strong>云服务开发</strong>——将云端规则转换为 JSON 格式的规则配置，把规则条件与 RESTful API 一起解释为后缀表达式；规则引擎在云端运行，可加载、解释大量规则配置并为每个规则注册触发器（触发器分<strong>基于事件</strong>和<strong>基于时间</strong>两类）；规则引擎包含<strong>三个线程</strong>，每个线程都有一个由 <strong>Redis</strong> 实现的简单 FIFO 消息队列：<strong>消息队列、规则队列、命令队列</strong>。<strong>移动端开发</strong>——客户端生成器将客户端代码（例如带 @Client 后缀的微应用）编译为 WebView 客户端程序：先构建抽象语法树，再将与其它微应用的交互转换为 JavaScript 代码，使用默认混合模板用 HTML 和 JS 表示 UI。</p>
+  <p><strong>TinyLink 2.0 关键特性（四条）</strong>：<strong>微应用模型</strong>——定义物联网节点的功能和行为，抽象传感数据、检测到的事件及暴露给其他微应用和策略的服务调用接口，屏蔽数据传输、事件上报和服务调用的底层实现细节；<strong>隐式交互</strong>——以结构化方式与微应用模型结合，允许跨微应用查询接口中定义的数据，实现每个节点状态的自动跟踪、自动保持节点一致性（数据流和服务调用的一致性）；<strong>云定义节点行为</strong>——设计类 IFTTT 规则并添加新关键词以增强开发多应用实例的功能，控制节点根据任务计划在适当时间点执行任务；<strong>虚拟传感器</strong>——自动从多源传感器数据组合生成推理模型。</p>
+
+  <div class="exam">
+    <h3>思考题（本课相关：教材课后习题 2、3）</h3>
+    <p><strong>习题 2</strong>：以表 7-4 作为硬件数据库，给定使用 TL_WiFi.fetchHTTP()、TL_Light、TL_Soil_Moisture，每 60s 上传一次光照和土壤湿度数据的代码作为输入，试给出满足应用需求且价格最低的硬件配置。</p>
+    <details><summary>点开看参考答案</summary>
+      <p>把代码交给 TinyLink 配置即可：系统分析出应用需要 <strong>Light（光照）、Soil_Moisture（土壤湿度）、HTTP/WiFi 上传</strong>三类功能，按价格最小化 + 接口约束求解，输出 TinyLink 生成的硬件配置图（开发板 + 扩展板 + 两个传感器 + WiFi 通信模块的组合）。记忆点：<strong>约束＝功能需求（WiFi 模块总量 &gt; 1 等用户约束 + 每类接口提供 ≥ 消耗）＋目标＝价格最小化</strong>。（出处：教材课后习题答案第 2 题，答案以配置图形式给出）</p>
+    </details>
+    <p><strong>习题 3</strong>：根据上一题配置，如果开发者想查看推荐配置，试计算有多少种可用的组合？</p>
+    <details><summary>点开看参考答案</summary>
+      <p>从图中可以看出，为开发者计算出 <strong>8 种</strong>可用的组合。（出处：教材课后习题答案第 3 题；与课件"选择 LinkIt One 后推荐 34 种可行方案、其中 TinyLink 可支持编译 8 种"的数字一致）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第七章》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云端一体速查.html">云端一体速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0703-设备模型与命名机制.html">设备模型与命名机制</a> · 下一课：<a href="0705-IoTStudio物模型与服务编排.html">IoT Studio 物模型与服务编排</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "TinyLink 1.0 的两大系统分工是？",
+    options: [
+      "硬件生成系统生成硬件配置；软件生成系统经交叉编译链生成二进制代码",
+      "硬件生成系统烧录程序；软件生成系统组装硬件平台",
+      "硬件生成系统管理硬件数据库；软件生成系统注册触发器"
+    ],
+    answer: 0,
+    explain: "课件原文：硬件生成系统通过分析应用代码 + 硬件数据库领域知识自动生成硬件配置；软件生成系统结合硬件配置和软件库，通过交叉编译链生成二进制代码。"
+  },
+  {
+    prompt: "TinyLink 1.0 硬件生成系统的求解方式是？",
+    options: [
+      "经典线性规划问题，用 lp_solver 求解，通常生成 210 条约束条件",
+      "遗传算法，优化目标是功耗最小化",
+      "贪心算法，逐类接口分配端口"
+    ],
+    answer: 0,
+    explain: "课件：在{主板∪扩展板∪外设}中找子集，优化目标为价格最小化，满足用户约束+硬件约束，通常 210 条约束，是经典线性规划问题，用 lp_solver 求解。"
+  },
+  {
+    prompt: "TinyLink 2.0 规则引擎的三个 Redis FIFO 消息队列是？",
+    options: [
+      "消息队列、规则队列、命令队列",
+      "兴趣队列、数据队列、确认队列",
+      "上行队列、下行队列、同步队列"
+    ],
+    answer: 0,
+    explain: "课件原文：规则引擎包含三个线程，每个线程都有一个由 Redis 实现的简单 FIFO 消息队列——消息队列、规则队列、命令队列；触发器分基于事件和基于时间两类。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— TinyLink 这节过关。" : " —— 回头重点复习使用流程五步与两大生成系统。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

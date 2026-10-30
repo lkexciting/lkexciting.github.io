@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · 边缘计算与典型平台</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 小课 7/7 · 课件提炼</span>
+  <h1>边缘计算（Greengrass）与四大典型云平台</h1>
+  <p class="subtitle">一句话：这节讲计算放到现场的机制与取舍（Greengrass 组件、计算卸载、断网缓存补传），并对比 AWS IoT / Azure IoT / 阿里云 IoT / ThingsBoard 四大平台。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第六章-2026》6.2 主要功能之"边缘计算"、6.3 典型物联网云平台、6.4 案例与 6.5 总结节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第六章-2026.pdf</p>
+  </div>
+
+  <h2>一、边缘计算：Greengrass 的云边协作</h2>
+  <p>同一任务（设备异常→本地告警）：云端路径是 设备→网络→Lambda→结果返回；现场路径是 传感器→EdgeAlarm 组件→本地告警。<strong>执行位置改变的是通信依赖与资源条件，业务判断可以保持一致</strong>；同一数据仍可上传作历史分析。Linux 网关运行 Greengrass nucleus，采集、处理和上传是可部署的<strong>组件</strong>。</p>
+  <p><strong>课件三个组件分工</strong>：采集组件（读取设备 → factory/temp）、com.example.EdgeAlarm（订阅 temp → 判断阈值 → 写 outbox → 发布 factory/alarm）、MQTT Bridge（本地消息 → IoT Core）。<strong>业务处理不等待云端往返</strong>；SQLite 补传需另设上传器。组件配方（recipe）描述版本、所需文件和生命周期（如 Run: python3 -u {artifacts:path}/alarm.py），代码作为 artifact 随组件交付；本地 IPC 权限（如 SubscribeToTopic 资源 factory/temp）与云端 IoT 策略<strong>分别配置</strong>。</p>
+  <div class="calc">采集适配器数值解码（课件例）：
+raw = bytes([0x00, 0xFD])
+value = int.from_bytes(raw, "big", signed=True) * 0.1
+# 字节顺序 bigendian；有符号 16 位；比例 0.1℃/单位 → 253 → 25.3℃
+协议适配必须保留数据语义，不能只把字节搬到云端。</div>
+
+  <h2>二、计算卸载与断网缓存（两道计算模板）</h2>
+  <div class="calc">① 计算卸载的带宽临界条件：
+上传 D Mbit，网络往返 L ms，云端处理 C ms，边缘处理 E ms
+边缘路径 ≈ E + D/R（R 单位 Mbit/s）；若 E ≤ L + C，则云端不可能更快
+课件数值例：D=2 Mbit、L=30 ms、C=10 ms、E=100 ms
+→ 20 Mbit/s 时边缘更快；50 Mbit/s 时云端更快；阈值处两条路径时间相同
+先统一单位再解带宽阈值；分母符号决定是否存在可行解。</div>
+  <div class="calc">② 断网缓存的容量与补传：
+容量预算：50 KB/s × 4 × 3600 s = 720,000 KB = 720 MB（十进制）→ 数据库预算 > 720 MB
+缓存上限例：600,000 KB / 50 KB/s = 12,000 s ≈ 3 小时 20 分（满盘策略：背压/丢最旧/降采样）
+补传：现场 200 条/s，上传能力 500 条/s，积压 10,000 条
+→ 净清理速率 300 条/s，清空 ≈ 33.33 s
+重传沿用原 event_id；本地发送成功不等于业务确认，确认后才删除 outbox 记录。</div>
+  <p>outbox 表用 event_id 作主键（INSERT OR IGNORE 去重）；MQTT Bridge 只处理配置的消息路由，<strong>桥不会自动读取 SQLite</strong>。断网测试观察三处：本地功能是否继续、记录是否跨进程重启（outbox 行数增加、重启后仍在）、云端结果是否完整对应。</p>
+
+  <h2>三、四大典型平台对比（必背表）</h2>
+  <table>
+    <tr><th>平台</th><th>课件关键词</th><th>协议支持</th><th>特色</th></tr>
+    <tr><td>Amazon AWS IoT</td><td>2015 年推出的托管物联网云平台；支持数十亿设备和数万亿条消息</td><td>MQTT、WebSockets、HTTP 1.1</td><td>设备影子、规则引擎、注册表；身份验证支持 SigV4、X.509 证书、自定义令牌；Lambda 无服务器计算；配套 Kinesis（流计算）、S3（存储）、DynamoDB（NoSQL）、SNS（消息收发）</td></tr>
+    <tr><td>Microsoft Azure IoT</td><td>微软物联网云平台；可靠安全的云端与设备双向通信</td><td>MQTT、HTTPS、AMQP（本地网关与虚拟协议网关做协议适配）</td><td>设备管理（直接管理、设备影子、智能网关）；存储 Cosmos DB/MySQL/PostgreSQL/MariaDB；认证用对称密钥/安全令牌、X.509 CA 证书；Azure Functions 无服务器；机器学习服务；MQTT 与 AMQP 对比（表 6-12）：MQTT 轻量级/不确保安全性/客户端服务端不对称，AMQP 重量级/SASL+TLS 保证安全/对称</td></tr>
+    <tr><td>阿里云 IoT</td><td>2018 年 3 月 28 日云栖大会·深圳峰会宣布全面进军 IoT，IoT 成为阿里一条新的主赛道</td><td>MQTT、CoAP、HTTPS</td><td>"云-网-边-端"产品架构；直接管理、设备影子及 OTA；规则引擎转发到存储服务、函数计算或其他 Topic（M2M）；ID² 芯片级安全存储、一机一密；函数计算支持 Python/PHP/Java/.NET/Go，计费 = 调用次数 + 执行时间 + 公网流量；Link Edge 支持断网续传；IoT Studio 一站式开发（流式服务编排、拖拽生成 Web 与移动应用）</td></tr>
+    <tr><td>ThingsBoard</td><td>社区版提供开源、私有化部署的设备接入、规则处理和仪表盘</td><td>MQTT 接入（遥测主题 v1/devices/me/telemetry）</td><td>遥测用于历史曲线、属性保存配置、RPC 用于控制调用；温度过滤规则（−40 &lt; temperature &lt; 80，异常进日志分支）；拖拽式仪表盘；RPC 请求、设备执行与结果回报对应控制链路不同阶段</td></tr>
+  </table>
+  <div class="callout">
+    <div class="label">本章总结（课件 6.5，六句话）</div>
+    <p>① MQTT 以主题解耦消息生产与消费，QoS 在可靠交付与通信成本之间取舍；② 时序存储围绕持续采样与范围统计优化，压缩收益取决于数据与负载；③ 流计算复用窗口状态减少重算，Flink 支持多设备持续处理；④ Lambda 以代码与资源配置承接事件，权衡初始化、环境复用与快照恢复；⑤ Greengrass 把组件、消息和缓存部署到现场，并按端到端时延选择云边分工；⑥ ThingsBoard 用实际界面回应接入、规则、展示与控制。四平台一句话：AWS IoT——云基础设施与 Lambda；Azure IoT——机器学习服务及交互式模型构建；阿里云 IoT——Link ID2 设备认证与 IoT Studio 一站式开发；ThingsBoard——开源、私有化部署、可视化规则引擎与拖拽式仪表盘。</p>
+  </div>
+  <p><strong>案例：语音控制智能灯（8 步）</strong>：① 注册登录平台（ThingsBoard Cloud，设备 ESP32_LED，MQTT Basic 凭据）→ ② 验证 MQTT 连通性（mosquitto_pub 发 temperature=25，收到 CONNACK(0) 与 PUBACK）→ ③ 硬件接线（ESP32：GPIO26→R、GPIO25→G、GPIO27→B，各通道串联 220Ω）→ ④ 设备端代码（Makefile + LEDController + main.cpp）→ ⑤ 编译烧录 → ⑥ 手动测试 RPC（setLed，Params {"value":true/false}）→ ⑦ Web 端语音控制（录音→16kHz PCM→百度识别 dev_pid=1537→关键词匹配→JWT Token→oneway RPC）→ ⑧ 完整联调。设备端要点：订阅 <code>v1/devices/me/rpc/request/+</code>（+ 匹配任意 requestId）；回调匹配后 msg_send 交给 LED 线程，不在回调中直接 MQTTPublish（MQTTYield 持有 client.mutex，重入会死锁）；Keepalive 设 0 并靠 TCP keepalive 与每 5 秒重连检查（RIOT Paho 移植层检查 PINGRESP 窗口约 10 ms，云端往返可能超 200 ms 会误判断连）。</p>
+  <p><strong>研究前沿（课件 156–157 页）</strong>：MELT（MobiCom 2024）系统测量端侧模型推理，联合评估时延、内存、能耗与精度；PowerInfer-2 以神经元簇为粒度协调 CPU、NPU 与存储，重叠数据加载与计算。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>思考题（教材 PPT 第 118 页）：简述 Amazon AWS IoT、Microsoft Azure IoT、阿里云 IoT 的功能。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（按课件 6.3 整理）AWS IoT：设备通信支持 MQTT/WebSockets/HTTP 1.1；设备影子包含最新状态、离线也可交互；规则引擎按业务规则转换并转发入站消息；身份验证支持 SigV4、X.509 证书、自定义令牌；注册表为设备建立唯一身份并跟踪元数据；可利用 Lambda、Kinesis、S3、DynamoDB、SNS 等服务。Azure IoT：设备连接支持 MQTT/HTTPS/AMQP；设备管理含直接管理、设备影子、智能网关；数据存储用 Cosmos DB/MySQL/PostgreSQL/MariaDB；认证用对称密钥/安全令牌与 X.509 CA 证书；Azure Functions 无服务器计算；通过无服务器计算下沉实现边缘计算；提供机器学习服务。阿里云 IoT：设备通信支持 MQTT/CoAP/HTTPS；支持直接管理、设备影子、网关子设备与 OTA；时序存储与基于 Flink 的实时计算；规则引擎可转发到存储服务、函数计算或其他 Topic 实现 M2M；ID² 芯片级安全与一机一密认证；函数计算支持多语言；Link Edge 支持设备接入、边缘函数计算、消息路由和断网续传。</p>
+    </details>
+    <p><strong>思考题（课后习题答案第 11 题）：为边缘计算场景设计寻找计算下沉锚点的算法（边缘节点只知道自身父节点），并求复杂度。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（习题答案第 11 题原解要点）该问题即寻找两点的最近公共祖先（LCA）：设 depth[x] 为深度、pre[x] 为父结点，则 depth[lca(u,v)] ≤ min{depth[u], depth[v]}。算法：depth[u]&lt;depth[v] 时 lca(u,v)=lca(u,pre[v])；depth[u]&gt;depth[v] 时 lca(u,v)=lca(pre[u],v)——u、v 不断向根步进直到 u==v。复杂度：预处理 O(nlogn)，查找 O(depth(u)+depth(v))。</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0606-安全认证与无服务器.html">0606-安全认证与无服务器</a> · 下一课：<a href="0701-云-端一体开发概述.html">第 7 章 云-端一体开发</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "计算卸载判断：上传 D Mbit、往返 L ms、云端处理 C ms、边缘处理 E ms，课件给出的临界说法是？",
+    options: [
+      "若 E ≤ L + C，则云端不可能更快",
+      "若 C ≤ E，则边缘不可能更快",
+      "边缘永远比云端快，与带宽无关"
+    ],
+    answer: 0,
+    explain: "课件：若 E ≤ L+C，则云端不可能更快；例 D=2 Mbit、L=30、C=10、E=100 时，20 Mbit/s 边缘更快、50 Mbit/s 云端更快。（课件 6.2 边缘计算）"
+  },
+  {
+    prompt: "断网补传：现场持续 200 条/s，上传能力 500 条/s，积压 10,000 条，清空时间约？",
+    options: [
+      "20 秒（10000/500）",
+      "50 秒（10000/200）",
+      "约 33.3 秒（10000/300，净清理速率）"
+    ],
+    answer: 2,
+    explain: "课件：净清理速率 = 500 − 200 = 300 条/s，清空 ≈ 10000/300 = 33.33 s；本地发送成功不等于业务确认，确认后才删除 outbox 记录。（课件 6.2 补传）"
+  },
+  {
+    prompt: "按教材 PPT 的 MQTT 与 AMQP 对比（表 6-12），正确的组合是？",
+    options: [
+      "MQTT 重量级且安全，AMQP 轻量级且不确保安全",
+      "MQTT 轻量级、不确保安全性、客户端和服务端不对称；AMQP 重量级、SASL+TLS 确保安全、对称",
+      "两者都是轻量级协议，仅通信模式不同"
+    ],
+    answer: 1,
+    explain: "表 6-12：MQTT 通信开销轻量级、不确保安全性、客户端和服务端不对称；AMQP 重量级、使用 SASL 和 TLS 确保安全性、客户端和服务端对称。（教材 PPT 补充）"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 本章全部小课完成，去刷速查卡吧。" : " —— 重点复习计算卸载临界条件与四大平台对比表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 章 · Tuya 平台与联合开发案例</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 7 章 · 小课 6/6 · 课件提炼</span>
+  <h1>Tuya 平台与联合开发案例</h1>
+  <p class="subtitle">一句话：第三个平台 Tuya IoT（零/低/多代码 + 面板），再加本章压轴——IoT Studio 案例、其设备端不足，以及 TinyLink + IoT Studio 联合开发的 MQTT 接入参数计算。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第七章》第 3–4–5 节【Tuya IoT 开发平台 + 案例开发 + 总结】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第七章.pdf</p></div>
+
+  <h2>一、Tuya IoT 开发平台</h2>
+  <p><strong>简介</strong>：涂鸦智能于 <strong>2016 年</strong>推出的全球化 IoT 开发平台，向开发者提供<strong>硬件开发、云服务开发和 App 开发</strong>等工具；平台开发设备可接入 <strong>Amazon Alexa、Google Assistant、Apple HomeKit、SmartThings</strong> 等生态。截至 2021 年 7 月，累计有超过 <strong>37.4 万</strong>注册开发者，产品和服务覆盖超过 <strong>200 个</strong>国家和地区。</p>
+  <table>
+    <tr><th>维度</th><th>要点（课件原文）</th></tr>
+    <tr><td><strong>设备端开发（三档）</strong></td><td><strong>零代码</strong>——针对电工、照明、传感等功能相对标准的设备，如平台预定义插座功能，开发者可视化 UI 配置功能并选择无线通信模组，平台自动为模组生成固件；<strong>低代码</strong>——针对硬件方案中有 MCU 的产品，平台提供 MCU SDK，开发者调用相关接口完成应用；<strong>多代码</strong>——针对网关、摄像头等其它复杂硬件设备，平台提供对应的设备 SDK</td></tr>
+    <tr><td><strong>云服务开发流程</strong></td><td>创建并配置云项目 → 添加设备 → 代码开发。代码要点（Python）：初始化 <code>TuyaOpenAPI(ENDPOINT, ACCESS_ID, ACCESS_KEY)</code> 并 login；构造开关命令 <code>commands = {'commands':[{'code':'switch_led','value':flag}]}</code>；经 <code>openapi.post('/v1.0/devices/{}/commands'.format(DEVICE_ID), commands)</code> 由云服务下发</td></tr>
+    <tr><td><strong>移动端开发</strong></td><td>控制智能产品的界面程序——<strong>面板（Panel）</strong>：基于 <strong>React Native</strong> 框架实现，保留原生移动应用的流畅体验；可在工作台拖拽组件完成设计，也可基于 SDK 设计新面板。面板嵌入移动应用三种方式：公版 App、零代码开发 OEM App、使用 SDK 进行本地 App 开发</td></tr>
+    <tr><td><strong>平台特性（四条）</strong></td><td>成熟的硬件解决方案（电工、照明和家电等）；灵活的边缘计算网关（Docker 镜像方式安装，跨平台，部署方便，支持多种主流物联网标准协议接入，也支持用工具集快速开发私有协议驱动）；便捷的 SaaS 开发框架（面向 IoT SaaS 开发者的前后端开源框架，集成用户登录、角色权限等基本功能）；全球公有云（整合不同主流公有云的全球服务节点）</td></tr>
+  </table>
+
+  <h2>二、IoT Studio 开发案例：智能教室座位使用统计</h2>
+  <p>案例描述：设备部署在教室，自动监测座位上是否有人，并在 Web 页面实时显示。<strong>需要的设备：树莓派 4B + 红外热释电运动传感器</strong>。九个步骤：</p>
+  <ol>
+    <li>进入 IoT Studio 工作台（https://studio.iot.aliyun.com/），创建空白项目并在项目下创建产品。</li>
+    <li>为产品自定义功能：添加两个属性——设备编号（deviceID）和红外检测状态（motionState）。</li>
+    <li>硬件连接：树莓派引脚 <strong>5V / GND / GPIO18</strong> 分别接传感器 <strong>VCC / GND / D1</strong>。</li>
+    <li>SDK 安装：项目目录下安装 <strong>aliyun-iot-device-sdk</strong>（云平台接入 SDK）与 <strong>Pigpio</strong>（树莓派 GPIO 相关接口）。</li>
+    <li>设备端代码编写（JavaScript）：aliyunIot.device({productKey, deviceName, deviceSecret}) 创建设备实例；gpio_pir.digitalRead() 读传感器；device.postProps({deviceID, motionState}) 上传；setInterval(postProps, 10000) 周期上传。</li>
+    <li>进入 IoT Studio 项目，新建<strong>基于可视化搭建</strong>的 Web 应用。</li>
+    <li>使用<strong>指示灯、文本框、文字时钟</strong>等组件搭建 Web 页面。</li>
+    <li>配置指示灯组件的数据源。</li>
+    <li>在 Web 应用开发控制台点击<strong>页面预览</strong>，查看效果。</li>
+  </ol>
+  <p><strong>IoT Studio 设备端开发的不足（两条）</strong>：①支持的硬件种类较少（以 JavaScript 开发为例：ESP32-乐鑫、STM32F/L4XX 与 STM32F7XX-意法半导体、EMW3060/EMW3080-庆科、STM32F103X-意法半导体，操作系统为 AliOS-Things / FreeRTOS / UCOSII 的组合）；②仍采用传统的<strong>自底向上</strong>的开发方式。</p>
+
+  <h2>三、IoT Studio + TinyLink 联合开发（压轴计算题）</h2>
+  <p><strong>分工</strong>：使用 <strong>TinyLink 实现设备端开发</strong>，云端服务开发和 Web 应用/移动应用开发由 <strong>IoT Studio</strong> 完成。<strong>关键点：使用 TinyLink 实现基于物模型的设备接入</strong>。设备使用 MQTT 协议连接阿里云，连接参数：</p>
+  <table>
+    <tr><th>参数名称</th><th>参数值</th></tr>
+    <tr><td>serverName</td><td>${productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com</td></tr>
+    <tr><td>port</td><td>1883</td></tr>
+    <tr><td>clientName</td><td>clientId+"|securemode=x,signmethod=xxxxxx,timestamp=xxxxxx|"——clientId 用户自定义（64 字符以内）；timestamp 当前时间；signmethod 签名算法（支持 hmacSha1、hmacSha256、hmacMd5）；securemode 安全模式（2＝TLS 直连，3＝TCP 直连）</td></tr>
+    <tr><td>userName</td><td>deviceName + "&amp;" + productKey</td></tr>
+    <tr><td>passWord</td><td>sign_hmac(deviceSecret, content)，content =（productKey, deviceName, timestamp, clientId）</td></tr>
+  </table>
+  <p><strong>示例</strong>：设备属性 clientId=12345、deviceName=device、productKey=pk、timestamp=789、signmethod=hmacsha1、deviceSecret=secret → serverName <code>pk.iot-as-mqtt.cn-shanghai.aliyuncs.com</code>；clientName <code>12345|securemode=3,signmethod=hmacsha1,timestamp=789|</code>；userName <code>device&pk</code>；passWord <code>hmacsha1("secret","clientId12345deviceNamedeviceproductKeypktimestamp789").toHexString() = FAFD82A3D602B37FB0FA8B7892F24A477F851A14</code>。</p>
+  <div class="calc"># TinyLink 设备开发示例（智能教室座位统计接入 IoT Studio）要点
+TL_MQTT mqtt;
+mqtt = TL_WiFi.fetchMQTT();                      // 连接 WiFi 后获取 MQTT
+int mqtt_conn = mqtt.connect(serverName, port, clientName, userName, password);
+// loop 中：TL_PIR.read() 读传感器 → 按物模型构造 payload（id/version/params/
+// {deviceID, motionState}/method="thing.event.property.post"）
+mqtt.publish(propertyPostTopic, buf, payloadlength); // 发到 /sys/pk/device/thing/event/property/post
+messageID++; TL_Serial.println(buf); mqtt.yield(4000);</div>
+
+  <h2>四、总结：三平台比较（必背大表）</h2>
+  <table>
+    <tr><th>平台名称</th><th>设备开发</th><th>服务开发</th><th>Web/移动应用开发</th><th>特点</th></tr>
+    <tr><td>TinyLink</td><td>采用硬件无关的 TinyLink 语言，支持云端编译</td><td>支持基于 IFTTT 规则的服务开发</td><td>基于设备端代码自动生成应用框架，开发难度最低</td><td>开发简单，适合物联网技术的初学者</td></tr>
+    <tr><td>Link Develop（IoT Studio）</td><td>提供基于 SDK、基于 AliOS-Things、基于解释型语言多种设备端开发方式</td><td>提供基于可视化服务编排的服务开发方式</td><td>提供可视化搭建的应用开发方式，适合初学者</td><td>支持多种开发方式，开发更为灵活</td></tr>
+    <tr><td>Tuya IoT 平台</td><td>提供零代码开发方式和基于 SDK 的低代码/多代码开发</td><td>支持基于脚本语言的规则开发</td><td>提供可视化搭建的应用开发方式，也提供基于 SDK 的开发方式</td><td>开发简单，解决方案成熟，对工业界支持较多</td></tr>
+  </table>
+
+  <div class="exam">
+    <h3>思考题（本课相关：教材习题 6、7）</h3>
+    <p><strong>习题 6</strong>：某设备参数为 clientId=1001、deviceName=bulb、productKey=bulbkey、securemode=3、timestamp=123、signmethod=hmacsha1、deviceSecret=mysecret。计算使用 TinyLink 连接 Link Develop 平台的 MQTT 连接参数。</p>
+    <details><summary>点开看参考答案</summary>
+      <p>serverName：<code>bulb.iot-as-mqtt.cn-shanghai.aliyuncs.com</code>（productKey 拼前缀）；port：<code>1883</code>；clientName：<code>1001|securemode=3,signmethod=hmacsha1,timestamp=123|</code>；userName：<code>bulb&amp;bulbkey</code>；passWord：<code>8ea1b574a7f1e6b51a1afb73149c8e5906635e93</code>（＝hmacsha1 对 content="clientId1001deviceNamebulbproductKeybulbkeytimestamp123" 以 mysecret 为密钥计算）。（出处：教材课后习题答案第 6 题）</p>
+    </details>
+    <p><strong>习题 7</strong>：基于 TinyLink、IoT Studio 平台和 Tuya IoT 平台开发完整物联网应用：设备采集室内温度，每隔 10s 上报至 Link Develop 平台；云平台运行设备触发服务，温度大于 30℃ 打开设备上的风扇；移动应用实时显示当前温度及风扇状态，允许用户开关风扇。</p>
+    <details><summary>点开看参考答案</summary>
+      <p>课后习题答案<strong>未给出该题参考答案</strong>，建议向老师确认。可参考本章框架自行组织：设备端用 TinyLink（或 Tuya）按物模型周期上报温度属性；云端用 IoT Studio 业务逻辑（设备触发 + 条件判断 + 产品结点下发开风扇服务）；移动端用 IoT Studio 可视化搭建或 Tuya 面板展示并控制。</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第七章》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云端一体速查.html">云端一体速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0705-IoTStudio物模型与服务编排.html">IoT Studio 物模型与服务编排</a> · 下一课：<a href="0801-物联网安全概述与攻击.html">第 8 章 物联网安全</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "Tuya IoT 设备端'低代码开发'针对的对象与提供物是？",
+    options: [
+      "功能相对标准的电工照明设备；平台自动生成固件",
+      "硬件方案中有 MCU 的产品；平台提供 MCU SDK",
+      "网关和摄像头等复杂设备；平台提供设备 SDK"
+    ],
+    answer: 1,
+    explain: "课件：零代码→标准设备（自动生成固件）；低代码→有 MCU 的产品（MCU SDK）；多代码→网关/摄像头等复杂设备（设备 SDK）。三档一一对应。"
+  },
+  {
+    prompt: "TinyLink 连接阿里云时，userName 的取值规则是？",
+    options: [
+      "clientId + \"|securemode=3|\"",
+      "deviceName + \"&\" + productKey",
+      "productKey + \".\" + deviceName"
+    ],
+    answer: 1,
+    explain: "课件参数表：userName＝deviceName&productKey；clientName＝clientId|securemode,signmethod,timestamp|；passWord＝sign_hmac(deviceSecret, (productKey, deviceName, timestamp, clientId))。"
+  },
+  {
+    prompt: "IoT Studio 在设备端开发上的不足，课件指出的两条是？",
+    options: [
+      "不支持云端编译；无服务编排能力",
+      "支持的硬件种类较少；仍采用传统的自底向上的开发方式",
+      "只能用 JavaScript；不支持 AliOS Things"
+    ],
+    answer: 1,
+    explain: "课件原文两条：支持的硬件种类较少（ESP32、STM32 系列、EMW3060/3080 等）；仍采用传统的自底向上的开发方式——这正是用 TinyLink 联合开发补足的点。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 第 7 章全部小课完成！" : " —— 回头复习 MQTT 参数表与三平台总结表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

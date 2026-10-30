@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · IFTTT与规则引擎</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 小课 4/7 · 课件提炼</span>
+  <h1>IFTTT 与规则引擎：冲突检测与解耦</h1>
+  <p class="subtitle">一句话：这节讲用 If-Then 表达物联网联动逻辑，重点掌握规则冲突的两个判定条件与 SAT/SMT 求解思路，以及规则引擎如何解耦。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第六章-2026》6.2 主要功能之"IFTTT 与规则引擎"节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第六章-2026.pdf</p>
+  </div>
+
+  <h2>一、IFTTT 定义、特点与四大问题</h2>
+  <p><strong>IFTTT: If This Then That</strong>——一种简单的基于条件语句的程序逻辑。课件两例：IF soil_moisture &lt;= threshold THEN start irrigation；IF temp &gt;= threshold1 &amp;&amp; humidity &lt;= threshold2 THEN start alert。</p>
+  <p><strong>特点（三条）</strong>：可用简单条件语句表达多种应用逻辑；一般在云端执行，可以解耦设备端代码和应用逻辑；支持多设备联动。</p>
+  <p><strong>四大问题（必背）</strong>：<strong>规则冲突</strong>、<strong>实时性 vs 能耗</strong>、<strong>公平性问题</strong>、<strong>应用逻辑与执行操作的耦合性</strong>。</p>
+
+  <h2>二、规则冲突判定（两个条件 + SAT/SMT）</h2>
+  <div class="calc">规则冲突的两个条件（课件原文）：
+① IF 条件能够同时成立
+② THEN 控制同一设备，且动作冲突
+
+课件四组判断（.light 同一盏灯）：
+组1：light>10000lux→turnOff 与 light<500lux→turnOn   → 条件不能同时成立，无冲突
+组2：light>10000lux→turnOff 与 light<20000lux→turnOn → light∈(10000,20000) 可同时成立且动作相反 → 冲突
+组3：light>10000lux→turnOff 与 light<20000lux→turnOff → 同一设备但动作相同 → 无冲突
+组4：light>10000lux→turnOff 与 time∈[19:00,24:00]→turnOn → 条件可同时成立且动作冲突 → 冲突</div>
+  <p><strong>条件判定转为可满足性问题</strong>：引入 xᵢ 表示第 i 个条件是否成立，判断如 x₁ &amp;&amp; (x₂ || x₃) 是否可为 1（候选 (1,1,1)、(1,1,0)、(1,0,1)），再检查<strong>同一传感器的约束</strong>——cond1 与 cond3 或 !cond3 是否有交集，排除不可能的赋值后再判断冲突。课件实例：R1 temp&gt;30→fan=ON 与 R2 temp&gt;=28→fan=OFF，共享条件可同时成立（取 temp=31），动作相反、同一风机 → 冲突。</p>
+  <div class="callout def">
+    <div class="label">名词解释（课件原文）</div>
+    <p><strong>SAT（布尔可满足性）</strong>：给定布尔表达式，是否存在一组变量赋值使结果为真。<strong>SMT（可满足性模理论）</strong>：SAT 的推广，涉及非布尔变量，例如实数、整数、数组等。<strong>Z3</strong>：微软研究院开发的优秀 SMT Solver，能检查表达式的可满足性。</p>
+  </div>
+
+  <h2>三、实时性 vs 能耗、公平性</h2>
+  <p>查询频率高 → 实时性高但能耗过大；查询频率低 → 能耗小但实时性低（如关窗响应不及时可能导致雨水淋进房间）。<strong>解决方法：自适应调整查询间隔</strong>——传感数据可预测接近阈值时缩小查询间隔，反之扩大。增强的 IFTTT 语法：</p>
+  <div class="calc">IF humidity > 75% and light < 1000lux
+THEN window.close
+WITH time < 60 and missratio < 0.01
+（出处：Heo 等，RT-IFTTT，IEEE RTSS 2017）</div>
+  <p><strong>公平性问题</strong>：某应用设置多条规则或单条规则执行频率过高，可能导致其余规则无法及时执行；解决方法：<strong>通过优先级、配额与公平调度约束执行频率</strong>。<strong>耦合性问题</strong>：用<strong>规则引擎</strong>解决。</p>
+
+  <h2>四、规则引擎与控灯案例</h2>
+  <p><strong>规则引擎解耦应用逻辑与执行操作</strong>：规则引擎筛选消息，其他服务执行操作。按 Topic 与条件筛选提取目标消息，转发给云服务——时序数据库（存储）、函数计算（处理）、推送服务（通知用户）、机器学习服务（预测）。输入是消息对象而非裸数值：先校验字段与类型（如 temp 需为 number 且 −40≤t≤125），<strong>字段、单位与质量检查在业务阈值之前完成</strong>。</p>
+  <p><strong>案例：智能手机控制智能灯泡</strong>：① 手机 App 获取灯泡 deviceName，经 MQTT 向 Topic1 发布消息；② 规则引擎配置规则从 Topic1（/pk1/controlApp/update/）筛选消息，转发到 Topic2（/pk2/bulb/get）；③ 灯泡订阅 Topic2，接收消息修改状态。</p>
+  <div class="calc">边界推演（有效范围 −40～125℃，端点包含；>30℃ 产生过热告警）：
+输入 −40 → 范围校验通过，不过热
+输入  30 → 通过，不过热（30 不严格大于 30）
+输入 30.1 → 通过，过热
+输入 125 → 通过，过热
+输入 126 → 不通过，不判断
+先确定闭区间端点；再区分 > 与 ≥；缺失值不作正常值处理。</div>
+  <p><strong>Topic 为什么要分成两个（必背三条）</strong>：① <strong>安全</strong>：限制物联网设备订阅特定 Topic，避免设备被攻击后获取敏感信息；② <strong>降低耦合</strong>：不同 Topic 隔离不同设备，不同命令发至不同 Topic，管理更方便；③ <strong>可扩展性</strong>：控制端不必为新设备发送格式不同的命令，由规则引擎变更消息格式并转发到目标 Topic。排查消息链路时用 event_id 贯穿输入、节点日志与告警结果，区分未到达、被过滤与输出失败。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>思考题（教材 PPT 第 59 页）：以下两条规则有无冲突？IF (time∈[07:00,17:00]) || (light&gt;10000lux) THEN light.turnOff；IF (light&lt;1000lux) || (sound&gt;55dB) THEN light.turnOn。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（教材 PPT 第 59 页原解）有冲突。反例：IF light = 999lux at 07:01 —— 此时 07:01∈[07:00,17:00] 使第一条规则触发（turnOff），同时 light=999lux&lt;1000lux 使第二条规则触发（turnOn），两条件同时成立、同一盏灯、动作相反 → 冲突。</p>
+    </details>
+    <p><strong>思考（课件 53–54 页四组）：逐组判断有没有冲突。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>按"IF 条件能同时成立 + THEN 同一设备且动作冲突"两个条件：<br>① light&gt;10000→Off 与 light&lt;500→On：条件区间不相交，<strong>无冲突</strong>；<br>② light&gt;10000→Off 与 light&lt;20000→On：light∈(10000,20000) 可同时成立、动作相反，<strong>有冲突</strong>；<br>③ light&gt;10000→Off 与 light&lt;20000→Off：条件可同时成立但动作相同，<strong>无冲突</strong>；<br>④ light&gt;10000→Off 与 time∈[19:00,24:00]→On：晚上 19 点后若强光仍大于 10000lux，两条件同时成立、动作相反，<strong>有冲突</strong>。<br>（课件仅给出规则未逐组给答案，以上按课件判定条件推得，建议向老师确认。）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0603-设备管理与OTA.html">0603-设备管理与OTA</a> · 下一课：<a href="0605-时序数据库与流计算.html">0605-时序数据库与流计算</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "判定两条 IFTTT 规则冲突，需要同时满足哪两个条件？",
+    options: [
+      "IF 条件能够同时成立，且 THEN 控制同一设备、动作冲突",
+      "两条规则来自同一应用，且触发频率相差超过 10 倍",
+      "THEN 控制同一设备，且两条规则的 IF 中都引用同一传感器"
+    ],
+    answer: 0,
+    explain: "课件：规则冲突的两个条件——IF 条件能够同时成立；THEN 控制同一设备且动作冲突。判定可转为可满足性问题。（课件 6.2 规则冲突检测）"
+  },
+  {
+    prompt: "规则 1：light>10000lux→turnOff；规则 2：light<20000lux→turnOff。两条规则有冲突吗？",
+    options: [
+      "有冲突，因为两条件可以同时成立",
+      "无冲突，因为两条件不能同时成立",
+      "无冲突，因为动作相同（同为 turnOff）"
+    ],
+    answer: 2,
+    explain: "课件：light∈(10000,20000) 时两条件可同时成立，但 THEN 都是 turnOff，动作不冲突，故不算冲突。（课件 6.2 规则冲突四组例）"
+  },
+  {
+    prompt: "规则引擎案例中，控制命令的 Topic 拆成 Topic1 与 Topic2 的原因不包括？",
+    options: [
+      "安全：限制设备订阅特定 Topic，避免被攻击后获取敏感信息",
+      "降低耦合与可扩展性：由规则引擎变更消息格式并转发到目标 Topic",
+      "计费：平台按 Topic 数量对设备收取连接费用"
+    ],
+    answer: 2,
+    explain: "课件三条原因：安全、降低耦合、可扩展性；“按 Topic 计费”课件未提及。（课件 6.2 规则引擎案例）"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 冲突判定已过关。" : " —— 重点背两个冲突条件与 Topic 拆分三原因。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

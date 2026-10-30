@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 章 · 编程模型与调度方式</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 3 章 · 小课 2/6 · 课件提炼</span>
+  <h1>编程模型与调度方式</h1>
+  <p class="subtitle">一句话：关键特性 1–2——程序怎么组织（模块化/事件/线程）、CPU 怎么分（四种调度），含必考的三线程调度计算题。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第三章-dw(3)》"关键特性 1：编程模型""关键特性 2：调度方式"节【教材 PPT 补充部分会单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第三章-dw(3).pdf</p></div>
+
+  <h2>一、编程模型：两个分类维度</h2>
+  <h3>1.1 依据程序结构分类</h3>
+  <table>
+    <tr><th>类型</th><th>课件定义</th></tr>
+    <tr><td>非模块化编程</td><td>应用程序<strong>作为一个整体</strong>来进行设计、测试和调试</td></tr>
+    <tr><td>模块化编程</td><td>强调将程序的功能<strong>分离为独立的、可互换的模块</strong>，每个模块执行某一具体功能。又分两层：<strong>编码层面的模块化</strong>（如 TinyOS 组件化编程）、<strong>二进制层面的模块化</strong>（如 SOS 模块化编程）</td></tr>
+  </table>
+  <p>TinyOS 与 SOS 的关键区别（必背）：</p>
+  <table>
+    <tr><th>对比</th><th>TinyOS 组件化编程</th><th>SOS 模块化编程</th></tr>
+    <tr><td>应用构成</td><td>应用由多个<strong>组件</strong>组合而成</td><td>应用由多个<strong>模块</strong>组成</td></tr>
+    <tr><td>编译后</td><td><strong>单个二进制程序映像</strong>，不再保留组件化的信息</td><td><strong>仍有模块信息</strong>，可动态加载</td></tr>
+  </table>
+  <div class="calc">// SOS 模块头部的例子（课件原文节选）
+static const mod_header_t mod_header SOS_MODULE_HEADER = {
+  .mod_id = SURGE_MOD_PID,      // 模块的ID为SURGE_MOD_PID
+  .state_size = sizeof(surge_state_t),
+  .num_sub_func = 1,            // 订阅服务的个数
+  .num_prov_func = 0,
+  .platform_type = HW_TYPE,     // or PLATFORM_ANY
+  .processor_type = MCU_TYPE,
+  .module_handler = surge_module_handler,
+};</div>
+
+  <h3>1.2 依据执行逻辑分类</h3>
+  <div class="grid cols-2">
+    <div class="card"><h4>基于事件驱动的编程</h4><p>应用程序会<strong>实时地处理或响应系统中的事件</strong>；应用程序由多个<strong>事件处理函数</strong>构成。课件例子：周期性采集传感器读数并无线发送——计时完成事件 → 读传感器 → 读数完成事件 → 提交传输任务 → 传输完成事件（若未成功则继续提交任务）。</p></div>
+    <div class="card"><h4>基于多线程的编程</h4><p><strong>一个线程对应一个逻辑上的任务</strong>。教材 PPT 补充：能更好地组织程序结构、代码可读性更高，<strong>减少由代码分片带来的额外代码量</strong>。课件例子：发送线程在一个 while(TRUE) 循环里顺序读温度、湿度、光照，打包发送后休眠。</p></div>
+  </div>
+  <div class="callout"><div class="label">教材 PPT 补充：事件模型的特点</div><p>基于事件的编程模型可以<strong>较好地保证系统的实时性和响应性</strong>。</p></div>
+  <div class="calc">课后习题 3 复算：读一个传感器平均 3ms，发送 6ms。
+事件驱动：3 个传感器读取可并发进行 → t1 = 3ms + 6ms = <b>9ms</b>
+多线程：3 个传感器顺序读取 → t2 = 3+3+3+6 = <b>15ms</b>
+结论（习题答案原文）：事件驱动下读取可并发、性能更高。</div>
+
+  <h2>二、调度方式：四种（必背定义）</h2>
+  <table>
+    <tr><th>方式</th><th>课件定义</th></tr>
+    <tr><td>抢占式</td><td><strong>高优先级线程会抢占低优先级线程</strong>的执行</td></tr>
+    <tr><td>非抢占式</td><td>系统一旦把处理器分配给就绪队列中的某线程后，该线程便<strong>一直执行下去，直至完成或阻塞</strong></td></tr>
+    <tr><td>协作式</td><td>只有在线程<strong>主动交出 CPU 的控制权（yield()）</strong>后，才可以让其他线程得到 CPU 控制权</td></tr>
+    <tr><td>时间片轮转</td><td>系统默认给每个线程分配<strong>相同时间片</strong>，时间片用完即使任务未完成也<strong>必须交出 CPU</strong></td></tr>
+  </table>
+  <h3>2.1 调度方式对原子操作的影响（必考代码题）</h3>
+  <p>问题：多个线程同时对共享变量 x 有操作权限，如何进行原子操作，使 x 在 RAM 与外存之间始终保持一致？课件给出的三种写法：</p>
+  <div class="calc">非抢占式：  { x++; Yield(); write(x); }   ← 中间 Yield() 错误！
+协作式：    { x++; write(x); Yield(); }     ← 末尾 Yield() 正确
+抢占式或时间片轮转：需加互斥锁
+  mutex m; m.lock(); { x++; write(x); } m.unlock();</div>
+
+  <div class="exam">
+    <h3>课件思考题 1（本课核心，三问全解）</h3>
+    <p>三个线程 a、b、c，单独执行完的时间分别为 10s、20s、30s。</p>
+    <p><strong>（1）非抢占式：时间点 0s 时 a,b,c 顺序启动，三个线程完成时间分别是多少？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>非抢占式下单个线程依次执行完，各自花费的时间分别为 <strong>10s、20s、30s</strong>（课后习题答案原文）。</p>
+    </details>
+    <p><strong>（2）抢占式：优先级 c&gt;b&gt;a，a、b、c 的就绪时间点分别为第 1s、第 2s、第 15s，完成时间？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>课件未给出此问（纯抢占式版本）的标准答案，建议向老师确认。课后习题答案给的是它的变体——"协同式和抢占式并存，b 执行完 4s 有 yield() 指令"版本：a 先执行完，花费时间为 1s+4s+9s=<strong>14s</strong>；紧接着 c 执行完，花费的时间为 <strong>30s</strong>；最后 b 执行完，花费的时间为 <strong>59s</strong>（可画甘特图计算）。</p>
+    </details>
+    <p><strong>（3）时间片轮转：时间片 10s，a、b、c 启动时间点分别为第 0s、第 10s、第 20s，完成时间？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>按课后习题答案原文：a 先执行完，花费的时间为 <strong>10s</strong>；紧接着 b 执行完，花费的时间为 <strong>30s</strong>；最后 c 执行完，花费的时间为 <strong>40s</strong>。</p>
+    </details>
+    <p><strong>课后习题 4</strong>：调度方式图中，图 (a) 哪几行代码会被抢占、图 (b) 哪几行会被抢占？（习题答案：图 a 为 <strong>5、6、7</strong> 行；图 b 为 <strong>1、2、3、4</strong> 行。注：该题原图未在提取文本中给出，作答时请对照教材原书图形。）</p>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第三章-dw(3)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/操作系统速查.html">操作系统速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0301-操作系统概述与构成.html">操作系统概述与构成</a> · 下一课：<a href="0303-IO内存与软件更新.html">IO内存与软件更新</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师，可以要求更细的讲解或更多例题。</footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "TinyOS 组件化编程与 SOS 模块化编程，编译后的关键区别是？",
+    options: [
+      "两者编译后都保留模块信息，只是语言不同",
+      "TinyOS 编译后是单个二进制映像、不保留组件信息；SOS 编译后仍有模块信息、可动态加载",
+      "TinyOS 编译后可动态加载；SOS 编译后是单个二进制映像"
+    ],
+    answer: 1,
+    explain: "课件原文：TinyOS 编译后的应用程序是单个二进制程序映像，不再保留组件化的信息；SOS 编译后仍有模块信息，可动态加载（二进制层面的模块化）。"
+  },
+  {
+    prompt: "哪种调度方式下，线程必须主动交出 CPU 控制权（yield()）其他线程才能运行？",
+    options: [
+      "时间片轮转",
+      "抢占式",
+      "协作式"
+    ],
+    answer: 2,
+    explain: "课件定义：协作式调度中，只有在线程主动交出 CPU 的控制权（yield()）后，才可以让其他的线程得到 CPU 的控制权。"
+  },
+  {
+    prompt: "协作式调度下对共享变量 x 做原子操作（x++; write(x);），课件给出的正确写法是？",
+    options: [
+      "{ x++; write(x); } 结尾再执行 Yield()",
+      "在 x++ 与 write(x) 之间插入 Yield()",
+      "必须加 mutex 互斥锁"
+    ],
+    answer: 0,
+    explain: "课件：协作式下 { x++; write(x); Yield(); } 正确，中间插 Yield() 是错误示范；mutex 加锁方案对应的是抢占式或时间片轮转。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 编程模型与调度稳了。" : " —— 回头看标红的解析，重点复习 TinyOS/SOS 区别与四种调度。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -11,10 +11,17 @@ const filesToCopy = async (argv: Argv, cfg: QuartzConfig) => {
   return await glob("**", argv.directory, ["**/*.md", ...cfg.configuration.ignorePatterns])
 }
 
+// keep the .html extension for static html files so relative links
+// between standalone pages keep working
+const slugForCopy = (fp: FilePath): FilePath =>
+  (fp.endsWith(".html")
+    ? slugifyFilePath(fp, true) + ".html"
+    : slugifyFilePath(fp)) as FilePath
+
 const copyFile = async (argv: Argv, fp: FilePath) => {
   const src = joinSegments(argv.directory, fp) as FilePath
 
-  const name = slugifyFilePath(fp)
+  const name = slugForCopy(fp)
   const dest = joinSegments(argv.output, name) as FilePath
 
   // ensure dir exists
@@ -42,7 +49,7 @@ export const Assets: QuartzEmitterPlugin = () => {
         if (changeEvent.type === "add" || changeEvent.type === "change") {
           yield copyFile(ctx.argv, changeEvent.path)
         } else if (changeEvent.type === "delete") {
-          const name = slugifyFilePath(changeEvent.path)
+          const name = slugForCopy(changeEvent.path)
           const dest = joinSegments(ctx.argv.output, name) as FilePath
           await fs.promises.unlink(dest)
         }

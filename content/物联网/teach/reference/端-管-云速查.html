@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>端-管-云 与 第1章速查卡</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">REFERENCE · 速查卡</span>
+  <h1>端-管-云 与 第1章速查</h1>
+  <p class="subtitle">依据课件八章提炼。考前 5 分钟扫一遍，覆盖"概述类"考点。</p>
+
+  <h2>一、课程地图：端–管–云</h2>
+  <table>
+    <tr><th>环节</th><th>章节</th><th>核心内容</th></tr>
+    <tr><td rowspan="3"><strong>端</strong></td><td>第2章 硬件平台</td><td>硬件分类与关键特性、常见平台、案例</td></tr>
+    <tr><td>第3章 操作系统</td><td>编程模型、任务调度、典型 OS</td></tr>
+    <tr><td>第4章 边缘智能</td><td>边缘智能、模型压缩（量化/剪枝/蒸馏）、云边协同</td></tr>
+    <tr><td><strong>管</strong></td><td>第5章 低功耗通信协议</td><td>802.15.4 / ZigBee / BLE / LoRa / NB-IoT、PRR、CTP/ETX</td></tr>
+    <tr><td><strong>云</strong></td><td>第6章 云平台</td><td>发布订阅(MQTT)、QoS、物模型、时序存储、滑动窗口</td></tr>
+    <tr><td colspan="2">第7章 云-端一体开发</td><td>TinyLink、IoT Studio、物模型、服务编排</td></tr>
+    <tr><td colspan="2">第8章 物联网系统安全</td><td>网络层/硬件层攻击、安全开发框架</td></tr>
+  </table>
+
+  <h2>二、典型应用架构（必背）</h2>
+  <div class="flow">
+    <div class="node"><b>终端感知设备</b>采集</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>无线接入</b>BLE/NB-IoT/WiFi/GPRS</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>网关</b>无线收→有线传</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>互联网</b></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>云平台</b>存储/分析/管理/安全</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>客户端</b>Web/APP</div>
+  </div>
+
+  <h2>三、第1章 关键点</h2>
+  <div class="callout def">
+    <div class="label">定义</div>
+    <p>物联网是物理设备及嵌入了电子器件、软件、传感器的物件组成的网络；物件具有<strong>感知、计算、连接</strong>三种能力，把物理世界集成到数字世界。</p>
+  </div>
+
+  <h3>起源</h3>
+  <p>1995 比尔·盖茨《未来之路》→ 2005 ITU → 2009 IBM"智慧地球" / 中国"感知中国" → 近年 AIoT 万物智联。</p>
+
+  <h3>三阶段</h3>
+  <p>1.0（2010–2015）传感网/RFID；2.0（2015–2020）操作系统/云平台；3.0（2020–）AIoT。</p>
+  <p>连接数：2020 年 117 亿（首超非物联网）；2025 预计 309 亿。</p>
+
+  <h3>三组挑战 ↔ 机遇</h3>
+  <table>
+    <tr><th>挑战</th><th>机遇</th></tr>
+    <tr><td>开发链长</td><td>低代码（Gartner：2024 年 75%）</td></tr>
+    <tr><td>无固定终端类型</td><td>异构 → 低功耗/小体积多元化</td></tr>
+    <tr><td>垂直一体化</td><td>Matter、ThingsBoard/IoTSharp 标准化</td></tr>
+  </table>
+
+  <h3>四个案例（一句话）</h3>
+  <ul>
+    <li><strong>鸿山小镇</strong>：无锡，全国首个物联网特色小镇，阿里云飞凤平台。</li>
+    <li><strong>CMU GIoTTO</strong>：Living Lab；MongoDB + InfluxDB；机器学习层产"虚拟传感器"。</li>
+    <li><strong>Mosaic</strong>：低成本移动测 PM2.5（直径&lt;2.5µm）；两阶段校准（多元线性+随机森林）。</li>
+    <li><strong>港珠澳大桥</strong>：55km、数千传感器；数据异常/有线部署难/定位质量低。</li>
+  </ul>
+
+  <h3>必会计算</h3>
+  <div class="calc">T = C / I
+例：2800mAh，20mA/0.5mA，占空比10%
+I = 20×10% + 0.5×90% = 2.45mA
+T = 2800/2.45 ≈ 1142h</div>
+
+  <footer>
+    主源：课件《第一章_169_20260825》· 教材 董玮等《从创意到原型（第2版）》
+    · 课程：<a href="../lessons/0001-物联网概述.html">第1章 物联网概述</a>
+    · 术语：<a href="../GLOSSARY">GLOSSARY</a>
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 章 · 边缘智能是什么</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 4 章 · 小课 1/6 · 课件提炼</span>
+  <h1>边缘智能是什么</h1>
+  <p class="subtitle">一句话：定义、两个典型应用、模型"训练→压缩→部署"三步走与三种 DNN 结构——本章一切内容的地基。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第四章-1009》"概述"节（第 4–8 页）。本章为老师自编课件，教材无对应章节。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第四章-1009.pdf</p></div>
+
+  <h2>一、边缘智能的定义</h2>
+  <div class="callout def"><div class="label">课件定义（必背）</div><p><strong>边缘智能</strong>：指将人工智能模型与算法部署于<strong>靠近数据源的 IoT 终端、边缘网关等计算节点</strong>，利用<strong>本地算力</strong>开展数据分析、模型推理、场景感知与智能决策的技术与应用模式。</p></div>
+  <p>抓住三个关键词：①<strong>靠近数据源</strong>（不在远端云机房）；②<strong>本地算力</strong>（终端或网关自己算）；③<strong>四件事</strong>——数据分析、模型推理、场景感知、智能决策。</p>
+
+  <h2>二、两个典型应用</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>桌面机器人（EMO 桌面陪伴机器人）</h4><p>融合视觉、声音和触摸感知，在用户身边完成环境感知与交互反馈。<br>· <strong>多模态感知</strong>：摄像头、麦克风阵列、触摸传感器——识别人脸、定位声源并感知触摸。<br>· <strong>设备端智能</strong>：内置神经网络处理器与 CPU，在机器人内部完成人脸识别等处理。<br>· <strong>端云协同</strong>：设备端承担本地感知与交互，部分语音命令依赖云端服务。</p></div>
+    <div class="card"><h4>边缘智能网关（Edge AI Gateway）</h4><p>连接多个传感器、摄像头和工业设备，在<strong>本地</strong>完成数据融合、AI 推理和决策——<strong>不必让每个终端都配备强大的 AI 芯片</strong>。课件实例：边缘协议网关 PGW-1700。</p></div>
+  </div>
+
+  <h2>三、模型的使用：训练 → 压缩优化 → 部署</h2>
+  <div class="flow">
+    <div class="node"><b>① 模型训练</b>从数据中学习参数</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>② 压缩优化</b>适配边缘资源限制</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>③ 模型部署</b>在目标硬件上运行</div>
+  </div>
+  <table>
+    <tr><th>阶段</th><th>做什么（课件原文要点）</th><th>代表工具</th></tr>
+    <tr><td>模型训练</td><td>准备数据、选择模型结构，通过<strong>前向计算、损失计算和反向传播</strong>更新参数；用<strong>验证集</strong>评估效果，保存达到任务要求的模型权重</td><td>PyTorch、TensorFlow 等训练框架</td></tr>
+    <tr><td>压缩优化</td><td>使用压缩优化框架降低模型开销，按目标平台<strong>转换格式</strong>并复核精度与性能。例如：<strong>量化（FP32 → INT8）</strong>、<strong>剪枝（移除不重要的权重或通道）</strong></td><td>压缩优化框架</td></tr>
+    <tr><td>模型部署</td><td>将模型与<strong>推理引擎</strong>集成到应用，适配硬件并验证<strong>精度、时延和内存占用</strong>；运行时引擎执行模型前向计算，应用完成预处理和结果处理</td><td>ONNX Runtime、TensorRT、MNN 等推理引擎</td></tr>
+  </table>
+
+  <h2>四、常见 DNN 结构与边缘场景选型</h2>
+  <table>
+    <tr><th>结构</th><th>机制（课件一句话）</th><th>常用于</th></tr>
+    <tr><td>CNN 卷积神经网络</td><td>提取局部空间特征</td><td>图像分类、目标检测</td></tr>
+    <tr><td>RNN 循环神经网络</td><td>按时间步传递状态</td><td>时序信号、语音</td></tr>
+    <tr><td>Transformer</td><td>通过注意力关联不同位置</td><td>语言、视觉任务</td></tr>
+  </table>
+  <div class="callout def"><div class="label">面向边缘场景的结构设计（考点）</div><p>① 从任务出发选结构，<strong>控制层数、通道数与输入尺寸（或序列长度）</strong>；② 结合设备算子支持选择轻量模型，如 <strong>MobileNet</strong>，兼顾精度与资源开销；③ 在目标设备<strong>实测时延、峰值内存与能耗</strong>——<strong>FLOPs 不能直接代表实际速度</strong>。</p></div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第四章-1009》（老师自编，教材无对应章节）
+    · 速查：<a href="../reference/边缘智能速查.html">边缘智能速查</a>
+    · 术语：<a href="../GLOSSARY">GLOSSARY</a>
+    · 上一课：<a href="0306-AliOS系统与案例前沿.html">第 3 章 末课 0306</a>
+    · 下一课：<a href="0402-关键特性与指标.html">0402 关键特性与指标</a>
+    · <a href="../课程总目录.html">课程总目录</a>
+    <br>有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "课件对「边缘智能」的定义，核心是？",
+    options: [
+      "把数据全部上传云端，用数据中心的大算力统一做智能分析",
+      "将 AI 模型与算法部署于靠近数据源的 IoT 终端、边缘网关等计算节点，用本地算力做推理与决策",
+      "只用单片机采集数据，智能部分一律不做"
+    ],
+    answer: 1,
+    explain: "课件第 4 页：边缘智能指将 AI 模型与算法部署于靠近数据源的 IoT 终端、边缘网关等计算节点，利用本地算力开展数据分析、模型推理、场景感知与智能决策。"
+  },
+  {
+    prompt: "常见 DNN 结构中，「提取局部空间特征、常用于图像分类与目标检测」的是？",
+    options: [
+      "CNN 卷积神经网络",
+      "RNN 循环神经网络",
+      "Transformer"
+    ],
+    answer: 0,
+    explain: "课件第 8 页：CNN 提取局部空间特征，常用于图像分类、目标检测；RNN 按时间步传递状态（时序信号、语音）；Transformer 通过注意力关联不同位置（语言、视觉任务）。"
+  },
+  {
+    prompt: "关于模型使用三阶段，下列哪一组对应关系与课件一致？",
+    options: [
+      "训练用 PyTorch/TensorFlow，部署用 ONNX Runtime/TensorRT/MNN 等推理引擎",
+      "训练用 ONNX Runtime，部署用 PyTorch",
+      "压缩优化阶段要把模型重新从零训练一遍"
+    ],
+    answer: 0,
+    explain: "课件第 7 页：训练框架例如 PyTorch、TensorFlow；推理引擎例如 ONNX Runtime、TensorRT、MNN；压缩优化（量化、剪枝）是在已有模型上降低开销并转换格式，不是从零训练。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 概念关通过，下一节看关键特性。" : " —— 回头看标红的解析，重点记定义与三阶段。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

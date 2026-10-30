@@ -37,3 +37,7 @@ body[data-slug="index"] .content-meta { display: none; }
 
 
 .course-card h3 a[role='anchor'] { display: none; }
+
+.teach-entry { display: flex; flex-wrap: wrap; gap: .8rem; margin: 1.2rem 0 1.6rem; }
+.teach-entry a { display: inline-block; padding: .55rem 1.1rem; border: 1px solid var(--lightgray); border-radius: 9px; font-size: .85rem; color: var(--dark); text-decoration: none; transition: border-color .2s, background .2s; }
+.teach-entry a:hover { border-color: var(--tertiary); background: var(--highlight); }

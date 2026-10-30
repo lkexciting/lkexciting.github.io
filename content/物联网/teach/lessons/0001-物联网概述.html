@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 章 · 物联网概述</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 1 章 · 课件提炼</span>
+  <h1>物联网概述</h1>
+  <p class="subtitle">严格依据你的课件《第一章_169_20260825》整理：定义与趋势、应用架构、典型应用、学术前沿。约 10 分钟，配 5 道课件小测。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p>教材：董玮、高艺、韩劲松《从创意到原型：物联网应用快速开发（第2版）》，科学出版社，2022。对应课件：第一章《物联网概述》。下文所有知识点均出自该课件，未额外引入。</p>
+  </div>
+
+  <h2>一、先看这门课的地图：端–管–云</h2>
+  <p>课件开篇即给出课程主线——物联网的<strong>"端–管–云"</strong>技术体系与开发工具。八章正好按这条线铺开：</p>
+  <div class="flow">
+    <div class="node"><b>端</b>第2章 硬件<br>第3章 操作系统<br>第4章 边缘智能</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>管</b>第5章 低功耗<br>通信协议</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>云</b>第6章 云平台</div>
+  </div>
+  <p>再加上两条贯穿线：<strong>第7章 云-端一体开发</strong>、<strong>第8章 物联网系统安全</strong>。记住这个地图，后面每章都能"对号入座"。</p>
+
+  <h2>二、物联网的定义（课件原文，背）</h2>
+  <div class="callout def">
+    <div class="label">定义</div>
+    <p>物联网就是<strong>物理设备以及其他嵌入了电子器件、软件、传感器的物件</strong>组成的网络。这些物件具有<strong>感知能力、计算能力以及连接能力</strong>，从而能更直接地将物理世界集成到数字世界中。</p>
+  </div>
+  <p>定义的核心是物件的三种能力：<strong>感知</strong>（采集物理世界）、<strong>计算</strong>（本地处理）、<strong>连接</strong>（联网通信）。课件举的例子是智慧家居、共享单车。</p>
+
+  <h2>三、起源与发展脉络</h2>
+  <ul class="timeline">
+    <li><strong>1995</strong>：比尔·盖茨《未来之路》提出物物互联的基本思想。</li>
+    <li><strong>2005</strong>：国际电信联盟（ITU）指出，无所不在的"物联网"通信时代即将来临。</li>
+    <li><strong>2009</strong>：IBM 提出"智慧地球"；同年中国提出"感知中国"。</li>
+    <li><strong>近年</strong>：人工智能赋能物联网（AIoT），迈向"万物智联"。</li>
+  </ul>
+  <p>课件还引了 ITU 描绘的图景：衣服会告诉洗衣机对颜色和水温的要求，公文包会提醒主人忘带东西——用来理解"物物互联"的直观含义。</p>
+
+  <h2>四、发展趋势：三个阶段与连接数</h2>
+  <div class="grid cols-3">
+    <div class="card"><h4>物联网 1.0（2010–2015）</h4><p>传感网、RFID</p></div>
+    <div class="card"><h4>物联网 2.0（2015–2020）</h4><p>操作系统、物联网云平台</p></div>
+    <div class="card"><h4>物联网 3.0（2020 至今）</h4><p>AIoT（AI + IoT）</p></div>
+  </div>
+  <p>数据（IoT Analytics）：<strong>2020 年物联网连接数达 117 亿，首次超过非物联网连接数</strong>；预计 <strong>2025 年增长到 309 亿</strong>，几乎是非物联网连接数的 3 倍。</p>
+
+  <h2>五、典型物联网应用架构（核心考点）</h2>
+  <p>这是本章最重要的一张图：数据从底层的"物"一路流到用户端。</p>
+  <div class="flow">
+    <div class="node"><b>终端感知设备</b>如 PM2.5 感知节点</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>无线接入</b>BLE 5.0 / NB-IoT / Wi-Fi / GPRS</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>网关</b>无线接收、有线回传</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>互联网</b></div>
+    <div class="arrow">→</div>
+    <div class="node"><b>物联网云平台</b>存储/分析/管理/安全</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>客户端</b>Web / APP 应用</div>
+  </div>
+  <p>各部分职责（课件原意）：</p>
+  <ul>
+    <li><strong>终端感知设备</strong>：物联网末端的感知节点，负责采集数据。</li>
+    <li><strong>网关</strong>：设备通常以无线方式接入；网关无线接收数据，再通过有线把数据传输到云平台。</li>
+    <li><strong>云平台</strong>：存储感知数据；提供数据查询、分析、处理、展示；管理终端与网关的接入；提供多重安全防护。</li>
+    <li><strong>客户端</strong>：开发者面向用户开发的各类应用。</li>
+  </ul>
+  <p>课件列出的常见设备 / 平台 / 软件：传感器、开发板、网络设备、云服务；开源软件如 <strong>Contiki、RIOT、Zephyr、RT-Thread、HarmonyOS</strong>，<strong>OpenWrt、EdgeX、KubeEdge</strong>，以及 <strong>ThingsBoard、IoTSharp</strong>（集成 MQTT、InfluxDB、Grafana 等组件）。</p>
+
+  <h2>六、开发面临的三组"挑战 ↔ 机遇"</h2>
+  <table>
+    <tr><th>挑战</th><th>对应的机遇</th></tr>
+    <tr>
+      <td><strong>开发链长</strong>：一个应用涉及嵌入式、云平台、用户端开发，需嵌入式 / 前端 / 后端多类人员协作。</td>
+      <td><strong>低代码开发</strong>：Gartner 预测到 2024 年 75% 的应用将在低代码平台开发；IEEE CS 将其列为 2022 年 16 大技术趋势之一。</td>
+    </tr>
+    <tr>
+      <td><strong>没有固定的终端类型</strong>：物联网领域尚未形成统一的终端形态。</td>
+      <td><strong>碎片化 / 异构性</strong>意味着没有独裁垄断；硬件可向低功耗、小体积等多元化方向发展。</td>
+    </tr>
+    <tr>
+      <td><strong>垂直一体化架构</strong>：软硬件与云平台耦合，难以复用与标准化。</td>
+      <td><strong>Matter 协议</strong>（用区块链做跨生态去中心化认证）与开源云平台 <strong>ThingsBoard / IoTSharp</strong>，使"标准化"开发成为可能。</td>
+    </tr>
+  </table>
+
+  <h2>七、四个典型应用（课件案例，记一句话）</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>无锡鸿山物联网小镇</h4><p>全国首个以物联网为产业特色的小镇；"四个全国第一"；用阿里云飞凤平台（后演变为阿里云物联网平台）支撑智能楼宇、垃圾桶、井盖、消防等。</p></div>
+    <div class="card"><h4>CMU GIoTTO 智慧校园</h4><p>卡内基梅隆大学在 Google 资助下的 Living Lab；4 特点：终端用户可编程、支持广泛部署、支持机器学习、安全与隐私保护。</p></div>
+    <div class="card"><h4>Mosaic 空气质量监测</h4><p>低成本移动监测 PM2.5；PM2.5 指直径 &lt;2.5µm 的粒子；云端用"多元线性模型 + 随机森林"两阶段校准。</p></div>
+    <div class="card"><h4>港珠澳大桥结构健康监测</h4><p>全长 55 公里，建设期已部署数千个传感器；面临数据异常/时间不对齐、有线传输部署难、定位数据质量不高等局限。</p></div>
+  </div>
+  <p>其中 <strong>CMU GIoTTO</strong> 的数据管理层值得记：中心服务器用 <strong>MongoDB</strong>（传感器/用户/建筑/访问控制列表），数据服务器用 <strong>InfluxDB</strong> 时序库，连接器负责设备通信；机器学习层把"打标签→训练分类器→虚拟传感器"串起来（案例：用虚拟分贝计 + 座位占用传感器找安静且有空座的教室）。安全上用 <strong>HTTPS</strong>、<strong>OAuth 2.0</strong>（ID+密钥换令牌）与访问控制层。</p>
+  <p><strong>Mosaic</strong> 的粒子传感器原理也常考：风扇向上提供稳定气流 → 激光发射器发出红外激光 → 激光被气流中粒子反射 → 光传感器感知反射强弱，从而测出粒子浓度。</p>
+
+  <h2>八、学术前沿与一个必会计算</h2>
+  <p>课件列出的研究领域：<strong>RFID</strong>（有源阅读器 + 无源标签）、<strong>普适计算</strong>（任何时间地点计算、上下文感知）、<strong>无线传感器网络</strong>（集成计算/感知/通信的微型节点，多跳传输）。前沿方向：供电节能（电池→可再生能源→无源后向散射）、节点平台（MicaZ/TelosB→Arduino/树莓派）、通信组网（多跳 ZigBee→BLE/LoRa/NB-IoT）、智能感知（→边缘计算：降传输、降延迟、增隐私）。</p>
+  <div class="callout">
+    <div class="label">必会：节点生命周期</div>
+    <p>公式 <strong>T = C / I</strong>（T 工作时长，C 电池容量，I 平均电流）。课件例：C=2800mAh，工作 20mA、休眠 0.5mA，占空比 10%：</p>
+    <div class="calc">平均电流 I = 20mA×10% + 0.5mA×(1−10%) = <b>2.45mA</b>
+工作时长 T = C / I = 2800mAh / 2.45mA ≈ <b>1142h</b></div>
+    <p>课件思考题 3 就是换占空比 1%、再叠加电池自放电 0.5%/天，自己算一遍。</p>
+  </div>
+
+  <h2>八点五、概念详解：这道电池题到底在算什么（占空比 · 平均电流 · 自放电）</h2>
+  <p>看不懂思考题 3，通常是三个概念没落地。用一个类比全讲通：<strong>电池 = 水箱</strong>。</p>
+  <div class="grid cols-3">
+    <div class="card"><h4>① 容量 C 与电流 I</h4><p>电池像水箱：<strong>容量 C（2800mAh）</strong>是箱里存了多少水；<strong>电流 I</strong> 是放水多快。mAh 的意思：以 1mA 放电能放 1 小时，所以 2800mAh = 按 1mA 放 2800 小时、按 20mA 只能放 140 小时。水用完的时间 T = C ÷ I。</p></div>
+    <div class="card"><h4>② 占空比与平均电流</h4><p>物联网节点大部分时间在<strong>睡觉</strong>（0.5mA），少数时间<strong>干活</strong>（20mA）。<strong>占空比 = 干活时间占比</strong>，1% 就是每 100 秒干 1 秒、睡 99 秒。电流忽大忽小没法直接除，按时间"加权平均"折成匀速：I = 20×1% + 0.5×99% = <strong>0.695mA</strong>。谁的时间多就听谁的，所以平均值远小于 20。</p></div>
+    <div class="card"><h4>③ 自放电 = 隐形漏电</h4><p>电池不接设备也会自己漏电（内部化学反应）。课件口径：<strong>每天漏初始电量的 0.5%</strong>。解法是把"每天漏的电量"折成一个看不见的漏电流：2800×0.5% = 14mAh/天，14÷24 ≈ <strong>0.583mA</strong>——相当于多接了一个一直耗 0.583mA 的隐形设备。</p></div>
+  </div>
+  <div class="callout">
+    <div class="label">三步解题模板（考试直接套）</div>
+    <div class="calc">第 1 步：平均电流 I = 工作电流×占空比 + 休眠电流×(1−占空比)
+第 2 步（若有自放电）：漏电流 = C × 自放电率 ÷ 24h，加进 I
+第 3 步：T = C ÷ I（单位：小时），÷24 换成天</div>
+    <p>问①：I = 0.695mA → T = 2800÷0.695 ≈ <strong>4029h（168 天）</strong>。问②：I = 0.695+0.583 = 1.278mA → T ≈ <strong>2190h（91 天）</strong>。课件例题（占空比 10% → 2.45mA → 1142h）同一套方法，只是换数字。</p>
+  </div>
+
+  <h2>九、课件思考题（先自己答，再点开对照 · 每题独立）</h2>
+  <div class="exam">
+    <h3>思考题 1</h3>
+    <p><strong>问 ①</strong>：一个典型物联网应用架构包括哪些部分？</p>
+    <details><summary>点开看问 ① 的参考答案</summary>
+      <p>六部分：<strong>终端感知设备 → 无线接入（BLE 5.0 / NB-IoT / Wi-Fi / GPRS）→ 网关 → 互联网 → 物联网云平台 → 客户端（Web / APP）</strong>。职责：终端感知设备采集数据；网关无线接收数据并经有线回传云平台；云平台存储感知数据、提供查询/分析/处理/展示、管理终端与网关接入、提供多重安全防护；客户端是面向用户开发的应用。（本课第五节即此图）</p>
+    </details>
+    <p><strong>问 ②</strong>：物联网开发与传统 PC 程序开发有什么不同？</p>
+    <details><summary>点开看问 ② 的参考答案</summary>
+      <p>按课件"挑战"部分作答：① <strong>开发链长</strong>——一个应用涉及嵌入式、云平台、用户端开发，需嵌入式/前端/后端多类人员协作；② <strong>没有固定的终端类型</strong>——物联网领域尚未形成统一的终端形态；③ <strong>垂直一体化架构</strong>——软硬件与云平台耦合，难以复用与标准化。</p>
+    </details>
+    <h3>思考题 2</h3>
+    <p><strong>问 ①</strong>：在 CMU GIoTTO 项目中，如何保证安全性？机器学习层起到了什么作用？</p>
+    <details><summary>点开看问 ① 的参考答案</summary>
+      <p>安全三件套（课件原文）：<strong>HTTPS</strong>——在 HTTP 基础上加密通信；<strong>OAuth 2.0</strong>——用户用账户名、密码登录中心服务器后获得唯一 ID 和密钥，访问 GIoTTO 数据库时必须先用 ID 和密钥获取 OAuth 令牌才能获得数据访问权限，令牌有效期超时后必须重新生成；<strong>访问控制层</strong>——分管理员与普通用户，管理员拥有所有传感器数据访问权限并定义普通用户权限（访问控制列表）。机器学习层作用：给数据<strong>打标签 → 训练分类器 → 得到虚拟传感器</strong>——如训练虚拟分贝计、训练座椅加速度计数据得到座位占用虚拟传感器，两者结合即可检测安静环境下的空闲座位。</p>
+    </details>
+    <p><strong>问 ②</strong>：在 Mosaic 项目中，PM2.5 测量的原理是什么？使用一元线性模型做数据校准有什么缺陷？</p>
+    <details><summary>点开看问 ② 的参考答案</summary>
+      <p>原理（课件原文）：风扇向上提供稳定气流 → 激光发射器发出一束红外激光 → 激光照射到气流上，被其中的粒子反射 → 被光传感器感知，通过反射的强弱程度测量粒子浓度。校准缺陷可对照课件给出的方案回答：课件实际采用<strong>多元线性模型 + 随机森林的二阶段校准</strong>——特征不只粒子原始数据，还有温湿度、速度、人流密度、车流密度等（Akaike 信息准则选特征防过拟合）；第一阶段多元最小二乘定线性模型参数，第二阶段用随机森林拟合线性模型的残差。可见单一特征的一元线性模型不足以刻画多因素影响，其残差中的非线性部分也无法拟合。</p>
+    </details>
+    <h3>思考题 3</h3>
+    <p><strong>问 ①</strong>：电池 2800mAh，工作 20mA、休眠 0.5mA，占空比 1%，节点工作时长为？</p>
+    <details><summary>点开看问 ① 的参考答案</summary>
+      <div class="calc">I = 20mA×1% + 0.5mA×99% = 0.2 + 0.495 = <b>0.695mA</b>
+T = C/I = 2800mAh / 0.695mA ≈ <b>4029h</b>（约 168 天）</div>
+      <p>方法与课件例题（占空比 10% → 2.45mA → 1142h）完全一致，只换代入值。</p>
+    </details>
+    <p><strong>问 ②</strong>：占空比 1%，且考虑电池自放电率 0.5%/天（课件假设：电池每天释放初始电量的 0.5%），工作时长为？</p>
+    <details><summary>点开看问 ② 的参考答案</summary>
+      <div class="calc">自放电等效电流 = 2800mAh × 0.5% ÷ 24h = 14mAh/24h ≈ <b>0.583mA</b>
+总等效电流 I = 0.695 + 0.583 = <b>1.278mA</b>
+T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
+      <p>说明：题目条件与假设均为课件原文，解法是把自放电按课件 T=C/I 的口径折算成等效电流；这是思考题，课件未给数值答案，建议以此思路与老师核对。</p>
+    </details>
+  </div>
+
+  <h2>十、即时小测（全部出自课件）</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score"></div>
+
+  <div class="ask">
+    <strong>有不懂的随时问我。</strong> 这一章是"总览 + 案例"，很多细节（如 Mosaic 校准公式、GIoTTO 架构）在后续章节会再展开。下一章我们进 <strong>第 2 章 物联网硬件平台</strong>（端的起点）。
+  </div>
+
+  <footer>
+    主源：课件《第一章_169_20260825》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/端-管-云速查.html">端-管-云速查</a>
+    · 术语：<a href="../GLOSSARY">GLOSSARY</a>
+    · 下一课：<a href="0002-物联网硬件平台.html">第 2 章 硬件平台</a>
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "课件对物联网的定义中，物件具有哪三种能力？",
+    options: [
+      "感知、计算、连接",
+      "存储、传输、显示",
+      "加密、认证、审计",
+      "采集、控制、报警"
+    ],
+    answer: 0,
+    explain: "课件原文：物件具有“感知能力、计算能力以及连接能力”，从而把物理世界集成到数字世界。"
+  },
+  {
+    prompt: "在典型应用架构中，网关的主要作用是？",
+    options: [
+      "直接存储全部感知数据",
+      "无线接收数据并转有线回传云平台",
+      "负责用户端的界面展示",
+      "替代云平台完成数据分析"
+    ],
+    answer: 1,
+    explain: "课件：设备通常无线接入，网关无线接收数据，再通过有线把数据传输到物联网云平台。"
+  },
+  {
+    prompt: "下列哪组属于课件列出的“开发挑战”？",
+    options: [
+      "开发链长、终端类型不固定、垂直一体化",
+      "成本过高、带宽不足、电池太大",
+      "标准过多、协议过新、人才过剩",
+      "数据太少、场景太少、设备太少"
+    ],
+    answer: 0,
+    explain: "课件三组挑战：开发链长；物联网领域还没有固定终端类型；架构仍属“垂直一体化”。"
+  },
+  {
+    prompt: "物联网发展趋势中，2015–2020 年对应哪个阶段？",
+    options: [
+      "物联网 1.0：传感网、RFID",
+      "物联网 2.0：操作系统、云平台",
+      "物联网 3.0：AIoT",
+      "物联网 4.0：元宇宙"
+    ],
+    answer: 1,
+    explain: "课件：1.0（2010–2015）传感网/RFID；2.0（2015–2020）操作系统/物联网云平台；3.0（2020 至今）AIoT。"
+  },
+  {
+    prompt: "Mosaic 中 PM2.5 的“2.5”指的是？",
+    options: [
+      "粒子质量 2.5 毫克",
+      "粒子直径小于 2.5 微米",
+      "监测半径 2.5 公里",
+      "采样频率 2.5 赫兹"
+    ],
+    answer: 1,
+    explain: "课件：PM2.5 指粒子直径小于 2.5µm 的粒子；PM10 指直径小于 10µm 的粒子。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 课件要点掌握了。" : " —— 回头看标红的解析。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

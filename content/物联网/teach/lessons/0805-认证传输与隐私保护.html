@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 认证传输与隐私保护</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 小课 5/6 · 课件提炼</span>
+  <h1>认证、传输安全与隐私保护</h1>
+  <p class="subtitle">一句话：口令/设备认证怎么验、TLS 和 MQTT 怎么加密、身份与位置隐私怎么藏——TLS 两层结构是本节必考点。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第八章-v2(2)》第 2 节"安全机制4：认证与传输安全"和"安全机制5：隐私保护"【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第八章-v2(2).pdf</p>
+  </div>
+
+  <h2>一、认证：口令认证与设备认证</h2>
+  <h3>1.1 基于口令的用户认证（盐值 + 散列值）</h3>
+  <p><strong>注册</strong>：用户提供用户名和口令 → 系统生成一个随机数（<strong>盐值，salt</strong>）→ 口令连同样值通过<strong>散列函数（Hash function）</strong>打乱混合，变为固定长度的<strong>散列值（Hash values）</strong> → 散列值和盐值分别存放于系统数据库中。</p>
+  <p><strong>登录</strong>：用户提供用户名和口令 → 系统按用户名找到对应散列值和盐值 → 在口令上加对应盐值再散列产生新散列值 → 比较原散列值与新散列值：<strong>相等则口令正确，反之错误</strong>。</p>
+  <h3>1.2 设备认证（两种）</h3>
+  <div class="grid cols-2">
+    <div class="card"><h4>基于三元组（阿里云 IoT）</h4><p>三元组是平台授权颁发的设备身份信息，<strong>每个设备全球唯一</strong>，指 <strong>ProductKey、DeviceName、DeviceSecret</strong> 的组合。设备建立连接时通过 <strong>DeviceSecret 加签</strong>设备信息，平台对加签信息进行验证，完成设备登录 IoT 平台。</p></div>
+    <div class="card"><h4>基于射频指纹</h4><p>背景：攻击者可以建立一个<strong>伪 AP</strong>，其 ID 和真实 AP 一样。方法：使用无线射频指纹（如<strong>功率放大器非线性指纹结合帧间时间分布指纹</strong>），准确鉴别真实 AP 与伪 AP。</p></div>
+  </div>
+
+  <h2>二、传输安全：TLS 与安全版 MQTT</h2>
+  <h3>2.1 TLS 协议</h3>
+  <ul>
+    <li>前身为 <strong>SSL（secure sockets layer，安全套接层）</strong>协议；在<strong>传输层</strong>对网络连接进行加密，提供<strong>机密性和完整性</strong>保障。</li>
+    <li>广泛用于 Web 应用程序与服务器通信：明文传输的 HTTP 加上 SSL 协议后变成 <strong>HTTPS</strong>。</li>
+    <li>一大优势：<strong>独立于应用程序之外</strong>，高层协议如 HTTP、FTP 等都能透明地运行在 TLS 之上；相比 SSL 能提供更大的灵活性。</li>
+    <li><strong>两层协议</strong>：低层 = <strong>记录协议</strong>，为各种高层协议提供基本安全服务；高层 = <strong>握手协议、改变密码标准协议和警报协议</strong>，用于管理 TLS 交换。</li>
+  </ul>
+  <p><strong>TLS 握手协议四阶段</strong>（必背）：① 客户端发起，建立安全功能并初始化逻辑连接——发 <code>client_hello</code>，服务器回 <code>server_hello</code>；② 服务器向客户端传递建立连接所需信息：证书、密钥信息、证书请求，发完发 <code>server_hello_done</code>；③ 客户端向服务器发送证书、密钥信息和证书验证；④ 根据第 2、3 阶段交换的信息实现<strong>密码组合的交换</strong>，建立双方安全连接，完成握手。握手协议可使服务器和客户端<strong>相互验证并协商加密 MAC 算法及加密密钥</strong>。</p>
+  <h3>2.2 安全版 MQTT</h3>
+  <p>MQTT 参与设备分三种身份：<strong>发布者、代理、订阅者</strong>——代理往往由服务器充当，发布者和订阅者往往是客户端。MQTT 在多层上采取安全措施：</p>
+  <table>
+    <tr><th>层次</th><th>安全措施（课件原文）</th></tr>
+    <tr><td>应用层</td><td>MQTT 协议提供设备的<strong>标识符和密码</strong>，以识别认证每个设备</td></tr>
+    <tr><td>传输层</td><td>加密认证基于 <strong>TLS</strong> 协议：<strong>单向加密认证</strong>只需服务器提供证书；<strong>双向加密认证</strong>需要客户端和服务器一起提供证书</td></tr>
+    <tr><td>网络层</td><td>代理、发布者和订阅者之间的连接支持<strong>专线或者 VPN</strong> 等传输方式，专用物理或虚拟线路提高网络传输安全性</td></tr>
+  </table>
+
+  <h2>三、隐私保护：身份隐私与位置隐私</h2>
+  <p>隐私通常指<strong>个人不愿公开的私事或秘密</strong>。常见隐私问题：<strong>身份隐私泄露</strong>——用户的身份和其他重要信息关联起来；<strong>位置隐私泄露</strong>——用户的位置和能唯一确定身份的信息关联起来。</p>
+  <div class="grid cols-2">
+    <div class="card"><h4>身份隐私保护：假名技术</h4><p>医疗报销案例：用户 A 有两个假名 <strong>Alice 和 Amy</strong>，分别用于和医生和保险公司交互。① A 先用假名 Alice 在医院医生处开具诊断凭证；② 再以假名 Amy 把诊断凭证交付给保险公司。保险公司可验证凭证的真实性、有效性与合法性，正常报销；但 A 未向任何实体出具真实身份信息，<strong>不泄露任何身份隐私</strong>；医院无法确定 A 与假名的关联性，保险公司也无法将 Alice 和 Amy 关联。</p></div>
+    <div class="card"><h4>位置隐私保护：假位置技术</h4><p>位置信息含两种形式：<strong>标识信息</strong>（个体静态特征或属性，可唯一确定个体）与<strong>位置信息</strong>（个体的位置、行踪或轨迹）。保护方法：保护标识信息——请求服务时只提供位置信息、隐藏标识信息（匿名和假名技术）；保护位置信息——提供混淆或不精确的位置（如<strong>假位置信息、路标位置信息</strong>）。假位置技术：用户给服务提供者发送多个位置，仅一个真实、其余虚假；提供者为每个位置计算反馈（用户可据反馈正常工作），但攻击者不知哪个是真实位置。</p></div>
+  </div>
+  <div class="callout">
+    <div class="label">教材 PPT 补充</div>
+    <p>身份匿名是身份隐私保护的热点方向，知名匿名凭证系统有 <strong>Idenmix（IBM）、Primelife、U-Prove</strong>。其他认证技术：基于令牌（典型为<strong>智能卡 IC card</strong>，交互含复位应答 ATR、协议类型选择 PTS 等步骤）；基于生物特征（静态：指纹、手部几何形状、面部特征；动态：步态、动作、行为）。安全传输加密算法 <strong>SM4</strong>：分组对称密码算法，分组长度 128bit、密钥长度 128bit，加密算法与密钥扩展算法均采用 32 轮非线性迭代结构，S 盒可灵活替换。基于密码的挑战-应答认证协议：用户传身份 U → 主机返回随机数 r → 用户返回 f(r', h(P')) → 主机与模板 f(r, h(P(U))) 比较判断合法性。</p>
+  </div>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>1. TLS 协议由哪两层协议组成？各自的作用是什么？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>由两层协议组成：<strong>低层协议——记录协议</strong>，为各种高层协议提供基本的安全服务；<strong>高层协议——握手协议、改变密码标准协议和警报协议</strong>，用于管理 TLS 交换。（课件"安全机制4——TLS"原文）</p>
+    </details>
+    <p><strong>2. 简述假名系统医疗报销案例：为什么保险公司能正常报销，却不泄露用户的身份隐私？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>用户 A 用假名 Alice 在医生处开具诊断凭证，再以假名 Amy 将诊断凭证交付给保险公司。保险公司可以验证该诊断凭证的真实性、有效性和合法性，所以可进行正常报销业务；但由于 A 未向任何实体出具自己的真实身份信息，因此不会泄露任何身份隐私——医院无法确定 A 与假名之间的关联性，保险公司也无法将假名 Alice 和假名 Amy 进行关联。（课件"安全机制5——身份隐私保护"原文）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/安全速查.html">安全速查</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · 上一课：<a href="0804-无线安全机制.html">0804 无线安全机制</a> · 下一课：<a href="0806-安全框架案例与前沿.html">0806 安全框架案例与前沿</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "基于口令的认证中，'盐值（salt）'在注册阶段的作用是？",
+    options: [
+      "与口令连接后一起散列，散列值和盐值分别存入系统数据库",
+      "加密用户名，防止用户名泄露",
+      "作为登录时的验证码，防止机器人尝试"
+    ],
+    answer: 0,
+    explain: "课件：注册时系统生成一个随机数（盐值），口令连同样值通过散列函数打乱混合为固定长度的散列值，散列值和盐值分别存放于系统数据库；登录时再加同一盐值重新散列，比较两个散列值是否相等。"
+  },
+  {
+    prompt: "阿里云 IoT 的设备'三元组'指的是哪三个的组合？",
+    options: [
+      "AppKey、DevEUI、NwkSKey",
+      "设备 ID、IP 地址、MAC 地址",
+      "ProductKey、DeviceName、DeviceSecret"
+    ],
+    answer: 2,
+    explain: "课件：三元组指 ProductKey、DeviceName、DeviceSecret 的组合，每个设备全球唯一；设备通过 DeviceSecret 加签设备信息，平台验证加签信息完成登录。AppKey/DevEUI 是 LoRaWAN 的（0804）。"
+  },
+  {
+    prompt: "TLS 的两层协议中，属于高层、用于管理 TLS 交换的一组是？",
+    options: [
+      "记录协议",
+      "握手协议、改变密码标准协议和警报协议",
+      "IP 协议与 TCP 协议"
+    ],
+    answer: 1,
+    explain: "课件：低层记录协议为各种高层协议提供基本安全服务；高层握手协议、改变密码标准协议和警报协议用于管理 TLS 交换。握手协议分四阶段，允许服务器和客户端相互验证并协商加密 MAC 算法及加密密钥。"
+  },
+  {
+    prompt: "安全版 MQTT 中，'双向加密认证'与'单向加密认证'的区别是？",
+    options: [
+      "双向认证需要客户端和服务器一起提供证书，单向只需服务器提供证书",
+      "双向认证使用两条网络专线，单向只用一条",
+      "双向认证在应用层验证密码，单向在网络层验证"
+    ],
+    answer: 0,
+    explain: "课件：MQTT 传输层加密认证基于 TLS，单向加密认证只需要服务器提供证书，双向加密认证需要客户端和服务器一起提供证书。网络层则支持专线或 VPN 传输方式。"
+  },
+  {
+    prompt: "位置隐私保护中，'向应用服务发起请求时仅提供位置信息、将标识信息隐藏掉'属于哪类方法？",
+    options: [
+      "保护位置信息——提供假位置或路标位置",
+      "保护标识信息——利用匿名和假名技术",
+      "假名系统医疗报销法"
+    ],
+    answer: 1,
+    explain: "课件：位置隐私保护两条路——保护标识信息（隐藏标识，用匿名和假名技术）与保护位置信息（提供混淆或不精确的位置，如假位置信息和路标位置信息）。假位置技术是后者的代表：多个位置只有一个真实，攻击者不知哪个是真的。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 认证、传输、隐私三块都稳了。" : " —— 回头看标红的解析，重点复习 TLS 两层结构与三元组。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

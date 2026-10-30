@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · 云平台速查</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 速查卡 · 可打印</span>
+  <h1>物联网云平台 · 速查卡</h1>
+  <p class="subtitle">依据课件《第六章-2026》压缩的高频考点：定义、四类平台、MQTT 机制、时序/流计算数字、四大平台对比。考前扫一遍即可。</p>
+
+  <div class="callout def">
+    <div class="label">考试边界</div>
+    <p><strong>以课件为准</strong>；教材 PPT 仅助理解（下文标注"教材 PPT"）。配套小课：0601–0607。</p>
+  </div>
+
+  <h2>一、定义与分类（0601）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>与传统云的区别（5 条）</td><td>轻量与异构连接 · 设备状态管理 · 时序数据处理 · 设备安全认证 · 并发消息与计算</td></tr>
+    <tr><td>参与者（3 类）</td><td>通信运营商（SIM/资费/运维）· 设备制造商（身份/固件/设备服务）· 云与应用厂商（数据分析/业务应用）；能力可组合</td></tr>
+    <tr><td>CMP</td><td>网络连接与 SIM 卡管理；示例 Jasper/DCP/GDSP、移动 OneLink、联通 ControlCenter、天翼物联；共享单车：查在线状态/网络定位/流量</td></tr>
+    <tr><td>DMP</td><td>设备全生命周期与运行状态管理；示例 海尔 U+、美的云、BOSCH IoT Suite、根云</td></tr>
+    <tr><td>AEP</td><td>帮开发者快速构建部署应用（工具/中间件/业务逻辑引擎/API）；示例 AWS IoT、IBM Watson、阿里云 IoT、涂鸦智能</td></tr>
+    <tr><td>BAP</td><td>把海量数据转化为业务价值（预测性/可认知）；示例 Predix、Azure IoT、MindSphere</td></tr>
+    <tr><td>判断题钩子</td><td>四类<strong>并非相互排斥</strong>，一个平台可提供多类服务</td></tr>
+  </table>
+
+  <h2>二、MQTT（0602）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>报文顺序</td><td>CONNECT/CONNACK → SUBSCRIBE/SUBACK（登记主题过滤器）→ PUBLISH 分发；发布者不需知道订阅者地址</td></tr>
+    <tr><td>通配符</td><td>+ 匹配<strong>一个</strong>层级；# 匹配<strong>多个</strong>层级且只在过滤器末尾；<strong>发布主题不能含通配符</strong></td></tr>
+    <tr><td>QoS 0/1/2</td><td>至多一次（无确认，可能缺失，开销低）/ 至少一次（确认重发，可能重复）/ 恰好一次（额外交互与状态，避免同次交换重复）</td></tr>
+    <tr><td>两段连接</td><td>设备→Broker 与 Broker→看板是两次交付；<strong>下行 QoS 不高于订阅要求</strong>；协议交付 ≠ 业务动作执行一次</td></tr>
+    <tr><td>吞吐公式</td><td>QoS1 理想吞吐上界 ≈ <strong>C / RTT</strong>（C=在途上限）。例：C=20、RTT=80ms → 250 条/s；W=20、RTT=100ms → 200 条/s ≈ 200 KB/s（每条 1KB）</td></tr>
+    <tr><td>选择依据</td><td>缺失容忍度、重复后果、时效、资源开销：持续温度→QoS0；重要告警→QoS1；严格交付→QoS2</td></tr>
+    <tr><td>三协议对比（教材 PPT）</td><td>MQTT：TCP、代价小、多播、需 Broker；CoAP：UDP、代价小、无中间代理、32+8B；HTTP：TCP、代价大、824+32B（温度上传示例）</td></tr>
+    <tr><td>延伸</td><td>Sparkplug 3.0（2022）/ISO/IEC 20237:2023 工业语义互通；MQTT over QUIC 探索连接迁移（标准 3.1.1 基于 TCP）；亿咖通 200 万+ 车辆/在线 35 万+</td></tr>
+  </table>
+
+  <h2>三、设备管理与 OTA（0603）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>管理内容</td><td>生命周期（注册/删除）· 状态（online–offline）· 固件版本 · 固件更新；属性：deviceId/status→生命周期，connectionState→状态，version→版本，updateList→固件更新</td></tr>
+    <tr><td>设备影子</td><td>desired（期望）/reported（上报）分存，相等即同步；离线先改 desired，重连取最新目标；<strong>幂等目标状态</strong>适合影子；一次性动作（投药）不能只留最终状态，短期命令应有有效期</td></tr>
+    <tr><td>直接控制 vs 影子</td><td>直接控制=请求响应、需立即确认、离线无效、不保证排序；影子=离线可设、保证指令排序（习题 5：红/蓝灯例子）</td></tr>
+    <tr><td>OTA 闭环</td><td>启动上报版本 → 判断升级 → 下载升级包 → 升级后上报版本；版本号<strong>启动时上报，不周期循环</strong>；差分包：基线相符才能套用、校验→重建→验证、失败可回退</td></tr>
+    <tr><td>OTA 安全（必背）</td><td>95% 未保护升级包内容；90% 防不了中间人；61% 可被强制降级；对策：签名校验、双向认证、升级包加密、通讯安全防护</td></tr>
+    <tr><td>固件验证</td><td>摘要（内容是否改变）≠ 签名（可信发布者）；写入备用分区→试启动→确认→标记成功（双分区保留恢复路径）</td></tr>
+  </table>
+
+  <h2>四、IFTTT 与规则引擎（0604）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>四大问题</td><td>规则冲突 · 实时性 vs 能耗 · 公平性 · 应用逻辑与执行操作耦合</td></tr>
+    <tr><td>冲突两条件</td><td>① IF 条件能同时成立（转 SAT/SMT，Z3 求解；SMT=SAT 推广，含实数/整数/数组）② THEN 同一设备且动作冲突</td></tr>
+    <tr><td>实时性 vs 能耗</td><td>自适应查询间隔（接近阈值缩小、远离扩大）；增强语法 WITH time&lt;60 and missratio&lt;0.01（RT-IFTTT，RTSS 2017）</td></tr>
+    <tr><td>公平性</td><td>优先级、配额与公平调度约束执行频率；耦合性→规则引擎（筛选消息→转发时序库/函数计算/推送/ML）</td></tr>
+    <tr><td>控灯案例 Topic 拆分</td><td>① 安全（限订阅防敏感信息）② 降低耦合（隔离设备）③ 可扩展性（规则引擎变更格式转发）</td></tr>
+    <tr><td>边界推演</td><td>−40～125℃ 闭区间；&gt;30 过热；缺失值不作正常值</td></tr>
+  </table>
+
+  <h2>五、时序数据库与流计算（0605）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>规模数字</td><td>1 万设备×1 点/s×16B（8B 时间戳+8B 浮点）→ 8.64 亿点/天 = 13.824 GB/天；近 10 分钟：单设备 600 点/全部 600 万点</td></tr>
+    <tr><td>InfluxDB</td><td>tag 标识筛选序列（基数要控制），field 存测量值；写入 precision=s；Flux：range→filter→mean；2.x TSM/Flux ≠ 3.x 列式</td></tr>
+    <tr><td>Gorilla 压缩</td><td>记录差异不存完整值，精度不变；5 点 40B→23B（省 42.5%）；固定值 144B / 规则缓变 1465B / 随机噪声 6767B（1000 点、原 8000B）</td></tr>
+    <tr><td>容量估算</td><td>数值 8B→2B：字段省 75%，<strong>整条记录只省 6/32=18.75%</strong>（时间戳 8B+其它 16B 不随同比下降）；压缩后 10B/点</td></tr>
+    <tr><td>滑动均值</td><td>直接算法 O((n−k+1)·k)、每窗 k−1 次加法；增量 O(n)、初始化后每点 2 次加减；两者空间均 O(k)（环形缓冲，不能只留总和）</td></tr>
+    <tr><td>状态规模</td><td>n=10000,k=1000：8,991,999→18,999 次加减；每设备窗口 8k B，10 万设备 ≈ 0.8 GB</td></tr>
+    <tr><td>滑动最大值</td><td>双端队列存候选下标：队首过期移除、新值淘汰队尾较小者；每下标至多进出队一次 → O(n)/O(k)</td></tr>
+    <tr><td>Flink</td><td>keyBy(device) 隔离状态；框架管分区/调度/托管状态/恢复，算法仍自己实现；Flink 2.0（PVLDB 2025）状态存算分离，290GB 负载 16→8 CU（1CU=1 核+4GB+20GB 盘）</td></tr>
+  </table>
+
+  <h2>六、安全认证（0606）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>共享密钥</td><td>HMAC 验来源与完整性（不等于加密载荷）；认证数据含标识/时间戳/随机挑战；防重放需独立新鲜性检查；风险：任一端密钥泄露</td></tr>
+    <tr><td>X.509 / PKI</td><td>私钥签名+公钥认证；证书三种获取：CA 颁发/平台生成/第三方工具；双向 TLS：验服务器证书→交客户端证书→证私钥持有→再查主题权限（连接认证 ≠ 任意授权）</td></tr>
+    <tr><td>IBC</td><td>设备标识（序列号/网络地址）+系统参数定公钥；KGC 申请私钥加密传送；减少证书传输</td></tr>
+    <tr><td>权限</td><td>身份认证→权限策略→授权执行；权限落到具体操作与资源（如仅允许 Publish 设备 A 温度主题）</td></tr>
+  </table>
+
+  <h2>七、无服务器计算（0606）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>冷启动账单</td><td>冷调用 10+50+350+40=<strong>450 ms</strong>；热调用 10+40=<strong>50 ms</strong>；额外准备 400 ms；初始化越长、业务越短影响越显著</td></tr>
+    <tr><td>环境复用</td><td>顶层语句（读配置/建 SDK 对象）只在初始化执行；日志：冷=INIT→INVOKE→REPORT；Duration=执行、Init Duration=初始化、Billed=计费口径</td></tr>
+    <tr><td>优化取舍</td><td>100 次调用 10 次冷：从头平均 90 ms；SnapStart（恢复 60ms）平均 56 ms；保温 50 ms 但驻留成本（0.5GiB×60s=30 GiB·s）；SnapStart 与预置并发不能同启</td></tr>
+    <tr><td>部署</td><td>代码包+配置（Handler/Runtime python3.12/MemorySize 256/Timeout 3）；Lambda 链路 IoT Core→Lambda→SNS</td></tr>
+  </table>
+
+  <h2>八、边缘计算（0607）</h2>
+  <table>
+    <tr><th>考点</th><th>要点</th></tr>
+    <tr><td>Greengrass</td><td>nucleus + 组件（采集/EdgeAlarm/MQTT Bridge）；recipe=版本+文件+生命周期；本地 IPC 权限与云端 IoT 策略分别配置；业务处理不等待云端往返</td></tr>
+    <tr><td>计算卸载</td><td>边缘 ≈ E + D/R；<strong>若 E ≤ L+C 云端不可能更快</strong>；例 D=2Mbit/L=30/C=10/E=100：20Mbit/s 边缘快、50Mbit/s 云端快</td></tr>
+    <tr><td>断网缓存</td><td>50KB/s×4h=720MB（预算需更大）；600MB 预算≈12000s≈3h20m；满盘策略：背压/丢最旧/降采样</td></tr>
+    <tr><td>补传</td><td>净清理=上传−产生=500−200=300 条/s；清空 10000 条≈33.33s；event_id 贯穿重传；业务确认后才删 outbox</td></tr>
+    <tr><td>采集解码</td><td>bigendian+有符号 16 位+比例 0.1：0x00FD=253→25.3℃；协议适配必须保留数据语义</td></tr>
+  </table>
+
+  <h2>九、四大平台对比（0607，必背）</h2>
+  <table>
+    <tr><th>平台</th><th>协议</th><th>一句话特色</th></tr>
+    <tr><td>AWS IoT</td><td>MQTT/WebSockets/HTTP 1.1</td><td>2015 年托管平台；影子/规则引擎/注册表；SigV4+X.509+令牌；Lambda；Kinesis/S3/DynamoDB/SNS</td></tr>
+    <tr><td>Azure IoT</td><td>MQTT/HTTPS/AMQP</td><td>双向通信；Cosmos DB/MySQL/PostgreSQL/MariaDB；X.509 CA+对称密钥/令牌；Azure Functions；机器学习服务；MQTT 轻 vs AMQP 重（SASL+TLS、对称）</td></tr>
+    <tr><td>阿里云 IoT</td><td>MQTT/CoAP/HTTPS</td><td>2018-03-28 云栖大会深圳峰宣布进军 IoT；云-网-边-端；ID² 芯片级安全、一机一密；函数计费=调用次数+执行时间+公网流量；Link Edge 断网续传；IoT Studio 一站式</td></tr>
+    <tr><td>ThingsBoard</td><td>MQTT（v1/devices/me/telemetry）</td><td>开源、私有化部署；遥测/属性/RPC；温度规则 −40&lt;t&lt;80；拖拽仪表盘；语音灯案例平台</td></tr>
+  </table>
+
+  <h2>十、必背数字清单</h2>
+  <p><strong>13.824 GB/天</strong>（1 万设备×16B）· <strong>C/RTT</strong>（250 条/s 例）· OTA 安全 <strong>95%/90%/61%</strong> · Gorilla <strong>40→23B、省 42.5%</strong> · 记录压缩 <strong>18.75%</strong>（字段 75%）· 增量 vs 直接 <strong>18,999 vs 8,991,999</strong>（10 万设备窗口 ≈ <strong>0.8 GB</strong>）· 冷启动 <strong>450/50 ms、平均 90→56 ms</strong> · 缓存 <strong>720 MB / 3h20m / 33.33 s</strong> · 阿里云函数计费三构成 · ThingsBoard 温度 <strong>−40&lt;t&lt;80</strong> · 边缘解码 <strong>253→25.3℃</strong>。</p>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》 · 小课：<a href="../lessons/0601-云平台是什么.html">0601</a>｜<a href="../lessons/0602-MQTT通信接入.html">0602</a>｜<a href="../lessons/0603-设备管理与OTA.html">0603</a>｜<a href="../lessons/0604-IFTTT与规则引擎.html">0604</a>｜<a href="../lessons/0605-时序数据库与流计算.html">0605</a>｜<a href="../lessons/0606-安全认证与无服务器.html">0606</a>｜<a href="../lessons/0607-边缘计算与典型平台.html">0607</a> · 术语：<a href="../GLOSSARY">GLOSSARY</a> · <a href="../课程总目录.html">课程总目录</a></footer>
+</div>
+</body>
+</html>
