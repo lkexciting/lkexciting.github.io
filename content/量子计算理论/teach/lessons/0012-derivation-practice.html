@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 12 课 · 期中推导训练题</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -71,7 +71,7 @@
 <p><strong>6.</strong> 判断 \((|00\rangle+|01\rangle)/\sqrt{2}\) 与 \((|00\rangle+|11\rangle)/\sqrt{2}\) 哪个纠缠、哪个可分，给出判定式。</p>
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
-<p>判定式：双比特态 \(\alpha_{0}_{0}|00\rangle+\alpha_{0}_{1}|01\rangle+\alpha_{1}_{0}|10\rangle+\alpha_{1}_{1}|11\rangle\) 可分 ⇔ \(\alpha_{0}_{0}\alpha_{1}_{1} = \alpha_{0}_{1}\alpha_{1}_{0}\)（矩阵秩为 1）。</p>
+<p>判定式：双比特态 \(\alpha_{00}|00\rangle+\alpha_{01}|01\rangle+\alpha_{10}|10\rangle+\alpha_{11}|11\rangle\) 可分 ⇔ \(\alpha_{00}\alpha_{11} = \alpha_{01}\alpha_{10}\)（矩阵秩为 1）。</p>
 <p>\((|00\rangle+|01\rangle)/\sqrt{2}\)：系数 (1,1,0,0)/√2，\(1\cdot0 = 1\cdot0 = 0\) ⇒ 可分，且 = \(|0\rangle\otimes(|0\rangle+|1\rangle)/\sqrt{2}\)。</p>
 <p>\((|00\rangle+|11\rangle)/\sqrt{2}\)：系数 (1,0,0,1)/√2，\(1\cdot1 - 0\cdot0 = 1 \neq 0\) ⇒ 纠缠（即贝尔态 \(|\Phi^{+}\rangle\)）。</p>
 </div>
@@ -119,11 +119,11 @@
 </div>
 <h2>E. QPE → Shor 归约</h2>
 <div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
-<p><strong>11.</strong> QPE：幺正 \(U\) 的特征向量 \(|u\rangle\)，特征相位 \(\phi = 3/8\)，用 3 个计数比特。写出概率最大的测量结果（二进制）及其估计的 \(\phî\)。</p>
+<p><strong>11.</strong> QPE：幺正 \(U\) 的特征向量 \(|u\rangle\)，特征相位 \(\phi = 3/8\)，用 3 个计数比特。写出概率最大的测量结果（二进制）及其估计的 \(\hat{\phi}\)。</p>
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
 <p>QPE 输出最接近 \(2^{3}\cdot\phi = 8\cdot3/8 = 3\) 的整数，即二进制 \(011\)。在理想（无相位误差）情况下测得 \(|011\rangle\) 概率最大。</p>
-<p>估计 \(\phî = 3/8\)，与真实值一致（精确到 3 位计数比特）。</p>
+<p>估计 \(\hat{\phi} = 3/8\)，与真实值一致（精确到 3 位计数比特）。</p>
 </div>
 </details>
 </div>

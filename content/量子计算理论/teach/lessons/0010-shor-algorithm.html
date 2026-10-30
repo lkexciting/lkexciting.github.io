@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 10 课 · Shor 算法</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -21,7 +21,7 @@
 <span class="label">Shor 的数论工具</span>
 <p><strong>同余 / 阶：</strong>\(a\) 模 \(n\) 的阶是使 \(a^{r} \equiv 1 (mod n)\) 成立的最小正整数 \(r\)，记作 \(ord_{n}(a)\)（课件 03 · P38）。<br/>
 <strong>欧拉函数：</strong>\(\phi(n)\) 是与 n 互质且小于 n 的正整数个数；若 \(gcd(a,n)=1\) 则 \(a^{\phi(n)} \equiv 1 (mod n)\)（欧拉定理）。<br/>
-<strong>RSA：</strong>\(n=pq \Rightarrow \phi(n)=(p-1)(q-1)\)；取 \(e\) 与 \(\phi(n)\) 互质，\(d \equiv e^{-}^{1} (mod \phi(n))\)。</p>
+<strong>RSA：</strong>\(n=pq \Rightarrow \phi(n)=(p-1)(q-1)\)；取 \(e\) 与 \(\phi(n)\) 互质，\(d \equiv e^{-1} (mod \phi(n))\)。</p>
 </div>
 <h2>三、Shor 算法流程</h2>
 <p>随机取一个小于 n 且与 n 互质的正整数 \(a\)，算法如下（课件 03 · P44）：</p>

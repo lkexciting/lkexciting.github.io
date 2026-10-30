@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 06 课 · Deutsch 算法</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -16,7 +16,7 @@
 <h2>一、并行性是怎样的，又为什么不够</h2>
 <p>把输入制备到叠加态、再用一个实现 f 的酉门 U_f 作用，可以让 f 在所有输入上"同时"被计算（课件 01 · P57）。但这种并行性<strong>并不直接有用</strong>：如果对输出做测量，每次测量只能得到一个 \(x_{i}\) 下的函数值，这与经典计算相比并无优势。量子计算要的不仅是并行，更是<strong>更强的信息抽取能力</strong>——这正是 Deutsch 算法要展示的（课件 01 · P58）。</p>
 <h2>二、Deutsch 问题</h2>
-<p>考虑映射 \(f:\{0,1}\to\{0,1}\)，它只可能是四种操作之一，归为两类（课件 01 · P58）：</p>
+<p>考虑映射 \(f:\{0,1\}\to\{0,1\}\)，它只可能是四种操作之一，归为两类（课件 01 · P58）：</p>
 <div class="keybox">
 <span class="label">两类函数</span>
 <p><strong>常数函数（constant）：</strong>\(f(x) \equiv 0\) 或 \(f(x) \equiv 1\)（两个输入的函数值相同）。<br/>

@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 09 课 · 量子相位估计（QPE）</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -28,7 +28,7 @@
 <h2>三、示例：旋转门 P(φ)</h2>
 <p>课件给出例题（课件 03 · P33–P34）：相位旋转门</p>
 <div class="eq">\[P(\phi) = [[1,0],[0,e^{2\pi i\phi}]]\text{，本征态之一为} |1\rangle\]</div>
-<p>取 \(\phi = 1/8\)，即 \(P(1/8)\) 对应本征值 \(e^{2\pi i\cdot(1/8)}\)。用 3 个相位比特（寄存器 1 初始化为 \(|000\rangle\)）、寄存器 2 初始化为本征态 \(|1\rangle\)，运行 QPE 电路，输出相位的<strong>三比特估计值为 \(\phî = 0.001__{2} = 1/8\)</strong>，与理论值完全相符。</p>
+<p>取 \(\phi = 1/8\)，即 \(P(1/8)\) 对应本征值 \(e^{2\pi i\cdot(1/8)}\)。用 3 个相位比特（寄存器 1 初始化为 \(|000\rangle\)）、寄存器 2 初始化为本征态 \(|1\rangle\)，运行 QPE 电路，输出相位的<strong>三比特估计值为 \(\hat{\phi} = 0.001_{2} = 1/8\)</strong>，与理论值完全相符。</p>
 <h2>四、精度与注意点</h2>
 <div class="warn">
 <p><strong>两个要点（课件 03 · P34–P35）：</strong><br/>
