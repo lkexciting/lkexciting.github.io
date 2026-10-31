@@ -5,7 +5,6 @@ aliases:
 ---
 # THE DATA LINK LAYER（数据链路层）
 
-
 ## 1. Data Link Layer Design Issues
 
 ### 1.1 基本职责与分层关系

@@ -24,11 +24,11 @@ aliases:
 
 - [[#1. 背景：为什么共享数据会出错]]
 - [[#2. 临界区问题（Critical-Section Problem）]]
-- [[#3. 三种不完整的软件方案]]
+- [[#3. 三种不完整的软件方案（Software Solutions）]]
 - [[#4. Peterson 算法（Peterson’s Solution）]]
-- [[#5. 原子性、内存顺序与内存屏障]]
+- [[#5. 原子性、内存顺序与内存屏障（Atomicity, Memory Ordering and Memory Barriers）]]
 - [[#6. 面包房算法（Bakery Algorithm）]]
-- [[#7. 硬件同步：关中断、TAS、Swap 与 CAS]]
+- [[#7. 硬件同步（Synchronization Hardware）：关中断、TAS、Swap 与 CAS]]
 - [[#8. 互斥锁（Mutex）与自旋锁（Spinlock）]]
 - [[#9. 信号量（Semaphore）：从用法到实现]]
 - [[#10. 唤醒丢失（Lost Wakeup）：为什么睡眠必须有协议]]
@@ -37,15 +37,15 @@ aliases:
 - [[#13. 读者—写者问题（Readers-Writers Problem）]]
 - [[#14. 哲学家就餐问题（Dining-Philosophers Problem）]]
 - [[#15. 管程（Monitor）与条件变量（Condition Variable）]]
-- [[#16. 同步机制的系统实例与 Pthreads]]
+- [[#16. 同步机制的系统实例（Synchronization Examples）与 Pthreads]]
 - [[#17. 原子事务（Atomic Transactions）与恢复]]
 - [[#18. 可串行化（Serializability）与并发控制]]
 - [[#19. 对照表、做题模板与高频易错点]]
 - [[#20. 自测题与逐步答案]]
 - [[#21. 中英术语速查]]
+- [[#22. 课件对照与重点补充（Slide Cross-reference and Review）]]
 
 ## 1. 背景：为什么共享数据会出错
-
 
 ### 1.1 从 CPU 调度过渡到进程同步
 
@@ -133,7 +133,8 @@ count--;
 
 生产者的更新被后写入的旧计算结果覆盖，称为**丢失更新（Lost Update）**。如果交换最后两次写回的顺序，结果变成 **6**。若完全串行执行一加一减，结果为 **5**。
 
-> [!important] 不是“CPU 算错了”
+> [!important] 丢失更新（Lost Update）的根因
+> 各线程的局部加减都正确；错误来自读—修改—写（Read–Modify–Write，RMW）没有作为整体同步，旧结果覆盖了另一个线程的更新。
 
 ### 1.5 竞态条件与数据竞争
 
@@ -154,7 +155,6 @@ count--;
 答题时应先列出单/多 CPU、是否允许中断、共享者有哪些，再判断是否有真正的互斥保证。
 
 ## 2. 临界区问题（Critical-Section Problem）
-
 
 ### 2.1 临界资源与临界区
 
@@ -201,8 +201,7 @@ count--;
 > [!warning] 让权等待和前三项不是同一层要求
 > Peterson 可以满足教材模型中的三个临界区正确性要求，却仍采用忙等待（Busy Waiting）。它没有因为忙等待就自动“互斥错误”。
 
-## 3. 三种不完整的软件方案
-
+## 3. 三种不完整的软件方案（Software Solutions）
 
 ### 3.1 单标志法：严格轮换（Strict Alternation）
 
@@ -275,7 +274,6 @@ flag[i] = false;
 
 ## 4. Peterson 算法（Peterson’s Solution）
 
-
 ### 4.1 两个变量各管什么
 
 只考虑两个进程 P0、P1：
@@ -339,8 +337,7 @@ P1: turn=0     ← 最后一次写 turn
 
 **缺点：**仅直接适用于两个进程、等待时占用 CPU，并依赖内存顺序与可见性条件。
 
-## 5. 原子性、内存顺序与内存屏障
-
+## 5. 原子性、内存顺序与内存屏障（Atomicity, Memory Ordering and Memory Barriers）
 
 ### 5.1 三件事不能混淆
 
@@ -384,7 +381,6 @@ while (flag[j] && turn == j) { }
 
 ## 6. 面包房算法（Bakery Algorithm）
 
-
 ### 6.1 取号排队的直觉
 
 Peterson 直接处理两个人；Lamport 的面包房算法处理 n 个进程。每人先取号，**号码小的先进入，号码相同则编号小的先进入**。
@@ -400,9 +396,7 @@ Peterson 直接处理两个人；Lamport 的面包房算法处理 n 个进程。
 
 比较用**字典序（Lexicographic Order）**：
 
-$$
-(a,b)<(c,d)\iff (a<c)\lor(a=c\land b<d)
-$$
+(a,b)<(c,d)⟺(a<c)∨(a=c∧b<d)
 
 例如 (3,1)<(3,4)，也有 (2,9)<(3,0)。先看票号，再看编号。
 
@@ -447,8 +441,7 @@ while (true) {
 
 算法在相应假设下实现互斥与等待保证，但扫描需要 O(n) 次量级的工作，且仍忙等待；实际实现还要考虑内存模型与票号溢出。原算法的寄存器假设比这里的简化课堂模型更细，延伸阅读可看 [Lamport 原论文](https://lamport.azurewebsites.net/pubs/bakery.pdf)。
 
-## 7. 硬件同步：关中断、TAS、Swap 与 CAS
-
+## 7. 硬件同步（Synchronization Hardware）：关中断、TAS、Swap 与 CAS
 
 ### 7.1 关中断（Disabling Interrupts）
 
@@ -593,7 +586,6 @@ while (true) {
 
 ## 8. 互斥锁（Mutex）与自旋锁（Spinlock）
 
-
 ### 8.1 互斥的接口
 
 ```c
@@ -624,7 +616,6 @@ release(lock);
 别人预期锁很快释放而一直自旋。如果持有者睡眠，等待会被拉长；在某些调度或中断关系下还会形成死锁。因此内核自旋锁的使用必须遵守具体上下文规则，不能把“任意长操作”包进去。
 
 ## 9. 信号量（Semaphore）：从用法到实现
-
 
 ### 9.1 把信号量想成“可取得的许可”
 
@@ -667,7 +658,6 @@ signal(done);           S2;
 无论 P1、P2 谁先获得 CPU，都保证 S1 在 S2 前完成。若 done 初值错设为 1，P2 可能不等 S1 就执行。
 
 ### 9.3 四个房间的例子
-
 
 - 四个房间功能等价、使用者不指定房间：一个初值为 4 的计数信号量可以限制总使用人数，**仍需可靠地分配具体空房间**。
 - 四个房间各自独立，访问者可能指定不同房间：通常每房一个初值为 1 的信号量，允许不同房间并行使用。
@@ -744,7 +734,6 @@ signal(S) {
 
 ## 10. 唤醒丢失（Lost Wakeup）：为什么睡眠必须有协议
 
-
 ### 10.1 第一个例子：自旋很浪费，而且检查与扣减要一起保护
 
 ![忙等待信号量示例上半部分](OS/pictures/Chapter%206/slide-57-fig-1.webp)
@@ -815,7 +804,6 @@ release(&s->lock);
 
 ## 11. 死锁（Deadlock）与饥饿（Starvation）
 
-
 ### 11.1 两把信号量反向获取
 
 S=1、Q=1：
@@ -853,7 +841,6 @@ signal(S);            signal(Q);
 “P/V 必须配对”应理解为：**整个协议的许可产生与消耗必须匹配**，不一定同一线程中相邻出现。用于顺序同步时，P 和 V 经常分布在不同进程中。
 
 ## 12. 有界缓冲区（Bounded-Buffer Problem）
-
 
 ### 12.1 为什么要三个信号量
 
@@ -931,7 +918,6 @@ wait(full);          // 空缓冲区时抱着 mutex 睡
 
 ## 13. 读者—写者问题（Readers-Writers Problem）
 
-
 ### 13.1 谁可以与谁并行
 
 | 组合 | 是否允许同时访问同一数据集 |
@@ -1005,7 +991,6 @@ while (true) {
 
 ## 14. 哲学家就餐问题（Dining-Philosophers Problem）
 
-
 ![哲学家围桌与共享筷子](OS/pictures/Chapter%206/slide-72-fig-1.webp)
 
 ### 14.1 模型
@@ -1062,7 +1047,6 @@ signal(room);
 这是“全有或全无”的资源申请思想，**不是简单连续执行两次普通 wait 就自动实现**。实现仍需原子地检查与分配。
 
 ## 15. 管程（Monitor）与条件变量（Condition Variable）
-
 
 ### 15.1 为什么需要更高层抽象
 
@@ -1147,7 +1131,7 @@ monitor DiningPhilosophers {
 }
 ```
 
-用 if 等待；这里用 while 表达稳健的谓词重检，保持其“先授权 EATING，再通知”的基本思路。
+课件第 77 页用 if 等待；这里用 while 表达稳健的谓词重检，保持其“先授权 EATING，再通知”的基本思路。
 
 哲学家使用：
 
@@ -1169,8 +1153,7 @@ dp.putdown(i)
 
 这个状态协议禁止相邻者同时吃，也不出现“人人持一根筷子”的死锁状态。但某人左右邻居交替用餐，可能使它一直找不到两边都空的机会，**仍可能饥饿**。正强调这一点。
 
-## 16. 同步机制的系统实例与 Pthreads
-
+## 16. 同步机制的系统实例（Synchronization Examples）与 Pthreads
 
 > [!info] 历史实现的阅读方式
 > Solaris、Windows XP 和本示例的 Linux 概述用于展示同步工具组合，不代表所有现代版本的完整实现；尤其不能把平台移植性标签无条件沿用到今天。
@@ -1251,7 +1234,6 @@ void increment_count(void) {
 > 拿锁 → while 条件不满足就 wait → 条件满足后修改共享状态 → 必要时通知 → 解锁。
 
 ## 17. 原子事务（Atomic Transactions）与恢复
-
 
 ### 17.1 为什么进程同步会讲到数据库
 
@@ -1342,7 +1324,6 @@ RAID、复制（Replication）只能在特定故障模型下提高可靠性，�
 检查点让恢复能够缩小扫描范围。但**不能一概删除检查点以前的全部日志**：若事务在检查点前开始、之后尚未结束，恢复仍可能需要它的更早记录。具体起点取决于检查点如何记录活动事务及系统的恢复协议。
 
 ## 18. 可串行化（Serializability）与并发控制
-
 
 ### 18.1 串行与交错
 
@@ -1702,3 +1683,63 @@ Q 的 R_TS=15、W_TS=9。分别独立判断 TS=12 的事务 read(Q)、write(Q) �
 | 共享锁 / 排他锁 / 兼容矩阵 | Shared Lock，S / Exclusive Lock，X / Compatibility Matrix |
 | 两阶段锁 / 增长阶段 / 收缩阶段 | Two-Phase Locking，2PL / Growing Phase / Shrinking Phase |
 | 时间戳 / 时间戳排序 / 过时写 | Timestamp / Timestamp Ordering / Obsolete Write |
+
+## 22. 课件对照与重点补充（Slide Cross-reference and Review）
+
+本节对照 `ch6-Process Synchronization-20261020.pptx`，页码指幻灯片序号。前文为详细解释，本表用于课堂回看。
+
+| 课件页码 | 主题（English） | 对应笔记 |
+| --- | --- | --- |
+| 4–11 | 背景与竞态（Background; Race Condition） | §1 |
+| 12–14 | 临界区与三个要求（Critical-Section Problem） | §2 |
+| 16–25 | 软件互斥方案（Software Solutions） | §3 |
+| 26–32 | Peterson 算法与内存屏障（Peterson’s Solution; Memory Barrier） | §4–5 |
+| 33–35 | 面包房算法（Bakery Algorithm） | §6 |
+| 36–46 | 硬件原子指令与有限等待（Synchronization Hardware; Bounded Waiting） | §7 |
+| 47–63 | 互斥锁、信号量与睡眠唤醒（Mutex Locks; Semaphores; Sleep/Wakeup） | §8–10 |
+| 64–74 | 死锁、饥饿与经典同步问题（Deadlock; Starvation; Classical Problems） | §11–14 |
+| 75–78 | 管程与条件变量（Monitors; Condition Variables） | §15 |
+| 79–87 | 系统实例与线程接口（Synchronization Examples; Pthreads） | §16 |
+| 88–93 | 原子事务与恢复（Atomic Transactions; Recovery） | §17 |
+| 94–104 | 可串行化、锁协议与时间戳（Serializability; Locking; Timestamps） | §18 |
+
+### 22.1 从算法题到证明：安全性与活性（Safety and Liveness）
+
+- **安全性（Safety）**：不发生禁止的情况。互斥要求“同一互斥临界区不能同时进入两人”。找一次同时进入的交错即可推翻。
+- **活性（Liveness）**：要求的进展最终发生。空闲让进（Progress）关注竞争者能否选出下一位；有限等待（Bounded Waiting）进一步限制某一申请被其他人超越的次数。
+- **公平性（Fairness）**不能由原子性推出。简单 TAS/CAS 锁即使每一次抢锁都原子，仍可能反复由同一竞争者获胜。
+- **调度假设（Scheduling Assumption）**要单独写：一个永远不再获调度的线程，不可能单靠互斥算法保证及时进入。
+
+答题顺序：先声明原子操作粒度和初值，再验证互斥，随后分别验证 Progress 与 Bounded Waiting，最后说明等待时是否让出 CPU。
+
+### 22.2 三种“原子”各自保证什么（Atomicity at Different Levels）
+
+| 层次 | 例子 | 保证与边界 |
+| --- | --- | --- |
+| 原子指令（Atomic Instruction） | Test-and-Set、Compare-and-Swap | 某一次读改写不可分；不直接保证整个业务正确 |
+| 临界区互斥（Critical-Section Mutual Exclusion） | 锁内修改 buffer、in、out | 遵守同一协议的执行者不交错访问；普通锁不提供断电恢复 |
+| 事务原子性（Transaction Atomicity） | 转账的扣款和入账 | 作为一个逻辑整体提交或撤销；需要日志与恢复协议支持失败处理 |
+
+因此，给转账函数加 Mutex，只解决相应运行期并发访问，不能据此证明断电后不会留下半笔转账。
+
+### 22.3 课件表述的使用边界（Interpretation Notes）
+
+1. 第 27 页关于 turn 的文字应结合第 28 页代码理解：`turn=j` 表示冲突时**让对方先进入**。
+2. 第 58–59 页同时展示忙等待与阻塞伪代码。是否睡眠取决于具体实现，不能只看到 `wait` 就判断一定发生阻塞。
+3. 第 66 页“相邻 signal 顺序无关紧要”用于当前经典信号量题的正确性分析；不能推广成所有通知机制都可以交换顺序。
+4. 第 73 页防死锁的“四人限制”应限制同时进入**取筷子阶段（Chopstick Acquisition）**的人数。只限制正在吃饭的人数不能阻止五人各拿一根筷子。
+5. 第 79–83 页是课件所列系统实例，其中 Windows XP 等具有历史版本背景；用来理解机制，不能作为当前系统全部实现的清单。
+6. 第 93 页检查点（Checkpoint）的恢复范围要结合活跃事务（Active Transaction）判断。检查点不是无条件删除此前全部日志的许可。
+
+### 22.4 新增术语（Additional Terminology）
+
+| 中文 | English / 缩写 |
+| --- | --- |
+| 安全性 / 活性 | Safety / Liveness |
+| 读—修改—写 | Read–Modify–Write，RMW |
+| 调度假设 | Scheduling Assumption |
+| 资源获取 / 资源释放 | Resource Acquisition / Resource Release |
+| 活跃事务 | Active Transaction |
+| 检查点时的活跃事务集合 | Active Transaction Set at Checkpoint |
+| 取筷子阶段 | Chopstick Acquisition Phase |
+

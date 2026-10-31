@@ -14,7 +14,7 @@ aliases:
 	对于“.\*”这里给出一个例子
 	![[Pasted image 20251124133747.webp]]
 		**补充知识点：**
-		1. 指向成员的指针允许我们间接地访问类的成员，这在需要泛型回调或延迟绑定时非常有用。	    
+		1. 指向成员的指针允许我们间接地访问类的成员，这在需要泛型回调或延迟绑定时非常有用。
 		2. 使用`.*`或`->*`运算符来通过成员指针访问成员。
 - **限制**
 	- 只能重载已存在的运算符（不能创建\*\*运算符用于求幂）
@@ -27,12 +27,12 @@ aliases:
 		operator \*(...)
 	- 可以是成员函数
 		- 隐式第一个参数
-			String String::operator+(const String& that);			
+			String String::operator+(const String& that);
 	- 可以是全局（自由）函数
-		- 两个参数都是显式的  
+		- 两个参数都是显式的
 			`String operator+(const String& 1, const String& r);`
 - **==作为成员函数==**
-	- 隐式第一个参数  
+	- 隐式第一个参数
 	- 不对接收者执行类型转换![[Pasted image 20251124134341.webp]]
 	- 例如：
 		```c++
@@ -40,8 +40,8 @@ aliases:
 		x + y; // ===> x.operator+(y);
 		```
 		- 隐式第一个参数
-		- 开发者必须能够访问类定义		
-		- 成员可以完全访问类中的所有数据		
+		- 开发者必须能够访问类定义
+		- 成员可以完全访问类中的所有数据
 		- 不对接收者执行类型转换
 		z = x+y ==>z = x.operator + (y)✔
 		z = x+3 ==>z = x.operator + (3)✔==此时会先将 3 变成 integer 类型==
@@ -49,24 +49,24 @@ aliases:
 	- 对于二元运算符（+, -, \*, 等），成员函数需要==一个参数==。
 	- 对于一元运算符（一元-, !, 等），成员函数不需要参数：
 		```c++
-		Integer operator-() const 
+		Integer operator-() const
 		{
 		    return Integer(-i);
 		}
 		z = -x; // z.operator=(x.operator-());
 		```
 - **如何重载？作为==全局函数==**
-	— 显示（explicit）第一个参数  
-	— 对两个参数都执行类型转换  
+	— 显示（explicit）第一个参数
+	— 对两个参数都执行类型转换
 	— 可以设为友元（can be made as a friend）
 	```c++
 	Integer operator+(const Integer& lhs, const Integer& rhs);
 	Integer x, y;
 	x + y // operator+(x, y);
 	```
-	- **显示第一个参数**    
-	- **开发者不需要对类有特殊访问权限**    
-	- **==可能==需要设为友元** （如果运算符需要访问私有成员，必须在类内声明为`friend`。）   
+	- **显示第一个参数**
+	- **开发者不需要对类有特殊访问权限**
+	- **==可能==需要设为友元** （如果运算符需要访问私有成员，必须在类内声明为`friend`。）
 	- **对两个参数==都执行==类型转换**
 - **全局运算符（friend）**
 	```c++
@@ -78,7 +78,7 @@ aliases:
 	private:
 	    int i;
 	};
-	
+
 	Integer operator+(const Integer& lhs, const Integer& rhs)
 	{
 	    return Integer(lhs.i + rhs.i);
@@ -110,7 +110,7 @@ aliases:
 - **关系运算符**
 	- implement!=in terms of\=\=（用\=\=表示！=）
 	- implement >, >=,<=in terms of <![[Pasted image 20251124142639.webp]]![[Pasted image 20251124142648.webp]]![[Pasted image 20251124142659.webp]]
-- **运算符“\[]”**==(示例：Vector.h 和 Vector.cpp)==
+- **运算符“[]”**==(示例：Vector.h 和 Vector.cpp)==
 	- **Must be a ==member function**==
 	- ==Single argument==
 	- 意味着对象像数组一样操作，因此应该返回一个引用
@@ -120,7 +120,7 @@ aliases:
 
 	// 初始化使用拷贝构造函数
 	MyType a = b;
-	
+
 	// 拷贝使用赋值运算符
 	a = b;
 	```
@@ -143,8 +143,8 @@ aliases:
 	- 具有重载的运算符（通常）
 	- 可以与其他类型相互转换
 	- 补充：
-		- 值类应该是轻量级的，适合按值传递。    
-		- 设计值类时，应提供完整的运算符集，使其行为与内置类型一致。    
+		- 值类应该是轻量级的，适合按值传递。
+		- 设计值类时，应提供完整的运算符集，使其行为与内置类型一致。
 		- 值类通常应该是不可变的，或者至少提供值语义。
 - **User-defined type conversions**（用户定义的类型转换）
 	- A conversion operator can be used to convert an object of one class into

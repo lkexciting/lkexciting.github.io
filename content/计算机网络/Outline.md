@@ -29,18 +29,18 @@ aliases:
 		- ==Growth of the ARPANET==
 			 ![[Pasted image 20260916103309.webp|433]]
 		- ==物联网设备的 6 个理想特性==
-			- Reliability – don't want high probability of working  
+			- Reliability – don't want high probability of working
 			    可靠性——不希望正常工作的概率高（注：==原文疑似笔误==，逻辑上应为“希望高概率正常工作”）
-			- Safety – wont use if not safe (home, car, office, etc.)  
+			- Safety – wont use if not safe (home, car, office, etc.)
 			    安全性——如果不安全将不会使用（家庭、汽车、办公室等）
-			- Security – wont use if appears insecure (vulnerable to hacks)  
+			- Security – wont use if appears insecure (vulnerable to hacks)
 			    信息安全——如果看起来不安全（易受黑客攻击）将不会使用
-			- Privacy – wont use if privacy is likely to be breached  
+			- Privacy – wont use if privacy is likely to be breached
 			    隐私性——如果隐私可能被侵犯将不会使用
-			- Interoperability – wont use if cannot interoperate across brands  
+			- Interoperability – wont use if cannot interoperate across brands
 			    互操作性——如果无法跨品牌互通将不会使用
-			- Autonomy – wont use if \[house, office\] fails if Internet is down  
-			    自主性——如果断网时\[房屋, 办公室\]系统失效将不会使用
+			- Autonomy – wont use if [house, office] fails if Internet is down
+			    自主性——如果断网时[房屋, 办公室]系统失效将不会使用
 	- NSFNET
 		![[Pasted image 20260916104250.webp|519]]
 		![[Pasted image 20260916104617.webp|537]]

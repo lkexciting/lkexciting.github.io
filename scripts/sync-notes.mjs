@@ -5,7 +5,8 @@ import { fileURLToPath } from 'node:url'
 import { convertImagesToWebp, applyContentUpgrades, cleanNoteTitle } from './note-transforms.mjs'
 
 const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const vault = path.resolve(site, '..')
+// 默认同步上级目录的库；也可用 VAULT_DIR 环境变量指向任意 Obsidian 库
+const vault = process.env.VAULT_DIR ? path.resolve(process.env.VAULT_DIR) : path.resolve(site, '..')
 const courses = [
   ['计算机网络', 'NETWORKS', '从分层模型到网络协议，理解信息如何连接。'],
   ['计算机系统原理', 'COMPUTER SYSTEMS', '从硬件到程序，探索计算机的工作方式。'],
@@ -14,6 +15,7 @@ const courses = [
   ['图像信息处理', 'IMAGE PROCESSING', '从像素到特征，探索图像背后的方法。'],
   ['量子计算理论', 'QUANTUM COMPUTING', '量子态、量子门与量子计算的基础。'],
   ['物联网', 'INTERNET OF THINGS', '感知、通信与连接，记录物联网学习。'],
+  ['ADS', 'ADVANCED DATA STRUCTURES', '从树结构到算法设计，攻克高级数据结构与算法。'],
 ]
 const assetNames = new Set()
 const notePaths = new Set()

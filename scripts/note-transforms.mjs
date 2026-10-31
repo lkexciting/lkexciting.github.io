@@ -85,13 +85,14 @@ function dedentOneLevel(line) {
  * - 去掉编号前缀（01-xxx、01.xxx、01 xxx）
  * - Chapter3 规范为 Chapter 3
  * - 去掉与课程文件夹重复的前缀（计算机系统原理 第五章… → 第五章…）
- * - _ai 后缀标记为「· AI 精讲」
+ * - AI 精讲笔记统一标记为「· AI 精讲」：兼容 `_ai` 后缀与「 AI精讲」后缀两种命名
  */
 export function cleanNoteTitle(filename, courseName = '') {
   const raw = path.basename(filename, '.md')
-  const isAi = /_ai$/i.test(raw)
+  const isAi = /_ai$/i.test(raw) || /\s*AI\s*精讲$/i.test(raw)
   const base = raw
     .replace(/_ai$/i, '')
+    .replace(/\s*AI\s*精讲$/i, '')
     .replace(/^\d+[-.\s]+/, '')
     .replace(/^Chapter\s*(\d+)/i, 'Chapter $1')
     .replace(/\s+/g, ' ')

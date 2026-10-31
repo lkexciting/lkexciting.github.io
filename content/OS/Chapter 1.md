@@ -101,9 +101,9 @@ aliases:
 - Storage Structure
 	- Main memory – only large storage media that the CPU can access directly.
 	- Secondary storage – extension of main memory that provides large nonvolatile storage capacity.
-	- Magnetic disks – rigid metal or glass platters covered with magnetic recording material 
+	- Magnetic disks – rigid metal or glass platters covered with magnetic recording material
 		- Disk surface is logically divided into tracks, which are subdivided into sectors.
-		- The disk controller determines the logical interaction between the device and the computer. 
+		- The disk controller determines the logical interaction between the device and the computer.
 - Storage-Device Hierarchy
 	![[Pasted image 20260917151707.webp|439]]
 	虚线以下：非意识性存储，关机不会丢失
@@ -184,130 +184,130 @@ aliases:
 	- When counter zero generate an interrupt
 	- Set up before scheduling process to regain control or terminate program that exceeds allotted time
 ## Process Management（进程管理）
-- A process is a program in execution. It is a unit of work within the system. Program is a ==passive entity==, process is an ==active entity==.  
+- A process is a program in execution. It is a unit of work within the system. Program is a ==passive entity==, process is an ==active entity==.
 	进程是正在执行的程序。它是系统内的一个工作单元。程序是被动实体，进程是主动实体。
-- Process needs resources to accomplish its task  
+- Process needs resources to accomplish its task
 	进程需要资源来完成其任务
-	- CPU, memory, I/O, files  
+	- CPU, memory, I/O, files
 		CPU、内存、I/O、文件
-	- Initialization data  
+	- Initialization data
 		初始化数据
-- Process termination requires reclaim of any reusable resources  
+- Process termination requires reclaim of any reusable resources
 	进程终止需要回收所有可复用的资源
-- Single-threaded process has one ==program counter== specifying location of next instruction to execute  
+- Single-threaded process has one ==program counter== specifying location of next instruction to execute
 	单线程进程有一个程序计数器，用于指定下一条要执行的指令的位置
-	- Process executes instructions sequentially, one at a time, until completion  
+	- Process executes instructions sequentially, one at a time, until completion
 		进程按顺序执行指令，一次执行一条，直到完成
-- Multi-threaded process has one ==program counter per thread==  
+- Multi-threaded process has one ==program counter per thread==
 	多线程进程为每个线程配备一个程序计数器
-- Typically system has many processes, some user, some operating system running concurrently on ==one or more CPUs==  
+- Typically system has many processes, some user, some operating system running concurrently on ==one or more CPUs==
 	通常系统有许多进程，一些是用户进程，一些是操作系统进程，在一个或多个 CPU 上并发运行
-	- Concurrency by ==multiplexing the CPUs== among the processes / threads  
+	- Concurrency by ==multiplexing the CPUs== among the processes / threads
 		通过在处理进程/线程之间复用 CPU 来实现并发
 ## Process Management Activities（进程管理活动）
-- The operating system is responsible for the following activities in connection with process management:  
+- The operating system is responsible for the following activities in connection with process management:
 	操作系统负责与进程管理相关的下列活动：
-- ==Creating== and ==deleting== both user and system processes  
+- ==Creating== and ==deleting== both user and system processes
 	创建和删除用户及系统进程
-- ==Suspending== and ==resuming== processes  
+- ==Suspending== and ==resuming== processes
 	挂起和恢复进程
-- Providing mechanisms for process ==synchronization==  
+- Providing mechanisms for process ==synchronization==
 	提供进程同步机制
-- Providing mechanisms for process ==communication==  
+- Providing mechanisms for process ==communication==
 	提供进程通信机制
-- Providing mechanisms for ==deadlock== handling  
+- Providing mechanisms for ==deadlock== handling
 	提供死锁处理机制
-	
-- Synchronization is about timing; communication is about data movement.  
+
+- Synchronization is about timing; communication is about data movement.
 	同步关乎时序；通信关乎数据移动。
 ## Memory Management（内存管理）
-- All ==data== must be in memory before and after processing  
+- All ==data== must be in memory before and after processing
 	所有数据在处理前后必须位于内存中
-- All ==instructions== must be in memory in order to execute  
+- All ==instructions== must be in memory in order to execute
 	所有指令为了执行必须位于内存中
-- Memory management determines what is in memory when  
+- Memory management determines what is in memory when
 	内存管理决定何时将什么保留在内存中
-	- Optimizing CPU utilization and computer response to users  
+	- Optimizing CPU utilization and computer response to users
 		优化 CPU 利用率以及计算机对用户的响应
-- Memory management activities  
+- Memory management activities
 	内存管理活动
-	- Keeping track of which parts of memory are currently being used and by whom  
+	- Keeping track of which parts of memory are currently being used and by whom
 		跟踪内存的哪些部分当前正在被使用以及被谁使用
-	- Deciding which processes (or parts thereof) and data to move into and out of memory  
+	- Deciding which processes (or parts thereof) and data to move into and out of memory
 		决定哪些进程（或其部分）和数据移入或移出内存
-	- Allocating and deallocating memory space as needed  
+	- Allocating and deallocating memory space as needed
 		根据需要分配和回收内存空间
 ## Storage Management（存储管理）
-- OS provides uniform, logical view of information storage  
+- OS provides uniform, logical view of information storage
 	操作系统提供统一、逻辑的信息存储视图
-	- Abstracts physical properties to logical storage unit - ==file==  
+	- Abstracts physical properties to logical storage unit - ==file==
 		将物理属性抽象为逻辑存储单元——文件（file）
-	- Each medium is controlled by device (i.e., disk drive, tape drive)  
+	- Each medium is controlled by device (i.e., disk drive, tape drive)
 		每种介质由设备控制（即磁盘驱动器、磁带驱动器）
-		- Varying properties include access speed, capacity, data-transfer rate, access method (sequential or random)  
+		- Varying properties include access speed, capacity, data-transfer rate, access method (sequential or random)
 			不同的属性包括访问速度、容量、数据传输率、访问方法（顺序或随机）
-- File-System management  
+- File-System management
 	文件系统管理
-	- Files usually organized into ==directories==  
+	- Files usually organized into ==directories==
 		文件通常组织成目录（directories）
-	- ==Access control== on most systems to determine who can access what  
+	- ==Access control== on most systems to determine who can access what
 		大多数系统上的访问控制（Access control），以确定谁可以访问什么
-- OS activities include  
+- OS activities include
 	操作系统活动包括
-	- Creating and deleting files and directories  
+	- Creating and deleting files and directories
 		创建和删除文件与目录
-	- Primitives to manipulate files and dirs  
+	- Primitives to manipulate files and dirs
 		操作文件和目录（dirs）的原语
-	- Mapping files onto secondary storage  
+	- Mapping files onto secondary storage
 		将文件映射到二级存储
-	- Backup files onto stable (non-volatile) storage media  
+	- Backup files onto stable (non-volatile) storage media
 		将文件备份到稳定（非易失性）存储介质上
 ## Mass-Storage Management（大容量存储管理）
-- Usually disks used to store data that does not fit in main memory or data that must be kept for a "long" period of time.  
+- Usually disks used to store data that does not fit in main memory or data that must be kept for a "long" period of time.
 	通常使用磁盘来存储无法放入主存的数据，或必须保留“长”时间的数据。
-- Proper management is of central importance  
+- Proper management is of central importance
 	恰当的管理至关重要
-- Entire ==speed== of computer operation hinges on disk subsystem and its algorithms  
+- Entire ==speed== of computer operation hinges on disk subsystem and its algorithms
 	计算机操作的整体速度取决于磁盘子系统及其算法（speed）
-- OS activities  
+- OS activities
 	操作系统活动
-	- Free-space management  
+	- Free-space management
 		空闲空间管理
-	- Storage allocation  
+	- Storage allocation
 		存储分配
-	- Disk scheduling  
+	- Disk scheduling
 		磁盘调度
-- Some storage needs not be fast  
+- Some storage needs not be fast
 	某些存储不需要很快
-	- Tertiary storage includes optical storage, magnetic tape  
+	- Tertiary storage includes optical storage, magnetic tape
 		三级存储包括光存储、磁带
-	- Still must be managed  
+	- Still must be managed
 		仍然必须被管理
-	- Varies between WORM (write-once, read-many-times) and RW (read-write)  
+	- Varies between WORM (write-once, read-many-times) and RW (read-write)
 		介于 WORM（一次写入，多次读取）和 RW（读写）之间
 ## I/O Subsystem（I/O 子系统）
-- One purpose of OS is to ==hide peculiarities== of hardware devices from the user – ease of usage & programming  
+- One purpose of OS is to ==hide peculiarities== of hardware devices from the user – ease of usage & programming
 	操作系统的目的之一是向用户隐藏硬件设备的特殊性（peculiarities）——以便于使用和编程
-- I/O subsystem responsible for  
+- I/O subsystem responsible for
 	I/O 子系统负责
-	- Memory management of I/O including ==buffering== (storing data temporarily while it is being transferred), ==caching== (storing parts of data in faster storage for performance), ==spooling== (the overlapping of output of one job with input of other jobs)  
+	- Memory management of I/O including ==buffering== (storing data temporarily while it is being transferred), ==caching== (storing parts of data in faster storage for performance), ==spooling== (the overlapping of output of one job with input of other jobs)
 		I/O 的内存管理，包括缓冲（buffering）（在数据传输时临时存储数据）、缓存（caching）（将部分数据存储在更快的存储中以提高性能）、假脱机（spooling）（将一个作业的输出与其他作业的输入重叠进行）
-	- General device-driver interface  
+	- General device-driver interface
 		通用设备驱动程序接口
-	- Drivers for specific hardware devices  
+	- Drivers for specific hardware devices
 		特定硬件设备的驱动程序
 ## OS Purposes（操作系统目的）
-- Abstraction  
+- Abstraction
 	抽象
-- Multiplex  
+- Multiplex
 	多路复用
-- Isolation  
+- Isolation
 	隔离
-- Sharing  
+- Sharing
 	共享
-- Security  
+- Security
 	安全
-- Performance  
+- Performance
 	性能
-- Range of uses  
+- Range of uses
 	使用范围（或适用范围）

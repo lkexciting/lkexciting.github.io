@@ -83,7 +83,7 @@ aliases:
 				  - 复制所有线程；
 				  - 只复制调用 fork() 的线程。
 		- **exec()（执行新程序）**
-			- 会替换整个 Process（进程）。	
+			- 会替换整个 Process（进程）。
 		- **Thread Cancellation（线程取消）**
 			- 在线程完成任务前终止 Thread（线程）。
 		- **Asynchronous Cancellation（异步取消）**

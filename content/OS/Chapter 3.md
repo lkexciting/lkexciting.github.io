@@ -103,7 +103,7 @@ aliases:
 				typedef struct {
 				    // item fields
 				} item;
-				
+
 				item buffer[BUFFER_SIZE];
 				int in = 0;
 				int out = 0;
@@ -134,29 +134,29 @@ aliases:
 				```
 - **Interprocess Communication**
 	进程间通信（IPC）
-	- Mechanism for processes to communicate and to synchronize their actions  
+	- Mechanism for processes to communicate and to synchronize their actions
 	    进程间通信和同步其动作的机制
-	- Two models for IPC: message passing and shared memory  
+	- Two models for IPC: message passing and shared memory
 	    IPC 的两种模型：消息传递和共享内存
-	- Message passing – processes communicate with each other without resorting to shared variables  
+	- Message passing – processes communicate with each other without resorting to shared variables
 	    消息传递——进程之间在不借助共享变量的情况下进行通信
-	- Message-passing facility provides two operations:  
+	- Message-passing facility provides two operations:
 	    消息传递设施提供两种操作：
-	    - send(message) – message size fixed or variable  
+	    - send(message) – message size fixed or variable
 	        send(message)（发送（消息））——消息大小固定或可变
-	    - receive(message)  
+	    - receive(message)
 	        receive(message)（接收（消息））
-	- If P and Q wish to communicate, they need to:  
+	- If P and Q wish to communicate, they need to:
 	    如果进程 P 和 Q 希望进行通信，它们需要：
-	    - establish a communication link between them  
+	    - establish a communication link between them
 	        在它们之间建立一条通信链路
-	    - exchange messages via send/receive  
+	    - exchange messages via send/receive
 	        通过 send/receive（发送/接收）交换消息
-	- Implementation of communication link  
+	- Implementation of communication link
 	    通信链路的实现
-	    - physical (e.g., shared memory, hardware bus)  
+	    - physical (e.g., shared memory, hardware bus)
 	        物理的（例如，共享内存、硬件总线）
-	    - logical (e.g., logical properties)  
+	    - logical (e.g., logical properties)
 	        逻辑的（例如，逻辑属性）
 	![[Pasted image 20261008150421.webp|526]]
 	- **Direct Communication**

@@ -120,7 +120,7 @@ aliases:
 		- Consists of everything below the system-call interface and above the physical hardware
 		- Provides the file system, CPU scheduling, memory management, and other operating-system functions; ==a large number of functions for one level==分层简单
 		![[Pasted image 20260922174453.webp|529]]
-- ==Microkernel Structure（微内核）== 
+- ==Microkernel Structure（微内核）==
 	将尽可能多的功能从内核（kernel）移入“用户”（user）空间。用户模块（user modules）之间使用消息传递（message passing）进行通信（Communication）。优点（Benefits）：更容易扩展微内核（microkernel）；更容易将操作系统移植（port）到新的体系结构（architectures）；更可靠（reliable）（更少代码运行在内核模式（kernel mode）下）；更安全（secure）。缺点（Detriments）：用户空间（user space）到内核空间（kernel space）通信的性能开销（Performance overhead）。
 	![[Pasted image 20260922175025.webp]]
 - 可不可以结合宏内核和微内核？

@@ -94,3 +94,19 @@ test("dropBrokenImageEmbeds only removes missing assets", () => {
   // 非图片嵌入不受影响
   assert.equal(dropBrokenImageEmbeds("[[某笔记]]", assets), "[[某笔记]]")
 })
+
+test("cleanNoteTitle recognizes the space-AI精讲 naming convention", () => {
+  assert.equal(
+    cleanNoteTitle("Chapter 8 动态规划 AI精讲.md"),
+    "Chapter 8 动态规划 · AI 精讲",
+  )
+  assert.equal(
+    cleanNoteTitle("Appendix A Exam Guide AI精讲.md", "OOP"),
+    "Appendix A Exam Guide · AI 精讲",
+  )
+  assert.equal(cleanNoteTitle("Chapter 1 AVL树与伸展树 AI精讲.md"), "Chapter 1 AVL树与伸展树 · AI 精讲")
+  // 老命名不受影响
+  assert.equal(cleanNoteTitle("Chapter 1_ai.md", "计算机网络"), "Chapter 1 · AI 精讲")
+  // 普通标题不含 AI 字样
+  assert.equal(cleanNoteTitle("00-复习导航.md"), "复习导航")
+})

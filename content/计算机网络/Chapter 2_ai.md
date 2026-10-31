@@ -5,7 +5,6 @@ aliases:
 ---
 # THE PHYSICAL LAYER（物理层）
 
-
 ## 1. Physical Layer: Overview
 
 **Physical Layer / PHY** 是课程模型的最底层，规定如何将 bits 表示为信号并在 Channel 上传输，包括电气、光学、机械、时序及相关接口。
@@ -514,7 +513,6 @@ H=3000 Hz，M=2，S/N=100。
 这是 SONET Payload 容量，若内部再封装 PPP/IP 等，还需扣其开销。数值与参数表的 594.432 Mbps 一致；不要只减一列 Path overhead 而漏掉 Fixed stuff。
 
 ### 12.6 CDMA：A、B、C 同时发送 0
-
 
 `A=(-1,-1,-1,+1,+1,-1,+1,+1)`
 

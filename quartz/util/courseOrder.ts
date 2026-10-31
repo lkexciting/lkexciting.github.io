@@ -12,9 +12,9 @@ export function byCourseOrder(a: CourseEntry, b: CourseEntry): number {
     // 标题后缀（经清理后形如「Chapter 1 · AI 精讲」）
     const name = entry.displayName ?? entry.frontmatter?.title ?? ""
     if (/·\s*AI\s*精讲/.test(name)) return true
-    // 文件名 / slug 后缀（Chapter 1_ai.md、Chapter-1_ai）
+    // 文件名 / slug 后缀：`Chapter 1_ai`、`Chapter-1_ai`、`Chapter 8 动态规划 AI精讲`
     const file = (entry.filePath ?? entry.slug ?? "").replace(/\.md$/i, "")
-    return /_ai$/i.test(file)
+    return /_ai$/i.test(file) || /(?:^|\s)AI\s*精讲$/i.test(file)
   }
   // AI 精讲笔记统一排到所在目录的最后
   const leftIsAi = isAiNote(a)
