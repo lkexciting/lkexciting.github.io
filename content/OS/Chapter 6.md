@@ -389,7 +389,7 @@ while (flag[j] && turn == j) { }
 
 Peterson 直接处理两个人；Lamport 的面包房算法处理 n 个进程。每人先取号，**号码小的先进入，号码相同则编号小的先进入**。
 
-![中的 Lamport 面包房算法论文](OS/pictures/Chapter%206/slide-33-fig-1.png)
+![中的 Lamport 面包房算法论文](OS/pictures/Chapter%206/slide-33-fig-1.webp)
 
 共享数组：
 
@@ -747,15 +747,15 @@ signal(S) {
 
 ### 10.1 第一个例子：自旋很浪费，而且检查与扣减要一起保护
 
-![忙等待信号量示例上半部分](OS/pictures/Chapter%206/slide-57-fig-1.png)
+![忙等待信号量示例上半部分](OS/pictures/Chapter%206/slide-57-fig-1.webp)
 
-![忙等待信号量示例下半部分](OS/pictures/Chapter%206/slide-57-fig-2.png)
+![忙等待信号量示例下半部分](OS/pictures/Chapter%206/slide-57-fig-2.webp)
 
 消费者循环检查 count，生产者长时间不提供资源时会浪费 CPU。本节以一生产者、一消费者讨论这一点；如果推广到多个消费者，“在锁外看到 count>0，然后才拿锁扣减”还会产生多个消费者抢同一许可的问题，需要在锁内重新检查。
 
 ### 10.2 直接把空转替换成 sleep 为什么不行
 
-![直接 sleep 引起的唤醒丢失](OS/pictures/Chapter%206/slide-60-fig-1.png)
+![直接 sleep 引起的唤醒丢失](OS/pictures/Chapter%206/slide-60-fig-1.webp)
 
  P 的危险片段：
 
@@ -777,7 +777,7 @@ while (s->count == 0)
 
 ### 10.3 加锁后抱着锁睡，也不行
 
-![持有条件锁睡眠造成死锁](OS/pictures/Chapter%206/slide-61-fig-1.png)
+![持有条件锁睡眠造成死锁](OS/pictures/Chapter%206/slide-61-fig-1.webp)
 
 ```c
 acquire(&s->lock);
@@ -789,9 +789,9 @@ while (s->count == 0)
 
 ### 10.4 正确思路：登记等待和释放条件锁必须协调
 
-![将条件锁交给 sleep 的实现上半部分](OS/pictures/Chapter%206/slide-62-fig-1.png)
+![将条件锁交给 sleep 的实现上半部分](OS/pictures/Chapter%206/slide-62-fig-1.webp)
 
-![将条件锁交给 sleep 的实现下半部分](OS/pictures/Chapter%206/slide-62-fig-2.png)
+![将条件锁交给 sleep 的实现下半部分](OS/pictures/Chapter%206/slide-62-fig-2.webp)
 
 改为 `sleep(s, &s->lock)`：
 
@@ -1006,7 +1006,7 @@ while (true) {
 ## 14. 哲学家就餐问题（Dining-Philosophers Problem）
 
 
-![哲学家围桌与共享筷子](OS/pictures/Chapter%206/slide-72-fig-1.png)
+![哲学家围桌与共享筷子](OS/pictures/Chapter%206/slide-72-fig-1.webp)
 
 ### 14.1 模型
 
@@ -1068,7 +1068,7 @@ signal(room);
 
 信号量容易因为漏 P/V、顺序颠倒而出错。管程把共享数据和操作它的过程封装在一起，进入过程时由语言/运行时提供互斥。
 
-![管程、入口队列与共享数据](OS/pictures/Chapter%206/slide-75-fig-1.png)
+![管程、入口队列与共享数据](OS/pictures/Chapter%206/slide-75-fig-1.webp)
 
 管程包含：共享数据（Shared Data）、操作过程（Procedures）、初始化代码（Initialization Code），以及入口队列（Entry Queue）。
 
@@ -1078,7 +1078,7 @@ signal(room);
 
 互斥只能保证“一个人进去检查”。缓冲区空时，消费者即使独占了管程，也变不出一个元素。它需要等待“非空”条件，同时允许生产者进入并改变条件。
 
-![管程中的条件队列](OS/pictures/Chapter%206/slide-76-fig-1.png)
+![管程中的条件队列](OS/pictures/Chapter%206/slide-76-fig-1.webp)
 
 **条件变量（Condition Variable）**关联等待某种条件的队列：
 
@@ -1351,7 +1351,7 @@ RAID、复制（Replication）只能在特定故障模型下提高可靠性，�
 - **非串行调度（Nonserial Schedule）**：事务的操作交错执行。
 - **可串行化（Serializability）**：交错后的行为符合某个串行执行的正确性标准。
 
-![先 T0 后 T1 的串行调度](OS/pictures/Chapter%206/slide-96-fig-1.png)
+![先 T0 后 T1 的串行调度](OS/pictures/Chapter%206/slide-96-fig-1.webp)
 
 n 个事务若没有额外先后约束，有 n! 种排列出的串行顺序；不同顺序不必得到相同结果，因此可串行化通常是“等价于其中一种”，不是“等价于所有顺序”。
 
@@ -1373,7 +1373,7 @@ n 个事务若没有额外先后约束，有 n! 种排列出的串行顺序；�
 
 如果能通过不断交换**相邻、不同事务、互不冲突**的操作，把一个调度变成串行调度，则它是冲突可串行化的。
 
-![中的非串行但可串行化调度](OS/pictures/Chapter%206/slide-98-fig-1.png)
+![中的非串行但可串行化调度](OS/pictures/Chapter%206/slide-98-fig-1.webp)
 
 图中 T0 在 A 上的读写，先于 T1 在 A 上的读写；T0 在 B 上也先于 T1。虽然中间交错，但冲突方向一致，为 T0→T1。
 
@@ -1489,7 +1489,7 @@ lock-S(A), read(A), unlock(A), lock-X(B), write(B)              ✗
 
 ### 18.11 为什么是允许的调度
 
-![中可由时间戳协议接受的交错](OS/pictures/Chapter%206/slide-104-fig-1.png)
+![中可由时间戳协议接受的交错](OS/pictures/Chapter%206/slide-104-fig-1.webp)
 
 假设 TS(T2)<TS(T3)：T2 先读 B，T3 再读写 B；随后 T2 先读 A，T3 再读写 A。每个数据项的冲突方向都符合 T2→T3。
 

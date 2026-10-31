@@ -1,5 +1,5 @@
 ---
-title: Chapter 2_ai
+title: Chapter 2 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 2_ai
 ---
@@ -39,7 +39,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - 比较 Category 3 与 Category 5，后者绞合更密。
 - Category、频率性能、长度及使用的 Ethernet 标准共同决定可用速率，不能只凭“Cat 6”推出所有距离都支持同一速率。
 
-![Category 3 与 Category 5](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-006.png)
+![Category 3 与 Category 5](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-006.webp)
 
 **传输方向：**
 
@@ -53,7 +53,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 
 由中心导体、绝缘层、外导体/屏蔽和保护外套组成。屏蔽有助于抗噪声，这里用于长距离线路和 Cable network 示例。
 
-![Coaxial cable 的结构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-008.png)
+![Coaxial cable 的结构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-008.webp)
 
 ### 2.4 Power Lines
 
@@ -69,9 +69,9 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - Light source：LED 或 Semiconductor laser；Detector 常用 Photodiode。
 - 连接：Connector、Mechanical splice、Fusion splice。
 
-![光在光纤中的传播与约束](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-011.png)
+![光在光纤中的传播与约束](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-011.webp)
 
-![Attenuation 与波长窗口](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-012.png)
+![Attenuation 与波长窗口](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-012.webp)
 
 | 相对 Copper 的优势 | 代价或限制 |
 |---|---|
@@ -93,7 +93,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - 较宽 H 可以支持更高 Data rate，但还受 Noise、调制和编码条件影响。
 - 频段会影响天线、传播、遮挡、干扰及可用资源。
 
-![Electromagnetic spectrum](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-018.png)
+![Electromagnetic spectrum](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-018.webp)
 
 ### 3.2 Spread Spectrum
 
@@ -113,9 +113,9 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 | Millimeter wave | 短波长，便于形成窄波束 | 遮挡、对准、随频段变化的吸收和衰减 |
 | Lightwave / Free-space optical | 激光等在自由空间形成定向连接 | 对准、雾、湍流与气流 |
 
-![Ground wave 与 Ionospheric propagation](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-023.png)
+![Ground wave 与 Ionospheric propagation](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-023.webp)
 
-![Free-space optical 与气流影响](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-028.png)
+![Free-space optical 与气流影响](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-028.webp)
 
 “Radio 总是全向”“Infrared 不能室外使用”“某频率以上都完全直线”等是简化说明。方向性还受 Antenna 影响，能否应用需结合具体传播环境，不能当作绝对规律。
 
@@ -135,7 +135,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 | MEO（Medium-Earth Orbit） | 介于低轨与地球静止轨道之间，典型示例为导航系统 | Coverage、数量、Delay 介于不同轨道系统之间 |
 | LEO（Low-Earth Orbit） | 较低高度，相对地面快速运动 | 较短空间链路、较低传播时延，通常需要更多 Satellites 和 Handover |
 
-![卫星轨道、覆盖和 Delay](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-032.png)
+![卫星轨道、覆盖和 Delay](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-032.webp)
 
 **易错：**Geosynchronous 不必然 Geostationary；后者还要求适当轨道形状、倾角和运动方向。Latency 不能只由“低轨”两个字确定，还要计入地面路由与处理。
 
@@ -146,9 +146,9 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - **Iridium** 是示例的 LEO 历史案例，借此理解星座、多轨道面和覆盖，而非记为当前卫星数量的完整事实。
 - 网络可用 Inter-satellite links 在空间转发，也可在地面完成主要转接。
 
-![VSAT Hub](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-034.png)
+![VSAT Hub](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-034.webp)
 
-![Space relay 与 Ground relay](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-039.png)
+![Space relay 与 Ground relay](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-039.webp)
 
 “MEO 不用于电信”“进入辐射带会很快毁坏”等不能作绝对结论：MEO 可承载通信，辐射带主要增加设计与耐辐射要求。此处无需记忆过时部署判断。
 
@@ -165,9 +165,9 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - 保留更多 Harmonics，通常可以更接近原波形。
 - 并非一定要恢复完美方波才能恢复 bits；关键是 Receiver 能否可靠判断发送的 Symbols。
 
-![信号与 Harmonics](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-044.png)
+![信号与 Harmonics](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-044.webp)
 
-![保留有限 Harmonics 后的近似](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-048.png)
+![保留有限 Harmonics 后的近似](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-048.webp)
 
 -bit pattern 的例子：bit rate 为 b，则周期 `T=8/b`，Fundamental frequency `f=b/8`。H=3000 Hz 时，最多通过约 `floor(24000/b)` 个 Harmonics。这个 T 只对应所设的 8-bit repeating pattern，不是所有数据流的通用周期。
 
@@ -228,7 +228,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 | Manchester | 每 bit 中点必有 transition，方向表示数据 | 携带时钟信息 | 每 bit 两个 signal elements，频带需求更大 |
 | AMI（Alternate Mark Inversion） | 0 为零电平，1 正负交替 | 减少 DC 成分，可利用极性规则 | 长串 0 仍可能缺乏 transitions |
 
-![NRZ、NRZI、Manchester、AMI 波形](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-057.png)
+![NRZ、NRZI、Manchester、AMI 波形](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-057.webp)
 
 **Clock recovery**：Receiver 必须知道 Symbol/Bit boundaries。电平不变时，难以仅凭波形判断究竟经过了多少个 bits。
 
@@ -241,7 +241,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - 例： `0000→11110`，`0001→01001`。
 - 它是 Block/Line coding，不能把“有冗余”直接理解为能纠正任意错误。
 
-![4B/5B 映射表](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-061.png)
+![4B/5B 映射表](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-061.webp)
 
 按本节约定简化模型，带宽 H、无噪声：Binary NRZ 最大 data rate≈2H，Manchester≈H；给定 data rate B，所需带宽分别至少约 B/2、B。实际频谱占用还取决于带宽定义、脉冲形状与允许失真。
 
@@ -253,7 +253,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 - **QPSK（Quadrature PSK）**：4 个相位状态，每 Symbol 2 bits。
 - **QAM（Quadrature Amplitude Modulation）**：通过正交 I/Q 分量组合形成多个 Amplitude/Phase 状态。
 
-![ASK、FSK、PSK 波形](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-062.png)
+![ASK、FSK、PSK 波形](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-062.webp)
 
 **Constellation diagram** 中每个点代表一个 Symbol。M 个点时，固定长度映射每 Symbol 为 log₂M bits。
 
@@ -263,7 +263,7 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 | 16-QAM | 16 | 4 |
 | 64-QAM | 64 | 6 |
 
-![QPSK、16-QAM、64-QAM Constellations](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-063.png)
+![QPSK、16-QAM、64-QAM Constellations](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-063.webp)
 
 点数越多，在相同功率下通常越密集，Receiver 越难区分，需要更好的 SNR 或更强处理。若每 Symbol 有 check bits，有效 bits/symbol 小于 gross mapping bits。
 
@@ -282,9 +282,9 @@ PHY 主要处理 Signal、Symbol、Bit，不负责 IP Routing 或应用语义；
 
 **FDM** 把多个信号放到不同频带。**OFDM（Orthogonal Frequency Division Multiplexing）** 使用正交 Subcarriers，频谱可以重叠，但在理想同步条件下仍可分离，提高频谱利用率。
 
-![FDM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-065.png)
+![FDM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-065.webp)
 
-![OFDM 正交 Subcarriers](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-066.png)
+![OFDM 正交 Subcarriers](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-066.webp)
 
 OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分配资源属于进一步的 Multiple access 设计。频偏、时间同步误差等会破坏理想正交条件。
 
@@ -292,7 +292,7 @@ OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分�
 
 多个输入按时间交错。**Synchronous TDM** 可固定分配 slots，若用户没有数据，其 slot 可能空闲。**Statistical multiplexing** 根据当前需求分配资源，是理解共享效率的补充概念。
 
-![TDM 与 Time slots](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-067.png)
+![TDM 与 Time slots](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-067.webp)
 
 ### 7.4 CDM / CDMA
 
@@ -305,7 +305,7 @@ OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分�
 - 解码 X：**`b_X=(Y·X)/m`**。
 - 由 `X·X=m`、`X·Z=0`，恢复值 +1、−1、0 分别表示 1、0、Silent。
 
-![CDMA Code 与复合信号示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-072.png)
+![CDMA Code 与复合信号示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-072.webp)
 
 实际系统会受 Noise、不同功率、Multipath 与异步影响；不能把理想点积保证无条件推广。码长为 m 的向量空间最多容纳 m 个相互正交、非零 code vectors。
 
@@ -313,7 +313,7 @@ OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分�
 
 用不同 Optical wavelengths 复用光信号，通过光学 Combiner/Splitter 合并和分离。由于 `v=fλ`，它可理解为光频率范围内的 FDM。
 
-![WDM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-073.png)
+![WDM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-073.webp)
 
 ## 8. Public Switched Telephone Network（PSTN）
 
@@ -327,7 +327,7 @@ OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分�
 
 全互联 n 个用户需 `n(n−1)/2` 条点对点连接，规模扩大后难以管理，因此引入中心交换与分层交换结构。
 
-![全互联、集中式与分层交换](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-079.png)
+![全互联、集中式与分层交换](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-079.webp)
 
 示例的五级电话网和模拟 Copper local loop 是传统架构背景，不意味着所有电话接入都仍是该结构。
 
@@ -337,7 +337,7 @@ OFDM 不是“每个用户必然对应一个 Subcarrier”；如何向用户分�
 - **Codec（Coder/Decoder）**：在本节中把模拟语音 Sampling、Quantization、Encoding 成数字数据，再反向还原。
 - 二者都可能涉及模拟/数字转换，但信息来源与任务不同：Demodulator 判决编码过的通信 Symbols，语音 Coder 表示原始模拟声音。
 
-![Modem 与 Codec 的位置](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-083.png)
+![Modem 与 Codec 的位置](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-083.webp)
 
 ### 8.3 Dial-up Modems
 
@@ -356,13 +356,13 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 - **DSLAM（DSL Access Multiplexer）** 位于接入汇聚侧，连接大量用户 DSL 线路与运营商数据网络。
 - 距离、Attenuation、Crosstalk 影响实际速率。
 
-![ADSL 的 DMT 频段示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-085.png)
+![ADSL 的 DMT 频段示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-085.webp)
 
-![ADSL Modem、Splitter、DSLAM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-087.png)
+![ADSL Modem、Splitter、DSLAM](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-087.webp)
 
 **FTTH（Fiber to the Home）** 把 Fiber 延伸到用户住宅。配图使用 Optical splitter/combiner，说明光接入也可能共享某段资源，不是所有 Fiber 用户都拥有端到端独占带宽。
 
-![FTTH 与 Optical splitter](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-088.png)
+![FTTH 与 Optical splitter](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-088.webp)
 
 ### 8.5 PCM 与 T1
 
@@ -376,7 +376,7 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 - 24 路 8-bit 时隙的 aggregate rate=`192×8000=1.536 Mbps`，它与总线路速率不同。
 -  T1 图使用某类 Signaling bit 安排；实际可用 Payload 还取决于具体 framing/signaling，不应把 1.536 Mbps 总当作任意业务净速率。
 
-![T1 的 193-bit Frame](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-092.png)
+![T1 的 193-bit Frame](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-092.webp)
 
 ### 8.6 SONET / SDH
 
@@ -395,7 +395,7 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 - Electrical signal 称 STS-n，Optical carrier 称 OC-n。
 - `c` 表示 Concatenated，形成一个更大的连续 payload，不能直接与多个独立小 payload 的 Path overhead 算法混用。
 
-![SONET Frame 与 SPE 跨界](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-095.png)
+![SONET Frame 与 SPE 跨界](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-095.webp)
 
 出现“6480 b/s”，应理解为每 Frame 6480 bits，再乘 8000 frames/s 才得到 51.84 Mbps。
 
@@ -410,9 +410,9 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 | 转发 | 按已建立的 Circuit 传输 | 按 Packet 转发，常用 Store-and-forward |
 | 顺序 | 沿 Circuit 按序传输 | Datagram 可能不同路、乱序 |
 
-![Circuit 与 Packet 的路径](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-098.png)
+![Circuit 与 Packet 的路径](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-098.webp)
 
-![Setup、Propagation、Store-and-forward 与 Queueing](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-099.png)
+![Setup、Propagation、Store-and-forward 与 Queueing](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-099.webp)
 
 **易错：**Packet switching 也包括 Virtual-circuit 等形态，不能把所有 Packet networks 都说成“无连接、每帧不同路径”。“按分钟/按 Packet 计费”“Switch crash 是否 fatal”等是历史比较，不是技术定义。
 
@@ -426,7 +426,7 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 
 **Cellular design** 划分 Cells，使用 Frequency reuse、协调资源和 Handover。图中 Hexagon 是覆盖的理想几何模型，真实覆盖受地形和传播环境影响。
 
-![Frequency reuse 与 Cell splitting](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-104.png)
+![Frequency reuse 与 Cell splitting](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-104.webp)
 
 ## 10. Cable Networks and Access Network Comparison
 
@@ -434,7 +434,7 @@ V.32 示例：2400 baud，每 Symbol 4 个有效 data bits 加 1 个 coding redu
 
 **HFC（Hybrid Fiber-Coax）**：骨干/汇聚使用 Fiber，较靠近用户的部分使用 Coaxial cable，利用既有 Cable TV infrastructure 承载数据。
 
-![HFC 与电话接入架构对比](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-106.png)
+![HFC 与电话接入架构对比](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%202_ai/page-106.webp)
 
 ### 10.2 Cable、ADSL、FTTH、Satellite
 

@@ -7,27 +7,27 @@ aliases:
 	- **个人主页：** https://dongw.emnets.cn
 	- **Email:** dongw@zju.edu.cn
 - **课程评分**
-![[Pasted image 20260916100631.png|479]]
-- **课程内容**
-	![[Pasted image 20260916100901.png|482]]
-	==链路层，网络层，传输层important==
-- **实验内容**
-	![[Pasted image 20260916100954.png|501]]
-	==打\*的可以在期末交==
-- **大致时间安排**
-	![[Pasted image 20260916101049.png|502]]
+![[Pasted image 20260916100631.webp|479]]
+## 课程内容
+![[Pasted image 20260916100901.webp|482]]
+==链路层，网络层，传输层important==
+## 实验内容
+![[Pasted image 20260916100954.webp|501]]
+==打\*的可以在期末交==
+## 大致时间安排
+![[Pasted image 20260916101049.webp|502]]
 - The Internet
 	- The ARPANET
-		![[Pasted image 20260916101751.png|433]]
-		![[Pasted image 20260916102008.png|466]]
+		![[Pasted image 20260916101751.webp|433]]
+		![[Pasted image 20260916102008.webp|466]]
 		电话网络集中，但是更容易瘫痪
 		所以出现了（b）类型的网络
 		- 由此引发出==The original design ARPANET==
 			——The subnet would consist of minicomputers called IMP (Interface Message Processors) connected by56 -kbps transmission lines .
 			——Hosts would be connected to IMPs by short wires .
-			![[Pasted image 20260916102624.png|477]]
+			![[Pasted image 20260916102624.webp|477]]
 		- ==Growth of the ARPANET==
-			 ![[Pasted image 20260916103309.png|433]]
+			 ![[Pasted image 20260916103309.webp|433]]
 		- ==物联网设备的6个理想特性==
 			- Reliability – don't want high probability of working  
 			    可靠性——不希望正常工作的概率高（注：==原文疑似笔误==，逻辑上应为“希望高概率正常工作”）
@@ -42,20 +42,20 @@ aliases:
 			- Autonomy – wont use if \[house, office\] fails if Internet is down  
 			    自主性——如果断网时\[房屋, 办公室\]系统失效将不会使用
 	- NSFNET
-		![[Pasted image 20260916104250.png|519]]
-		![[Pasted image 20260916104617.png|537]]
+		![[Pasted image 20260916104250.webp|519]]
+		![[Pasted image 20260916104617.webp|537]]
 	- Internet Architecture
-		![[Pasted image 20260916105230.png|478]]![[Pasted image 20260916105351.png|484]]
+		![[Pasted image 20260916105230.webp|478]]![[Pasted image 20260916105351.webp|484]]
 - Internet evolution
-	![[Pasted image 20260916105439.png|523]]
-	![[Pasted image 20260916105451.png|485]]
+	![[Pasted image 20260916105439.webp|523]]
+	![[Pasted image 20260916105451.webp|485]]
 - TCP/IP and Web
-	![[Pasted image 20260916105533.png|515]]
+	![[Pasted image 20260916105533.webp|515]]
 	==万维网：Anything Could Be Linked to Anything==
-- **物联网定义与愿景**
-	- 物联网是一个基于互联网、传统电信网等信息载体，让所有能够被独立寻址的普通物理对象实现互联互通的网络
-	- 普通对象设备化，自治终端互联化和普适服务智能化是其三个重要特征
-	- 国际电信联盟2005年描绘物联网时代的图景：
-		衣服会告诉洗衣机对颜色和水温的要求，公文包会提醒主人忘带了什么东西等等。物联网时代的来临将会使人们的日常生活发生翻天覆地的变化
-- **物联网学术来源**
-	![[Pasted image 20260916115405.png|502]]
+## 物联网定义与愿景
+- 物联网是一个基于互联网、传统电信网等信息载体，让所有能够被独立寻址的普通物理对象实现互联互通的网络
+- 普通对象设备化，自治终端互联化和普适服务智能化是其三个重要特征
+- 国际电信联盟2005年描绘物联网时代的图景：
+	衣服会告诉洗衣机对颜色和水温的要求，公文包会提醒主人忘带了什么东西等等。物联网时代的来临将会使人们的日常生活发生翻天覆地的变化
+## 物联网学术来源
+![[Pasted image 20260916115405.webp|502]]

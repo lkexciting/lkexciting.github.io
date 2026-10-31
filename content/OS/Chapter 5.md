@@ -101,7 +101,7 @@ aliases:
 
 “一个进程在内存里”不等于“它现在就可以运行”。等待磁盘读完的进程还没有准备好，不能直接拿来执行。
 
-![进程状态转换](OS/pictures/Chapter%205/slide-02-fig-1.png)
+![进程状态转换](OS/pictures/Chapter%205/slide-02-fig-1.webp)
 
 **读图顺序：**
 
@@ -125,7 +125,7 @@ aliases:
 CPU 计算 → 等待 I/O → CPU 计算 → 等待 I/O → …… → 结束
 ```
 
-![CPU 与 I/O 交替](OS/pictures/Chapter%205/slide-04-fig-1.png)
+![CPU 与 I/O 交替](OS/pictures/Chapter%205/slide-04-fig-1.webp)
 
 - **CPU burst**：连续使用 CPU 的一段时间。
 - **I/O burst**：进行或等待 I/O 的一段时间。
@@ -138,7 +138,7 @@ CPU 计算 → 等待 I/O → CPU 计算 → 等待 I/O → …… → 结束
 
 ### 1.3 CPU burst 的分布告诉我们什么
 
-![CPU burst 长度的分布](OS/pictures/Chapter%205/slide-05-fig-1.png)
+![CPU burst 长度的分布](OS/pictures/Chapter%205/slide-05-fig-1.webp)
 
 横轴是 CPU burst 的持续时间，纵轴是出现频数。图中短 burst 多，长 burst 少。
 
@@ -186,7 +186,7 @@ CPU 计算 → 等待 I/O → CPU 计算 → 等待 I/O → …… → 结束
 
 不是每次调度决策都会切换到不同进程；如果仍选中原进程，就不一定需要完整的进程上下文切换（Context Switch）。
 
-![分派程序与上下文切换](OS/pictures/Chapter%205/slide-07-fig-1.png)
+![分派程序与上下文切换](OS/pictures/Chapter%205/slide-07-fig-1.webp)
 
 **分派延迟（Dispatch Latency）：**从停止一个执行者到让另一个执行者开始运行所需的时间。它越大，调度额外开销越明显，实时任务的响应也越难保证。
 
@@ -434,7 +434,7 @@ $$
 
 老师式记法：**新预测 = 最新实测的一部分 + 旧预测的一部分。**两项权重加起来为 1。
 
-![指数平均预测 CPU burst](OS/pictures/Chapter%205/slide-16-fig-1.png)
+![指数平均预测 CPU burst](OS/pictures/Chapter%205/slide-16-fig-1.webp)
 
 例如 α=0.5，初始预测 10，实际 burst 依次为 6、4、6、4：
 
@@ -604,7 +604,7 @@ $$
 
 ### 8.3 时间片太大或太小会怎样
 
-![时间片与切换次数|700](OS/pictures/Chapter%205/slide-26-fig-1.png)
+![时间片与切换次数|700](OS/pictures/Chapter%205/slide-26-fig-1.webp)
 
 图中一个需要 10 单位时间的任务：
 
@@ -638,7 +638,7 @@ $$
 
 ### 8.5 时间片与平均周转时间不一定单调变化
 
-![时间片改变时的平均周转时间](OS/pictures/Chapter%205/slide-28-fig-1.png)
+![时间片改变时的平均周转时间](OS/pictures/Chapter%205/slide-28-fig-1.webp)
 
 图中进程服务时间为 P1=6、P2=3、P3=1、P4=7。曲线说明：**时间片变大，平均周转时间可能上升也可能下降**，因为任务完成顺序和时间片分割会变化。
 
@@ -657,7 +657,7 @@ $$
 
 把就绪队列按任务类型分成多个队列，例如前台交互任务和后台批处理任务。
 
-![多级队列示意](OS/pictures/Chapter%205/slide-30-fig-1.png)
+![多级队列示意](OS/pictures/Chapter%205/slide-30-fig-1.webp)
 
 要分别决定两个层次：
 
@@ -677,7 +677,7 @@ $$
 
 关键变化：**进程可以在队列之间移动。**系统根据它的实际运行行为调整待遇。
 
-![三级反馈队列](OS/pictures/Chapter%205/slide-33-fig-1.png)
+![三级反馈队列](OS/pictures/Chapter%205/slide-33-fig-1.webp)
 
 例题：
 
@@ -742,7 +742,7 @@ $$
 
 **理解补充：**软亲和性（Soft Affinity）是尽量留在原 CPU，硬亲和性（Hard Affinity）则对允许运行的 CPU 集合施加明确限制。
 
-![物理 CPU 与逻辑 CPU](OS/pictures/Chapter%205/slide-50-fig-1.png)
+![物理 CPU 与逻辑 CPU](OS/pictures/Chapter%205/slide-50-fig-1.webp)
 
 图中一个物理 CPU（Physical CPU）可以向调度器呈现多个逻辑 CPU（Logical CPU）。逻辑 CPU 不意味着拥有完全独立的全部硬件资源，因此“逻辑 CPU 数翻倍”不等于所有负载性能都翻倍。
 
@@ -884,11 +884,11 @@ int main(void) {
 
 ### 13.1 Solaris：调度类与动态调整
 
-![Solaris 调度类](OS/pictures/Chapter%205/slide-41-fig-1.png)
+![Solaris 调度类](OS/pictures/Chapter%205/slide-41-fig-1.webp)
 
 图把实时类（Real-time Class）、系统类（System Class）、交互/分时类（Interactive / Time-sharing Class）等映射到全局优先级（Global Priority），调度器先比较最终的全局优先级。
 
-![Solaris 分派表](OS/pictures/Chapter%205/slide-42-fig-1.png)
+![Solaris 分派表](OS/pictures/Chapter%205/slide-42-fig-1.webp)
 
 分派表的列应这样读：
 
@@ -903,7 +903,7 @@ int main(void) {
 
 ### 13.2 Windows XP：优先级类与线程相对优先级
 
-![Windows XP 优先级表](OS/pictures/Chapter%205/slide-43-fig-1.png)
+![Windows XP 优先级表](OS/pictures/Chapter%205/slide-43-fig-1.webp)
 
 读表方法：**列是进程优先级类（Priority Class），行是线程相对优先级（Relative Priority），交点给出该组合的优先级。**
 
@@ -922,9 +922,9 @@ int main(void) {
 
 同时，这里介绍软实时优先级策略，包含 FIFO 和 RR，高优先级任务先执行。
 
-![中的 Linux 优先级与时间片关系](OS/pictures/Chapter%205/slide-45-fig-1.png)
+![中的 Linux 优先级与时间片关系](OS/pictures/Chapter%205/slide-45-fig-1.webp)
 
-![旧 Linux runqueue 的 active 与 expired 数组](OS/pictures/Chapter%205/slide-46-fig-1.png)
+![旧 Linux runqueue 的 active 与 expired 数组](OS/pictures/Chapter%205/slide-46-fig-1.webp)
 
 结构按优先级组织任务链表（Task List），并区分 active 和 expired 两组任务。作为该图对应历史调度器的理解补充：任务用完本轮额度后进入 expired，active 用尽时可通过交换两组角色开始下一轮。
 
@@ -995,7 +995,7 @@ $$
 
 ### 15.3 模拟图怎么看
 
-![调度算法模拟评价](OS/pictures/Chapter%205/slide-48-fig-1.png)
+![调度算法模拟评价](OS/pictures/Chapter%205/slide-48-fig-1.webp)
 
 从真实进程执行记录中提取 CPU/I/O 轨迹（Execution Trace），再用同一份记录驱动 FCFS、SJF、RR 等模拟器，最后比较统计结果。
 

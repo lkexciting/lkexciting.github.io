@@ -1,5 +1,5 @@
 ---
-title: Chapter4
+title: Chapter 4
 tags:
   - 计算机网络
   - MAC
@@ -112,7 +112,7 @@ $$P_{\rm block}=\frac{(1-\rho)\rho^K}{1-\rho^{K+1}}$$
 
 纯 ALOHA：有帧立即发送；重叠导致冲突；失败后随机等待再发。时隙 ALOHA：时间按一帧长划分，只能在时隙起点发送，因此需要时间同步。
 
-![纯 ALOHA 发送示意](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-012.png)
+![纯 ALOHA 发送示意](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-012.webp)
 
 ### 2.2 Vulnerable Period（脆弱期）：先画区间，再写指数
 
@@ -128,7 +128,7 @@ $$P_{\rm block}=\frac{(1-\rho)\rho^K}{1-\rho^{K+1}}$$
 
 另一帧只要在 $(t_0-T_f,t_0+T_f)$ 内开始，就会与目标帧重叠，因此纯 ALOHA 的脆弱期为 $2T_f$。时隙 ALOHA 只有同一时隙的其他发送会造成冲突，脆弱期为 $T_f$。
 
-![脆弱期图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-014.png)
+![脆弱期图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-014.webp)
 
 ### 2.3 Throughput and Offered Load：从泊松分布推导吞吐量
 
@@ -150,7 +150,7 @@ $$S_{\max}=\frac1{2e}\approx0.18394$$
 
 $$\frac{dS}{dG}=e^{-G}(1-G)=0\Rightarrow G=1,\quad S_{\max}=1/e\approx0.36788$$
 
-![两种 ALOHA 的吞吐量曲线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-016.png)
+![两种 ALOHA 的吞吐量曲线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-016.webp)
 
 **手画曲线：**横轴 $G$、纵轴 $S$，两曲线从原点出发，纯 ALOHA 标峰值 $(0.5,0.184)$，时隙 ALOHA 标峰值 $(1,0.368)$，之后均随负载上升而下降。不要画成持续增加后水平饱和：重传会进一步放大冲突。
 
@@ -176,7 +176,7 @@ CSMA = Carrier Sense Multiple Access（载波侦听多路访问）。题干中�
 
 碰撞后都还需要相应的随机重试机制。$p$-坚持不能理解为“掷一次硬币失败就丢弃”。
 
-![随机访问协议性能比较](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-026.png)
+![随机访问协议性能比较](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-026.webp)
 
 ### 3.2 听到空闲，为什么不保证安全？
 
@@ -205,7 +205,7 @@ $$P_{\rm success}=np(1-p)^{n-1}$$
 
 CD 是 Collision Detection。发送站检测到碰撞后中止发送并进行冲突强化/退避，避免把整帧都浪费在已知的碰撞上。信道可分为空闲期、竞争期和成功传输期。
 
-![CSMA/CD 的时间阶段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-029.png)
+![CSMA/CD 的时间阶段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-029.webp)
 
 无线发送信号相对本机接收的远端信号很强，再加上隐藏终端，无法直接照搬经典有线以太网的碰撞检测方式，所以后面会使用 CA。
 
@@ -232,7 +232,7 @@ $$\eta_{低负载}=\frac d{N+d},\qquad
 
 例：$N=64,d=1024$，轻载效率 $1024/1088=94.12\%$；重载效率 $1024/1025=99.90\%$。
 
-![位图的轻载与编号偏差](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-034.png)
+![位图的轻载与编号偏差](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-034.webp)
 
 ### 4.2 Token Passing（令牌传递）
 
@@ -242,7 +242,7 @@ $$\eta_{低负载}=\frac d{N+d},\qquad
 
 本节举例：802.5、FDDI、802.17 RPR，属于历史技术背景。
 
-![令牌环](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-037.png)
+![令牌环](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-037.webp)
 
 ### 4.3 Binary Countdown（二进制倒计数）
 
@@ -259,7 +259,7 @@ $$\eta_{低负载}=\frac d{N+d},\qquad
 | 第三位 | 0、1 | 1 | 1001 |
 | 第四位 | 1010 的末位 0 | 0 | 最终胜者 1010 |
 
-![二进制倒计数原图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-040.png)
+![二进制倒计数原图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-040.webp)
 
 地址需要 $b=\lceil\log_2N\rceil$ 位（假设编号空间紧凑），则每帧仲裁开销约 $b$ 位：
 
@@ -327,9 +327,9 @@ MACA（Multiple Access with Collision Avoidance）先交换短控制帧：
 
 听见 CTS 的其他站暂停，保护 B 的接收。只听见 RTS 的站先避让 CTS 响应阶段；若未听到 CTS，在本节的 MACA 模型下可再尝试适当的并发发送。听见两者也要避让。
 
-![MACA 的覆盖范围与邻站角色](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-047.png)
+![MACA 的覆盖范围与邻站角色](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-047.webp)
 
-![MACA 并发与等待的时间线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-048.png)
+![MACA 并发与等待的时间线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-048.webp)
 
 RTS 仍可能冲突；握手只是减少长数据帧冲突的代价，不保证“永远不冲突”。两条无线传输能否并发，要分别验证两个接收端均不受另一发射者干扰，还要满足控制帧交换的时序。
 
@@ -341,7 +341,7 @@ RTS 仍可能冲突；握手只是减少长数据帧冲突的代价，不保证�
 
 经典介质有 10BASE5 粗同轴、10BASE2 细同轴、10BASE-T 双绞线。`10` 表示 10 Mbps，BASE 表示基带；10BASE-T 的 T 表示双绞线。使用集线器的星形布线，在共享访问性质上仍然属于同一碰撞域。
 
-![三种经典以太网布线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-052.png)
+![三种经典以太网布线](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-052.webp)
 
 ### 7.2 Manchester / Differential Manchester Encoding：按半比特画
 
@@ -361,9 +361,9 @@ RTS 仍可能冲突；握手只是减少长数据帧冲突的代价，不保证�
 
 例：起始为 H，数据 `10010` 的半 bit 电平依次是 `HL | HL | HL | LH | LH`。差分方式的信息在“是否变化”，而不依赖绝对高低电平。
 
-![逐步画出的编码示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/worked-encoding.png)
+![逐步画出的编码示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/worked-encoding.webp)
 
-![二进制、曼彻斯特及差分曼彻斯特对照](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-054.png)
+![二进制、曼彻斯特及差分曼彻斯特对照](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-054.webp)
 
 补充：曼彻斯特一个数据 bit 有两个半 bit 信号区间。画图的半 bit 率为数据率两倍；频谱带宽的精确定义还取决于所用带宽口径。
 
@@ -377,7 +377,7 @@ RTS 仍可能冲突；握手只是减少长数据帧冲突的代价，不保证�
 
 有些图将前导码和Start Frame Delimiter（起始定界符）合写为 8 字节；严格区分时是Preamble（前导码）7 字节、SFD 1 字节。Interpacket gap（帧间隙）不属于 MAC 帧。FCS 是 32 bit CRC，检测差错，不是加密或纠错。
 
-![DIX 与 IEEE 802.3 帧格式](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-055.png)
+![DIX 与 IEEE 802.3 帧格式](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-055.webp)
 
 DA、SA 各 6 字节，即 48 bit MAC 地址；单播针对单个目的，多播针对一组，广播地址为 `FF:FF:FF:FF:FF:FF`。补充：组播标志看首个地址字节的最低有效位，不能误看地址文本最左侧的最高位。
 
@@ -393,9 +393,9 @@ DIX 使用类型；原始 IEEE 802.3 长度格式配合 LLC 等上层识别。�
 
 ### 7.4 Collision Detection Time / Minimum Frame Size：为什么检测最坏需要 $2\tau$？
 
-![最坏碰撞的双站时间图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/worked-collision.png)
+![最坏碰撞的双站时间图](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/worked-collision.webp)
 
-![最坏碰撞传播过程](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-057.png)
+![最坏碰撞传播过程](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-057.webp)
 
 按步骤画两条时间轴：A 在左、B 在右，时间向下。
 
@@ -447,7 +447,7 @@ $$k=\min(i,10),\quad r\in\{0,1,\ldots,2^k-1\},\quad W=rT_{slot}$$
 
  表明，在所画竞争模型下，长帧能摊薄竞争开销；站数多时竞争代价更明显。比较效率应注明负载、帧长和拓扑条件。
 
-![经典以太网帧长与效率](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-061.png)
+![经典以太网帧长与效率](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-061.webp)
 
 **补充近似式：**一些教学模型用 $\eta\approx1/(1+5a)$ 描述共享以太网效率趋势；系数取决于竞争假设，不能作为所有以太网的精确公式。记住 $a=\tau/T_f$ 越小通常越有利更重要。
 
@@ -455,11 +455,11 @@ $$k=\min(i,10),\quad r\in\{0,1,\ldots,2^k-1\},\quad W=rT_{slot}$$
 
 **全双工点到点交换以太网不运行 CSMA/CD。** “每端口一个碰撞域”是传统分段分析用语，不表示全双工端口实际上会发生碰撞。
 
-![集线器与交换机的差别](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-062.png)
+![集线器与交换机的差别](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-062.webp)
 
 本节的速率演进是 Fast Ethernet 100 Mbps、Gigabit Ethernet 1 Gbps、10 Gigabit Ethernet 10 Gbps。下图保留各历史介质、距离和特点，不把这些旧表当作完整的现行产品能力表。
 
-![百兆与千兆以太网介质表](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-064.png)
+![百兆与千兆以太网介质表](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-064.webp)
 
 下面的例题采用给定的技术参数：
 
@@ -483,9 +483,9 @@ $$k=\min(i,10),\quad r\in\{0,1,\ldots,2^k-1\},\quad W=rT_{slot}$$
 
 基础设施模式通过 AP 接入分布系统；Ad-hoc 模式由站点直接组织通信。802.11 的 MAC 可以配合不同物理层，不能把某一种调制方式等同于全部 Wi-Fi。
 
-![基础设施与 Ad-hoc 模式](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-068.png)
+![基础设施与 Ad-hoc 模式](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-068.webp)
 
-![802.11 协议栈](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-069.png)
+![802.11 协议栈](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-069.webp)
 
 本节列出的历史物理层：
 
@@ -514,7 +514,7 @@ DCF（Distributed Coordination Function，分布协调功能）以 CSMA/CA 为�
 
 失败可能来自碰撞，也可能来自信道差错。CA = Collision Avoidance（冲突避免），CD = Collision Detection（冲突检测）。CA 与 CD 的处理方式不同：发送方通常依据缺少 CTS/ACK 等反馈处理失败。
 
-![CSMA/CA 发送及退避过程](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-072.png)
+![CSMA/CA 发送及退避过程](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-072.webp)
 
 ### 8.4 画 RTS/CTS/DATA/ACK 时序图
 
@@ -529,7 +529,7 @@ B：             CTS ──SIFS──               ACK
 
 NAV（Network Allocation Vector）是虚拟载波侦听的预约计时器，不是实际发射的忙信号。听到预约帧的站按照持续时间设置 NAV，倒计时期间不争抢。
 
-![802.11 的 RTS/CTS、ACK 与 NAV](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-074.png)
+![802.11 的 RTS/CTS、ACK 与 NAV](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-074.webp)
 
 本节强调：802.11 比所讲 MACA 更保守，听到 RTS 的站也按 NAV 避让，因此不能直接沿用 MACA 的“只听到 RTS 就可并发”的结论。
 
@@ -544,7 +544,7 @@ $$\mathrm{SIFS}<\mathrm{PIFS}<\mathrm{DIFS}<\mathrm{EIFS}$$
 
 补充常见关系：$PIFS=SIFS+\sigma$、$DIFS=SIFS+2\sigma$，$\sigma$ 为槽时间；具体微秒值依物理层而定。
 
-![各种帧间隔的优先关系](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-076.png)
+![各种帧间隔的优先关系](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-076.webp)
 
 ### 8.6 无线时间计算：所有开销逐项相加
 
@@ -561,7 +561,7 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 
 高误码环境中，长帧更容易因一个错误而整体重传；分片允许分别确认、分别重传，但增加首部与 ACK 开销。分片突发中用短帧间隔及预约保护后续交换，其他普通 DCF 站需要等待更长间隔。
 
-![分片突发及逐片确认](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-075.png)
+![分片突发及逐片确认](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-075.webp)
 
 补充独立比特差错模型：$L$ bit 帧无错概率 $(1-p_b)^L$，可用它解释长帧的重传风险；不代表越短越好，因为开销比例同时升高。
 
@@ -569,7 +569,7 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 
 三大类帧：管理、控制、数据。数据帧包括帧控制、Duration、地址 1/2/3、序号、可选地址 4、数据和 FCS。帧控制图还包括版本、类型、子类型、To DS、From DS、更多分片、重试、省电、更多数据、保护及顺序等标志。
 
-![802.11 数据帧和帧控制字段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-077.png)
+![802.11 数据帧和帧控制字段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-077.webp)
 
 **为什么最多四个地址？** 无线当前一跳的发送/接收者不一定是端到端源/目的；AP 转发时需要区分这些角色。
 
@@ -590,9 +590,9 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 
 不同组织/地点需要互通；分散布线可能比单一集中设备更合适；多网段与骨干能够分担负载。网桥在链路层依据 MAC 地址处理帧；交换机本质上是多端口网桥。
 
-![通过骨干连接多个 LAN](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-080.png)
+![通过骨干连接多个 LAN](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-080.webp)
 
-![网桥连接拓扑](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-083.png)
+![网桥连接拓扑](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-083.webp)
 
 ### 9.2 Learning Bridges / Backward Learning（学习桥与反向学习）
 
@@ -605,7 +605,7 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 
 “反向学习”是从源地址学习返回路径。未知目的可以触发泛洪，但不能凭目的地址推断它的位置。表项老化允许适应迁移，具体老化时间由设备配置决定。
 
-![学习桥示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-085.png)
+![学习桥示例](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-085.webp)
 
 ### 9.3 画转发表题：一帧一行，不跳步骤
 
@@ -634,7 +634,7 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 
 “默认网关”通常指承担下一跳的路由接口，不等于这里只讲的应用协议转换网关。
 
-![设备层次及帧/分组的关系](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-096.png)
+![设备层次及帧/分组的关系](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-096.webp)
 
 示例中的简化措辞需要注意：中继器/有源集线器通常涉及再生或重复信号，不能将“Hub 不放大”理解为所有集线器都是无源器件；交换机也并非都采用直通转发。
 
@@ -646,7 +646,7 @@ Store-and-forward switch（存储转发交换机）收完整帧后检查并转�
 
 两桥之间有两条并行路径，未知目的帧被泛洪后可沿环反复复制。普通二层帧没有像 IP TTL 那样的逐跳寿命限制；可能产生广播风暴、重复帧和 MAC 学习表来回变化。
 
-![双路径造成循环泛洪](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-087.png)
+![双路径造成循环泛洪](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-087.webp)
 
 生成树保留连接性，同时阻塞部分冗余端口，使当前转发拓扑无环。链路仍物理存在；拓扑改变后可以重新选择路径。
 
@@ -673,7 +673,7 @@ Store-and-forward switch（存储转发交换机）收完整帧后检查并转�
          指定侧     ×阻塞侧
 ```
 
-![五桥生成树，虚线为非树链路](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-089.png)
+![五桥生成树，虚线为非树链路](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-089.webp)
 
 对简单的 $n$ 顶点连通无向图，一棵树有 $n-1$ 条边，可作为自检；若拓扑含共享 LAN，需要把 LAN 也视作图节点或按端口角色分析，不能机械地数交换机间连线。
 
@@ -683,7 +683,7 @@ Store-and-forward switch（存储转发交换机）收完整帧后检查并转�
 
 管理员决定 VLAN 数量、名称、成员及端口可访问的 VLAN。一个端口可承载多个 VLAN；跨交换机链路要携带 VLAN 身份。这里用灰/白两种颜色表现逻辑分组。
 
-![跨桥的两种 VLAN](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-093.png)
+![跨桥的两种 VLAN](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-093.webp)
 
 本节列出按端口、MAC、三层协议或 IP 等分类思路。实际解题以题目给定的配置为准，不把“按端口”当成唯一可能的成员识别方式。
 
@@ -697,7 +697,7 @@ Store-and-forward switch（存储转发交换机）收完整帧后检查并转�
 DA6 | SA6 | TPID2 | PCP3bit + DEI1bit + VID12bit | 原类型/长度2 | 数据 | FCS4
 ```
 
-![802.1Q 插入位置与字段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-094.png)
+![802.1Q 插入位置与字段](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-094.webp)
 
 $$2^{12}=4096\text{ 种 VID 编码}$$
 
@@ -709,7 +709,7 @@ $$TCI=(5\ll13)+(0\ll12)+100=41060=\texttt{0xA064}$$
 
 标准 TPID 为 `0x8100` 时，四字节标签写成 `81 00 A0 64`。原来最大 1518 B 的普通无标签帧插入一层标签后变为 1522 B，FCS 需对应更新。最小长度和填充处理应看题目明确的帧格式，不能从“插入 4 B”推断所有帧都必须重新填充至同一值。
 
-![部分设备支持 VLAN 时的互连](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-095.png)
+![部分设备支持 VLAN 时的互连](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-095.webp)
 
 图中阴影设备能够理解 VLAN；非 VLAN 感知终端通常由边缘设备完成标签添加/移除。标签用于识别成员身份，本身不提供加密。
 
@@ -717,7 +717,7 @@ $$TCI=(5\ll13)+(0\ll12)+100=41060=\texttt{0xA064}$$
 
 **碰撞域**：共享介质上可能互相碰撞的范围。Hub 不分隔它；网桥/交换机端口分隔共享冲突范围。**广播域**：Layer-2 broadcast（二层广播）能够到达的逻辑范围。普通桥接可以扩大覆盖范围但不会自动分成多个广播域；VLAN 和路由边界则分隔广播域。
 
-![交换机连接集线器时的域划分](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-107.png)
+![交换机连接集线器时的域划分](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-107.webp)
 
 手算步骤：
 
@@ -829,7 +829,7 @@ B 对 A 的胜出赔率为 $1:13$。若问题只问“第三次冲突后下一�
 
 > **Exam wording（英文题意）：** Identify the hidden or exposed station problem from the transmission ranges. Does MACA help?
 
-![第 8 题原图：A/B 共同的范围与 C 的范围](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-112.png)
+![第 8 题原图：A/B 共同的范围与 C 的范围](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-112.webp)
 
 **此题不能直接套“A→B←C 一定隐藏”的结论。** 根据原图，左圆是 A 和 B 的发射范围：C 位于左圆内，说明 C 能听到 A；右圆是 C 的范围：B 在其中，A 不在其中，说明 A 听不到 C，存在**非对称可听关系**。
 

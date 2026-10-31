@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile, mkdir, cp, rm, rename } from 'node:fs/pro
 import matter from 'gray-matter'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { convertImagesToWebp, applyContentUpgrades, cleanNoteTitle } from './note-transforms.mjs'
 
 const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const vault = path.resolve(site, '..')
@@ -48,7 +49,7 @@ async function flattenPublishedNotes(courseDir, courseName) {
     const relative = path.relative(courseDir, file)
     const target = path.join(courseDir, ...relative.split(path.sep).filter(part => !/^notes?$/i.test(part)))
     const parsed = matter(await readFile(file, 'utf8'))
-    parsed.data.title = path.basename(file, '.md')
+    parsed.data.title = cleanNoteTitle(file, courseName)
     const aliases = parsed.data.aliases ?? parsed.data.alias ?? []
     parsed.data.aliases = [...new Set([...(Array.isArray(aliases) ? aliases : [aliases]), `${courseName}/${relative.split(path.sep).join('/').replace(/\.md$/, '')}`])]
     await mkdir(path.dirname(target), { recursive: true })
@@ -96,7 +97,11 @@ for (const [name] of courses) {
   if (!dest.startsWith(path.resolve(site, 'content') + path.sep)) throw new Error('同步目标超出 content 目录')
   await rm(dest, { recursive: true, force: true })
   await cp(path.join(vault, name), dest, { recursive: true, filter: source => !path.basename(source).startsWith('.') && (path.extname(source).toLowerCase() !== '.md' || isCourseNote(source)) })
+  // 图片先转 WebP，后续改写引用时只引用转换成功的文件
+  const converted = await convertImagesToWebp(dest)
   await normalizeRelativeLinks(dest)
+  // 高亮语法修复、图片引用改写、列表结构升级（原始笔记不受影响）
+  await applyContentUpgrades(dest, converted)
   await flattenPublishedNotes(dest, name)
 }
 const total = counts.reduce((a, b) => a + b, 0)

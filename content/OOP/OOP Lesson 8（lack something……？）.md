@@ -1,5 +1,5 @@
 ---
-title: OOP Lesson 8（lack something……？）
+title: Lesson 8（lack something……？）
 aliases:
   - OOP/notes/OOP Lesson 8（lack something……？）
 ---

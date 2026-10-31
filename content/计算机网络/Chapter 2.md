@@ -40,7 +40,7 @@ aliases:
 	    - ==永远不要低估一辆满载磁带在高速公路上飞驰的旅行车的带宽。==
 	
 	- **双绞线（Twisted pair）**由两根绝缘铜线组成，通常粗细约为1毫米。这两根线以螺旋形式绞合在一起，就像DNA分子一样。
-	- 双绞线可以在不放大信号的情况下传输几公里，但对于更远的距离，则需要使用**中继器（repeaters）**。![[Pasted image 20260930103729.png]]![[Pasted image 20260930103752.png]]
+	- 双绞线可以在不放大信号的情况下传输几公里，但对于更远的距离，则需要使用**中继器（repeaters）**。![[Pasted image 20260930103729.webp]]![[Pasted image 20260930103752.webp]]
 	- 双绞线（Twisted pairs）可用于传输模拟或数字信号。
 	- 类型（Types）：
 	    - 5类线（Category 5） (100Mbps, 1Gbps)
@@ -52,20 +52,20 @@ aliases:
 	    - 一根坚硬的铜线作为核心（铜芯），
 	    - 外围包裹着绝缘材料，
 	    - 绝缘层又被圆柱形导体包裹，通常为紧密编织的网状结构（编织外层导体），
-	    - 外部导体覆盖有保护性的塑料外套（保护塑料外套）。![[Pasted image 20260930104040.png]]
+	    - 外部导体覆盖有保护性的塑料外套（保护塑料外套）。![[Pasted image 20260930104040.webp]]
 	- 高带宽（High bandwidth）和出色的抗噪声能力（excellent noise immunity）。
 	- 过去曾广泛用于长途线路（long-distance lines）。
 	
 	- **Power Lines**
 	- 多年来，电力公司一直使用电力线进行低速率通信，例如远程抄表，以及在家庭中控制设备。
-	- 近年来，人们对这些线路上进行高速率通信重新产生了兴趣，既在家庭内部用作局域网（LAN），也在家庭外部用于宽带互联网接入。![[Pasted image 20260930104210.png]]
+	- 近年来，人们对这些线路上进行高速率通信重新产生了兴趣，既在家庭内部用作局域网（LAN），也在家庭外部用于宽带互联网接入。![[Pasted image 20260930104210.webp]]
 	
 	- **Fiber optics**
 	- 在计算与通信的发展竞赛中，通信速度（光通信）的增长远超计算速度（CPU）。CPU性能虽曾每十年增长16倍，但最终受限于物理极限；而通信速率从45Mbps发展到100Gbps，同样保持每十年16倍的增长且误码率极低，借助光纤几乎达到无极限（约50Tbps）。由此得出新共识：==计算机相对极慢，网络设计应尽量避免计算==。此外，光传输系统的基本组成依次为：光源、传输介质和探测器。
-	- ![[Pasted image 20260930104406.png]]
+	- ![[Pasted image 20260930104406.webp]]
 	- **光纤中的光传输（Transmission of light through fiber）**
 		- 光在光纤中通过红外区域的**衰减（Attenuation）**。
-		- 光通信使用三个波长波段。它们分别以 0.85、1.30 和 1.55 微米（micros）为中心。![[Pasted image 20260930104512.png]]
+		- 光通信使用三个波长波段。它们分别以 0.85、1.30 和 1.55 微米（micros）为中心。![[Pasted image 20260930104512.webp]]
 		- 扩展说明与例子：
 			- **衰减原因**：光纤衰减主要由石英玻璃材料的**本征吸收**（如红外区域的分子振动吸收）、**杂质吸收**（如早期光纤中水气产生的氢氧根 OH⁻ 在 1.38μm 处有强烈吸收峰）以及**瑞利散射**（由材料微观密度和折射率不均匀引起）造成。
 			- **三大波长波段特性与应用例子**：
@@ -75,7 +75,7 @@ aliases:
 	- **光缆（Fiber cables）**
 		- 光纤电缆类似于同轴电缆，只是没有编织网。
 		- (a) 单根光纤的侧视图。（内芯+保护层+外套）
-		- (b) 包含三根光纤的护套的横截面视图。![[Pasted image 20260930104647.png]]
+		- (b) 包含三根光纤的护套的横截面视图。![[Pasted image 20260930104647.webp]]
 	    - **部署（Deployment）**
 	        - 铺设在地表一米内的地下。
 	        - 埋在岸边（shore）的沟（trenches）里。
@@ -86,7 +86,7 @@ aliases:
 	        - 熔接接头/熔接（Fusion splice）。
 	    - **检测（Detection）**
 	        - 光电二极管（Photodiode）。响应时间为1纳秒（ns），这将数据速率限制在约1Gbps。
-		![[Pasted image 20260930104945.png]]
+		![[Pasted image 20260930104945.webp]]
 	- **光纤与铜线的比较（Comparison of fiber optics and copper wire）**
 		- **优点（Advantages）**
 		    - 更高的带宽和更低的衰减。
@@ -99,33 +99,33 @@ aliases:
 		    - 光纤接口更昂贵。
 		- **结论（Conclusion）**：对于新路线（尤其是较长的路线），光纤胜出！
 - **WIRELESS TRANSMISSION(无线传输)**
-	- The electromagnetic spectrum (电磁波谱)![[Pasted image 20260930105146.png]]![[Pasted image 20260930105208.png]]
+	- The electromagnetic spectrum (电磁波谱)![[Pasted image 20260930105146.webp]]![[Pasted image 20260930105208.webp]]
 		- 有些（技术）将其频率扩展到一个**宽频段**（**扩频（spread spectrum）**）。
 			- **跳频扩频（Frequency hopping spread spectrum）**（军事、802.11、蓝牙）。
 			- **直接序列扩频（Direct sequence spread spectrum）**（3G手机）。
 			- **UWB（超宽带）**。
-			![[Pasted image 20260930105324.png]]
-	- Radio transmission (无线电传输)![[Pasted image 20260930105340.png]]
+			![[Pasted image 20260930105324.webp]]
+	- Radio transmission (无线电传输)![[Pasted image 20260930105340.webp]]
 		- 无线电波易于产生，可以传输长距离，并且能轻松穿透建筑物，因此它们被广泛用于通信。
 		- 无线电波也是全向的，意味着它们从源向各个方向传播，因此发射器和接收器不必进行精确的物理对齐。
 		- 由于无线电波具有传输长距离的能力，用户之间的干扰是一个问题。出于这个原因，所有政府都严格控制无线电发射设备的使用许可。
-		![[Pasted image 20260930105450.png|443]]
-	- Microwave transmission (微波传输)![[Pasted image 20260930105507.png|635]]
+		![[Pasted image 20260930105450.webp|443]]
+	- Microwave transmission (微波传输)![[Pasted image 20260930105507.webp|635]]
 		- 高于100MHz时，电波沿直线传播，因此可以被狭窄地聚焦。
 		- ==传输塔越高，它们之间的距离就可以越远。对于100米高的塔，中继器（repeaters）可以间隔80公里。==
 		- 微波会引起==多径衰落（multipath fading）==或==被雨吸收（absorbed by rain）==**。
 		- 微波通信被广泛用于长途电话通信、蜂窝电话、电视分发等用途，以至于出现了严重的频谱短缺。
 		- 微波相对于光纤有一些优势：没有路权（right of way）问题，且价格低廉。
-	- Infrared and millimeter waves (红外线和毫米波)![[Pasted image 20260930105622.png]]
+	- Infrared and millimeter waves (红外线和毫米波)![[Pasted image 20260930105622.webp]]
 		- 红外线和毫米波无法穿透固体物体。
 		- 红外线可用于室内无线局域网（LANs）和遥控器。
 		- 红外线不能在室外使用，因为太阳在红外光谱中的光芒与在可见光谱中一样明亮（会造成强烈干扰）。
 		- 优点
 		    - 红外遥控器无法控制邻居的电视。
 		    - 更安全。
-	- Lightwave transmission (光波传输)![[Pasted image 20260930105707.png|430]]
+	- Lightwave transmission (光波传输)![[Pasted image 20260930105707.webp|430]]
 - **COMMUNICATION SATELLITES（通讯卫星）**
-	- Geostationary Satellites (地球同步卫星)![[Pasted image 20260930110719.png|376]]![[Pasted image 20260930110733.png|373]]
+	- Geostationary Satellites (地球同步卫星)![[Pasted image 20260930110719.webp|376]]![[Pasted image 20260930110733.webp|373]]
 	- Medium-Earth Orbit Satellites (中轨道卫星)
 		- 低于GEO（地球静止轨道卫星）。位于两个范艾伦辐射带之间。
 	    - 地面覆盖面积（footprint）较小。到达它们需要功率较低的发射器。
@@ -140,11 +140,11 @@ aliases:
 	- **The Theoretical Basis for Data Communication**
 		- 我们用数学函数来对电压或电流的变化进行建模。
 		- 任何表现良好的、周期为 T 的周期函数 g(t)，都可以被构造为（可能是无限个）正弦和余弦函数的和。
-		![[Pasted image 20260930111720.png|469]]
+		![[Pasted image 20260930111720.webp|469]]
 		- f=1/T：**基频**（fundamental frequency）；第1次**谐波**（harmonic）的频率。
 		- aₙ, bₙ：第n次**谐波**（项）的**正弦**和**余弦振幅**（amplitudes）。
 		- 具有有限持续时间的数据信号（所有数据信号都是如此），可以通过假设它永远反复重复整个模式来处理。
-		![[Pasted image 20260930111821.png|493]]
+		![[Pasted image 20260930111821.webp|493]]
 		- **系统带宽**（Bandwidth for systems）
 		    - 传输时未被强烈衰减的频率范围。
 		    - **截止频率**（cutoff frequency）并不是绝对尖锐的界限，被定义为透过一半（50%）功率时的频率。
@@ -155,15 +155,15 @@ aliases:
 		        （在时域中，对应**卷积**；在频域中，对应**相乘**）
 			- 二进制信号及其**均方根**（rms）：rms = (aₙ² + bₙ²)¹/²
 			- 这些平方项与在相应频率下传输的**能量**成正比。
-			![[Pasted image 20260930112100.png|459]]
+			![[Pasted image 20260930112100.webp|459]]
 			- Successive approximations to the original signal.
-			![[Pasted image 20260930112132.png]]![[Pasted image 20260930112137.png]]![[Pasted image 20260930112142.png]]![[Pasted image 20260930112149.png]]
+			![[Pasted image 20260930112132.webp]]![[Pasted image 20260930112137.webp]]![[Pasted image 20260930112142.webp]]![[Pasted image 20260930112149.webp]]
 			- 给定比特率 $b$ bits/sec（位/秒），  
 		        → 发送1位的时间是 $1/b$，  
 		        → 发送8位所需的时间是 $T=8/b$ 秒，  
 		        → 第1次谐波的频率是 $f=b/8$。
 		    - 普通电话线（通常称为**话音级线路**（voice-grade line））人为引入的截止频率在3000Hz附近。这种限制意味着通过的最高谐波次数为 $3000/(b/8)$ 或 $24000/b$。
-			![[Pasted image 20260930113345.png|452]]
+			![[Pasted image 20260930113345.webp|452]]
 		- **符号率与数据率**（Symbol rate vs. Data rate）
 			- 一个**符号**（symbol）是几种电压、频率或相位变化中的一种。
 			    - 符号是通信信道的任何**离散状态**（distinct state）。例如，在二进制（双状态）信道中，状态可以是两个电压电平、两个不同的电流值，甚至两个不同的频率——即一个简单的调制解调器。这样的信道一次可以传输1比特信息。
@@ -188,7 +188,7 @@ aliases:
 		    - S/N：信噪比（信号功率与噪声功率的比值）
 		- 实际数据速率 B 必须满足：B ≤ H · log₂(1 + S/N)
 		- 信噪比常用分贝（dB）表示：dB = 10 log₁₀(S/N)
-		![[Pasted image 20260930115122.png]]
+		![[Pasted image 20260930115122.webp]]
 		- 题目翻译：填空题：在使用8个离散电压电平表示比特、且信噪比为20dB的信道上，达到 B bits/sec 所需的最小带宽是多少？
 			本题需要结合**奈奎斯特定理**（无噪声极限）和**香农定理**（有噪声极限）来综合求解。
 			**第一步：处理信噪比（dB换算）**
@@ -222,7 +222,7 @@ aliases:
 			- signal occupies a band of frequencies around the frequency of the carrier signal
 		- 为了发送数字信息，我们必须设计模拟信号来表示比特。
 		- 在比特与表示它们的信号之间进行转换的过程被称为**数字调制**（Digital Modulation）。
-		![[Pasted image 20260930115517.png]]
+		![[Pasted image 20260930115517.webp]]
 		- **时钟恢复，精确时钟**（Clock Recovery, Accurate clock）：对于所有将比特编码为符号的方案，接收方必须知道一个符号何时结束以及下一个符号何时开始，才能正确解码比特。
 		- **NRZ（不归零制）**（Non-Return-to-Zero）：符号电压电平。
 		    - **问题**（Problem）：一长串的0或1会使信号保持不变。一段时间后，很难区分比特，因为15个0看起来和16个0非常相似，除非你拥有一个非常精确的时钟。
@@ -230,19 +230,19 @@ aliases:
 		- **一个巧妙的技巧**是将时钟信号与数据信号通过异或（XOR）混合在一起，这样就不需要额外的线路了。→ **曼彻斯特编码**（Manchester Encoding）
 		    - **问题**：带宽的利用率？（utilization of the bandwidth?）
 		    - **思考题**：假设一条无噪声信道的线路带宽为 H(Hz)，使用 NRZ 的最大数据率是 \___？使用曼彻斯特编码的最大数据率是 \___？
-			    ![[Pasted image 20260930120157.png]]
+			    ![[Pasted image 20260930120157.webp]]
 		- 作为朝正确方向迈出的一步，我们可以通过将 1 编码为跳变、将 0 编码为无跳变（或者反之）来简化情况。→ **NRZI（不归零倒相制）**（用于 USB）
 		- **4B/5B 的简单思路**：为了消灭长串的0，4B/5B 把每 4 个比特的数据转换成 5 个比特的代码。这 5 个比特的代码是提前选好的，**保证里面至少有足够的跳变（不会出长串0）**。例子：就像把容易让人看晕的长篇大论（长串0），翻译成带有标点符号的短句（4B/5B代码），让接收方随时能喘口气对齐节奏。
-			![[Pasted image 20260930121200.png|503]]
-		![[Pasted image 20260930121212.png|394]]
-		![[Pasted image 20260930121225.png|449]]
+			![[Pasted image 20260930121200.webp|503]]
+		![[Pasted image 20260930121212.webp|394]]
+		![[Pasted image 20260930121225.webp|449]]
 	- **Multiplexing**
 		Channels are often shared by multiple signals.
 		This kind of sharing is called **Multiplexing (复用)**
-		- Frequency Division Multiplexing (频分复用)![[Pasted image 20260930121409.png|519]]
-			- **正交频分复用**（Orthogonal frequency division multiplexing, OFDM）。![[Pasted image 20260930121933.png]]
+		- Frequency Division Multiplexing (频分复用)![[Pasted image 20260930121409.webp|519]]
+			- **正交频分复用**（Orthogonal frequency division multiplexing, OFDM）。![[Pasted image 20260930121933.webp]]
 				每个子载波的频率响应被设计为在相邻子载波的中心处为零。因此，可以在子载波的中心频率处对它们进行采样，而不会受到相邻子载波的干扰。
-		- Time Division Multiplexing(时分复用)![[Pasted image 20260930121946.png]]
+		- Time Division Multiplexing(时分复用)![[Pasted image 20260930121946.webp]]
 		- Code Division Multiplexing(码分复用)
 			- A, B, C, D → BS（基站）
 			- A, B, C, D 如何与 BS 通信？  
@@ -266,7 +266,7 @@ aliases:
 				- 如果结果是 0 → 静默。
 				- 如果结果是 -1 → 0。
 			- **Example**
-				![[Pasted image 20260930122421.png|291]]
+				![[Pasted image 20260930122421.webp|291]]
 				- S1：站点 C 发送比特 1  
 				    – 信道：-1 +1 -1 +1 +1 +1 -1 -1  
 				    – 译码 C：Channel·C/8 = 1  
@@ -278,7 +278,7 @@ aliases:
 				- S4：A,C 发送 1；B 发送 0
 				- S5：A,B,C,D 均发送 1
 				- S6：A,B,D 发送 1；C 发送 0
-		- Wavelength Division Multiplexing (波分多路复用)![[Pasted image 20261010101943.png]]
+		- Wavelength Division Multiplexing (波分多路复用)![[Pasted image 20261010101943.webp]]
 - **PUBLIC SWITCHED TELEPHONE NETWORK**
 	-  **Intro**
 		- 在连接计算机时，对于少量计算机和局部区域（local area），可以使用局域网（Local Area Network, LAN）。然而，当计算机数量庞大、覆盖范围广（wide area），或者缺乏路权（Right of Way）无法自行布线时，局域网（LAN）就不再适用，此时**必须依赖现有的通信设施**，例如公共交换电话网（Public Switched Telephone Network, PSTN）。
@@ -289,24 +289,24 @@ aliases:
 			- ==干线==（Trunks，即交换局之间的长距离连接）
 			- ==交换局==（Switching Offices）
 	- **Structure of the Telephone System**
-		![[Pasted image 20261010102836.png|417]]
+		![[Pasted image 20261010102836.webp|417]]
 		- 基本的贝尔系统模型（Bell system model）在超过100年的时间里基本上保持完好（intact）。电话系统（Telephone System）的主要组成部分（Major Components）包含以下三个核心部分：
 			- ==本地回路（Local loops）==，即通往家庭和企业用户的模拟双绞线（Analog twisted pairs）（注意并非开环 open-loop）
 			- ==干线（Trunks）==，即连接各个交换局（Switching offices）的数字光纤（Digital fiber optics）（过去曾使用同轴电缆 coaxial cables）
 			- ==交换局（Switching offices）==，负责将呼叫从一个干线切换到另一个干线，其工作方式已经从早期的人工操作员加跳线（manual operators + jumpers）演进为自动交换计算机（automatic switching computer）
 		- 如果连接到某个端局（End Office）的==用户（Subscriber）==呼叫另一个连接到同一端局的用户，该局内的交换机制（Switching Mechanism）会在两个本地回路（Local Loops）之间建立直接的电气连接（Direct Electrical Connection）。
 		- ==而不同端局下的用户之间的呼叫，则需要通过长途局（Toll Office）、初级局（Primary Office）、地区局（Sectional Office）和区域局（Regional Office）进行中转，==这也是中等距离呼叫（Medium-Distance Call）的典型电路路由（Circuit Route）。
-			![[Pasted image 20261010103245.png|552]]
+			![[Pasted image 20261010103245.webp|552]]
 	- **The Local Loop**
 		- 在计算机到计算机的呼叫（computer-to-computer call）中，会同时使用模拟传输（analog transmissions）和数字传输（digital transmissions）。这种转换（conversion）工作是由==调制解调器（modems, modulator-demodulator, 调制解调器）==和==编解码器（codecs, coder-decoder, 编码解码器）==来完成的。
-				![[Pasted image 20261010103500.png|459]]
+				![[Pasted image 20261010103500.webp|459]]
 		- **Modems: Dial-up modems**
 			- 在3000Hz语音级线路（voice-grade line）上工作时，奈奎斯特定理（Nyquist theorem）指出，即使是在完美的3000-Hz线路上，采样速率超过6000Hz也没有意义，因为==最大符号率（symbol rate）为2H（即6000符号/秒）==。
 			- **然而在实践中，大多数调制解调器（modems）采用2400符号/秒（symbols/sec）的采样率，并致力于在每个符号（symbol）中传输更多比特（bits per symbol）。例如，V.32调制解调器标准（V.32 modem standard）使用32个星座点（constellation points），在2400波特（baud）的速率下每个符号传输4个数据位和1个校验位，从而实现9600比特每秒（bps）的速率。**
 			- 最终发展出了V.90和V.92调制解调器标准（V.90 and V.92 modem standards），它们提供了==56==千比特每秒（kbps）的下行信道（downstream channel，从ISP到用户）以及33.6-kbps和48-kbps的上行信道（upstream channel，从用户到ISP）。
 		- **DSL: ADSL**
 			- 从拨号调制解调器（Dial-up modem，最大56kbps）发展到xDSL（数字用户线，Digital Subscriber Line），其中==应用最广泛的是ADSL（非对称数字用户线，Asymmetric DSL）==。对于xDSL技术而言，其可用带宽（bandwidth）比传统拨号线路要宽得多，从而实现了更高速的数据传输。
-				![[Pasted image 20261010103857.png]]
+				![[Pasted image 20261010103857.webp]]
 			- xDSL（数字用户线，Digital Subscriber Line）的设计目标主要包括：
 				- 服务必须能够在现有的三类双绞线（Category 3 twisted pair）本地回路（local loops）上正常运行
 				- 不能影响客户现有的电话和传真机（fax machines）的使用
@@ -315,15 +315,15 @@ aliases:
 			- 一个典型的非对称数字用户线（ADSL, Asymmetric Digital Subscriber Line）设备配置主要包括
 				- 网络接口设备（NID, Network Interface Device）
 				- 数字用户线接入复用器（DSLAM, DSL Access Multiplexor
-					![[Pasted image 20261010104345.png|418]]
+					![[Pasted image 20261010104345.webp|418]]
 		- **Fiber: FttH**
-			![[Pasted image 20261010104407.png|406]]
+			![[Pasted image 20261010104407.webp|406]]
 	- **Trunks and Multiplexing**
 		- **Digitizing Voice Signals**
 		- **T-Carrier: Multiplexing Digital Signals on the Phone Network**
-		- **Multiplexing Optical Networks: SONET (同步光纤网络)/SDH(同步数字分级结构)**![[Pasted image 20261010105730.png]]
+		- **Multiplexing Optical Networks: SONET (同步光纤网络)/SDH(同步数字分级结构)**![[Pasted image 20261010105730.webp]]
 			- Gross data rate 810 B/125us = 6480 b/s = 51.84Mbp
 			- Data rate for SPE = 87/90 * 51.84 = 50.112 Mbps
 			- User data rate = 86/87 * 50.112 = 49.536 Mbps
 			- This layout is the basic SONET channel, called STS-1(Synchronous Transport Signal-1). All SONET trunks aremultiples of STS-1.
-			![[Pasted image 20261010110352.png|353]]![[Pasted image 20261010110358.png|351]]![[Pasted image 20261010110404.png|347]]
+			![[Pasted image 20261010110352.webp|353]]![[Pasted image 20261010110358.webp|351]]![[Pasted image 20261010110404.webp|347]]

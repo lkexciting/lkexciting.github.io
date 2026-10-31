@@ -1,5 +1,5 @@
 ---
-title: 量子计算理论
+title: index
 aliases:
   - 量子计算理论/notes/index
   - 量子计算理论/note/index

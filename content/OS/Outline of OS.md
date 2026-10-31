@@ -10,20 +10,20 @@ aliases:
 	- To prepare to practice the techniques in your future work
 	- To enjoy hacking around!
 - Main ==content==
-![[Pasted image 20260915170038.png]]
+![[Pasted image 20260915170038.webp]]
 - Reference books
-![[Pasted image 20260915170257.png]]
-![[Pasted image 20260915170312.png]]
+![[Pasted image 20260915170257.webp]]
+![[Pasted image 20260915170312.webp]]
 - Final Grade
-![[Pasted image 20260915170347.png]]
+![[Pasted image 20260915170347.webp]]
 	==注意有机考==
 - Lab Projects
-![[Pasted image 20260915170438.png]]
+![[Pasted image 20260915170438.webp]]
 	实验说明文档在 https://sudis-zju.github.io/OS26Fall/
 	All code must include detailed comments (e.g., every 5 lines of code).
 	Each ==report== must include a "Discussion and Reflection" section, detailing the problems encountered during the lab and their solutions. This section accounts for ==20%== of the lab report's grade.
 - ==怎样学好系统？==
-	- ![[Pasted image 20260915170628.png]]
+	- ![[Pasted image 20260915170628.webp]]
 	- 理论钻研 vs 动手实践
 	- 寻找模式 
 	- 寻找兴奋点

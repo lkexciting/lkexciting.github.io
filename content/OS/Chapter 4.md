@@ -65,7 +65,7 @@ aliases:
 			- 示例：
 			    - Solaris 9以前
 			    - Windows NT/2000 ThreadFiber
-		- ![[Pasted image 20261013172147.png]]
+		- ![[Pasted image 20261013172147.webp]]
 		- Two-Level Model
 			- 基于 Many-to-Many 模型。
 			- 额外允许：

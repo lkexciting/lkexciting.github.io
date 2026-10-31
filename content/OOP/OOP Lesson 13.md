@@ -1,5 +1,5 @@
 ---
-title: OOP Lesson 13
+title: Lesson 13
 aliases:
   - OOP/notes/OOP Lesson 13
 ---

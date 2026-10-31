@@ -1,5 +1,5 @@
 ---
-title: OOP Lesson 7
+title: Lesson 7
 aliases:
   - OOP/notes/OOP Lesson 7
 ---
@@ -65,18 +65,18 @@ void func()
 	- 如果编译器在编译时能确定函数，也可能生成静态调用。
 	- ==How virtual works in C++？==
 		- 存在一个虚指针，指向相应的函数！
-		![[Pasted image 20251110143559.png]]
+		![[Pasted image 20251110143559.webp]]
 		- 下面给出几个例子：
 			- ellipse
-			![[Pasted image 20251110143703.png]]
+			![[Pasted image 20251110143703.webp]]
 			- circle
-			![[Pasted image 20251110143738.png]]
+			![[Pasted image 20251110143738.webp]]
 			- 比较ellipse与shape：
-			![[Pasted image 20251110143805.png]]
+			![[Pasted image 20251110143805.webp]]
 	- 当我强制的将子类的赋值赋值给基类时：
 		- **场景**: 将Circle对象赋值给Ellipse对象。    
 		- **后果**:    
-		    - Circle对象特有的部分（如area）被==**切割掉**==。		        
+		    - Circle对象特有的部分（如area）被**==切割掉==**。		        
 		    - 只复制了适合Ellipse对象大小的部分。		        
 		    - Circle的vptr被忽略，elly的vptr仍然指向Ellipse的虚函数表。		        
 		    - 因此，通过elly调用render()，执行的仍然是Ellipse::render()。
@@ -127,7 +127,7 @@ void func()
 		```
 		- `BaseClass::functionName()` 的语法,无需旧的函数名称！
 	- 返回类型协变（当前标准）
-		![[Pasted image 20251110145737.png]]
+		![[Pasted image 20251110145737.webp]]
 		- **规则**: 当D公有继承B时，D::f()可以返回B::f()返回类型的子类（对于指针或引用类型）。    
 		- **状态**: 大多数现代编译器支持。
 		- 示例
@@ -166,7 +166,7 @@ void func()
 			```
 		- When you override an overloaded function, override all of the variants!
 	- **重要提示**    
-		![[Pasted image 20251110145852.png]]
+		![[Pasted image 20251110145852.webp]]
 		- **提示1**: **永远不要**重新定义继承来的非虚函数（因为没有动态分发）。		    
 		- **提示2**: **永远不要**重新定义继承来的默认参数值（因为默认参数是静态绑定的）。
 	- **Abstract base classes（抽象基类）**
@@ -175,7 +175,7 @@ void func()
 		    - 只定义接口，不提供函数体（用`= 0`标记）。        
 		    - 不能实例化对象。        
 		    - 必须派生新类，并为所有纯虚函数提供定义后，才能实例化派生类对象。
-	![[Pasted image 20251117134526.png]]
+	![[Pasted image 20251117134526.webp]]
 	- **为何使用**:    
 	    - 建模需要。        
 	    - 强制正确的行为（要求派生类实现接口）。        
@@ -189,4 +189,4 @@ void func()
 		    - 拥有一个空的虚析构函数。        
 		    - 没有非静态成员变量。        
 		    - 可以包含静态成员。
-		- 例如：![[Pasted image 20251117134921.png]]
+		- 例如：![[Pasted image 20251117134921.webp]]

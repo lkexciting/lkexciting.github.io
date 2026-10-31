@@ -1,5 +1,5 @@
 ---
-title: Chapter 1_ai
+title: Chapter 1 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 1_ai
 ---
@@ -19,11 +19,11 @@ aliases:
 
 **Client-server model**：Client 发 Request，Server 提供服务并返回 Reply/Response。角色取决于一次交互中的职责，不取决于设备大小。
 
-![Client-server 的 Request/Reply](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-005.png)
+![Client-server 的 Request/Reply](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-005.webp)
 
 **Peer-to-peer（P2P）model**：没有固定、统一的 Client/Server 角色，同一 Peer 可以请求资源，也可以提供资源。P2P 不意味着实际系统完全没有中心节点；可能仍使用集中发现或协调服务。
 
-![P 模型](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-006.png)
+![P 模型](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-006.webp)
 
 | 比较维度 | Client-server | P2P |
 |---|---|---|
@@ -51,7 +51,7 @@ aliases:
 - **Sensor network** 可采用 Multihop：数据经多个节点转发到 Sink。设计要考虑能耗、无线链路、拓扑和路径测量。
 -  iPath 示例用于展示 Wireless Sensor Network 中的 Path inference：根据已有观测推断传输路径，属于应用研究示例。
 
-![Sensor network 的 Multihop topology](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-011.png)
+![Sensor network 的 Multihop topology](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-011.webp)
 
 ## 2. Types of Computer Networks
 
@@ -99,7 +99,7 @@ aliases:
 - **Static allocation**：预先分配时隙等资源，例如 Round-robin。
 - **Dynamic allocation**：按当前需求安排，可由中央控制，也可分布式竞争。
 
-![Wireless LAN 与 Switched Ethernet](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-021.png)
+![Wireless LAN 与 Switched Ethernet](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-021.webp)
 
 **易错：**经典共享 Ethernet 和现代 Switched Ethernet 的接入条件不同；不能把所有 LAN 都想成“所有设备共享一根线、必然碰撞”。
 
@@ -112,7 +112,7 @@ aliases:
 - **Router / Switching element** 根据目的和路由选择输出链路，转发 Packet。
 - 路径上 Packet 可能经历多个 Router。
 
-![WAN 连接分支机构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-027.png)
+![WAN 连接分支机构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-027.webp)
 
 **术语提醒：**这里的 Communication subnet 是通信基础设施，不是 IP addressing 中的 IP subnet。“Router 连接三条或更多线路”是典型示意，不是 Router 的必要定义。
 
@@ -124,7 +124,7 @@ WAN 中 End systems 和通信基础设施常由不同主体管理，也可连接
 - **SD-WAN**：通过软件控制和策略管理多个 WAN 连接，是这里列出的 WAN 形态之一。
 - **internet**：泛指互联网络；**Internet**：通常专指全球 Internet。
 
-![VPN 的逻辑连接](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-032.png)
+![VPN 的逻辑连接](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-032.webp)
 
 ## 4. Example Networks
 
@@ -138,11 +138,11 @@ WAN 中 End systems 和通信基础设施常由不同主体管理，也可连接
 - 3G 示例：Node B 与 RNC 组成接入侧，Core 支持 Circuit/Packet 业务。
 - 4G LTE 示例：E-UTRAN 以 eNodeB 为接入节点，EPC 为 Packet-switched core；这里列出 S-GW、P-GW 等网关。
 
-![3G 架构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-036.png)
+![3G 架构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-036.webp)
 
-![4G LTE 架构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-037.png)
+![4G LTE 架构](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-037.webp)
 
-![Handover 前后](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-041.png)
+![Handover 前后](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-041.webp)
 
 **易错：**不要将 3G 的 RNC 机械套到 LTE 中；无线接入、核心网、移动性管理是不同层次的职责。
 
@@ -154,9 +154,9 @@ WAN 中 End systems 和通信基础设施常由不同主体管理，也可连接
 - **CSMA（Carrier Sense Multiple Access）**：发送前监听信道；无线中“本地听不到发送者”不代表 Receiver 不会遭到干扰。
 - **Hidden terminal**：两个发送节点互相听不到，却可能同时干扰同一个接收节点。因此仅靠 Carrier sensing 无法消除所有冲突。
 
-![WiFi Infrastructure 与 Ad hoc](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-043.png)
+![WiFi Infrastructure 与 Ad hoc](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-043.webp)
 
-![Hidden terminal](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-045.png)
+![Hidden terminal](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-045.webp)
 
 ## 5. Network Protocols
 
@@ -188,7 +188,7 @@ WAN 中 End systems 和通信基础设施常由不同主体管理，也可连接
 
 **典型关系：Application data → Transport segment/datagram → IP Packet → Link Frame → bits**。
 
-![Encapsulation 与 Peer 的逻辑通信](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-053.png)
+![Encapsulation 与 Peer 的逻辑通信](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-053.webp)
 
 - **Frame encapsulates Packet**，不是反过来。
 - Peers 是逻辑上直接通信；实际数据通常必须经本机下层、介质与对方协议栈。
@@ -214,7 +214,7 @@ WAN 中 End systems 和通信基础设施常由不同主体管理，也可连接
 
 **Service primitive** 是上层调用下层服务的操作。简单 Connection-oriented 模型包括 LISTEN、CONNECT、ACCEPT、RECEIVE、SEND、DISCONNECT。
 
-![Service primitives](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-056.png)
+![Service primitives](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-056.webp)
 
 Berkeley Sockets 的示例流程：
 
@@ -222,7 +222,7 @@ Berkeley Sockets 的示例流程：
 - Client：`SOCKET → CONNECT → SEND/RECEIVE → CLOSE`。
 - BIND 将本地地址与 Socket 关联；ACCEPT 接受传入连接；CONNECT 主动发起连接。
 
-![Socket primitives](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-097.png)
+![Socket primitives](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-097.webp)
 
 这些是接口层操作，不是“每次调用就恰好对应一个线上的 Packet”。
 
@@ -234,7 +234,7 @@ Berkeley Sockets 的示例流程：
 | Interface | 上层如何使用这些能力 | 本机层间边界 |
 | Protocol | Peers 如何交换消息以实现服务 | 跨设备同层的横向关系 |
 
-![Service 与 Protocol 的区别](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-058.png)
+![Service 与 Protocol 的区别](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-058.webp)
 
 类比：Service 像对象提供的操作，Protocol 像实现这些操作所需的交互规则。保持 Service 稳定时，下面的 Protocol implementation 可以改变。
 
@@ -254,7 +254,7 @@ Berkeley Sockets 的示例流程：
 | 2 Data Link | 一跳链路上的 Frame 传输 | Framing、Error detection、Flow control、MAC |
 | 1 Physical | 把 bits 表示为物理信号并传送 | 电气、机械、时序、介质接口 |
 
-![OSI 七层与中间 Router](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-063.png)
+![OSI 七层与中间 Router](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-063.webp)
 
 **注意：**职责表描述模型，不是所有协议都具备所有保证。Data Link Layer 不一定实现可靠重传，Transport Layer 也不一定保证可靠交付，UDP 就是例子。
 
@@ -267,9 +267,9 @@ Berkeley Sockets 的示例流程：
 - Internet 典型为 IP，提供 Connectionless、Best-effort Packet 传输。
 - Link 描述 IP 如何借助具体链路发送；原始模型没有清楚分开 Data Link 与 Physical。
 
-![OSI 与 TCP/IP 层次对应](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-072.png)
+![OSI 与 TCP/IP 层次对应](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-072.webp)
 
-![TCP/IP 与示例协议](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-073.png)
+![TCP/IP 与示例协议](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-073.webp)
 
 ### 6.3 OSI 与 TCP/IP 比较
 
@@ -290,7 +290,7 @@ Berkeley Sockets 的示例流程：
 - TCP/IP model 的局限：对 Service/Interface/Protocol 区分不充分、Link 抽象较粗、不明确分离 Physical 与 Data Link，某些既有协议难以替换。
 - 本课程 **Hybrid / Five-layer model**：**Application、Transport、Network、Data Link、Physical**。
 
-![本课程 Five-layer model](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-084.png)
+![本课程 Five-layer model](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-084.webp)
 
 ## 7. Standardization
 
@@ -394,7 +394,7 @@ Berkeley Sockets 的示例流程：
 - 重点理解 GET 获取表示、HEAD 获取类似 GET 的响应头但不含响应内容、POST 提交处理、PUT 写入目标资源、DELETE 删除目标资源。
 - 示例中的旧 HTML 标签和 HTTP 描述只作历史示例，例如 POST 不应被概括为仅“追加”，CONNECT 也不应被理解为只留作未来用途。
 
-![多线程 Web server](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-100.png)
+![多线程 Web server](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter%201_ai/page-100.webp)
 
 ## 11. Review Checklist
 

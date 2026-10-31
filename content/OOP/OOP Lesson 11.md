@@ -1,5 +1,5 @@
 ---
-title: OOP Lesson 11
+title: Lesson 11
 aliases:
   - OOP/notes/OOP Lesson 11
 ---

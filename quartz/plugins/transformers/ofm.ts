@@ -543,6 +543,28 @@ export const ObsidianFlavoredMarkdown: QuartzTransformerPlugin<Partial<Options>>
     htmlPlugins() {
       const plugins: PluggableList = [rehypeRaw]
 
+      // 图片懒加载：首屏第一张保持立即加载（避免拖慢 LCP），其余全部懒加载 + 异步解码。
+      // 笔记里显式写了 loading 的图片保持原样。
+      plugins.push(() => {
+        return (tree: HtmlRoot) => {
+          // 每篇笔记独立判断"第一张图"，状态必须放在 transformer 内部
+          let seenFirstImage = false
+          visit(tree, "element", (node) => {
+            if (node.tagName !== "img") return
+            const props = (node.properties ??= {})
+            if (props.loading !== undefined) return
+            if (!seenFirstImage) {
+              seenFirstImage = true
+              props.loading = "eager"
+              props.fetchPriority = "high"
+            } else {
+              props.loading = "lazy"
+            }
+            props.decoding = "async"
+          })
+        }
+      })
+
       if (opts.parseBlockReferences) {
         plugins.push(() => {
           const inlineTagTypes = new Set(["p", "li"])

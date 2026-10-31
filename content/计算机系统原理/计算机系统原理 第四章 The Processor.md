@@ -1,5 +1,5 @@
 ---
-title: 计算机系统原理 第四章 The Processor
+title: 第四章 The Processor
 aliases:
   - 计算机系统原理/notes/计算机系统原理 第四章 The Processor
 ---
@@ -28,25 +28,25 @@ aliases:
 	        - 分支目标地址            
 	- 为加载/存储访问数据内存    
 	- PC ← 目标地址 或 PC + 4
-	![[Pasted image 20251112100135.png]]
-	![[Pasted image 20251112100148.png]]
-	![[Pasted image 20251112100200.png]]
+	![[Pasted image 20251112100135.webp]]
+	![[Pasted image 20251112100148.webp]]
+	![[Pasted image 20251112100200.webp]]
 	- 这三张图中，第三张图尤为重要！
 
 ## §4.2 Logic Design Conventions
 - **逻辑设计基础（由于没有学过数逻）**
-	- ![[Pasted image 20251112100308.png]]
+	- ![[Pasted image 20251112100308.webp]]
 	- **信息以二进制编码**    
 	    - 低电压 = 0，高电压 = 1        
 	    - 每比特一根线        
 	    - 多比特数据在多线总线上编码        
-	- ==**组合元件**==    
-		- ![[Pasted image 20251112100853.png]]
+	- **==组合元件**==    
+		- ![[Pasted image 20251112100853.webp]]
 	    - 对数据进行操作        
 	    - 输出是输入的函数        
-	- ==**状态（时序）元件**== 
+	- ==**状态（时序）元件==** 
 		- 执行时间：==一个时钟周期==
-		- ![[Pasted image 20251112100920.png]]
+		- ![[Pasted image 20251112100920.webp]]
 	    - **寄存器**：在电路中存储信息与数据
 		    - 使用时钟信号来确定何时更新存储的值    
 			- 边沿触发（==edge-trigged==）：当Clk从0变为1时更新
@@ -55,16 +55,16 @@ aliases:
 				- 并且写进去之后也要有一定的时间延迟（及“保持时间”）来使其完全写好（否则可能会输入错误）。
 				- ==在保存时间之后的读取才是正常的，正确的==。
 		- 特殊的：**带写控制的寄存器**
-		- ![[Pasted image 20251112101830.png]]
+		- ![[Pasted image 20251112101830.webp]]
 			- 会存在一个“写信号”的来控制是否写入
 			- 仅在写控制输入为1时的时钟边沿更新    
 			- 当存储的值后续需要时使用
 		- **时钟策略**
-		- ![[Pasted image 20251112102106.png]]
+		- ![[Pasted image 20251112102106.webp]]
 			- 在时钟边沿之间    
 			- 从状态元件输入，输出到状态元件    
 			- **==最长延迟决定时钟周期==**
-		- ![[Pasted image 20251112102214.png]]
+		- ![[Pasted image 20251112102214.webp]]
 			- 所有状态部件在上升沿写入信息，经过Latch Prop锁存时间后输出有效    
 			- Cycle Time = Latch Prop + Longest Delay Path + Setup + ==Clock Skew==    
 				- 什么是==Clock Skew==？是到达每一个原件的微小的路径因为有差别而产生的值
@@ -81,11 +81,11 @@ aliases:
 - 我们将逐步构建一个RISC-V数据通路    
 	- 改进概述设计
 - **指令获取**
-- ![[Pasted image 20251112102909.png]]
+- ![[Pasted image 20251112102909.webp]]
 	- PC它会获取指令，获取指令后接下来下一个时钟周期要获取第二条指令，因此需要获得一个新的地址，而一条指令的长度为32位，所以==“PC+4”==，加完之后将会把指令地址送回PC，准备下一个时钟周期的进程。
 	- PC它没有write信号，因为一直需要写，所以没有必要
 - **读取R型指令**
-- ![[Pasted image 20251112103432.png]]
+- ![[Pasted image 20251112103432.webp]]
 	-  读取两个寄存器操作数  
 	-  执行算术/逻辑操作  
 	-  写寄存器结果
@@ -93,7 +93,7 @@ aliases:
 	- ALU operation是一个4位的控制信号来控制ALU进行什么运算（ALU执行的指令实在是太多了）
 		- 例如：两个数是否相等时做减法，看是否为0
 - **Load/Store指令**
-- ![[Pasted image 20251112104040.png]]
+- ![[Pasted image 20251112104040.webp]]
 	- 读取寄存器操作数    
 	- 使用12位偏移量计算地址    
 	    - 使用ALU，但对偏移量进行符号扩展        
@@ -109,7 +109,7 @@ aliases:
 	    - 左移1位（半字位移）        
 	    - 加到PC        
 	        - 已由指令获取计算得到
-	![[Pasted image 20251112105412.png]]
+	![[Pasted image 20251112105412.webp]]
 - **把多个元件组合（Composing the Elements）**
 	- 初版数据通路在==一个时钟周期内执行一条指令==    
 	    - 每个数据通路元件一次只能执行一个功能        
@@ -117,29 +117,29 @@ aliases:
 		    - 即==指令缓存==和==数据缓存==
 	- 在不同指令使用不同数据源的地方使用多路选择器
 - **R型/加载/存储数据通路**
-- ![[Pasted image 20251112110318.png]]
+- ![[Pasted image 20251112110318.webp]]
 	- ==ALUSrc==：ALU另一个数的来源“source”，是立即数还是寄存器
 	- 寄存器的“Write Data”运输过程中有一个“MemtoReg”的信息，是看这个要写的数据是来自ALU还是别的地方
 	- ==RegWrite==是寄存器的写信号
 	- ==值得注意的是：除了标注“4”的ALU operation，别的所有的信号都只需要一位！==
 	- 整体的数据流：
-	- ![[Pasted image 20251112110857.png]]
+	- ![[Pasted image 20251112110857.webp]]
 ## §4.4 A Simple Implementation Scheme
 - **ALU的控制**
-- ![[Pasted image 20251112111238.png]]
-- ![[Pasted image 20251112111249.png]]
-- ![[Pasted image 20251112111300.png]]
+- ![[Pasted image 20251112111238.webp]]
+- ![[Pasted image 20251112111249.webp]]
+- ![[Pasted image 20251112111300.webp]]
 - 主控制中心
-- ![[Pasted image 20251112111532.png]]
-- ![[Pasted image 20251112111544.png]]
-- ![[Pasted image 20251112111553.png]]
+- ![[Pasted image 20251112111532.webp]]
+- ![[Pasted image 20251112111544.webp]]
+- ![[Pasted image 20251112111553.webp]]
 - (emm……what can I say?)
 - 整体的一个数据流路径
 	- 判断某类指令使用的数据通路时，从指令的输入追踪到最终写回位置：未参与该指令的数据线即使物理存在，也不影响其结果。
-- ![[Pasted image 20251112111721.png]]
-- R型指令![[Pasted image 20251112111829.png]]
-- Load指令![[Pasted image 20251112111846.png]]
-- 分支指令![[Pasted image 20251112111903.png]]
+- ![[Pasted image 20251112111721.webp]]
+- R型指令![[Pasted image 20251112111829.webp]]
+- Load指令![[Pasted image 20251112111846.webp]]
+- 分支指令![[Pasted image 20251112111903.webp]]
 - **性能问题**
 	- 最长延迟决定时钟周期    
 	    - 关键路径        
@@ -149,7 +149,7 @@ aliases:
 	    - 使常见情况更快   
 ## §4.6 An Overview of Pipelining
 - **我们将通过流水线提高性能**
-	- 举个例子：洗衣服![[Pasted image 20251114081108.png]]
+	- 举个例子：洗衣服![[Pasted image 20251114081108.webp]]
 	- 可以想到的是：下面的做法优化了很多
 	- 加速比：旧时长/新时长=8h/3.5h
 		- 不停下来的时候，时长为0.5✖波数+1.5（最后一波的时间）
@@ -164,9 +164,9 @@ aliases:
 	- 假设各阶段时间为    
 	    - 寄存器读或写：100ps        
 	    - 其他阶段：200ps
-	- 比较流水线数据通路和单周期数据通路![[Pasted image 20251114082603.png]]
+	- 比较流水线数据通路和单周期数据通路![[Pasted image 20251114082603.webp]]
 		==设置时钟周期的时候，需要把时钟周期设置成消耗时间最大的一个！==
-	- ![[Pasted image 20251114082634.png]]
+	- ![[Pasted image 20251114082634.webp]]
 	- 比较这两种方式，其中第一种是顺序执行，第二个是流水线执行
 		- ==当不可执行时，将会停顿一个时钟周期！==
 - **流水线加速比**
@@ -200,21 +200,21 @@ aliases:
 - 数据冒险  
 	■ 一条指令依赖于前一条指令完成数据访问  
 	■ add x19, x0, x1  
-	■ sub x2, x19, x3![[Pasted image 20251114090104.png]]
+	■ sub x2, x19, x3![[Pasted image 20251114090104.webp]]
 	- ==停顿等效于插入一个空指令==
 	- ==正是因为停顿的出现，才使得加速比无法达到理论最高值==
 - **转发（也称为旁路）**（解决停顿的出现）
 	- 在==结果计算出来时==就使用它    
 	    - 不要等待它被存储到寄存器中        
-	    - 需要在数据通路中额外的连接![[Pasted image 20251114091622.png]]
+	    - 需要在数据通路中额外的连接![[Pasted image 20251114091622.webp]]
 		- 实际上这个转发是从ALU的结果直接连接向输入的情况，只不过在流程图上看不出
 		- ==在sub的EX阶段，add的结果已经从EX/MEM或MEM/WB流水线寄存器中转发过来，避免了停顿。==
 - **加载-使用数据冒险**
 	- 并非总能通过转发避免停顿    
 	    - 如果值在需要时尚未计算出来        
-	    - 无法在时间上向后转发！![[Pasted image 20251114092134.png]]
+	    - 无法在时间上向后转发！![[Pasted image 20251114092134.webp]]
 	    - ==由于ld指令在MEM阶段结束时才得到数据，sub指令在ID之后需要插入三个气泡（停顿）才能继续。==
-- 当然，我们还能使用软件的方式：**==通过代码调度避免停顿**==![[Pasted image 20251119102045.png]]
+- 当然，我们还能使用软件的方式：**==通过代码调度避免停顿**==![[Pasted image 20251119102045.webp]]
 	- 调整了顺序，读取几步之后进行计算，有效地减少了停顿
 - **控制冒险**
 	- 分支决定控制流    
@@ -225,7 +225,7 @@ aliases:
 	    - 需要在流水线早期比较寄存器和计算目标        
 	    - 在ID阶段添加硬件来完成它
 - **分支停顿**
-	- 在获取下一条指令之前等待直到分支结果确定![[Pasted image 20251119104020.png]]
+	- 在获取下一条指令之前等待直到分支结果确定![[Pasted image 20251119104020.webp]]
 	- 图示说明在beq指令的ID阶段之后，需要==插入两个气泡（停顿）==，直到分支结果在==MEM==阶段==确定后==，才能获取正确的下一条指令（or指令）。
 - **分支预测**
 	- ==更长的==流水线不能轻易地早期确定分支结果    
@@ -254,7 +254,7 @@ aliases:
 	    - 结构、数据、控制        
 	- 指令集设计影响流水线实现的复杂性1
 ## §4.7 Pipelined Datapath and Control
-- **RISC-V流水线数据通路**![[Pasted image 20251119111437.png]]![[Pasted image 20251119112016.png]]
+- **RISC-V流水线数据通路**![[Pasted image 20251119111437.webp]]![[Pasted image 20251119112016.webp]]
 - **流水线操作**
 	- 指令通过流水线数据通路的逐周期流    
 	    - “单时钟周期”流水线图        
@@ -262,14 +262,14 @@ aliases:
 	        - 高亮使用的资源            
 	    - 对比“多时钟周期”图        
 	        - 随时间推移的操作图            
-	- 我们将查看加载和存储的“单时钟周期”图![[Pasted image 20251119112111.png]]高亮了Load/Store/...指令在IF阶段使用的部分：PC、指令内存、到IF/ID流水线寄存器的指令输出、计算PC+4的加法器。![[Pasted image 20251119112136.png]]高亮了Load/Store/...指令在ID阶段使用的部分：IF/ID流水线寄存器、寄存器文件（读寄存器1、读寄存器2）、立即数生成单元(Imm Gen)、控制信号、以及连接到ID/EX流水线寄存器的路径。![[Pasted image 20251119112143.png]]高亮了Load/Store/...指令在EX阶段使用的部分：ID/EX流水线寄存器、ALU（计算地址或执行操作）、ALUSrc多路选择器、分支目标地址计算（Shift left 1, Add）、以及连接到EX/MEM流水线寄存器的路径。![[Pasted image 20251119112149.png]]高亮了Load/Store指令在MEM阶段使用的部分：EX/MEM流水线寄存器、数据内存（地址、读数据、写数据）、MemRead、MemWrite控制信号、MemtoReg多路选择器、以及连接到MEM/WB流水线寄存器的路径。对于Load，数据从内存读出；对于Store，数据写入内存。![[Pasted image 20251119112156.png]]Load指令在WB阶段使用的部分：MEM/WB流水线寄存器、MemtoReg多路选择器、寄存器文件的写数据输入和写寄存器输入、RegWrite控制信号。![[Pasted image 20251119112205.png]]==修正后的流水线数据通路==，明确显示WB阶段写回的寄存器编号来自MEM/WB流水线寄存器，而不是ID/EX。![[Pasted image 20251119112213.png]]
-	EX阶段使用的部分：ID/EX流水线寄存器、ALU（计算地址）、ALUSrc多路选择器、以及连接到EX/MEM流水线寄存器的路径，特别是存储的数据值。![[Pasted image 20251119112223.png]]
-	MEM阶段使用的部分：EX/MEM流水线寄存器、数据内存（地址、写数据）、MemWrite控制信号。数据从EX/MEM流水线寄存器写入数据内存。![[Pasted image 20251119112231.png]]
+	- 我们将查看加载和存储的“单时钟周期”图![[Pasted image 20251119112111.webp]]高亮了Load/Store/...指令在IF阶段使用的部分：PC、指令内存、到IF/ID流水线寄存器的指令输出、计算PC+4的加法器。![[Pasted image 20251119112136.webp]]高亮了Load/Store/...指令在ID阶段使用的部分：IF/ID流水线寄存器、寄存器文件（读寄存器1、读寄存器2）、立即数生成单元(Imm Gen)、控制信号、以及连接到ID/EX流水线寄存器的路径。![[Pasted image 20251119112143.webp]]高亮了Load/Store/...指令在EX阶段使用的部分：ID/EX流水线寄存器、ALU（计算地址或执行操作）、ALUSrc多路选择器、分支目标地址计算（Shift left 1, Add）、以及连接到EX/MEM流水线寄存器的路径。![[Pasted image 20251119112149.webp]]高亮了Load/Store指令在MEM阶段使用的部分：EX/MEM流水线寄存器、数据内存（地址、读数据、写数据）、MemRead、MemWrite控制信号、MemtoReg多路选择器、以及连接到MEM/WB流水线寄存器的路径。对于Load，数据从内存读出；对于Store，数据写入内存。![[Pasted image 20251119112156.webp]]Load指令在WB阶段使用的部分：MEM/WB流水线寄存器、MemtoReg多路选择器、寄存器文件的写数据输入和写寄存器输入、RegWrite控制信号。![[Pasted image 20251119112205.webp]]==修正后的流水线数据通路==，明确显示WB阶段写回的寄存器编号来自MEM/WB流水线寄存器，而不是ID/EX。![[Pasted image 20251119112213.webp]]
+	EX阶段使用的部分：ID/EX流水线寄存器、ALU（计算地址）、ALUSrc多路选择器、以及连接到EX/MEM流水线寄存器的路径，特别是存储的数据值。![[Pasted image 20251119112223.webp]]
+	MEM阶段使用的部分：EX/MEM流水线寄存器、数据内存（地址、写数据）、MemWrite控制信号。数据从EX/MEM流水线寄存器写入数据内存。![[Pasted image 20251119112231.webp]]
 	==Store指令在WB阶段不执行任何写寄存器操作，因此没有需要高亮的部分。==
 - **多周期流水线图**  
-	显示资源使用情况的表格形式	![[Pasted image 20251119112901.png]]![[Pasted image 20251119112943.png]]
+	显示资源使用情况的表格形式	![[Pasted image 20251119112901.webp]]![[Pasted image 20251119112943.webp]]
 - **单周期流水线图**
-- 流水段之间的寄存器保存本条指令的操作数、运算结果和后续需要的控制信号，供下一周期继续使用；它们不同于供指令编号寻址的通用寄存器堆。![[Pasted image 20251119113020.png]]
+- 流水段之间的寄存器保存本条指令的操作数、运算结果和后续需要的控制信号，供下一周期继续使用；它们不同于供指令编号寻址的通用寄存器堆。![[Pasted image 20251119113020.webp]]
 	- 在一个给定周期内流水线的状态。展示了==五条指令==
 		1. add x14, x5, x6
 		2. ld x13, 48(x1)
@@ -277,7 +277,7 @@ aliases:
 		4. sub x11, x2, x3
 		5.  ld x10, 40(x1)
 		同时位于流水线中，分别处于IF, ID, EX, MEM, WB阶段。数据通路图显示了每个流水线寄存器（IF/ID, ID/EX, EX/MEM, MEM/WB）中保存的指令信息流。
-- **流水线控制（简化）**![[Pasted image 20251119113219.png]]
+- **流水线控制（简化）**![[Pasted image 20251119113219.webp]]
 	- PCSrc信号是 Branch与Zero信号！
 - **控制线分组**
 	- 指令取指 (IF：Instruction fetch): 无需设置控制线（control line）    
@@ -288,9 +288,9 @@ aliases:
 	- 写回 (WB Write back): MemtoReg, RegWrite
 - **流水线控制**
 	- Control signals derived from instruction（控制信号从指令衍生）
-		- As in single cycle implementation（与单周期实现中一样）![[Pasted image 20251128081431.png]]
+		- As in single cycle implementation（与单周期实现中一样）![[Pasted image 20251128081431.webp]]
 	- 每一个阶段用一个控制信号，但是控制信号是一直携带的
-		- 产生都是在ID阶段产生，但是使用都是在后面的每一个步骤！（单周期就不用考虑这个，就一个时钟周期）不会回头去拿流水线的控制信号![[Pasted image 20251128081706.png]]
+		- 产生都是在ID阶段产生，但是使用都是在后面的每一个步骤！（单周期就不用考虑这个，就一个时钟周期）不会回头去拿流水线的控制信号![[Pasted image 20251128081706.webp]]
 ## §4.8 Data Hazards: Forwarding vs. Stalling
 - **ALU 指令中的数据冒险**
 	- Consider this sequence:
@@ -300,10 +300,10 @@ aliases:
 		add x14, x2 x2
 		sd x15,100( x2）
 	- 我们可以通过转发解决冒险（是什么时候转发比较合适？）
-- **多周期流水线**![[Pasted image 20251128082305.png]]
+- **多周期流水线**![[Pasted image 20251128082305.webp]]
 	- 可以发现的一共有9个周期
 	- 如果在存储指令之前的有红线指出的旁路的话，那么原本需要等待的下一条指令无需进行等待了
-- **检测转发的需求**（Detecting the Need to Forward）![[Pasted image 20251128083547.png]]
+- **检测转发的需求**（Detecting the Need to Forward）![[Pasted image 20251128083547.webp]]
 	- 沿流水线传递寄存器编号    
 	    - 例如，ID/EX.RegisterRs1 = 位于 ID/EX 流水线寄存器中的 Rs1 的寄存器编号        
 	- EX 阶段的 ALU 操作数寄存器编号由以下给出：    
@@ -314,14 +314,14 @@ aliases:
 	    2a. MEM/WB.RegisterRd = ID/EX.RegisterRs1  
 	    2b. MEM/WB.RegisterRd = ID/EX.RegisterRs2
 	    \*条件 1a 和 1b 检测是否需要从刚刚完成 EX 阶段（结果在 EX/MEM 中）的指令转发。
-		\*条件 2a 和 2b 检测是否需要从更早一条（完成 MEM 阶段，结果在 MEM/WB 中）的指令转发。![[Pasted image 20251128083642.png]]
+		\*条件 2a 和 2b 检测是否需要从更早一条（完成 MEM 阶段，结果在 MEM/WB 中）的指令转发。![[Pasted image 20251128083642.webp]]
 	-  但仅当要转发的指令会写入一个寄存器时！    
 	    - EX/MEM.RegWrite, MEM/WB.RegWrite        
 	- 且该指令的 Rd 不是 x0    
 	    - EX/MEM.RegisterRd ≠ 0, MEM/WB.RegisterRd ≠ 0        
 	- 例如：sll x0, x5, 2 (==写入 x0，实际不改变任何寄存器，无需转发==)
-![[Pasted image 20251128085945.png]]
-- **转发条件**![[Pasted image 20251128090040.png]]
+![[Pasted image 20251128085945.webp]]
+- **转发条件**![[Pasted image 20251128090040.webp]]
 - **双重数据冒险**
 	- Consider the sequence:
 		add x1 ,x1,x2
@@ -332,10 +332,10 @@ aliases:
 	- 修改 MEM 冒险条件    
 	    - ==仅当 EX 冒险条件不成立时才从 MEM 转发==
 - **修改后的转发条件**
-	- ![[Pasted image 20251128090738.png]]
+	- ![[Pasted image 20251128090738.webp]]
 - 添加了forwarding之后的整体的通路
-- ![[Pasted image 20251128090758.png]]
-- 像下面这种本身数据产生就在下一条指令的后面的情况下，只能等待几个时钟周期来进行下一步操作，即ld执行后停顿一个周期“nop”等待数据的正常传输![[Pasted image 20251128091035.png]]
+- ![[Pasted image 20251128090758.webp]]
+- 像下面这种本身数据产生就在下一条指令的后面的情况下，只能等待几个时钟周期来进行下一步操作，即ld执行后停顿一个周期“nop”等待数据的正常传输![[Pasted image 20251128091035.webp]]
 - **加载-使用冒险检测（LoadUse Hazard Detection）**
 	- 在使用指令于 ID 阶段译码时检查    
 	- ID 阶段的 ALU 操作数寄存器编号由以下给出：    
@@ -354,9 +354,9 @@ aliases:
 		- 1 个周期的停顿允许 MEM 阶段读取 ld 指令的数据  （1 cycle stall allows MEM to read data for ld）  
 		    - 随后可以转发到 EX 阶段（Can subsequently forward to EX stage）
 -  **加载-使用数据冒险图示**
-	- ![[Pasted image 20251128092250.png]]
-	![[Pasted image 20251128092315.png]]
-	![[Pasted image 20251128092548.png]]
+	- ![[Pasted image 20251128092250.webp]]
+	![[Pasted image 20251128092315.webp]]
+	![[Pasted image 20251128092548.webp]]
 	控制信号都是0的轴是空轴、
 	MUX选择器会接受一个control的控制信号和0的清零信号，会在这两者中做出选择
 - **Stalls and Performance**
@@ -364,13 +364,13 @@ aliases:
 		- But are required to get correct results
 	- Compiler can arrange code to avoid hazards and stalls
 		- Requires knowledge of the pipeline structure
-- **Example：编译器优化来解决数据冒险**![[Pasted image 20251203101501.png]]
+- **Example：编译器优化来解决数据冒险**![[Pasted image 20251203101501.webp]]
 	- 即便有数据冒险，每个粉色框处将会浪费一个时钟周期，调整后就不会继续浪费了
 	- 即==将原本的空操作换成一个和原本没有什么数据关系的指令，使得其顶替空操作的指令==，操作后没有什么区别
 	- 指令的交换==不能存在数据关联==，即处理顺序
 ## §4.9 Control Hazards
 - 以 IF、ID、EX、MEM、WB 五级流水线为例，若在 MEM 才确定分支结果，此时年轻的三条指令可能已进入 IF、ID、EX；预测错误时应撤销这些错误路径指令，具体罚时取决于分支判定与恢复的位置。==如果分支结果要等到 MEM 阶段才确定，那么流水线中已经取出的后续指令都需要被**冲刷（Flush）**。==
-![[Pasted image 20251203102349.png]]
+![[Pasted image 20251203102349.webp]]
 - **分支冒险**
 	- 减少延迟的方法
 		- Moving the branch decision up ==requires two actions to occur earlier==
@@ -384,13 +384,13 @@ aliases:
 		    1. 在 ID 阶段，必须决定是否需要将 ALU 的计算结果直接**旁路（Bypass）**到相等比较单元。这需要新的前递逻辑。        
 		    2. 可能会发生**数据冒险**并需要停顿。例如：如果上一条 ALU 指令的结果就是分支比较的操作数，那么就要停顿。
 		- **特别是**：如果一条 Load 指令后面紧跟着一条依赖该 Load 结果的条件分支指令，则需要 **2 个停顿周期**，==有可能停顿的时间更多==。
-	- ==Example==![[Pasted image 20251203103514.png]]
-		- 40的指令跳转到72，中间所有的指令都会被冲刷！![[Pasted image 20251203103713.png]]![[Pasted image 20251203103721.png]]
+	- ==Example==![[Pasted image 20251203103514.webp]]
+		- 40的指令跳转到72，中间所有的指令都会被冲刷！![[Pasted image 20251203103713.webp]]![[Pasted image 20251203103721.webp]]
 		- 当检测到需要跳转时，硬件会把 IF/ID 寄存器中的指令变为“气泡（nop）”，防止其进入 ID 阶段执行。    
 		- **Clock 3**：检测到跳转，计算目标地址。    
 		- **Clock 4**：下一条指令变成了 nop (Bubble)，PC 指向了目标地址（72）。
 -  **分支指令的数据冒险 (Data Hazards for Branches)**
-	![[Pasted image 20251203105310.png]]因为比较是在 ID 阶段进行的，只要数据在 ID 阶段能拿到就行。如果数据在 EX 或 MEM 阶段产生，可以通过前递传回 ID 阶段。![[Pasted image 20251203105327.png]]因为 ALU 运算在 EX 阶段才出结果，而分支比较在 ID 阶段就要用。虽然可以前递，但在时间上紧挨着的话，ID 阶段还是拿不到 EX 阶段还没算完的数据，所以必须==停顿一下==。![[Pasted image 20251203105332.png]]
+	![[Pasted image 20251203105310.webp]]因为比较是在 ID 阶段进行的，只要数据在 ID 阶段能拿到就行。如果数据在 EX 或 MEM 阶段产生，可以通过前递传回 ID 阶段。![[Pasted image 20251203105327.webp]]因为 ALU 运算在 EX 阶段才出结果，而分支比较在 ID 阶段就要用。虽然可以前递，但在时间上紧挨着的话，ID 阶段还是拿不到 EX 阶段还没算完的数据，所以必须==停顿一下==。![[Pasted image 20251203105332.webp]]
 	这是最坏情况。Load 指令要到 MEM 阶段结束才能拿到数据，而紧接着的 Branch 在 ID 阶段就要用。中间差了 EX 和 MEM 两个阶段，所以必须==停顿 2 次==。
 - **动态分支预测 (Dynamic Branch Prediction)**
 	- In deeper and superscalar pipelines, branch penalty is more significant
@@ -402,12 +402,12 @@ aliases:
 - **1位预测器的缺点 (1-Bit Predictor: Shortcoming)**
 	- 对于双重循环，内部循环的分支会被**预测错误两次**！    
 	- 第一次：循环最后一次迭代时，预测“跳转（继续循环）”，但实际“不跳转（退出循环）”。（错1次）    
-	- 第二次：下次再进入这个循环时，由于上次记住了“不跳转”，这次预测“不跳转”，但实际是“跳转（开始循环）”。（错2次）![[Pasted image 20251203110915.png]]
+	- 第二次：下次再进入这个循环时，由于上次记住了“不跳转”，这次预测“不跳转”，但实际是“跳转（开始循环）”。（错2次）![[Pasted image 20251203110915.webp]]
 - **2位预测器 (2-Bit Predictor)**
 	- **机制**：只有连续两次预测错误时，才会改变预测方向。    
 	- **状态机**：    
 	    - 强跳转 (Truly Taken) <-> 弱跳转 (Weakly Taken) <-> 弱不跳转 (Weakly Not Taken) <-> 强不跳转 (Truly Not Taken)。        
-	- 这大大提高了循环指令的预测准确率。![[Pasted image 20251203111401.png]]
+	- 这大大提高了循环指令的预测准确率。![[Pasted image 20251203111401.webp]]
 - **计算分支目标 (Calculating the Branch Target)**
 	- 即使有了预测器，仍然需要计算目标地址。    
 	- 如果计算需要时间，就会产生 1 个周期的惩罚。    
@@ -435,7 +435,7 @@ aliases:
 	    3. **冲刷 (Flush)** 该指令及其之后的所有指令。        
 	    4. 设置 SEPC 和 SCAUSE。        
 	    5. 跳转到处理程序。
-	![[Pasted image 20251205080450.png]]==增加了Flush线==
+	![[Pasted image 20251205080450.webp]]==增加了Flush线==
 -  **异常属性 (Exception Properties)**
 	- **可重启异常**：    
 	    - 流水线可以冲刷掉出错的指令。        
@@ -443,7 +443,7 @@ aliases:
 	    - 重新取指并从头执行。        
 	- SEPC 保存的是出错指令的地址（这就定义了该指令为造成异常的指令）。
 - **异常示例**
-	- ![[Pasted image 20251205080715.png]]在4c处发生异常，因此在其后的操作将会变成空操作（清零），即停顿三个时钟周期![[Pasted image 20251205080912.png]]![[Pasted image 20251205080941.png]]
+	- ![[Pasted image 20251205080715.webp]]在4c处发生异常，因此在其后的操作将会变成空操作（清零），即停顿三个时钟周期![[Pasted image 20251205080912.webp]]![[Pasted image 20251205080941.webp]]
 	- 展示了异常发生时（Clock 6）和下一周期（Clock 7）流水线的状态。    
 	- **Clock 6**：检测到 add 指令异常，硬件开始 Flush 后续指令（变为 Bubble）。    
 	- **Clock 7**：处理程序的第一条指令 sd 进入 ID 阶段。
@@ -485,7 +485,7 @@ aliases:
 - **推测与异常**
 	- 如果推测执行的指令发生了异常怎么办？（例如：推测加载了一个空指针）。    
 	- **静态推测**：ISA 需要支持“延迟异常”（即使出错先别报错，等真的用到这个结果再报错）。    
-	- **动态推测**：缓冲异常，直到该指令真的被确认执行（Commit）时才触发。如果该指令最终被冲刷掉（比如分支没走这边），则忽略异常。![[Pasted image 20251205083104.png]]
+	- **动态推测**：缓冲异常，直到该指令真的被确认执行（Commit）时才触发。如果该指令最终被冲刷掉（比如分支没走这边），则忽略异常。![[Pasted image 20251205083104.webp]]
 - **静态多发射 (Static Multiple Issue)**
 	- 编译器将指令打包成“发射包 (Issue packets)”。        
     - 可以看作是一个**超长指令字 (VLIW)**。        
@@ -495,14 +495,14 @@ aliases:
 	- 重新排序指令。    
 	- 如果凑不齐一个包，需要填充 **nop**（空操作）。
 - **RISC-V 的静态双发射 (Static Dual Issue)**
-	- ![[Pasted image 20251205083738.png]]
-	- ![[Pasted image 20251205083748.png]]两条流水线，直接加倍！
--  **双发射中的冒险**![[Pasted image 20251205084047.png]]
-- **调度的例子**![[Pasted image 20251205084107.png]]
+	- ![[Pasted image 20251205083738.webp]]
+	- ![[Pasted image 20251205083748.webp]]两条流水线，直接加倍！
+-  **双发射中的冒险**![[Pasted image 20251205084047.webp]]
+- **调度的例子**![[Pasted image 20251205084107.webp]]
 - **循环展开 (Loop Unrolling)**
 	- 复制多次循环体，以暴露更多的并行性。    
 	- 减少了循环控制（addi, blt）的开销。    
-	- 使用不同的寄存器（**寄存器重命名**）来避免“假相关”（名字依赖）。![[Pasted image 20251205090245.png]]
+	- 使用不同的寄存器（**寄存器重命名**）来避免“假相关”（名字依赖）。![[Pasted image 20251205090245.webp]]
 	- 展开 4 次循环后，IPC 提升到了 14/8 = 1.75。    
 	- 代价是代码体积变大，使用了更多寄存器。
 - **动态多发射 (Dynamic Multiple Issue)**
@@ -512,10 +512,10 @@ aliases:
 	- 不需要编译器进行复杂的调度（虽然编译器调度依然有帮助）。    
 	- **关键**：代码的语义顺序由 CPU 内部保证。
 - **动态流水线调度（Dynamic Pipeline Scheduling）**
-	- ![[Pasted image 20251205090911.png]]
+	- ![[Pasted image 20251205090911.webp]]
 	- 允许 CPU **乱序执行 (Out-of-order execution)** 以避免停顿。    
 	- 但是必须**按顺序提交 (Commit)** 结果到寄存器（为了保证精确异常）。    
-	- **示例**：sub 指令不依赖前面的 add，可以在 add 等待 ld 的时候先执行。![[Pasted image 20251205090953.png]]
+	- **示例**：sub 指令不依赖前面的 add，可以在 add 等待 ld 的时候先执行。![[Pasted image 20251205090953.webp]]
 - **寄存器重命名 (Register Renaming)**
 	- 保留站和 ROB 实际上提供了**寄存器重命名**功能。    
 	- 当指令发射时：如果操作数在寄存器或 ROB 中可用，就拷贝到保留站。    
@@ -524,7 +524,7 @@ aliases:
 	- 预测分支并继续发射指令。    
 	- 直到分支结果确定前，不提交（Commit）结果。    
 	- **Load 推测**：预测地址，提前读取。如果之后发现前面的 Store 更改了该地址，则回滚。
-- **为什么要动态调度？**![[Pasted image 20251205092000.png]]
+- **为什么要动态调度？**![[Pasted image 20251205092000.webp]]
 	- 为什么不全靠编译器？    
 	- 不是所有的停顿都能预测（例如 **Cache Miss**）。        
 	- 无法总是在分支周围进行有效调度。        

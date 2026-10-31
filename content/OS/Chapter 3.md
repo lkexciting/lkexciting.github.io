@@ -17,7 +17,7 @@ aliases:
 		- Time-sharing systems – user programs or tasks
 			- Multitasking
 			- Less turnaround, less CPU idle, user interaction
-	![[Pasted image 20260929172756.png]]
+	![[Pasted image 20260929172756.webp]]
 	- Textbook uses the terms job and process almost interchangeably
 	- ==Process== – a program in execution; process execution must progress in sequential fashion
 	- A process includes:
@@ -27,7 +27,7 @@ aliases:
 		- heap (dynamically allocated memory) 用于动态内存分配，需程序员手动申请和释放。
 		- program counter 指向当前执行指令的下一条指令地址，属于CPU寄存器，上下文切换时需保存和恢复。
 	- **Process in Memory**
-		![[Pasted image 20260929173538.png|480]]
+		![[Pasted image 20260929173538.webp|480]]
 		==注意stack和heap是相向的，是为了灵活，动态共享中间的区域！==
 	- **Process State**
 		- As a process executes, it changes ==state==
@@ -36,7 +36,7 @@ aliases:
 			- **ready**:  The process is waiting to be assigned to a processor (loaded into main memory)
 			- **waiting/blocked**:  The process is waiting/blocked for some event to occur
 			- **terminated**:  The process has finished execution
-		![[Pasted image 20260929174310.png|591]]
+		![[Pasted image 20260929174310.webp|591]]
 	- **Process Control Block 进程控制块**（PCB）
 		Information associated with each process
 		- Process state
@@ -46,20 +46,20 @@ aliases:
 		- Memory-management information （内存管理信息）
 		- Accounting information （记账信息）
 		- I/O status information
-		![[Pasted image 20261008135143.png|206]]![[Pasted image 20261008135729.png|383]]
+		![[Pasted image 20261008135143.webp|206]]![[Pasted image 20261008135729.webp|383]]
 - **Process Scheduling**
 	- ==Job queue== – set of all processes in the system （进程调度队列）
 	- ==Ready queue== – set of all processes residing in main memory, ready and waiting to execute （就绪队列——驻留在主存中、已就绪并等待执行的所有进程的集合）
 	- ==Device queues== – set of processes waiting for an I/O device （设备队列——等待 I/O 设备的进程集合）
 	- Processes migrate among the various queues （进程在各种队列之间迁移）
 	==就绪队列和I/O设备队列==
-	![[Pasted image 20261008141015.png|467]]
+	![[Pasted image 20261008141015.webp|467]]
 	==进程调度表示==
-	![[Pasted image 20261008141050.png|467]]
+	![[Pasted image 20261008141050.webp|467]]
 	- **Schedulers**
 		- ==Long-term scheduler==  (or job scheduler) – selects which processes should be brought into memory (the ready queue)
 		- ==Short-term scheduler==  (or CPU scheduler) – selects which process should be executed next and allocates CPU
-		![[Pasted image 20261008141719.png|452]]![[Pasted image 20261008141732.png|452]]
+		![[Pasted image 20261008141719.webp|452]]![[Pasted image 20261008141732.webp|452]]
 		- Short-term scheduler is invoked very frequently 短期调度器被非常频繁地调用(milliseconds) →(must be fast)
 		- Long-term scheduler is invoked very infrequently 长期调度器被非常不频繁地调用(seconds, minutes) →(may be slow)
 		- The long-term scheduler controls the ==degree of multiprogramming==长期调度器控制多道程序设计的程度
@@ -80,7 +80,7 @@ aliases:
 	- **UNIX 示例（UNIX examples）**
 		- fork 系统调用（fork system call）创建新进程
 		- exec 系统调用（exec system call）在 fork 之后使用，用新程序替换进程的内存空间（memory space）
-		![[Pasted image 20261008143819.png|516]]![[Pasted image 20261008144141.png|521]]![[Pasted image 20261008144155.png|517]]
+		![[Pasted image 20261008143819.webp|516]]![[Pasted image 20261008144141.webp|521]]![[Pasted image 20261008144155.webp|517]]
 	- **Process Termination**
 		- 当进程执行完最后一条语句后，会通过 **exit**​ 系统调用请求操作系统删除自身，并通过 **wait**​ 将输出数据传递给父进程，随后操作系统回收该进程的资源（**deallocated**）。
 		- 此外，父进程也可通过 **abort**​ 主动终止子进程的执行，常见原因包括子进程超出了分配的资源（**exceeded allocated resources**）或分配给它的任务不再需要。
@@ -158,7 +158,7 @@ aliases:
 	        物理的（例如，共享内存、硬件总线）
 	    - logical (e.g., logical properties)  
 	        逻辑的（例如，逻辑属性）
-	![[Pasted image 20261008150421.png|526]]
+	![[Pasted image 20261008150421.webp|526]]
 	- **Direct Communication**
 		- Processes must name each other ==explicitly==: （进程必须显式地命名彼此：）
 			- send (P, message) – send a message to process P （send(P, message) – 向进程 P 发送消息）

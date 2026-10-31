@@ -1,10 +1,26 @@
 interface CourseEntry {
   displayName?: string
   frontmatter?: { title: string }
+  slug?: string
+  filePath?: string
 }
 
 // Keep this function self-contained: Explorer serializes it for the browser.
 export function byCourseOrder(a: CourseEntry, b: CourseEntry): number {
+  // 辅助函数必须声明在 byCourseOrder 内部：整个函数会被 toString() 序列化到浏览器执行
+  function isAiNote(entry: CourseEntry): boolean {
+    // 标题后缀（经清理后形如「Chapter 1 · AI 精讲」）
+    const name = entry.displayName ?? entry.frontmatter?.title ?? ""
+    if (/·\s*AI\s*精讲/.test(name)) return true
+    // 文件名 / slug 后缀（Chapter 1_ai.md、Chapter-1_ai）
+    const file = (entry.filePath ?? entry.slug ?? "").replace(/\.md$/i, "")
+    return /_ai$/i.test(file)
+  }
+  // AI 精讲笔记统一排到所在目录的最后
+  const leftIsAi = isAiNote(a)
+  const rightIsAi = isAiNote(b)
+  if (leftIsAi !== rightIsAi) return leftIsAi ? 1 : -1
+
   function key(entry: CourseEntry): [number, number, string] {
     const name = (entry.displayName ?? entry.frontmatter?.title ?? "").trim()
     if (/\boutline\b/i.test(name)) return [0, 0, name]

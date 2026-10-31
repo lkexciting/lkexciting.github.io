@@ -1,5 +1,5 @@
 ---
-title: OOP Lesson 9
+title: Lesson 9
 aliases:
   - OOP/notes/OOP Lesson 9
 ---
@@ -7,12 +7,12 @@ aliases:
 - 允许用户定义的类型像 *内置* 类型一样操作。
 	- 假设我定义了一个类，分数类，那么使用原本的仅仅对数加减乘除方法必然无法得出正确的方法，需要自己定义一个==新型的运算方式==
 - 另一种进行函数调用的方式。
-- 哪些操作符可以重载？![[Pasted image 20251124133219.png]]
+- 哪些操作符可以重载？![[Pasted image 20251124133219.webp]]
 	一般的单目和双目运算符
-- ==不能被重载的运算符：==![[Pasted image 20251124133305.png]]
+- ==不能被重载的运算符：==![[Pasted image 20251124133305.webp]]
 	“.”是指针的取成员操作
 	对于“.\*”这里给出一个例子
-	![[Pasted image 20251124133747.png]]
+	![[Pasted image 20251124133747.webp]]
 		**补充知识点：**
 		1. 指向成员的指针允许我们间接地访问类的成员，这在需要泛型回调或延迟绑定时非常有用。	    
 		2. 使用`.*`或`->*`运算符来通过成员指针访问成员。
@@ -33,7 +33,7 @@ aliases:
 			`String operator+(const String& 1, const String& r);`
 - **==作为成员函数==**
 	- 隐式第一个参数  
-	- 不对接收者执行类型转换![[Pasted image 20251124134341.png]]
+	- 不对接收者执行类型转换![[Pasted image 20251124134341.webp]]
 	- 例如：
 		```c++
 		Integer x(1), y(5), z;
@@ -86,7 +86,7 @@ aliases:
 	```
 - **全局运算符**
 	- Binary operators require two arguments
-	- Unary operators require one argument![[Pasted image 20251124140029.png]]
+	- Unary operators require one argument![[Pasted image 20251124140029.webp]]
 	- 如果无法访问私有数据成员，那么全局函数必须使用公共接口（例如访问器）
 - **Tips: Members vs. Free functions**
 	- ==Unary operators== should be members（所有的单目运算符）
@@ -100,16 +100,16 @@ aliases:
 	- 根据运算符的==预期含义选择返回类型==！
 	- 对于`operator+`，你需要生成一个新对象。返回一个const对象，这样结果就不能作为左值（lvalue）被修改。
 	- 逻辑运算符应该返回bool
-- **运算符的原型**![[Pasted image 20251124140859.png]]
+- **运算符的原型**![[Pasted image 20251124140859.webp]]
 - **Operators ++ and --**
-	- Postfix（后缀形式） forms take an int argument —— compiler will pass in 0 as that int![[Pasted image 20251124141112.png]]
+	- Postfix（后缀形式） forms take an int argument —— compiler will pass in 0 as that int![[Pasted image 20251124141112.webp]]
 	- 前置 `++x` 通常返回修改后的对象引用 `T&`，便于保持左值语义并避免复制；后置 `x++` 用虚设的 `int` 参数区分重载，先保存旧值，再修改自身，按值返回旧对象。
-	- 下面给出一个例子：![[Pasted image 20251124142036.png]]
-	- 使用重载的++和--![[Pasted image 20251124142402.png]]
+	- 下面给出一个例子：![[Pasted image 20251124142036.webp]]
+	- 使用重载的++和--![[Pasted image 20251124142402.webp]]
 	- 用户定义的前缀比后缀更高效。
 - **关系运算符**
 	- implement!=in terms of\=\=（用\=\=表示！=）
-	- implement >, >=,<=in terms of <![[Pasted image 20251124142639.png]]![[Pasted image 20251124142648.png]]![[Pasted image 20251124142659.png]]
+	- implement >, >=,<=in terms of <![[Pasted image 20251124142639.webp]]![[Pasted image 20251124142648.webp]]![[Pasted image 20251124142659.webp]]
 - **运算符“\[]”**==(示例：Vector.h 和 Vector.cpp)==
 	- **Must be a ==member function**==
 	- ==Single argument==
@@ -130,12 +130,12 @@ aliases:
 	- 逐成员赋值
 - **Assignment operator**（赋值运算符）
 	- Must be a member function
-	- Will be generated for you if you don't provide one![[Pasted image 20251124144610.png]]
+	- Will be generated for you if you don't provide one![[Pasted image 20251124144610.webp]]
 	- For classes with dynamically allocated memory declare an assignment operator (and a copy constructor)【对于具有**动态**分配内存的类，声明一个赋值运算符（和一个拷贝构造函数）】
 	- To prevent assignment, explicitly declare `operator=` as private, or use `=delete`
 	- 使用`= delete`可以明确禁止拷贝赋值，这是现代C++的推荐做法。
 - **运算符“（）”**
-	- A functor（仿函数）, which overloads the function call operator, is an object that acts like a function.![[Pasted image 20251124145137.png]]
+	- A functor（仿函数）, which overloads the function call operator, is an object that acts like a function.![[Pasted image 20251124145137.webp]]
 	- “F f”中的f实际上就是一个“functor”
 - **值类（value classes）**
 	- 表现得像原始数据类型
@@ -154,9 +154,9 @@ aliases:
 		–Single-argument constructors
 		–implicit type conversion operators
 - **单参数构造函数**
-	- ![[Pasted image 20251124145800.png]]
+	- ![[Pasted image 20251124145800.webp]]
 - **防止隐式转换**
-	- ==新关键字：explicit==![[Pasted image 20251124145956.png]]
+	- ==新关键字：explicit==![[Pasted image 20251124145956.webp]]
 
 ## 运算符完整示例：前置、后置与输出
 

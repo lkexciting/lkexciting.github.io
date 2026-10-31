@@ -1,5 +1,5 @@
 ---
-title: Chapter3
+title: Chapter 3
 aliases:
   - 计算机网络/notes/Chapter3
 ---
@@ -44,7 +44,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - 抽象规则：数据 `A B ESC FLAG` → `FLAG A B ESC ESC ESC FLAG FLAG`。
 - 不同协议的具体 escape 编码可能不同，答题采用题目定义。
 
-![Byte stuffing：边界 FLAG 与数据中的 FLAG/ESC](Chapter3-page-010.png)
+![Byte stuffing：边界 FLAG 与数据中的 FLAG/ESC](Chapter3-page-010.webp)
 
 #### Flag bits with bit stuffing
 
@@ -54,7 +54,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - FLAG 本身不参与 stuffing；这是按 bit 处理，不需要 byte 对齐。
 - 例：`0111101111101111110` → `011110111110011111010`，这里只列填充后的数据，不包括首尾 FLAG。
 
-![Bit stuffing 与 destuffing](Chapter3-page-012.png)
+![Bit stuffing 与 destuffing](Chapter3-page-012.webp)
 
 #### Physical layer encoding violation
 
@@ -156,7 +156,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 -  rate=1/2 的编码器：输入 `111`，初始 state 为全零，输出依次为 `11、10、01`。
 - 具体输出取决于 generator/tap 配置，不是所有 Convolutional codes 都产生这个序列。
 
-![Convolutional code 编码器示例](Chapter3-page-032.png)
+![Convolutional code 编码器示例](Chapter3-page-032.webp)
 
 #### Reed-Solomon code
 
@@ -192,7 +192,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 **Interleaving** 将相邻传输 bits 分散到不同校验组，使短 Burst 不至于集中破坏同一组。按本节约定矩阵安排，长度不超过列数的单个 Burst 至多在每列造成一个错误，因此可由逐列 parity 检出。此保证依赖具体排列与 Burst 模型。
 
-![Parity interleaving](Chapter3-page-040.png)
+![Parity interleaving](Chapter3-page-040.webp)
 
 #### Checksum
 
@@ -219,7 +219,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 
 例：data=`1101011011`，G=`10011`，r=4，remainder=`1110`，发送 `11010110111110`。
 
-![CRC modulo-2 division](Chapter3-page-046.png)
+![CRC modulo-2 division](Chapter3-page-046.webp)
 
 **检错能力：**接收结果为 T(x)+E(x)，由于 T(x) 可整除，是否漏检取决于 E(x) 是否被 G(x) 整除。
 
@@ -252,7 +252,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - 本协议没有应对丢帧的机制，因为仍假设信道无错。
 - 数据单向不意味着没有反向控制信息。
 
-![Stop-and-Wait 正常过程](Chapter3-page-063.png)
+![Stop-and-Wait 正常过程](Chapter3-page-063.webp)
 
 ### 3.4 Protocol 3: A Simplex Protocol for a Noisy Channel
 
@@ -265,7 +265,7 @@ Header 中用长度字段给出 Frame 的大小。若长度字段损坏，接收
 - Sequence number 只需 1 bit，交替使用 0、1，即 **Alternating-bit protocol**。
 - “只需 1 bit”的结论建立在标准 Stop-and-Wait 的顺序和旧副本寿命假设上，不能处理无限滞留的任意旧副本。
 
-![ACK 丢失与重复帧处理](Chapter3-page-070.png)
+![ACK 丢失与重复帧处理](Chapter3-page-070.webp)
 
 ### 3.5 Protocol 4: A One-bit Sliding Window Protocol
 
@@ -301,7 +301,7 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 **术语提醒：**图中“window shrinks”描述可继续发送的位置减少。许多教材用固定最大窗口 W 表示“已发送未确认 + 尚可发送”的总范围。答题应区分最大窗口大小、Outstanding 数量与剩余发送名额。
 
-![Sender window 的变化](Chapter3-page-086.png)
+![Sender window 的变化](Chapter3-page-086.webp)
 
 ### 4.2 Cumulative acknowledgement
 
@@ -337,7 +337,7 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 例：0、1、2、3、4 中 Frame 2 丢失。Receiver 可交付 0、1，但丢弃提前到达的 3、4。Sender 随后重发 2、3、4。
 
-![Go-Back-N ARQ](Chapter3-page-092.png)
+![Go-Back-N ARQ](Chapter3-page-092.webp)
 
 **k-bit Sequence number：**序号空间 M=2^k，最大 `W_s ≤ 2^k−1`。不能把整个序号空间都用作 Sender window，否则 ACK 全丢失后的旧帧可能与下一轮新帧混淆。
 
@@ -350,7 +350,7 @@ Stop-and-Wait 每发一帧就等待 ACK。若传播延迟很大，Channel 大部
 
 例：Frame 2 丢失，3、4 可暂存。只重传 2；2 到达后再按序交付 2、3、4。
 
-![Selective Repeat ARQ](Chapter3-page-094.png)
+![Selective Repeat ARQ](Chapter3-page-094.webp)
 
 **本节使用对称窗口：**`W_s=W_r=W ≤ 2^(k−1)`，即窗口不能超过序号空间的一半，防止旧 Frame 落入新接收窗口后被当作新数据。
 
@@ -394,7 +394,7 @@ PPP 的三项核心功能：
 | Payload | 可变长度，受协商参数约束 |
 | FCS | CRC 检错值 |
 
-![PPP Frame format](Chapter3-page-100.png)
+![PPP Frame format](Chapter3-page-100.webp)
 
 **复习重点：**示例的基本 PPP 未编号模式提供检错，但不提供 GBN/SR 式可靠重传、编号去重或滑动窗口 Flow control。检测到损坏通常丢弃，由上层承担必要的恢复。
 
@@ -404,7 +404,7 @@ PPP 的三项核心功能：
 
 释放通常按相反层次处理：关闭网络层配置，再终止链路，最后释放物理连接。状态图用于说明阶段转换，并非每次都需要认证。
 
-![PPP 状态转换](Chapter3-page-101.png)
+![PPP 状态转换](Chapter3-page-101.webp)
 
 **修正提醒：**NCP 不是 DHCP 或 NAT。IPCP 是 IPv4 对应的 NCP，可协商包括 IP address 在内的相关配置；DHCP、NAT 是不同机制。括号中的 DHCP、NAT 不能当作 NCP 定义。
 
@@ -412,7 +412,7 @@ PPP 的三项核心功能：
 
 **SONET（Synchronous Optical Network）** 是同步光传输体系。通过协议栈与 Frame 关系说明：IP Packet 经 PPP 封装，再由 SONET 承载；不同层的 Frame/Packet 是逐层封装关系。
 
-![Packet over SONET 协议栈与封装关系](Chapter3-page-098.png)
+![Packet over SONET 协议栈与封装关系](Chapter3-page-098.webp)
 
 拨号建立连接的故事用于解释 PPP 阶段，不能理解为 SONET 光链路本身需要拨号 Modem。
 
@@ -427,9 +427,9 @@ PPP 的三项核心功能：
 - 不要理解为“一个 PPP Frame 必须恰好对应一个 ATM cell”。
 - 这是上述模型展示的 ATM-based ADSL 架构，不能推断所有 DSL 接入均使用同一协议栈。
 
-![ADSL 协议栈](Chapter3-page-104.png)
+![ADSL 协议栈](Chapter3-page-104.webp)
 
-![AAL5 承载 PPP 数据](Chapter3-page-105.png)
+![AAL5 承载 PPP 数据](Chapter3-page-105.webp)
 
 ## 6. Typical Calculations and Review Checklist
 
@@ -447,7 +447,7 @@ PPP 的三项核心功能：
 
 **GBN 练习：**采用 ACK=Next expected 的约定，3-bit 序号，最大 W=7。
 
-![GBN 双向传输练习](Chapter3-page-107.png)
+![GBN 双向传输练习](Chapter3-page-107.webp)
 
 - 图(a)：ACK 达到 3，因此确认收到的是 `S0,0、S1,0、S2,0`，共 3 帧。
 - t₁ 时还有序号 3、4 两帧未确认，因此还能发送 5 个新 Frame。收到的 R0、R1 连续有效，R3 因缺少 R2 被丢弃，下一帧期望为 2。新发送 Frame 从 **S5,2** 到 **S1,2**，序号依次 5、6、7、0、1。
