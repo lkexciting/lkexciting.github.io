@@ -1,0 +1,113 @@
+@use "../../styles/variables.scss" as *;
+
+// ========== 侧边栏收起 / 展开 ==========
+// 收起时左侧栏宽度变为 0，内容区获得完整宽度，左上角出现浮动展开按钮。
+// 仅在 ≥801px（平板 / 桌面）生效：移动端左侧栏是顶部横条，由 Explorer 自带的汉堡菜单控制。
+
+.sidebar-toggle {
+  cursor: pointer;
+  padding: 0;
+  position: relative;
+  background: none;
+  border: none;
+  width: 20px;
+  height: 32px;
+  margin: 0;
+  flex-shrink: 0;
+  color: var(--darkgray);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--secondary);
+  }
+
+  & > svg {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: calc(50% - 10px);
+    left: 0;
+  }
+}
+
+// 收起后左上角的浮动展开按钮
+.sidebar-toggle-float {
+  display: none;
+  position: fixed;
+  top: 1.25rem;
+  left: 1.25rem;
+  z-index: 10;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  background-color: var(--light);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 10%);
+
+  & > svg {
+    left: calc(50% - 10px);
+  }
+}
+
+// 移动端不显示收起 / 展开按钮
+@media all and ($mobile) {
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
+@media all and (min-width: 801px) {
+  .page > #quartz-body {
+    transition: grid-template-columns 0.3s ease;
+  }
+
+  :root.sidebar-collapsed {
+    // 平板两列布局：左栏收起为 0 宽
+    #quartz-body {
+      grid-template-columns: 0px auto;
+    }
+
+    // 桌面三列布局：左栏收起为 0 宽，右栏保持不变
+    @media all and ($desktop) {
+      #quartz-body {
+        grid-template-columns: 0px auto #{$sidePanelWidth};
+      }
+    }
+
+    // 0 宽轨道下需要裁掉内容并去掉左右内边距，否则子元素会溢出
+    // （基础规则带 #quartz-body，特异性更高，这里必须带上才能覆盖）
+    #quartz-body .sidebar.left {
+      overflow: hidden;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .sidebar-toggle-inline {
+      display: none;
+    }
+
+    .sidebar-toggle-float {
+      display: block;
+      animation: sidebar-toggle-in 0.25s ease 0.1s backwards;
+    }
+  }
+}
+
+@keyframes sidebar-toggle-in {
+  from {
+    opacity: 0;
+    transform: translateX(-0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page > #quartz-body,
+  .sidebar-toggle-float {
+    transition: none;
+    animation: none;
+  }
+}
