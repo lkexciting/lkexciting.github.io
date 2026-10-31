@@ -46,11 +46,11 @@ aliases:
 		- ==Loads== operating system kernel and ==starts== execution
 - Computer System Organization（计算机的组成）
 	![[Pasted image 20260917135341.webp|487]]
-		相比于cpu而言，USB controller 连接的都是慢速设备：***mouse keyboard printer***
+		相比于 cpu 而言，USB controller 连接的都是慢速设备：***mouse keyboard printer***
 	- One or more CPUs, device controllers connect through common bus providing access to shared ==memory=="==以内存为中心=="
 	- ==Concurrent execution== of CPUs and devices competing for ==memory== cycles
 - Computer-System Operation（计算机是怎么运行的？）
-	- I/O devices and the CPU can execute **concurrently *并发：从宏观角度认为同时发生***（parallel是并行，也就是同时在执行）.
+	- I/O devices and the CPU can execute **concurrently *并发：从宏观角度认为同时发生***（parallel 是并行，也就是同时在执行）.
 	- Each device controller is in charge of a **particular** device type.
 	- Each device controller has a ==local buffer (解决适配问题)==.
 	- CPU **moves data** from/to main memory to/from **local buffers**
@@ -64,12 +64,12 @@ aliases:
 	- Incoming interrupts are disabled while another interrupt is being processed to prevent a lost interrupt.`在处理另一个中断时，进入的中断会被禁用，以防止中断丢失。`
 	- A ==trap== is a software-generated interrupt caused either by an ==error== (基本被动触发) or a ==user request== (主动触发) (the latter is often referred to as a ==★★system call★★==). Note: names may vary across different architectures.`陷阱（trap）是由软件生成的中断，由错误或用户请求（后者通常被称为系统调用 system call）引起。注意：不同架构中的名称可能有所不同。`
 	- An operating system is ==interrupt== driven.`操作系统是中断（interrupt）驱动的。`
-	- 在RISC-5中：
+	- 在 RISC-5 中：
 		![[Pasted image 20260917143736.webp]]
 		interrupt：硬件中断
-- ==权限，管理等等一定需要kernel台进行管控！==
+- ==权限，管理等等一定需要 kernel 台进行管控！==
 - Interrupt Handling
-	- The operating system preserves the state of the CPU by storing ==registers(寄存器)== and the ==program counter(程序计数器PC)==.
+	- The operating system preserves the state of the CPU by storing ==registers(寄存器)== and the ==program counter(程序计数器 PC)==.
 	- Determines which type of interrupt has occurred: 决定中断的类型
 		- ==polling== by a generic routine 由通用例程进行**轮询（polling）**
 		- ==vectored== interrupt system **向量(vectored)中断系统**
@@ -175,7 +175,7 @@ aliases:
 			——Some instructions designated **as privileged** **特权指令**, **only executable in kernel mode**
 			——System call changes mode to kernel, return from call resets it to user
 	![[Pasted image 20260917155029.webp|421]]
-	==特权指令统一移交kernel进行接管==，状态改写
+	==特权指令统一移交 kernel 进行接管==，状态改写
 	执行模式隔离，用户行为灵活，进程隔离，用户代码与系统代码的隔离
 ## Timer & Interrupt
 - Timer to prevent infinite loop / process hogging resources
@@ -201,9 +201,9 @@ aliases:
 - Multi-threaded process has one ==program counter per thread==  
 	多线程进程为每个线程配备一个程序计数器
 - Typically system has many processes, some user, some operating system running concurrently on ==one or more CPUs==  
-	通常系统有许多进程，一些是用户进程，一些是操作系统进程，在一个或多个CPU上并发运行
+	通常系统有许多进程，一些是用户进程，一些是操作系统进程，在一个或多个 CPU 上并发运行
 	- Concurrency by ==multiplexing the CPUs== among the processes / threads  
-		通过在处理进程/线程之间复用CPU来实现并发
+		通过在处理进程/线程之间复用 CPU 来实现并发
 ## Process Management Activities（进程管理活动）
 - The operating system is responsible for the following activities in connection with process management:  
 	操作系统负责与进程管理相关的下列活动：
@@ -228,7 +228,7 @@ aliases:
 - Memory management determines what is in memory when  
 	内存管理决定何时将什么保留在内存中
 	- Optimizing CPU utilization and computer response to users  
-		优化CPU利用率以及计算机对用户的响应
+		优化 CPU 利用率以及计算机对用户的响应
 - Memory management activities  
 	内存管理活动
 	- Keeping track of which parts of memory are currently being used and by whom  
@@ -285,13 +285,13 @@ aliases:
 		仍然必须被管理
 	- Varies between WORM (write-once, read-many-times) and RW (read-write)  
 		介于 WORM（一次写入，多次读取）和 RW（读写）之间
-## I/O Subsystem（I/O子系统）
+## I/O Subsystem（I/O 子系统）
 - One purpose of OS is to ==hide peculiarities== of hardware devices from the user – ease of usage & programming  
 	操作系统的目的之一是向用户隐藏硬件设备的特殊性（peculiarities）——以便于使用和编程
 - I/O subsystem responsible for  
-	I/O子系统负责
+	I/O 子系统负责
 	- Memory management of I/O including ==buffering== (storing data temporarily while it is being transferred), ==caching== (storing parts of data in faster storage for performance), ==spooling== (the overlapping of output of one job with input of other jobs)  
-		I/O的内存管理，包括缓冲（buffering）（在数据传输时临时存储数据）、缓存（caching）（将部分数据存储在更快的存储中以提高性能）、假脱机（spooling）（将一个作业的输出与其他作业的输入重叠进行）
+		I/O 的内存管理，包括缓冲（buffering）（在数据传输时临时存储数据）、缓存（caching）（将部分数据存储在更快的存储中以提高性能）、假脱机（spooling）（将一个作业的输出与其他作业的输入重叠进行）
 	- General device-driver interface  
 		通用设备驱动程序接口
 	- Drivers for specific hardware devices  

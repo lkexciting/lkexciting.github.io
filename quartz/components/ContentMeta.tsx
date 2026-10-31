@@ -11,12 +11,25 @@ interface ContentMetaOptions {
    * Whether to display reading time
    */
   showReadingTime: boolean
+  /**
+   * Whether to display approximate word count (CJK chars + latin words)
+   */
+  showWordCount: boolean
   showComma: boolean
 }
 
 const defaultOptions: ContentMetaOptions = {
   showReadingTime: true,
+  showWordCount: true,
   showComma: true,
+}
+
+// 万字以上显示为「x.x 万」，其余用千分位
+function formatWords(words: number): string {
+  if (words >= 10000) {
+    return `${(words / 10000).toFixed(1).replace(/\.0$/, "")} 万`
+  }
+  return words.toLocaleString("en-US")
 }
 
 export default ((opts?: Partial<ContentMetaOptions>) => {
@@ -35,11 +48,15 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
 
       // Display reading time if enabled
       if (options.showReadingTime) {
-        const { minutes, words: _words } = readingTime(text)
+        const { minutes, words } = readingTime(text)
         const displayedTime = i18n(cfg.locale).components.contentMeta.readingTime({
           minutes: Math.ceil(minutes),
         })
         segments.push(<span>{displayedTime}</span>)
+
+        if (options.showWordCount) {
+          segments.push(<span>约 {formatWords(words)} 字</span>)
+        }
       }
 
       return (

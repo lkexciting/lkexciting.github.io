@@ -2,6 +2,8 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   cleanNoteTitle,
+  dropBrokenImageEmbeds,
+  fixCjkSpacing,
   fixHighlightSyntax,
   rewriteImageRefs,
   upgradeListStructure,
@@ -54,4 +56,41 @@ test("rewriteImageRefs only rewrites converted images", () => {
   assert.equal(rewriteImageRefs("![图](other.jpg)", converted), "![图](other.jpg)")
   // 空集合时整体不动
   assert.equal(rewriteImageRefs("![[diagram.png]]", new Set()), "![[diagram.png]]")
+})
+
+test("fixCjkSpacing adds pangu spacing without touching protected segments", () => {
+  assert.equal(fixCjkSpacing("尽量使用Private而不是Public"), "尽量使用 Private 而不是 Public")
+  assert.equal(fixCjkSpacing("速率可达10Gbps"), "速率可达 10Gbps")
+  assert.equal(fixCjkSpacing("第1章内容"), "第 1 章内容")
+  // 幂等
+  assert.equal(fixCjkSpacing("尽量使用 Private 而不是 Public"), "尽量使用 Private 而不是 Public")
+  // 已有空格的不重复加
+  assert.equal(fixCjkSpacing("高度 centralized（集中）式"), "高度 centralized（集中）式")
+  // 代码与公式受保护
+  assert.equal(fixCjkSpacing("使用`const x=1`并保持$H=p^2$不变"), "使用`const x=1`并保持$H=p^2$不变")
+  assert.equal(fixCjkSpacing("链接[[计算机网络/notes/Chapter 1|第1章]]路径不变"), "链接[[计算机网络/notes/Chapter 1|第1章]]路径不变")
+  assert.equal(fixCjkSpacing("跳转[文字](some/path.md)不变"), "跳转[文字](some/path.md)不变")
+  // 代码块整块跳过
+  const code = "```js\nconst 中文 = 1\n```"
+  assert.equal(fixCjkSpacing(code), code)
+  // 数学块整块跳过
+  const math = "$$\nH = \\text{负载}\n$$"
+  assert.equal(fixCjkSpacing(math), math)
+})
+
+test("fixCjkSpacing removes stray spaces around fullwidth punctuation", () => {
+  assert.equal(fixCjkSpacing("take over the world ？"), "take over the world？")
+  assert.equal(fixCjkSpacing("集中 ）收尾"), "集中）收尾")
+  assert.equal(fixCjkSpacing("（ 集中）开头的空格"), "（集中）开头的空格")
+})
+
+test("dropBrokenImageEmbeds only removes missing assets", () => {
+  const assets = new Set(["diagram.webp", "photo.png"])
+  assert.equal(dropBrokenImageEmbeds("![[diagram.webp]]", assets), "![[diagram.webp]]")
+  assert.equal(dropBrokenImageEmbeds("![[photo.png|300]]", assets), "![[photo.png|300]]")
+  assert.equal(dropBrokenImageEmbeds("前文![[missing.png|531]]后文", assets), "前文后文")
+  // URL 编码的路径也能按 basename 匹配
+  assert.equal(dropBrokenImageEmbeds("![[%E5%9B%BE/photo.png]]", assets), "![[%E5%9B%BE/photo.png]]")
+  // 非图片嵌入不受影响
+  assert.equal(dropBrokenImageEmbeds("[[某笔记]]", assets), "[[某笔记]]")
 })

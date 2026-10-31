@@ -25,10 +25,10 @@ aliases:
 		- data section (global vars) 存放全局变量和静态变量。
 		- stack (function parameters, local vars, return addresses) 存放函数参数、局部变量和返回地址，采用后进先出原则，由系统自动分配和回收。
 		- heap (dynamically allocated memory) 用于动态内存分配，需程序员手动申请和释放。
-		- program counter 指向当前执行指令的下一条指令地址，属于CPU寄存器，上下文切换时需保存和恢复。
+		- program counter 指向当前执行指令的下一条指令地址，属于 CPU 寄存器，上下文切换时需保存和恢复。
 	- **Process in Memory**
 		![[Pasted image 20260929173538.webp|480]]
-		==注意stack和heap是相向的，是为了灵活，动态共享中间的区域！==
+		==注意 stack 和 heap 是相向的，是为了灵活，动态共享中间的区域！==
 	- **Process State**
 		- As a process executes, it changes ==state==
 			- **new**:  The process is being created
@@ -52,7 +52,7 @@ aliases:
 	- ==Ready queue== – set of all processes residing in main memory, ready and waiting to execute （就绪队列——驻留在主存中、已就绪并等待执行的所有进程的集合）
 	- ==Device queues== – set of processes waiting for an I/O device （设备队列——等待 I/O 设备的进程集合）
 	- Processes migrate among the various queues （进程在各种队列之间迁移）
-	==就绪队列和I/O设备队列==
+	==就绪队列和 I/O 设备队列==
 	![[Pasted image 20261008141015.webp|467]]
 	==进程调度表示==
 	![[Pasted image 20261008141050.webp|467]]

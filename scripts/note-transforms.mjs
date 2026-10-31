@@ -3,7 +3,6 @@
 
 import { readdir, readFile, writeFile, rm } from 'node:fs/promises'
 import path from 'node:path'
-
 /**
  * Q1：修复 Obsidian 高亮语法在 Quartz 中的失效问题。
  * Quartz 的高亮替换只作用于文本节点，`==**术语**==` 会被解析成
@@ -174,9 +173,97 @@ export function rewriteImageRefs(md, converted) {
 }
 
 /**
- * 对目录下所有笔记应用内容升级（高亮修复 + 图片引用改写 + 结构转换）。
+ * 视觉排版：中西文混排加空格（盘古之白），并清理全角标点前后的多余空格。
+ * 幂等；自动跳过代码块、行内代码、数学公式、维基链接、Markdown 链接地址和 HTML 标签，
+ * 不会改动任何路径、代码与公式内容。
+ */
+const CJK = '\\u4e00-\\u9fff\\u3400-\\u4dbf'
+// 行内保护片段：行内代码、数学公式、维基链接/图片嵌入、链接地址、HTML 标签
+const PROTECTED_SEGMENT =
+  /`[^`]*`|\$\$[^$]*\$\$|\$[^$\n]*\$|!?\[\[[^\]]*\]\]|\]\([^)]*\)|<[^>]+>/g
+
+export function fixCjkSpacing(md) {
+  const spaceLine = (line) => {
+    const tokens = []
+    const shielded = line.replace(PROTECTED_SEGMENT, (seg) => {
+      tokens.push(seg)
+      return `\u0000${tokens.length - 1}\u0000`
+    })
+    const spaced = shielded
+      // 全角标点前不留空格（如「world ？」→「world？」）
+      .replace(/ +([，。？！：；、）】》」』])/g, '$1')
+      // 前引号/前括号类全角标点后不留空格
+      .replace(/([（【《「『]) +/g, '$1')
+      // 中文与拉丁字母、数字之间加空格
+      .replace(new RegExp(`([${CJK}])([A-Za-z0-9])`, 'g'), '$1 $2')
+      .replace(new RegExp(`([A-Za-z0-9])([${CJK}])`, 'g'), '$1 $2')
+    return spaced.replace(/\u0000(\d+)\u0000/g, (_, i) => tokens[Number(i)])
+  }
+
+  const lines = md.split('\n')
+  let inFence = false
+  let inMathBlock = false
+  const out = lines.map((line) => {
+    if (/^\s*(```|~~~)/.test(line)) {
+      inFence = !inFence
+      return line
+    }
+    if (inFence) return line
+    // 含 $$ 的行整行按公式处理；奇数个 $$ 切换多行公式块状态
+    const mathDelims = (line.match(/\$\$/g) || []).length
+    if (mathDelims > 0) {
+      if (mathDelims % 2 === 1) inMathBlock = !inMathBlock
+      return line
+    }
+    if (inMathBlock) return line
+    return spaceLine(line)
+  })
+  return out.join('\n')
+}
+
+/**
+ * 清理失效的图片嵌入：引用的文件不在素材集合里时直接移除（原笔记不受影响）。
+ */
+export function dropBrokenImageEmbeds(md, knownAssets) {
+  if (!knownAssets || knownAssets.size === 0) return md
+  return md.replace(
+    /!?\[\[([^\]|]+\.(?:png|jpe?g|gif|webp|svg))(?:\|[^\]]*)?\]\]/gi,
+    (match, name) => {
+      try {
+        name = decodeURIComponent(name)
+      } catch {
+        /* 保留原始字符串 */
+      }
+      return knownAssets.has(path.basename(name)) ? match : ''
+    },
+  )
+}
+
+/**
+ * 收集目录下所有非 Markdown 素材文件的文件名（basename）集合。
+ */
+export async function collectAssetNames(dir) {
+  const names = new Set()
+  async function walk(current) {
+    for (const entry of await readdir(current, { withFileTypes: true })) {
+      const file = path.join(current, entry.name)
+      if (entry.isDirectory()) {
+        await walk(file)
+        continue
+      }
+      if (!entry.name.endsWith('.md')) names.add(entry.name)
+    }
+  }
+  await walk(dir)
+  return names
+}
+
+/**
+ * 对目录下所有笔记应用内容升级（高亮修复 + 图片引用改写 + 失效嵌入清理 +
+ * 结构转换 + 中西文排版）。frontmatter 单独保护，不参与正文转换。
  */
 export async function applyContentUpgrades(dir, converted = new Set()) {
+  const assets = await collectAssetNames(dir)
   async function walk(current) {
     for (const entry of await readdir(current, { withFileTypes: true })) {
       const file = path.join(current, entry.name)
@@ -186,9 +273,29 @@ export async function applyContentUpgrades(dir, converted = new Set()) {
       }
       if (!entry.name.endsWith('.md')) continue
       const original = await readFile(file, 'utf8')
-      const upgraded = upgradeListStructure(rewriteImageRefs(fixHighlightSyntax(original), converted))
+      const upgraded = await upgradeMarkdown(original, converted, assets)
       if (upgraded !== original) await writeFile(file, upgraded, 'utf8')
     }
   }
   await walk(dir)
+}
+
+/**
+ * 单篇笔记的完整转换管线（正文部分）；frontmatter 原样保留。
+ */
+export async function upgradeMarkdown(original, converted = new Set(), assets = new Set()) {
+  let matter
+  try {
+    matter = (await import('gray-matter')).default
+  } catch {
+    matter = null
+  }
+  const transform = (body) =>
+    fixCjkSpacing(
+      upgradeListStructure(dropBrokenImageEmbeds(rewriteImageRefs(fixHighlightSyntax(body), converted), assets)),
+    )
+  if (!matter) return transform(original)
+  const parsed = matter(original)
+  const body = transform(parsed.content)
+  return body === parsed.content ? original : matter.stringify(body, parsed.data)
 }

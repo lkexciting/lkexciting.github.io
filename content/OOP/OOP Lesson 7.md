@@ -4,8 +4,8 @@ aliases:
   - OOP/notes/OOP Lesson 7
 ---
 # Polymorphism（多态）
-- 先考虑一一种情况：有很多的图形需要存储以及生成，那么对每一种图形单独形成一个class以及指针是很复杂的。这时可以使用shape进行总体的概括，用shape以及render可以把众多形状放到一起使用虚函数管理。
-- 定义一个shape函数:
+- 先考虑一一种情况：有很多的图形需要存储以及生成，那么对每一种图形单独形成一个 class 以及指针是很复杂的。这时可以使用 shape 进行总体的概括，用 shape 以及 render 可以把众多形状放到一起使用虚函数管理。
+- 定义一个 shape 函数:
 ```c++
 class Point{...};// (x,y) point
 class Shape
@@ -20,7 +20,7 @@ protected:
 	Point center;
 }
 ```
-- 如何增加新的shape？
+- 如何增加新的 shape？
 ```c++
 class Ellipse: public Shape
 {
@@ -53,11 +53,11 @@ void func()
 }
 ```
 - Polymorphism（多态）
-	- **向上转型**: 将派生类对象视为基类对象。==考虑lesson6中向上转型的范围！如果只是赋值是不会有多态的==
+	- **向上转型**: 将派生类对象视为基类对象。==考虑 lesson6 中向上转型的范围！如果只是赋值是不会有多态的==
 	- **绑定**:
 		- **静态绑定**: 根据声明类型调用函数。    
 		- **动态绑定**: 根据对象的"真实"类型调用函数（运行的时候才能决定）。==多态的关键因素==
-	- 举个例子：当构建一个circl的时候，circle会有一个半径的值，但是也要初始化一个ellipse类，然后只不过是短轴和长轴的长相同！
+	- 举个例子：当构建一个 circl 的时候，circle 会有一个半径的值，但是也要初始化一个 ellipse 类，然后只不过是短轴和长轴的长相同！
 - Virtual functions（虚函数）
 	- 可以在派生类中透明地重写。
 	- 对象携带一个虚函数表。
@@ -71,20 +71,20 @@ void func()
 			![[Pasted image 20251110143703.webp]]
 			- circle
 			![[Pasted image 20251110143738.webp]]
-			- 比较ellipse与shape：
+			- 比较 ellipse 与 shape：
 			![[Pasted image 20251110143805.webp]]
 	- 当我强制的将子类的赋值赋值给基类时：
-		- **场景**: 将Circle对象赋值给Ellipse对象。    
+		- **场景**: 将 Circle 对象赋值给 Ellipse 对象。    
 		- **后果**:    
-		    - Circle对象特有的部分（如area）被**==切割掉==**。		        
-		    - 只复制了适合Ellipse对象大小的部分。		        
-		    - Circle的vptr被忽略，elly的vptr仍然指向Ellipse的虚函数表。		        
-		    - 因此，通过elly调用render()，执行的仍然是Ellipse::render()。
+		    - Circle 对象特有的部分（如 area）被**==切割掉==**。		        
+		    - 只复制了适合 Ellipse 对象大小的部分。		        
+		    - Circle 的 vptr 被忽略，elly 的 vptr 仍然指向 Ellipse 的虚函数表。		        
+		    - 因此，通过 elly 调用 render()，执行的仍然是 Ellipse::render()。
 	- 但当我使用指针赋值时：
-		- **场景**: 将Circle指针赋值给Ellipse指针。    
+		- **场景**: 将 Circle 指针赋值给 Ellipse 指针。    
 		- **后果**:		    
-		    - 两个指针指向**同一个Circle对象**。		        
-		    - 通过Ellipse指针调用render()，会**动态调用Circle::render()**，因为虚函数机制通过vptr查找。
+		    - 两个指针指向**同一个 Circle 对象**。		        
+		    - 通过 Ellipse 指针调用 render()，会**动态调用 Circle::render()**，因为虚函数机制通过 vptr 查找。
 	- 虚函数与引用参数
 		```c++
 		void func(Ellipse&elly) {
@@ -103,9 +103,9 @@ void func()
 			...
 			delete p;// which dtor?
 			```
-		- **非虚析构函数问题**: 只有~Shape()被调用，可能导致Ellipse的资源泄漏。	    
+		- **非虚析构函数问题**: 只有~Shape()被调用，可能导致 Ellipse 的资源泄漏。	    
 		- **虚析构函数作用**: 调用~Shape()时会动态调用~Ellipse()，确保正确清理。
-	- 重写(overriding在子类发生)
+	- 重写(overriding 在子类发生)
 		```c++
 		classBase
 		{
@@ -128,7 +128,7 @@ void func()
 		- `BaseClass::functionName()` 的语法,无需旧的函数名称！
 	- 返回类型协变（当前标准）
 		![[Pasted image 20251110145737.webp]]
-		- **规则**: 当D公有继承B时，D::f()可以返回B::f()返回类型的子类（对于指针或引用类型）。    
+		- **规则**: 当 D 公有继承 B 时，D::f()可以返回 B::f()返回类型的子类（对于指针或引用类型）。    
 		- **状态**: 大多数现代编译器支持。
 		- 示例
 			```c++
@@ -167,8 +167,8 @@ void func()
 		- When you override an overloaded function, override all of the variants!
 	- **重要提示**    
 		![[Pasted image 20251110145852.webp]]
-		- **提示1**: **永远不要**重新定义继承来的非虚函数（因为没有动态分发）。		    
-		- **提示2**: **永远不要**重新定义继承来的默认参数值（因为默认参数是静态绑定的）。
+		- **提示 1**: **永远不要**重新定义继承来的非虚函数（因为没有动态分发）。		    
+		- **提示 2**: **永远不要**重新定义继承来的默认参数值（因为默认参数是静态绑定的）。
 	- **Abstract base classes（抽象基类）**
 		- **定义**: 包含**纯虚函数**的类。==完全没有任何的函数体==！
 		- **特性**:    

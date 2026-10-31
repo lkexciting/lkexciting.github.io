@@ -23,7 +23,7 @@ aliases:
 		– 保持优先级
 - **C++的重载符**
 	- 只是一个带有运算符名称的函数！
-	- 使用operator关键字作为名称的前缀
+	- 使用 operator 关键字作为名称的前缀
 		operator \*(...)
 	- 可以是成员函数
 		- 隐式第一个参数
@@ -44,8 +44,8 @@ aliases:
 		- 成员可以完全访问类中的所有数据		
 		- 不对接收者执行类型转换
 		z = x+y ==>z = x.operator + (y)✔
-		z = x+3 ==>z = x.operator + (3)✔==此时会先将 3 变成integer类型==
-		~~z = 3+y~~ 这种方法是错误的，3无法变成integer类型，无法操作
+		z = x+3 ==>z = x.operator + (3)✔==此时会先将 3 变成 integer 类型==
+		~~z = 3+y~~ 这种方法是错误的，3 无法变成 integer 类型，无法操作
 	- 对于二元运算符（+, -, \*, 等），成员函数需要==一个参数==。
 	- 对于一元运算符（一元-, !, 等），成员函数不需要参数：
 		```c++
@@ -98,8 +98,8 @@ aliases:
 	- For global functions, if the left-hand side changes pass as a reference(stream inserters)
 - **返回值**
 	- 根据运算符的==预期含义选择返回类型==！
-	- 对于`operator+`，你需要生成一个新对象。返回一个const对象，这样结果就不能作为左值（lvalue）被修改。
-	- 逻辑运算符应该返回bool
+	- 对于`operator+`，你需要生成一个新对象。返回一个 const 对象，这样结果就不能作为左值（lvalue）被修改。
+	- 逻辑运算符应该返回 bool
 - **运算符的原型**![[Pasted image 20251124140859.webp]]
 - **Operators ++ and --**
 	- Postfix（后缀形式） forms take an int argument —— compiler will pass in 0 as that int![[Pasted image 20251124141112.webp]]
@@ -133,10 +133,10 @@ aliases:
 	- Will be generated for you if you don't provide one![[Pasted image 20251124144610.webp]]
 	- For classes with dynamically allocated memory declare an assignment operator (and a copy constructor)【对于具有**动态**分配内存的类，声明一个赋值运算符（和一个拷贝构造函数）】
 	- To prevent assignment, explicitly declare `operator=` as private, or use `=delete`
-	- 使用`= delete`可以明确禁止拷贝赋值，这是现代C++的推荐做法。
+	- 使用`= delete`可以明确禁止拷贝赋值，这是现代 C++的推荐做法。
 - **运算符“（）”**
 	- A functor（仿函数）, which overloads the function call operator, is an object that acts like a function.![[Pasted image 20251124145137.webp]]
-	- “F f”中的f实际上就是一个“functor”
+	- “F f”中的 f 实际上就是一个“functor”
 - **值类（value classes）**
 	- 表现得像原始数据类型
 	- 传递给函数并从函数返回

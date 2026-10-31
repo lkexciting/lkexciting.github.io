@@ -56,7 +56,7 @@ FDM（Frequency Division Multiplexing，频分复用）把频带分给各站；T
 
 ### 1.2 M/M/1 Queueing Model：静态平分的时延代价
 
-本节使用 M/M/1：Poisson arrivals（泊松到达）、Exponential service times（指数服务时间）、Single server（单服务台）。设Arrival rate（到达率） $\lambda$ 帧/s，平均帧长 $1/\mu$ bit，信道容量 $C$ bit/s，则Service rate（服务率）为 $\mu C$ 帧/s。
+本节使用 M/M/1：Poisson arrivals（泊松到达）、Exponential service times（指数服务时间）、Single server（单服务台）。设 Arrival rate（到达率） $\lambda$ 帧/s，平均帧长 $1/\mu$ bit，信道容量 $C$ bit/s，则 Service rate（服务率）为 $\mu C$ 帧/s。
 
 为避免把“帧长参数 $\mu$”误认为服务率，下面记 $r=\mu C$。
 
@@ -375,7 +375,7 @@ RTS 仍可能冲突；握手只是减少长数据帧冲突的代价，不保证�
                  <--------------- 64..1518 字节 ---------------->
 ```
 
-有些图将前导码和Start Frame Delimiter（起始定界符）合写为 8 字节；严格区分时是Preamble（前导码）7 字节、SFD 1 字节。Interpacket gap（帧间隙）不属于 MAC 帧。FCS 是 32 bit CRC，检测差错，不是加密或纠错。
+有些图将前导码和 Start Frame Delimiter（起始定界符）合写为 8 字节；严格区分时是 Preamble（前导码）7 字节、SFD 1 字节。Interpacket gap（帧间隙）不属于 MAC 帧。FCS 是 32 bit CRC，检测差错，不是加密或纠错。
 
 ![DIX 与 IEEE 802.3 帧格式](%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/pictures/Chapter4/page-055.webp)
 
@@ -580,9 +580,9 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 | 0 | 1 | 目的（接收者） | AP/BSSID（发送者） | 原始源 | 无 |
 | 1 | 1 | 接收者 RA | 发送者 TA | 最终目的 DA | 原始源 SA |
 
-上表是帮助读图的传统数据帧映射；不要机械地把“地址1”都当成最终目的地址。
+上表是帮助读图的传统数据帧映射；不要机械地把“地址 1”都当成最终目的地址。
 
-传统 802.11 服务划分中的九项服务：小区内的Authentication（认证）、Deauthentication（去认证）、Privacy（隐私保护）、Data Delivery（数据交付）；跨小区相关的Association（关联）、Disassociation（解关联）、Reassociation（重关联）、Distribution（分布）、Integration（集成）。认证回答“是否允许接入”，关联建立站点与 AP 的关系；重关联支持迁移，分布系统转送数据，集成连接其他类型网络。
+传统 802.11 服务划分中的九项服务：小区内的 Authentication（认证）、Deauthentication（去认证）、Privacy（隐私保护）、Data Delivery（数据交付）；跨小区相关的 Association（关联）、Disassociation（解关联）、Reassociation（重关联）、Distribution（分布）、Integration（集成）。认证回答“是否允许接入”，关联建立站点与 AP 的关系；重关联支持迁移，分布系统转送数据，集成连接其他类型网络。
 
 ## 9. Data Link Layer Switching（数据链路层交换）：收到一帧后到底做什么？
 
@@ -601,7 +601,7 @@ $$T=50+60+80+10+56+10+4000+10+56=4432\,\mu s$$
 1. **Learn the source（先学源）：**更新 `S → p` 及时间信息。
 2. **Look up the destination（查目的）：**查 D 对应的端口。
 3. D 已知且端口等于 $p$：过滤，不再从其他口转发。
-4. D 已知且端口不同：仅从该口转发；D 未知：向同 VLAN 内除入端口外的所有可转发端口Flooding（泛洪）。广播通常也按此范围泛洪。
+4. D 已知且端口不同：仅从该口转发；D 未知：向同 VLAN 内除入端口外的所有可转发端口 Flooding（泛洪）。广播通常也按此范围泛洪。
 
 “反向学习”是从源地址学习返回路径。未知目的可以触发泛洪，但不能凭目的地址推断它的位置。表项老化允许适应迁移，具体老化时间由设备配置决定。
 
@@ -655,9 +655,9 @@ Store-and-forward switch（存储转发交换机）收完整帧后检查并转�
 这里用“最小序列号选根、从根构造最短路径树”解释。补充到常见 STP 题型：根由最小 Bridge ID 选出，Bridge ID 包含优先级与 MAC；路径使用 cost，不一定是最少跳数。
 
 1. 标每台桥的 ID、每条链路的 cost。
-2. 选最小 ID 的桥为Root bridge（根桥）。
-3. 每台非根桥选到根的最优端口为Root port（根端口）。
-4. 每个共享网段选一个朝根最优的Designated port（指定端口）。
+2. 选最小 ID 的桥为 Root bridge（根桥）。
+3. 每台非根桥选到根的最优端口为 Root port（根端口）。
+4. 每个共享网段选一个朝根最优的 Designated port（指定端口）。
 5. 其他冗余端口不参与普通数据转发，画虚线或叉号。
 6. 检查所有节点仍可达，且有效路径没有环。
 
@@ -782,7 +782,7 @@ $$N\le\frac{5600}{2e}=\frac{2800}{e}\approx1030.062\Rightarrow N_{\max}=1030$$
 
 可以，前提是两个接收端分别不被另一发射者干扰，并且 RTS/CTS 协商允许并发。例如 A→B 与 E→F 两对相互足够隔离，可以同时传输。若只知道“有 A–F 六个站”却没有指定拓扑，不能断言任意两对都能同时发。
 
-参照 ：只听见 RTS 而听不到 CTS 的邻站在原 MACA 模型下可能再发送；听到 CTS 的站需要保护该接收者。
+参照：只听见 RTS 而听不到 CTS 的邻站在原 MACA 模型下可能再发送；听到 CTS 的站需要保护该接收者。
 
 ### 第 5 题：1 Gbps 的最小帧长
 
@@ -884,7 +884,7 @@ C ─ B1:p3                 B2:p3 ─ G
 | 指数退避 | 标第几次碰撞 | $r\in[0,2^{\min(i,10)}-1]$ | 忘记窗口截断或概率条件化 |
 | 位图 | 数预留位和数据位 | 轻载 $d/(N+d)$，重载 $d/(d+1)$ | 重载仍让每帧独担 $N$ 位 |
 | 二进制倒计数 | 从高位逐位淘汰 | $d/(d+\lceil\log_2N\rceil)$ | 退出者仍参与后续按位或 |
-| 树搜索 | 标就绪叶、按访问顺序编号 | 只展开冲突节点 | 把槽0漏掉或无条件搜全树 |
+| 树搜索 | 标就绪叶、按访问顺序编号 | 只展开冲突节点 | 把槽 0 漏掉或无条件搜全树 |
 | 编码波形 | 分半 bit、声明初始电平 | 中点必跳变 | 曼彻斯特/差分规则混淆 |
 | 无线时序 | 列帧、间隔、退避、PHY 开销 | 每项时间分别相加 | 漏 ACK、速率不同仍统一相除 |
 | 网桥学习 | 先学源再查目的 | 同口过滤、异口单播、未知泛洪 | 自动学习目的、向入端口泛洪 |

@@ -7,7 +7,9 @@
       margin-right: 8px;
 
       &::after {
-        content: ",";
+        // 中文语境用间隔号替代英文逗号
+        content: "·";
+        margin-left: 8px;
       }
     }
   }

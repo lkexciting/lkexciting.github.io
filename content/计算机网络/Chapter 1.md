@@ -48,7 +48,7 @@ aliases:
 		允许设备在个人物理范围内互联。典型应用包括通过 **Bluetooth**​ 连接外设（鼠标、键盘、打印机、耳机）以及通过 **RFID**​ 技术实现与物品的短距离通信。**PANs**​ 是一种极小规模的网络，专注于个人设备间的便捷、低功耗数据交换。
 	- **LAN (Local Area Network)**：局部区域网络，如家庭、办公室或校园内的网络。
 		它是私有网络，覆盖范围限于单个建筑或校园（通常几公里内），常见技术包括 **WiFi**​ 和 **Ethernet**。其特性主要有两点：一是规模受限使得最坏传输时间有界且可预知，从而简化网络设计和管理的某些设计；二是采用高速传输技术，速率可达 **10Gbps**。![[Pasted image 20260923103236.webp]]
-		从MAC层的视角，阐述了广播型局域网（包括有线和无线）的信道资源分配方式，分为静态分配和动态分配两类。静态分配典型方法是TDMA思想，将时间划分为固定时隙，采用轮询调度，每个节点只在属于自己的时隙内发送。动态分配针对共享信道的冲突问题，分为集中式（由中心节点统一调度）和分布式（通过分布式算法自主协调，避免混乱）。核心专业名词：broadcast LANs, MAC, static allocation, dynamic allocation, time slots, round-robin algorithm, centralized, decentralized。
+		从 MAC 层的视角，阐述了广播型局域网（包括有线和无线）的信道资源分配方式，分为静态分配和动态分配两类。静态分配典型方法是 TDMA 思想，将时间划分为固定时隙，采用轮询调度，每个节点只在属于自己的时隙内发送。动态分配针对共享信道的冲突问题，分为集中式（由中心节点统一调度）和分布式（通过分布式算法自主协调，避免混乱）。核心专业名词：broadcast LANs, MAC, static allocation, dynamic allocation, time slots, round-robin algorithm, centralized, decentralized。
 	- **MAN (Metropolitan Area Network)**：城域网，覆盖一个城市范围的网络。
 		它是 **LAN**​ 的扩展版本，覆盖范围为一个城市，通常采用与 **LAN**​ 相似的技术。举例包括基于 **cable TV**、**IEEE 802.16 (WiMAX)**​ 和 **NB-IoT**。**MAN**​ 的关键特征是存在一个 **broadcast medium**，所有计算机都连接在这个介质上。核心专业名词：**MAN**、**LAN**、**cable TV**、**IEEE 802.16**、**WiMAX**、**NB-IoT**、**broadcast medium**。![[Pasted image 20260923103515.webp|553]]
 	- **WAN (Wide Area Network)**：广域网，跨越国家或全球的大型网络。
@@ -115,7 +115,7 @@ aliases:
 		    – 又足够少，使得体系结构不会变得笨拙。
 		![[Pasted image 20260923115136.webp]]
 		- 物理层（**Physical layer**）：关注如何在通信信道上传输原始比特（**raw bits**）。设计问题涉及机械、电气和时序接口，以及物理传输介质（**physical transmission medium**）。一些典型问题包括：
-			- 应该用多少伏电压表示1，多少伏表示0，一个比特持续多少微秒；
+			- 应该用多少伏电压表示 1，多少伏表示 0，一个比特持续多少微秒；
 			- 传输是否可以同时在两个方向上进行；
 			- 初始连接如何建立，以及当双方通信结束时如何拆除连接；
 			- 网络连接器有多少个引脚，每个引脚的用途是什么。
@@ -179,21 +179,21 @@ aliases:
 			– **NNTP**
 			– **DHCP**
 	- **Comparison**
-		- OSI和TCP/IP参考模型的相似点（**Similarities for the OSI and TCP/IP reference models**）：
+		- OSI 和 TCP/IP 参考模型的相似点（**Similarities for the OSI and TCP/IP reference models**）：
 			- 基于协议栈（**protocol stack**）的概念
 			- 层功能大致相似（**Layer functionality roughly similar**）
 			- 端到端服务提供者（传输层，**transport**）与端到端服务使用者（应用层，**app**）（**End-end service provider (transport) vs. end-end service user (app)**）
-		- OSI和TCP/IP参考模型的差异（**Differences for the OSI and TCP/IP reference models**）：
+		- OSI 和 TCP/IP 参考模型的差异（**Differences for the OSI and TCP/IP reference models**）：
 			- 服务/接口/协议（**Services/interfaces/protocols**）
-			- OSI明确区分它们（**The OSI makes the distinction explicit**）
-			- TCP/IP模型最初没有明确区分它们（**The TCP/IP model did not originally clearly distinguish them**）
+			- OSI 明确区分它们（**The OSI makes the distinction explicit**）
+			- TCP/IP 模型最初没有明确区分它们（**The TCP/IP model did not originally clearly distinguish them**）
 			- 哪个先出现？（模型/协议）（**Which comes first? (Models/protocols)**）：
-				- OSI先有模型，而TCP先有协议（**OSI model first while TCP protocol first**）。
-			- 7层 / 4层；TCP/IP缺少三层（**7 layer / 4 layers; TCP/IP lacks three layers**）。
+				- OSI 先有模型，而 TCP 先有协议（**OSI model first while TCP protocol first**）。
+			- 7 层 / 4 层；TCP/IP 缺少三层（**7 layer / 4 layers; TCP/IP lacks three layers**）。
 			- 面向连接与无连接通信（**Connection-oriented vs connectionless comm.**）：
 				- OSI：在网络层支持面向连接和无连接通信（**Connection-oriented and connectionless communication in network layer**），在传输层仅支持面向连接（**connection-oriented in transport layer**）。
 				- TCP：在网络层是无连接通信（**connectionless communication in network layer**），在传输层支持面向连接和无连接通信（**connection-oriented and connectionless communication in transport layer**），（给用户/应用提供选择）（**giving users/app a choice**）。
-		- **==Why OSI did not take over the world ？==**
+		- **==Why OSI did not take over the world？==**
 			- Bad timing
 				- The time at which a standard is established is absolutely critical to its success.
 				- The first elephant represents a burst of research activity.
@@ -226,9 +226,9 @@ aliases:
 	- IEEE, Institute of Electrical and Electronic Engineers
 	![[Pasted image 20260923121455.webp|439]]
 - **Internet**
-	- 1983年，IAB（Internet Activities Board，互联网活动委员会）
+	- 1983 年，IAB（Internet Activities Board，互联网活动委员会）
 	- 后来，IAB 更名为 Internet Architecture Board（互联网架构委员会）
-	- 1989年，IAB 拆分为 IRTF + IETF
+	- 1989 年，IAB 拆分为 IRTF + IETF
 		- IRTF（Internet Research Task Force，互联网研究任务组）
 		- IETF（Internet Engineering Task Force，互联网工程任务组）
 			- 最初由 DARPA 为 TCP/IP 协议开发而创立
@@ -246,4 +246,4 @@ aliases:
 	- 位置隐私（**Location privacy**）
 - 虚假信息（**Disinformation**）
 	- 假新闻（**Fake news**）
-![[Pasted image 20260923121907.png|531]]
+

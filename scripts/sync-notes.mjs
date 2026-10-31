@@ -62,6 +62,7 @@ async function flattenPublishedNotes(courseDir, courseName) {
     aliases: [`${courseName}/notes/index`, `${courseName}/note/index`],
   }), 'utf8')
 }
+const missingImages = []
 async function normalizeRelativeLinks(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const file = path.join(dir, entry.name)
@@ -70,7 +71,12 @@ async function normalizeRelativeLinks(dir) {
     const source = await readFile(file, 'utf8')
     // Quartz resolves paths from content root. Convert explicit relative Markdown
     // paths in the publish copy; leave the original Obsidian file untouched.
-    const normalized = source.replace(/!\[\[([^\]|]+\.(?:png|jpe?g|gif|webp|svg))(?:\|[^\]]*)?\]\]/gi, (match, name) => assetNames.has(path.basename(name)) ? match : `【原笔记缺少图片：${name}】`).replace(/(?<!!)\[\[([^\]|#]+)(#[^\]|]*)?(\|[^\]]*)?\]\]/g, (match, target, anchor = '', alias = '') => {
+    // 引用了库中不存在的图片：发布副本直接移除（控制台留痕），避免页面上出现裂图。
+    const normalized = source.replace(/!\[\[([^\]|]+\.(?:png|jpe?g|gif|webp|svg))(?:\|[^\]]*)?\]\]/gi, (match, name) => {
+      if (assetNames.has(path.basename(name))) return match
+      missingImages.push(`${path.relative(site, file)} → ${name}`)
+      return ''
+    }).replace(/(?<!!)\[\[([^\]|#]+)(#[^\]|]*)?(\|[^\]]*)?\]\]/g, (match, target, anchor = '', alias = '') => {
       const note = target.endsWith('.md') ? target : `${target}.md`
       const original = path.resolve(vault, path.relative(path.join(site, 'content'), path.dirname(file)), note)
       if (!notePaths.has(original)) return match
@@ -105,6 +111,27 @@ for (const [name] of courses) {
   await flattenPublishedNotes(dest, name)
 }
 const total = counts.reduce((a, b) => a + b, 0)
+// 统计发布副本的总字数：中文字符逐字计 + 英文/数字单词计
+let totalWords = 0
+for (const [name] of courses) {
+  async function countWords(dir) {
+    for (const entry of await readdir(dir, { withFileTypes: true })) {
+      const file = path.join(dir, entry.name)
+      if (entry.isDirectory()) { await countWords(file); continue }
+      if (!entry.name.endsWith('.md')) continue
+      const { content } = matter(await readFile(file, 'utf8'))
+      const body = content.replace(/```[\s\S]*?```/g, ' ').replace(/`[^`]*`/g, ' ')
+      totalWords += (body.match(/[\u4e00-\u9fff\u3400-\u4dbf]/g) || []).length
+      totalWords += (body.match(/[A-Za-z0-9]+/g) || []).length
+    }
+  }
+  await countWords(path.resolve(site, 'content', name))
+}
+const fmtWords = n => n >= 10000 ? `${(n / 10000).toFixed(1).replace(/\.0$/, '')} 万` : String(n)
+if (missingImages.length > 0) {
+  console.warn(`已移除 ${missingImages.length} 处失效图片引用：`)
+  for (const line of missingImages) console.warn(`  - ${line}`)
+}
 const cards = courses.map(([name, label, desc], i) => `<div class="course-card"><span class="course-label">${String(i + 1).padStart(2, '0')} / ${label}</span><h3><a class="internal" href="./${name}/">${name}</a></h3><p>${desc}</p><span class="course-count">${counts[i]} 篇笔记 <span aria-hidden="true">↗</span></span></div>`).join('\n')
 await mkdir(path.join(site, 'content'), { recursive: true })
 await writeFile(path.join(site, 'content', 'index.md'), `---
@@ -112,7 +139,7 @@ title: 学习，是不断建立连接。
 description: lkexciting 的课程笔记与知识花园，记录计算机科学与量子计算的学习。
 ---
 
-<div class="garden-intro"><span class="eyebrow">LKEXCITING / DIGITAL GARDEN</span><p class="garden-lead">把零散的理解，慢慢连成自己的知识地图。</p><p>这里收录我的课程笔记与学习记录。沿着目录阅读，也可以从搜索开始，发现知识之间的联系。</p><div class="garden-stats"><span><strong>${String(courses.length).padStart(2, '0')}</strong> 个学习方向</span><span><strong>${total}</strong> 篇课程笔记</span><span class="growing">持续生长中</span></div></div>
+<div class="garden-intro"><span class="eyebrow">LKEXCITING / DIGITAL GARDEN</span><p class="garden-lead">把零散的理解，慢慢连成自己的知识地图。</p><p>这里收录我的课程笔记与学习记录。沿着目录阅读，也可以从搜索开始，发现知识之间的联系。</p><div class="garden-stats"><span><strong>${String(courses.length).padStart(2, '0')}</strong> 个学习方向</span><span><strong>${total}</strong> 篇课程笔记</span><span><strong>约 ${fmtWords(totalWords)}</strong> 字</span><span class="growing">持续生长中</span></div></div>
 
 ## 探索笔记
 

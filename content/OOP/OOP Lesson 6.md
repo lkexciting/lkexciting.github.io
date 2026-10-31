@@ -25,8 +25,8 @@ aliases:
 		    名称 ( 参数 ) [':' 初始化列表] '{'
 	- 为什么能初始化列表就要初始化列表呢？
 		- 因为在我们进入对象之前，成员对象已经自动被调用了构造函数了！
-		- const只能通过列表进行修改，否则就会造成修改不了的情况
-	- 尽量使用Private而不是Public，这样可以控制接口的安全性，是底层实现的一部分
+		- const 只能通过列表进行修改，否则就会造成修改不了的情况
+	- 尽量使用 Private 而不是 Public，这样可以控制接口的安全性，是底层实现的一部分
 - ==`Inheritance（继承）`==
 	- **继承**定义一个包含基类子对象的派生类型，并可增加成员或重写允许重写的行为；它不是在运行时克隆某个已有对象。    
 	- 这是 _**is-a**_（是一个）的关系
@@ -36,9 +36,9 @@ aliases:
 	    - 成员数据	        
 	    - 成员函数	        
 	    - 接口	        
-	- 它是C++ 中的关键技术
+	- 它是 C++ 中的关键技术
 	![[Pasted image 20251103143506.webp]]
-	- 表示CD是public的Item的一个继承，DVD也是public的Item的继承
+	- 表示 CD 是 public 的 Item 的一个继承，DVD 也是 public 的 Item 的继承
 	- 继承的优点：
 		- 避免代码重复    
 		- 代码重用		    
@@ -53,7 +53,7 @@ aliases:
 		![[Pasted image 20251103144126.webp]]
 		- Now add Manager
 		![[Pasted image 20251103144140.webp]]
-		- 注意==class Manager : public Employee==，说明这是继承自Employee的类Manager
+		- 注意==class Manager : public Employee==，说明这是继承自 Employee 的类 Manager
 	- 因此，继承和构造函数：
 		- 将继承的特性视为一个嵌入对象    
 		- 基类通过类名提及
@@ -66,23 +66,23 @@ aliases:
 	- 由于衍生类包含所有父类拥有的函数，所以在使用时加上前缀防止“认错”，如：
 	![[Pasted image 20251103144906.webp]]
 	- 可以看到==Employee::print(out);==的存在，这就是调用父函数的前缀要求！
-	- 当两者的函数名称相同时，他将只会看到子类的print而不是父类的print函数，这就是==Name hiding==现象：派生作用域中查找到同名声明时，会隐藏基类同名声明；需要时可用 `using Base::print` 引入基类重载集合！
+	- 当两者的函数名称相同时，他将只会看到子类的 print 而不是父类的 print 函数，这就是==Name hiding==现象：派生作用域中查找到同名声明时，会隐藏基类同名声明；需要时可用 `using Base::print` 引入基类重载集合！
 	![[Pasted image 20251103145541.webp]]
-	- “为什么bill里面的get_name可以被使用呢？”因为子类中没有这个函数！
+	- “为什么 bill 里面的 get_name 可以被使用呢？”因为子类中没有这个函数！
 	- ==Name Hiding：如果你在派生类中重定义了一个成员函数，那么基类中所有其他重载的函数都将变得不可访问。==
 	- 那什么东西没被继承呢？
 		- 基类构造函数
 		- Destination
 		- 赋值操作
-	- class和struct的一个继承的区别
+	- class 和 struct 的一个继承的区别
 		- class defaults to private
 		- struct defaults to public
-		- public private与protected
+		- public private 与 protected
 		![[Pasted image 20251110132927.webp]]
-		也就是说：private>protected>public的优先级
+		也就是说：private>protected>public 的优先级
 		![[Pasted image 20251110133155.webp]]
 	- Friends（有缘类）的定义
-		- 如果定义了另一个为这个类的friend,那么所有的数据将会被开放，可以看到private和protected的变量
+		- 如果定义了另一个为这个类的 friend,那么所有的数据将会被开放，可以看到 private 和 protected 的变量
 		- 定义方式：
 		```c++
 		………………
@@ -95,7 +95,7 @@ aliases:
 		}
 		………………
 		```
-		定义的时候一定要先告诉编译器存在一个ClassB了，不能直接定义friend class ClassB。
+		定义的时候一定要先告诉编译器存在一个 ClassB 了，不能直接定义 friend class ClassB。
 	- 有缘函数的定义：
 	```c++
 	class ClassA
@@ -111,11 +111,11 @@ aliases:
 		……
 	}
 	```
-	则这个addAB函数就是AB同时可以调用的全局函数！
+	则这个 addAB 函数就是 AB 同时可以调用的全局函数！
 	- Conversions
 	- 公有继承应满足替换原则  
-		– 若B是一种A，则在任何需要使用A的地方都能用B替代。  
-		– 若B是一种A，则A具有的所有特性B也必然具备。  
+		– 若 B 是一种 A，则在任何需要使用 A 的地方都能用 B 替代。  
+		– 若 B 是一种 A，则 A 具有的所有特性 B 也必然具备。  
 		– 若替换不成立，务必谨慎处理！
 	![[Pasted image 20251110135929.webp]]
 	- Up-casting(向上转型)

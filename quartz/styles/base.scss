@@ -24,9 +24,14 @@ body {
 }
 
 .text-highlight {
-  background-color: var(--textHighlight);
-  padding: 0 0.1rem;
-  border-radius: 5px;
+  // 低饱和荧光笔效果：高亮密集的页面（60+ 处）也不会喧宾夺主，
+  // box-decoration-break 让跨行高亮的每一行都有完整的圆角
+  background-color: color-mix(in srgb, var(--textHighlight) 55%, transparent);
+  padding: 0.05rem 0.18rem;
+  margin: 0 0.05rem;
+  border-radius: 0.25rem;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 ::selection {
   background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));

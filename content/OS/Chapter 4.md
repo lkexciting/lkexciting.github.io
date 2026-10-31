@@ -24,9 +24,9 @@ aliases:
 			**User Threads（用户线程）**
 			- 由用户级线程库管理。
 			- 常见：
-			    - **Pthreads（POSIX Threads，POSIX线程）**
-			    - **Win32 Threads（Windows线程）**
-			    - **Java Threads（Java线程）**
+			    - **Pthreads（POSIX Threads，POSIX 线程）**
+			    - **Win32 Threads（Windows 线程）**
+			    - **Java Threads（Java 线程）**
 			**Kernel Threads（内核线程）**
 			- 由 Kernel（内核）支持和管理。
 			- 常见系统：
@@ -63,7 +63,7 @@ aliases:
 			    - 可以创建足够数量的 Kernel Threads；
 			    - 兼顾并发和资源消耗。
 			- 示例：
-			    - Solaris 9以前
+			    - Solaris 9 以前
 			    - Windows NT/2000 ThreadFiber
 		- ![[Pasted image 20261013172147.webp]]
 		- Two-Level Model
@@ -74,7 +74,7 @@ aliases:
 			    - IRIX
 			    - HP-UX
 			    - Tru64 UNIX
-			    - Solaris 8及以前
+			    - Solaris 8 及以前
 	- **Threading Issues**
 		- **fork()（创建进程）**
 			- fork() 是否复制调用线程？

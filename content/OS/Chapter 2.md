@@ -30,26 +30,26 @@ aliases:
 - ==Program execution== - The system must be able to load a program into memory and to run that program, end execution, either normally or abnormally (indicating error)
 	程序执行 — 系统必须能将程序加载到内存并运行，正常或异常（指示错误）结束执行
 - ==I/O operations== - A running program may require I/O, which may involve a file or an I/O device.
-	I/O操作 — 运行中的程序可能需要I/O，可能涉及文件或I/O设备
+	I/O 操作 — 运行中的程序可能需要 I/O，可能涉及文件或 I/O 设备
 - ==File-system manipulation== - The file system is of particular interest. Obviously, programs need to read and write files and directories, create and delete them, search them, list file information, permission management.
 	文件系统操作 — 文件系统特别受关注。程序需读写文件和目录、创建和删除、搜索、列出文件信息、权限管理
 - ==Communications== - Processes may exchange information, on the same computer or between computers over a network
 	通信 — 进程可以交换信息，在同一台计算机上或通过网络的计算机之间
 	- Communications may be via shared memory or through message passing (packets moved by the OS)
-		通信可以通过共享内存或通过消息传递（由OS移动数据包）
+		通信可以通过共享内存或通过消息传递（由 OS 移动数据包）
 - ==Error detection== - OS needs to be constantly aware of possible errors
-	错误检测 — OS需要持续注意可能的错误
+	错误检测 — OS 需要持续注意可能的错误
 	- May occur in the CPU and memory hardware, in I/O devices, in user program
-		可能发生在CPU和内存硬件、I/O设备、用户程序中
+		可能发生在 CPU 和内存硬件、I/O 设备、用户程序中
 	- For each type of error, OS should take the appropriate action to ensure correct and consistent computing
-		对于每种类型的错误，OS应采取适当的操作以确保正确和一致的计算
+		对于每种类型的错误，OS 应采取适当的操作以确保正确和一致的计算
 	- Debugging facilities can greatly enhance the user's and programmer's abilities to efficiently use the system
 		调试工具可以极大地增强用户和程序员高效使用系统的能力
 **Another** set of OS functions exists for ensuring the efficient operation of the system itself via resource sharing
 - ==Resource allocation== - When multiple users or multiple jobs running concurrently, resources must be allocated to each of them
 	资源分配 — 当多个用户或多个作业并发运行时，必须将资源分配给它们中的每一个
 	- Many types of resources - Some (such as CPU cycles, memory, and file storage) may have special allocation code, others (such as I/O devices) may have general request and release code.
-		多种类型的资源 — 有些（如CPU周期、内存和文件存储）可能有特殊的分配代码，其他（如I/O设备）可能有一般的请求和释放代码。
+		多种类型的资源 — 有些（如 CPU 周期、内存和文件存储）可能有特殊的分配代码，其他（如 I/O 设备）可能有一般的请求和释放代码。
 - ==Accounting== - To keep track of which users use how much and what kinds of computer resources
 	记账 — 跟踪哪些用户使用了多少和什么类型的计算机资源
 - ==Protection and security== - The owners of information stored in a multiuser or networked computer system may want to control use of that information, concurrent processes should not interfere with each other
@@ -57,7 +57,7 @@ aliases:
 	- Protection involves ensuring that all access to system resources is controlled
 		保护涉及确保所有对系统资源的访问都受控
 	- Security of the system from outsiders requires user authentication, extends to defending external I/O devices from invalid access attempts
-		系统免受外部侵害的安全需要用户认证，延伸到防御外部I/O设备的无效访问尝试
+		系统免受外部侵害的安全需要用户认证，延伸到防御外部 I/O 设备的无效访问尝试
 	- If a system is to be protected and secure, precautions must be instituted throughout it. A chain is only as strong as its weakest link.
 		如果系统要受到保护和保证安全，必须在整个系统中建立预防措施。链条的强度取决于它最薄弱的环节。
 ## User Operating System Interface
@@ -75,14 +75,14 @@ aliases:
 		Sometimes commands built-in (DOS), sometimes just names of programs (Unix)
 		有时命令是内置的（DOS），有时只是程序的名称（Unix）
 		- If the latter, adding new features doesn't require shell modification
-		- 如果是后者，添加新功能不需要修改shell
+		- 如果是后者，添加新功能不需要修改 shell
 - GUI
-	GUI采用桌面隐喻（desktop metaphor），通常使用鼠标（mouse）、键盘（keyboard）和显示器（monitor），用图标（icon）表示文件、程序、动作等。用户通过对界面对象点击不同鼠标按钮触发各种操作，如提供信息、显示选项、执行功能或打开目录（文件夹）。该技术最早发明于施乐帕克研究中心（Xerox PARC）。如今许多操作系统同时包含命令行界面（Command-Line Interface, CLI）和GUI，例如微软Windows以GUI为主并配有CLI命令壳（command shell）；苹果Mac OS X在UNIX内核（kernel）之上提供Aqua GUI界面，并可使用shell；而Solaris则以CLI为基础，可选安装Java Desktop或KDE等GUI环境。
+	GUI 采用桌面隐喻（desktop metaphor），通常使用鼠标（mouse）、键盘（keyboard）和显示器（monitor），用图标（icon）表示文件、程序、动作等。用户通过对界面对象点击不同鼠标按钮触发各种操作，如提供信息、显示选项、执行功能或打开目录（文件夹）。该技术最早发明于施乐帕克研究中心（Xerox PARC）。如今许多操作系统同时包含命令行界面（Command-Line Interface, CLI）和 GUI，例如微软 Windows 以 GUI 为主并配有 CLI 命令壳（command shell）；苹果 Mac OS X 在 UNIX 内核（kernel）之上提供 Aqua GUI 界面，并可使用 shell；而 Solaris 则以 CLI 为基础，可选安装 Java Desktop 或 KDE 等 GUI 环境。
 - **System Calls**![[Pasted image 20260922165843.webp|668]]
 	- System call sequence to copy the contents of one file to another file![[Pasted image 20260922170017.webp|548]]
 		内容很长，所以一般现在不写了
 	- System Call Implementation
-		通常，每个系统调用（system call）都关联一个编号（==number==），系统调用接口（system-call interface）维护一个按这些编号索引的表（==table==）。该接口调用操作系统内核（OS kernel）中对应的系统调用，并==返回调用状态（status）和返回值（return values）==。调用者（caller）无需了解系统调用的具体实现，只需遵守应用程序接口（API）并理解操作系统的行为结果。大部分操作系统==接口细节被API隐藏==，由运行时支持库（run-time support library，即编译器自带库中的一组函数）管理。![[Pasted image 20260922170821.webp|522]]
+		通常，每个系统调用（system call）都关联一个编号（==number==），系统调用接口（system-call interface）维护一个按这些编号索引的表（==table==）。该接口调用操作系统内核（OS kernel）中对应的系统调用，并==返回调用状态（status）和返回值（return values）==。调用者（caller）无需了解系统调用的具体实现，只需遵守应用程序接口（API）并理解操作系统的行为结果。大部分操作系统==接口细节被 API 隐藏==，由运行时支持库（run-time support library，即编译器自带库中的一组函数）管理。![[Pasted image 20260922170821.webp|522]]
 	- Standard C Library Example
 		C program invoking printf() library call, which calls write() system call![[Pasted image 20260922171013.webp]]
 	- System Call Parameter Passing
@@ -131,7 +131,7 @@ aliases:
 	- The operating system is divided into a number of layers (levels), ==each built on top of lower layers==.  The bottom layer (layer 0), is the hardware; the highest (layer N) is the user interface.
 	- With modularity, layers are selected such that each uses functions (operations) and services of only lower-level layers
 	![[Pasted image 20260929165424.webp|369]]
-- ==Modules模块==
+- ==Modules 模块==
 	- Most modern operating systems implement ==kernel modules==
 		- Uses object-oriented approach
 		- Each core component is separate
@@ -141,7 +141,7 @@ aliases:
 	- Overall, similar to layers but more flexible
 	![[Pasted image 20260929165900.webp|455]]
 - ==Other Structure==
-	- Exokernel (1994), 高度简化kernel，只负责资源分配，提供了低级的硬件操作，必须通过定制library供应用使用。高性能，但定制化library难度大，兼容性差
+	- Exokernel (1994), 高度简化 kernel，只负责资源分配，提供了低级的硬件操作，必须通过定制 library 供应用使用。高性能，但定制化 library 难度大，兼容性差
 	![[Pasted image 20260929165946.webp|425]]
 	- Unikernel: statically linked with the OS code needed. Good for cloud service, APP boots in tens of ms.
 		![[Pasted image 20260929170219.webp|427]]
