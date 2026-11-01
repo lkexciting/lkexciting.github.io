@@ -98,9 +98,9 @@ export const CrawlLinks: QuartzTransformerPlugin<Partial<Options>> = (userOpts) 
                   node.properties.target = "_blank"
                 }
 
-                // don't process external links or intra-document anchors
+                // don't process external links, intra-document anchors, or /static/ assets
                 const isInternal = !(
-                  isAbsoluteUrl(dest, { httpOnly: false }) || dest.startsWith("#")
+                  isAbsoluteUrl(dest, { httpOnly: false }) || dest.startsWith("#") || dest.startsWith("/static/")
                 )
                 if (isInternal) {
                   dest = node.properties.href = transformLink(
