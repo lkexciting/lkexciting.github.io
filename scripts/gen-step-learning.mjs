@@ -73,8 +73,6 @@ async function genCourse(course, site) {
   const lines = []
   lines.push('---')
   lines.push(`title: 分步学习 · ${course}`)
-  lines.push(`aliases:`)
-  lines.push(`  - ${course}/分步学习`)
   lines.push('---')
   lines.push('')
   lines.push('<style>')
