@@ -110,3 +110,13 @@ test("cleanNoteTitle recognizes the space-AI精讲 naming convention", () => {
   // 普通标题不含 AI 字样
   assert.equal(cleanNoteTitle("00-复习导航.md"), "复习导航")
 })
+
+test("rewriteImageRefs supports bracketed alt text", () => {
+  const converted = new Set(["fig06_slide16.webp"])
+  assert.equal(
+    rewriteImageRefs("![重建方案：用 L[line][stage] 记录来源](path/fig06_slide16.png)", converted),
+    "![重建方案：用 L[line][stage] 记录来源](path/fig06_slide16.webp)",
+  )
+  // 普通 alt 与未转换图片仍按原规则处理
+  assert.equal(rewriteImageRefs("![图](path/other.png)", converted), "![图](path/other.png)")
+})

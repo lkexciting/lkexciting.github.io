@@ -5,6 +5,7 @@ import { classNames } from "../util/lang"
 import { i18n } from "../i18n"
 import { JSX } from "preact"
 import style from "./styles/contentMeta.scss"
+import { isAiLecture, isAiReviewed } from "../util/learning"
 
 interface ContentMetaOptions {
   /**
@@ -15,12 +16,17 @@ interface ContentMetaOptions {
    * Whether to display approximate word count (CJK chars + latin words)
    */
   showWordCount: boolean
+  /**
+   * Whether to show review status on AI-lecture notes
+   */
+  showAiStatus: boolean
   showComma: boolean
 }
 
 const defaultOptions: ContentMetaOptions = {
   showReadingTime: true,
   showWordCount: true,
+  showAiStatus: true,
   showComma: true,
 }
 
@@ -57,6 +63,15 @@ export default ((opts?: Partial<ContentMetaOptions>) => {
         if (options.showWordCount) {
           segments.push(<span>约 {formatWords(words)} 字</span>)
         }
+      }
+
+      if (options.showAiStatus && isAiLecture(fileData)) {
+        const reviewed = isAiReviewed(fileData)
+        segments.push(
+          <span class="ai-review-status" data-reviewed={reviewed ? "true" : "false"}>
+            {reviewed ? "AI 精讲 · 已校对" : "AI 精讲 · 待校对"}
+          </span>,
+        )
       }
 
       return (

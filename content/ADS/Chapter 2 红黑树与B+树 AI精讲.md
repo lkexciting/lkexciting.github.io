@@ -28,7 +28,7 @@ aliases:
 | Insertion | $\le 2$ | $\le 2$ |
 | Deletion | $O(\log N)$ | $\le 3$ |
 
-![图 2-1 AVL 与红黑树的旋转次数对比：插入均 ≤2，删除 AVL 为 O(log N)、红黑树 ≤3](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig06_slide08.webp)
+![图 2-1 AVL 与红黑树的旋转次数对比：插入均 ≤2，删除 AVL 为 O(log N)、红黑树 ≤3](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig06_slide08.webp)
 
 > 这正是红黑树在工业界更流行的原因：**删除时旋转次数是常数**，而 AVL 可能 $O(\log N)$ 次。
 
@@ -59,7 +59,7 @@ aliases:
 4. **红结点的两个孩子都是黑的**（if a node is red, both children are black）——即**不能有连续两个红结点**；
 5. **对每个结点，从它到所有后代叶子的简单路径上黑结点数相同**（all simple paths contain the same number of black nodes）。
 
-![图 2-2 红黑树的结构与 5 条性质（结点含 key/color/left/right/parent，NIL 为外部黑结点）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig01_slide02.webp)
+![图 2-2 红黑树的结构与 5 条性质（结点含 key/color/left/right/parent，NIL 为外部黑结点）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig01_slide02.webp)
 
 **直观理解**：性质 5 保证「黑高相等」，性质 4 保证「红结点不能连成串」，于是最长路径（红黑交替）最多是最短路径（全黑）的 **2 倍** → 树高被限制在对数级。
 
@@ -110,7 +110,7 @@ $$N \ge 2^{h/2}-1 \ \Longrightarrow\ h \le 2\log_2(N+1).$$
 - Case 2 → Case 3：最多 2 次旋转；
 - 整个修复过程可以**迭代（iteratively）**实现（不需要递归），时间 $T=O(h)=O(\log N)$。
 
-![图 2-3 红黑树插入的三种情形 Case 1/2/3（叔结点红→染色上移；内侧→双旋；外侧→单旋）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig02_slide04.webp)
+![图 2-3 红黑树插入的三种情形 Case 1/2/3（叔结点红→染色上移；内侧→双旋；外侧→单旋）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig02_slide04.webp)
 
 > 记忆法：**「叔红变色上移，叔黑看内外；内侧先转成外侧，外侧单旋收工」**。
 
@@ -135,13 +135,13 @@ $$N \ge 2^{h/2}-1 \ \Longrightarrow\ h \le 2\log_2(N+1).$$
 | **Case 3** | $w$ 黑，$w$ 的**近侧孩子红、远侧孩子黑** | 旋转 $w$ 与近侧孩子，交换颜色 | 转 Case 4 |
 | **Case 4** | $w$ 黑，$w$ 的**远侧孩子红** | 旋转父与 $w$，$w$ 取父色、父染黑、远侧孩子染黑 | **结束** |
 
-![图 2-4 删除的四种情形 Case 1–4（w 为兄弟结点，x 为双黑结点）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig03_slide05.webp)
+![图 2-4 删除的四种情形 Case 1–4（w 为兄弟结点，x 为双黑结点）](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig03_slide05.webp)
 
-![图 2-5 Case 2 会「继续上移」多余的黑；Case 3 转成 Case 4 后一次旋转结束](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig04_slide06.webp)
+![图 2-5 Case 2 会「继续上移」多余的黑；Case 3 转成 Case 4 后一次旋转结束](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig04_slide06.webp)
 
 课件的完整删除示例（结点 10,5,15,3,7,6,8,11,17）：删除 5 → 用 6 替代（Case 1/2.1/2.2/3/4 依次出现），可以清楚看到「Case 1 → Case 2 → Case 3 → Case 4」的链条。
 
-![图 2-6 完整删除示例：同一棵树中依次触发 Case 1、Case 2.1、Case 2.2、Case 3、Case 4](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig05_slide07.webp)
+![图 2-6 完整删除示例：同一棵树中依次触发 Case 1、Case 2.1、Case 2.2、Case 3、Case 4](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig05_slide07.webp)
 
 **旋转次数**：删除最多 **3 次旋转**（Case 1 一次、Case 3 一次、Case 4 一次），其余是染色 —— 这就是红黑树相对 AVL 的优势。
 
@@ -181,7 +181,7 @@ $$N \ge 2^{h/2}-1 \ \Longrightarrow\ h \le 2\log_2(N+1).$$
 5. **所有真实数据（actual data）都存在叶子上**；内部结点只存「索引」；
 6. 每个内部结点含 $M$ 个指向孩子的指针，以及 $M-1$ 个「子树中的最小关键字」（第一个子树的最小值不存，因为可由前一个推出）—— 即内部结点的 key 是**对应子树的最小值**。
 
-![图 2-7 一棵 order 4 的 B+ 树（即 2-3-4 树）：数据全在叶，内部结点存各子树最小关键字](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig07_slide09.webp)
+![图 2-7 一棵 order 4 的 B+ 树（即 2-3-4 树）：数据全在叶，内部结点存各子树最小关键字](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig07_slide09.webp)
 
 **B+ 树 vs B 树**：
 - B 树的内部结点也存数据；**B+ 树所有数据只在叶子**，内部结点纯索引 → 同样大小的结点能容纳更多 key → 扇出（fanout）更大 → 树更矮；
@@ -222,7 +222,7 @@ Btree Insert( ElementType X, Btree T )
 | Insert 28 | `22,23,31` → `22,23` / `28,31`，`28` 上移 |
 | Insert 70 | `58,59,61` → `58,59` / `61,70`，`61` 上移 |
 
-![图 2-8 order 3 的 B+ 树插入演示（Find 52，Insert 18/1/19/28），可见分裂与上移](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig08_slide10.webp)
+![图 2-8 order 3 的 B+ 树插入演示（Find 52，Insert 18/1/19/28），可见分裂与上移](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig08_slide10.webp)
 
 **要点**：
 - B+ 树是**「从下往上长」**的：分裂只沿根路径上传，最多 $O(\log_M N)$ 层；
@@ -237,7 +237,7 @@ Btree Insert( ElementType X, Btree T )
 3. 合并可能导致父结点下溢 → **继续向上**；
 4. **删除与插入类似，区别只在于：当根失去两个孩子（只剩一个孩子）时要把根删除**，树高 −1。
 
-![图 2-9 删除时的「先借后并」：先找有 2 个 key 的兄弟调整，保持结点尽量满](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB%2B%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig09_slide11.webp)
+![图 2-9 删除时的「先借后并」：先找有 2 个 key 的兄弟调整，保持结点尽量满](ADS/pictures/Chapter%202%20%E7%BA%A2%E9%BB%91%E6%A0%91%E4%B8%8EB+%E6%A0%91%20AI%E7%B2%BE%E8%AE%B2/fig09_slide11.webp)
 
 > 「Keep more nodes full」是 B 树实现的经典优化：**优先借、避免合并**，可减少结点数、提升后续查询与空间利用率。
 

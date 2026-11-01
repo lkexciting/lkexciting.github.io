@@ -141,7 +141,7 @@ $$\boxed{\text{期望总成本} = O\left(C_i N + C_h \ln N\right)}$$
 
 > **对比**：最坏 $O(C_h N)$，期望只有 $O(C_h\ln N)$ —— **相差 $N/\ln N$ 倍**。但注意：这个结论**依赖于「随机到达」这个假设**（我们无法控制猎头的推荐顺序）。
 
-![图 13-2 指示随机变量：Pr[第 i 个被雇佣] = 1/i，期望雇佣次数 = H_N](ADS/pictures/Chapter%2013%20%E9%9A%8F%E6%9C%BA%E5%8C%96%E7%AE%97%E6%B3%95%20AI%E7%B2%BE%E8%AE%B2/fig02_slide07.png)
+![图 13-2 指示随机变量：Pr[第 i 个被雇佣] = 1/i，期望雇佣次数 = H_N](ADS/pictures/Chapter%2013%20%E9%9A%8F%E6%9C%BA%E5%8C%96%E7%AE%97%E6%B3%95%20AI%E7%B2%BE%E8%AE%B2/fig02_slide07.webp)
 
 ### 4.3 随机化雇佣算法（Randomized Hiring）
 

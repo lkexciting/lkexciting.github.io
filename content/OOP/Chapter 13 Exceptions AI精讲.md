@@ -305,7 +305,7 @@ void outer3() {
 
 ### 4.1 传播过程全图
 
-![异常的传播路径：operator[] 抛出 → func → outer2 → outer3](OOP/images/Chapter%2013%20Exceptions%20AI%E7%B2%BE%E8%AE%B2/ch13-p20-20.png)
+![异常的传播路径：operator[] 抛出 → func → outer2 → outer3](OOP/images/Chapter%2013%20Exceptions%20AI%E7%B2%BE%E8%AE%B2/ch13-p20-20.webp)
 
 这张图就是"栈展开"（stack unwinding）的可视化：
 

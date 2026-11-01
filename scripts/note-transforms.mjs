@@ -168,7 +168,8 @@ export function rewriteImageRefs(md, converted) {
         ? `![[${name.replace(/\.(?:png|jpe?g)$/i, '.webp')}${size}]]`
         : match,
     )
-    .replace(/!\[([^\]]*)\]\(<?([^)>\s]+\.(?:png|jpe?g))>?\)/gi, (match, alt, url) =>
+    // alt 文本允许包含方括号（如 L[line][stage]），非贪婪匹配到实际的链接地址
+    .replace(/!\[([^\n]*?)\]\(<?([^)>\s]+\.(?:png|jpe?g))>?\)/gi, (match, alt, url) =>
       isConverted(url) ? `![${alt}](${url.replace(/\.(?:png|jpe?g)$/i, '.webp')})` : match,
     )
 }

@@ -1,0 +1,100 @@
+@use "../../styles/variables.scss" as *;
+
+.learning-title {
+  margin: 0 0 0.65rem;
+  color: var(--dark);
+  font-size: 1rem;
+  font-family: var(--headerFont);
+}
+
+.related-notes,
+.study-guide {
+  margin-top: 1.25rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 0.55rem;
+  background-color: var(--light);
+}
+
+.related-notes-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related-note-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  height: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.35rem;
+  background-color: var(--highlight);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: var(--lightgray);
+  }
+}
+
+.related-note-course {
+  color: var(--gray);
+  font-size: 0.72rem;
+  font-family: var(--headerFont);
+}
+
+.related-note-title {
+  color: var(--secondary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.study-prompts {
+  margin: 0;
+  padding-left: 1.35rem;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+  line-height: 1.65;
+}
+
+.study-pitfalls {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--lightgray);
+
+  h3 {
+    margin: 0 0 0.35rem;
+    color: var(--secondary);
+    font-size: 0.85rem;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    color: var(--darkgray);
+    font-size: 0.88rem;
+  }
+}
+
+.study-customize-hint {
+  margin: 0.65rem 0 0;
+  color: var(--gray);
+  font-size: 0.75rem;
+  line-height: 1.5;
+
+  code {
+    font-size: 0.72rem;
+  }
+}
+
+@media all and ($mobile) {
+  .related-notes,
+  .study-guide {
+    padding: 0.8rem;
+  }
+}

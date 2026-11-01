@@ -324,7 +324,7 @@ for (stage=n; stage>0; stage--) {      /* 倒推 */
 }
 ```
 
-![图 8-6 重建方案：用 L[line][stage] 记录来源，从终点倒推得到每个工位选哪条线](ADS/pictures/Chapter%208%20%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%20AI%E7%B2%BE%E8%AE%B2/fig06_slide16.png)
+![图 8-6 重建方案：用 L[line][stage] 记录来源，从终点倒推得到每个工位选哪条线](ADS/pictures/Chapter%208%20%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%20AI%E7%B2%BE%E8%AE%B2/fig06_slide16.webp)
 
 ---
 

@@ -25,6 +25,8 @@ import Flex from "./Flex"
 import ConditionalRender from "./ConditionalRender"
 import SidebarToggle from "./SidebarToggle"
 import PrevNext from "./PrevNext"
+import RelatedNotes from "./RelatedNotes"
+import StudyGuide from "./StudyGuide"
 
 export {
   ArticleTitle,
@@ -54,4 +56,6 @@ export {
   ConditionalRender,
   SidebarToggle,
   PrevNext,
+  RelatedNotes,
+  StudyGuide,
 }

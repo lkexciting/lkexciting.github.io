@@ -93,7 +93,9 @@ async function normalizeRelativeLinks(dir) {
       let relative = path.relative(path.join(site, 'content'), absolute)
       if (relative.startsWith('..') || path.isAbsolute(relative)) return match
       if (/\.md$/i.test(decoded)) relative = relative.split(path.sep).filter(part => !/^notes?$/i.test(part)).join(path.sep)
-      return `](${relative.split(path.sep).map(encodeURIComponent).join('/')}${anchor.length ? '#' + anchor.join('#') : ''})`
+      // Quartz 会把 %2B 中的 % 转成 percent，导致 B+树 变成 B-percent2B树；
+      // + 在 Quartz slug 中是合法字符，路径段编码后恢复它。
+      return `](${relative.split(path.sep).map(part => encodeURIComponent(part).replace(/%2B/gi, '+')).join('/')}${anchor.length ? '#' + anchor.join('#') : ''})`
     })
     if (source !== normalized) await writeFile(file, normalized, 'utf8')
   }
