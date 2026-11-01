@@ -1,5 +1,5 @@
 ---
-title: 边缘智能与端侧AI
+title: 第 4 章 · 边缘智能与端侧AI
 aliases:
   - 物联网/notes/04-边缘智能与端侧AI
 ---

@@ -1,5 +1,5 @@
 ---
-title: Chapter 1 · AI 精讲
+title: 第 1 章 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 1_ai
 ---

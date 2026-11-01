@@ -7,9 +7,4 @@ aliases:
 
 按课时阅读，包含原有公式、图示与交互演示。
 
-## 课程导航
-
-<p><a href="/OS/teach/course-index.html">操作系统 · Chapter 0–6 课程</a></p>
-## 课时讲解
-
-<p><a href="/OS/teach/lessons/0001-os-course-map.html">0001 · OS课程地图：Chapter 0–6</a></p>
+👉 [**分步学习 · OS**](./分步学习) —— 浏览全部课件精讲

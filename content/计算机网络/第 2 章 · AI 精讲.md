@@ -1,5 +1,5 @@
 ---
-title: Chapter 2 · AI 精讲
+title: 第 2 章 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 2_ai
 ---
