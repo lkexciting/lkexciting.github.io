@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>第 03 课 · 多量子比特、张量积与纠缠贝尔态</title>
+<link href="../assets/course.css" rel="stylesheet"/>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<body>
+<div class="page">
+<p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+<p class="lesson-no">LESSON 03</p>
+<h1>多量子比特、张量积与纠缠贝尔态</h1>
+<p class="lede">单个比特讲完了，进入两个比特。这一课的三件事：① 两个比特怎么拼成 4 维空间（张量积）；② 怎么判断一个双比特态"纠缠"了没（课件原话：可分解 = 可分）；③ 四个贝尔态到底是什么。纠缠是量子计算区别于经典的核心，也是下一课 CNOT 和隐形传态的基础。</p>
+<h2>一、双比特的四个基态</h2>
+<p>两个经典比特有 00/01/10/11 四种状态；双量子比特也有四个基本态，且可以是它们的叠加（课件 01 · P24）：</p>
+<div class="eq">\[|\psi\rangle = \alpha_{00}|00\rangle + \alpha_{01}|01\rangle + \alpha_{10}|10\rangle + \alpha_{11}|11\rangle\]</div>
+<p>测量得到 \(|\alpha_{x}\rangle\) 的概率是 \(|\alpha_{x}|^{2}\)，且 \(\sum|\alpha_{x}|^{2} = 1\)。如果有三个比特，就是 8 个基态——比特数一多，状态空间就指数爆炸（课件 01 · P25）。</p>
+<h2>二、张量积：把两个向量拼成一个更大的空间</h2>
+<p>张量积（Kronecker 积）把两个向量空间合并成一个更大的空间，维度相乘（课件 01 · P26、P29）。例如：</p>
+<div class="eq">\[
+|0\rangle \otimes |0\rangle = |00\rangle = \begin{pmatrix}1 \\ 0 \\ 0 \\ 0\end{pmatrix}\text{，} 
+    |0\rangle \otimes |1\rangle = |01\rangle = \begin{pmatrix}0 \\ 1 \\ 0 \\ 0\end{pmatrix}
+\]</div>
+<p>用向量表示，若 \(|\psi\rangle = (a,b)^{T}\)、\(|\phi\rangle = (c,d)^{T}\)，则：</p>
+<div class="eq">\[|\psi\rangle\otimes|\phi\rangle = (ac, ad, bc, bd)^{T}\]</div>
+<p>课件点出：张量积给多量子比特态提供了一种数学表示方法，复合系统的演化本质上也是矩阵乘法，只是多了张量积这一运算（课件 01 · P27）。</p>
+<h2>三、怎么判断"纠缠"：可分解 = 可分</h2>
+<p>课件 01 · P28 先给了个直觉：把左脚鞋、右脚鞋分装两盒，开一盒另一盒就定——这是"量子叠加的必然结果"（课件 01 · P14 的鞋盒类比）。</p>
+<p>严格的判定在<strong>例 2（课件 01 · P43）</strong>：</p>
+<div class="keybox">
+<span class="label">纠缠的判定（课件原话）</span>
+<p>如果一个多量子比特系统<strong>可以分解为多个单量子比特的张量积</strong>，那么这个系统被称作<strong>无关的、可分的</strong>；反之，该系统是<strong>不可分的、纠缠的</strong>。</p>
+</div>
+<p>课件 01 · P28 用例子说明：</p>
+<div class="eq">\[|\phi\rangle = \alpha_{00}|00\rangle + \alpha_{11}|11\rangle \text{纠缠态}\text{：第一比特测得} 0 \Rightarrow \text{第二比特一定为} 0\]</div>
+<div class="eq">\[|\phi\rangle = \alpha|0\rangle(|0\rangle+|1\rangle) \text{非纠缠态}\text{：第二比特与第一比特无关}\]</div>
+<p>代数上，一个态能写成 \(|a\rangle\otimes|b\rangle\) 就是可分的；写不出就是纠缠的。对一般双比特态 \(\alpha_{00}|00\rangle+\alpha_{01}|01\rangle+\alpha_{10}|10\rangle+\alpha_{11}|11\rangle\)，它可分当且仅当 \(\alpha_{00}\alpha_{11} = \alpha_{01}\alpha_{10}\)（即"交叉相乘相等"）。</p>
+<div class="tool" data-widget="tensor-bell"></div>
+<h2>四、量子优势的一个直观例子</h2>
+<p>课件 01 · P30 用"找钥匙"比喻：经典做法要一个个试（慢），量子可以把所有可能性同时放进叠加态 \(|\phi\rangle\) 里"同时试"（快一次即可）。这正是量子并行性的来源——下一课会严格展开。</p>
+<h2>五、贝尔态：最重要的四个纠缠态</h2>
+<p>贝尔态是双比特系统中最重要的纠缠态（课件 01 · P31）：</p>
+<div class="eq">\[
+|\Phi^{+}\rangle = (|00\rangle+|11\rangle)/\sqrt{2} |\Phi^{-}\rangle = (|00\rangle-|11\rangle)/\sqrt{2}\\
+|\Psi^{+}\rangle = (|01\rangle+|10\rangle)/\sqrt{2} |\Psi^{-}\rangle = (|01\rangle-|10\rangle)/\sqrt{2}
+\]</div>
+<p>这四个贝尔态构成的集合叫<strong>贝尔基</strong>；任意两比特量子态都可以表示为四个贝尔态的线性组合（课件 01 · P31）。</p>
+<div class="note">
+<p><strong>贝尔态应用（课件 01 · P32）：</strong>纠缠态不能简单地分解为各子系统的独立态；测量一个会瞬间影响另一个（即使相距很远）。它用于量子隐形传态、量子纠错码、量子密钥分发，也是量子计算并行能力的来源。</p>
+</div>
+<h2>六、即时小测</h2>
+<div class="quiz" data-answer="c" data-explanation="纠缠态的定义：第一比特测得0则第二比特一定为0（反之亦然），课件 01 · P28。">
+<p class="quiz-q"><span class="qno">Q1</span>对态 \(|\phi\rangle = \alpha_{00}|00\rangle + \alpha_{11}|11\rangle\)，下列说法正确的是？</p>
+<div class="opts">
+<button data-opt="a">它是可分的（非纠缠）</button>
+<button data-opt="b">两个比特相互独立</button>
+<button data-opt="c">第一比特测得 0 时，第二比特一定为 0</button>
+<button data-opt="d">测量不会让态坍缩</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="a" data-explanation="可分 ⇔ 能写成单比特张量积。|00⟩⊗|11⟩ 是两个比特的独立态之积，故可分、非纠缠，课件 01 · P43。">
+<p class="quiz-q"><span class="qno">Q2</span>下列哪个态是"可分的"（非纠缠）？</p>
+<div class="opts">
+<button data-opt="a">\(|00\rangle\otimes|11\rangle\)</button>
+<button data-opt="b">\((|00\rangle+|11\rangle)/\sqrt{2}\)</button>
+<button data-opt="c">\((|01\rangle+|10\rangle)/\sqrt{2}\)</button>
+<button data-opt="d">\((|00\rangle-|11\rangle)/\sqrt{2}\)</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="d" data-explanation="四个贝尔态构成贝尔基，任意两比特态可表为它们的线性组合，课件 01 · P31。">
+<p class="quiz-q"><span class="qno">Q3</span>关于贝尔态，正确的是？</p>
+<div class="opts">
+<button data-opt="a">只有 1 个贝尔态</button>
+<button data-opt="b">贝尔态都是可分的</button>
+<button data-opt="c">贝尔态只存在于三比特系统</button>
+<button data-opt="d">共 4 个，构成贝尔基</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="b" data-explanation="双比特态可分当且仅当 α₀₀α₁₁=α₀₁α₁₀（交叉相乘相等），课件 01 · P28、P43 的" 可分解='可分"的代数形式。"'>
+<p class="quiz-q"><span class="qno">Q4</span>一般双比特态 \(\alpha_{00}|00\rangle+\alpha_{01}|01\rangle+\alpha_{10}|10\rangle+\alpha_{11}|11\rangle\) 可分的充要条件是？</p>
+<div class="opts">
+<button data-opt="a">\(\alpha_{00}+\alpha_{11} = \alpha_{01}+\alpha_{10}\)</button>
+<button data-opt="b">\(\alpha_{00}\alpha_{11} = \alpha_{01}\alpha_{10}\)</button>
+<button data-opt="c">\(\alpha_{00} = \alpha_{11} = 0\)</button>
+<button data-opt="d">\(|\alpha_{00}|^{2}+|\alpha_{11}|^{2} = 1\)</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="ask">
+<p><strong>卡住了就直接问我。</strong>比如"张量积到底怎么算""为什么 α₀₀α₁₁=α₀₁α₁₀ 就是可分"——都可以在对话里追问，我会就这一步重讲并换例子。</p>
+</div>
+<h2>七、这节课你应该能独立完成</h2>
+<ul>
+<li>计算两个单比特态的张量积，写出 4 维列向量。</li>
+<li>用"可分解 = 可分"判定一个双比特态是否纠缠（含代数条件 \(\alpha_{00}\alpha_{11}=\alpha_{01}\alpha_{10}\)）。</li>
+<li>默写出四个贝尔态并说明它们为什么纠缠。</li>
+</ul>
+<div class="note">
+<p><strong>主资源：</strong>本课正文与例题均来自课件 <strong>01 · P14、P24–P32、P43</strong>。下一课讲多比特门：CNOT 怎么制备贝尔态、以及量子隐形传态。</p>
+</div>
+<p class="lesson-footer">
+    下一课：<a href="0004-quantum-measurement.html"><strong>量子测量</strong></a>——Born 规则、投影测量与单/双比特怎么测；之后才进入多量子门。
+  </p>
+</div>
+<script src="../assets/quiz.js"></script>
+<script src="../assets/tensor-bell.js"></script>
+</body>
+</html>

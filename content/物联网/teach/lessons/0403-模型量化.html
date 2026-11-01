@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 章 · 模型量化</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 4 章 · 小课 3/6 · 课件提炼</span>
+  <h1>模型量化</h1>
+  <p class="subtitle">一句话：FP32→INT8 的映射原理、Scale/零点、对称与非对称、动态/静态/QAT 三条路线，以及大模型量化为什么会失效——本章分量最重的考点。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第四章-1009》"关键技术——量化"节（第 27–60 页）。本章为老师自编课件，教材无对应章节。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第四章-1009.pdf</p></div>
+
+  <h2>一、模型压缩与量化的基本概念</h2>
+  <p><strong>模型压缩</strong>（课件第 27 页）：减少模型大小与复杂度，使其能在资源受限设备上部署运行。端侧智能（微型机器学习）需将深度学习模型部署到数十亿物联网设备上，模型压缩是其中的关键支撑技术。<strong>核心技术：量化、剪枝、蒸馏、算子分割、神经架构搜索（NAS）等</strong>。</p>
+  <table>
+    <tr><th>方法</th><th>改变什么</th><th>主要作用</th><th>限制与代价</th></tr>
+    <tr><td>量化</td><td>降低权重／激活的表示精度（FP16、INT8、4 bit）</td><td>减小权重体积与访存量，适配硬件上可能加速</td><td>可能精度损失，收益依赖量化方案和算子实现</td></tr>
+    <tr><td>剪枝</td><td>移除低贡献权重、通道或其他结构单元</td><td>减少有效参数与计算，结构化剪枝更易实际加速</td><td>通常需微调恢复精度，非结构化稀疏依赖硬件支持</td></tr>
+    <tr><td>知识蒸馏</td><td>用教师的输出或特征指导较小的学生模型</td><td>把部分能力迁移给小模型，降低部署成本</td><td>增加训练或数据生成成本，学生能力受容量和数据限制</td></tr>
+    <tr><td>云边协同</td><td>调整任务在端、边、云之间的执行位置与分工</td><td>利用远端算力处理复杂任务，减轻终端负担</td><td>依赖网络时延和连接状态，需考虑传输开销与数据隐私</td></tr>
+  </table>
+  <div class="callout def"><div class="label">必背结论</div><p>量化、剪枝、蒸馏属于<strong>模型层优化</strong>；云边协同属于<strong>系统部署优化</strong>，两者可以组合使用。</p></div>
+  <p><strong>量化定义</strong>（第 29–30 页）：通过降低参数数值精度（如 FP32 → INT8），减小模型大小、降低内存占用，并可能加速计算。本质：<strong>为高精度浮点数与低精度整数之间建立精确的映射关系</strong>。直观类比：像把高清照片（FP32）压缩成高质量 JPEG（INT8）——文件变小了，但关键信息基本保留。</p>
+
+  <h2>二、量化原理：Scale、零点与 MinMax</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>两个关键参数（第 31 页）</h4><p><strong>缩放因子 Scale（S）</strong>：正实数，定义量化器步长（每个整数步长对应的浮点区间大小），可理解为浮点与整数世界间的「汇率」。<br><strong>零点 Zero Point（Z）</strong>：整数，确保浮点数中的 0 被精确映射到量化空间，对非对称分布数据（如 ReLU 激活值）至关重要。</p></div>
+    <div class="card"><h4>MinMax 线性量化求解（第 32 页）</h4><p>x_max＝输入浮点数据最大值；x_min＝最小值；q_max＝最大定点值（127 / 255）；q_min＝最小定点值（−128 / 0）。<br>量化过程用 <strong>RTN（Round-to-Nearest，四舍五入）</strong>，zero_point 与量化值需截断到 [qmin, qmax] 内。课件示例：FP32 [3.0, −5.5, 0.0, 6.0, −6.0, 2.5] → INT8 [64, −117, 0, 127, −128, 53]。</p></div>
+  </div>
+
+  <h2>三、量化分类：线性／非线性、对称／非对称</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>线性 vs 非线性（第 34–35 页）</h4><p>按浮点值与量化值的映射关系是否均匀划分。<strong>线性量化简单高效、易于硬件实现，是业界主流</strong>。非线性量化（映射不等距）主要类型：① 对数量化（量化级数按指数分布，乘法转加法，应用于海思 351X 等专用 AI 芯片）；② 聚类量化（K-Means 找中心点作 Codebook，精度高但推理需查表）；③ 可学习量化（量化电平作为可学习参数，梯度下降自动调整）。</p></div>
+    <div class="card"><h4>对称 vs 非对称（第 36–37 页）</h4><p><strong>对称量化</strong>：零点固定为 0，[-|max|,|max|]→[-127,127]（−128 保留不用以维持对称）。算法简单、计算开销最低；缺点是数据分布偏斜时浪费位宽。常用于<strong>对权重</strong>量化（PyTorch 动态量化、ONNX 量化常用）。<br><strong>非对称量化</strong>：引入零点 Z，[min,max]→[0,255] 或 [-128,127]。位宽利用充分、精度更高，特别适合 <strong>ReLU 后的非负激活值</strong>；需额外计算和存储零点。常用于<strong>对激活值</strong>量化（如 Google Gemmlowp 库）。</p></div>
+  </div>
+
+  <h2>四、量化方式：PTQ（动态／静态）与 QAT</h2>
+  <table>
+    <tr><th>特性维度</th><th>动态量化</th><th>静态量化</th><th>QAT（量化感知训练）</th></tr>
+    <tr><td>做法</td><td>仅离线量化权重，激活值在推理时实时量化（每层实时算 scale 和 zero_point）</td><td>权重与激活值均离线量化，用校准数据集预计算固定 scale / zero_point</td><td>训练/微调阶段插入「伪量化」节点模拟舍入误差，让模型感知量化影响并主动调整权重</td></tr>
+    <tr><td>实施复杂度</td><td>最低，即插即用</td><td>中等，需校准步骤</td><td>最高，需修改训练流程</td></tr>
+    <tr><td>校准数据</td><td>无需</td><td>需代表性校准集</td><td>无需（训练中感知）</td></tr>
+    <tr><td>推理速度</td><td>一般</td><td>最快</td><td>最快</td></tr>
+    <tr><td>精度</td><td>较高</td><td>较高</td><td>最高</td></tr>
+    <tr><td>适用场景</td><td>Transformer/RNN 等（权重固定、激活范围动态变化）</td><td>CNN 等固定结构（MobileNet 的标准量化方案）</td><td>精度要求极高场景</td></tr>
+  </table>
+  <div class="callout def"><div class="label">课件总结句（必背）</div><p>追求快速部署用<strong>动态量化</strong>，追求推理速度用<strong>静态量化</strong>，追求极致精度用 <strong>QAT</strong>。</p></div>
+  <p>要点补充：① 动态量化中，INT8 相乘可能溢出，需用 <strong>INT32 累加器</strong>存中间结果，再反量化回 FP32；PyTorch 的 <code>torch.quantization.quantize_dynamic</code> 官方仅支持 nn.Linear、nn.LSTM、nn.LSTMCell、nn.GRU、nn.GRUCell，<strong>不支持 nn.Conv2d</strong>（卷积层激活值数据量大，实时量化开销甚至抵消 INT8 加速）。AlexNet 动态量化实例：精度不变，模型大小 55.67MB→16.65MB，但推理速度提升有限（约 241→250 张/秒）。② 静态量化的<strong>校准（Calibration）</strong>：用代表性数据跑 FP32 模型 → 统计每层激活值范围 → 预先确定 scale / zero_point → 推理时 INT32 结果直接转 INT8，无需 FP32 中转；AlexNet 实例中 100–200 张校准图就够，实现「存储与显存真压缩、推理真加速」。</p>
+
+  <h2>五、大模型量化：RTN 失效与 LLM.int8()</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>方法一：RTN 四舍五入（第 50 页）</h4><p>核心思想：权重经缩放后直接四舍五入到最近整数 <strong>Q = round(W/scale) + Z</strong>。Data-free 特性：权重量化完全不依赖数据，应用快速廉价（PyTorch 量化默认使用）。局限：<strong>模型规模跨越临界点时这种简单方法会失效</strong>。</p></div>
+    <div class="card"><h4>失效原因：异常值（第 51–52 页）</h4><p><strong>当模型规模超过约 60 亿（6B）参数时，传统 8 位量化性能急剧下降</strong>。大模型存在数值极大（比普通值大 20 倍以上）的稀疏特征维度，对性能至关重要：巨大异常值拉宽 [min,max] → scale 变得非常大 → 正常值 W 除以巨大 scale 后趋近 0 → 精度信息被抹平。异常值仅占约 0.1% 输入特征，但将其置零会导致困惑度上升 600–1000%。</p></div>
+  </div>
+  <div class="callout def"><div class="label">经典方法：LLM.int8()（第 53–56 页）</div><p>思路：对 <strong>99.9% 的常规值使用高效的 8 位计算</strong>，同时为 <strong>0.1% 的关键异常值保留高精度（FP16）</strong>。<br>① <strong>向量级量化（Vector-wise）</strong>：不再为整个矩阵用一个缩放常数，输入矩阵每一行、权重矩阵每一列各用独立缩放常数，把离群值影响限制在单个行/列内；<br>② <strong>混合精度分解</strong>三步：<strong>识别</strong>（找到含离群值如绝对值&gt;6.0 的特征维度）→ <strong>分离</strong>（把矩阵乘法 XW 拆成异常值部分和常规部分）→ <strong>合并</strong>（两部分结果相加）。<br>结论：LLM.int8() 在将模型<strong>内存减半</strong>的同时，保持了与 16 位浮点数完全相同的性能。</p></div>
+  <p><strong>量化效果实例</strong>（第 58 页，DeepSeek-R1-Distill-Qwen-7B 的 GGUF 对比）：F16 15.24 GB（100%）→ Q8_0 8.10 GB（约 53%）→ <strong>Q4_K_M 4.68 GB（约 31%，存储体积减少约 69%）</strong>。注意：课件提醒完整版 DeepSeek-R1 总参数 671B，硬件需求不能用本例推断；4.68 GB 是文件体积，判断能否部署须在目标设备、目标上下文长度下验证（运行内存 ≈ 权重 + KV Cache + 激活/工作区 + 框架开销）。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关·思考题 1）</h3>
+    <p><strong>1. 动态量化 vs. 静态量化：如果追求极致的推理速度，应该选哪种？为什么？</strong></p>
+    <details><summary>点开看提示</summary>
+      <p>课件第 49 页对比表与总结句直接给出答案：追求推理速度用<strong>静态量化</strong>——权重与激活值均离线量化、全程整数运算、最大化利用硬件 INT8 指令、推理速度最快；动态量化每层需实时统计激活范围并反量化，额外开销可能抵消 INT8 加速。</p>
+    </details>
+    <p><strong>2. 在确定量化范围（截断阈值）时，直接取最大值（MinMax）有什么坏处？</strong></p>
+    <details><summary>点开看提示</summary>
+      <p>结合课件第 52 页异常值分析：一个巨大的异常值会极大地拉宽 [min, max] 范围，导致 scale 非常大，大部分正常值除以巨大 scale 后趋近 0，精度信息被抹平、模型性能严重下降。（本题为开放思考，以上为课件正文线索，建议向老师确认完整表述。）</p>
+    </details>
+    <p><strong>3. 为什么大语言模型（LLM）比传统的 CNN 模型更难量化？</strong></p>
+    <details><summary>点开看提示</summary>
+      <p>课件第 51–52 页：LLM 规模大（超过约 60 亿参数时 RTN 失效），且存在数值极大（比普通值大 20 倍以上）却至关重要的稀疏异常特征维度，会把 scale 拉大、抹平正常值的精度信息。（本题为开放思考，以上为课件正文线索，建议向老师确认完整表述。）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第四章-1009》（老师自编，教材无对应章节）
+    · 速查：<a href="../reference/边缘智能速查.html">边缘智能速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0402-关键特性与指标.html">0402 关键特性与指标</a>
+    · 下一课：<a href="0404-模型剪枝.html">0404 模型剪枝</a>
+    · <a href="../课程总目录.html">课程总目录</a>
+    <br>有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "课件说模型量化的「本质」是什么？",
+    options: [
+      "删除模型中不重要的网络层",
+      "为高精度浮点数与低精度整数之间建立精确的映射关系",
+      "用大模型教导小模型学习"
+    ],
+    answer: 1,
+    explain: "课件第 29–30 页：量化本质是为高精度浮点数与低精度整数之间建立精确的映射关系；类比高清照片(FP32)压缩成高质量 JPEG(INT8)，文件变小但关键信息基本保留。"
+  },
+  {
+    prompt: "静态量化的核心步骤是靠什么解决「激活值范围未知」问题的？",
+    options: [
+      "校准（用代表性数据推理，统计每层激活范围，预先确定 scale 和 zero_point）",
+      "把激活值全部保留为 FP32 不量化",
+      "在训练中插入伪量化节点重新训练"
+    ],
+    answer: 0,
+    explain: "课件第 44、47 页：静态量化通过校准(Calibration)解决激活值范围未知——用代表性数据运行 FP32 模型、统计每层激活值范围、预先确定 scale/zero_point；AlexNet 实例 100–200 张校准图即可。"
+  },
+  {
+    prompt: "LLM.int8() 处理大模型异常值的策略是？",
+    options: [
+      "把异常值全部置零以简化计算",
+      "对所有数值统一使用 16 位浮点计算",
+      "99.9% 常规值用 8 位整数计算，0.1% 异常值分离出来用 16 位浮点高精度计算"
+    ],
+    answer: 2,
+    explain: "课件第 53–55 页：LLM.int8() 对 99.9% 常规值用高效 8 位计算，为 0.1% 关键异常值保留高精度；三步为识别(如绝对值>6.0 的维度)→分离→合并；结论是内存减半且性能与 16 位浮点完全相同。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 量化关通过。" : " —— 回头看标红的解析，重点背三条路线对比与 LLM.int8()。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

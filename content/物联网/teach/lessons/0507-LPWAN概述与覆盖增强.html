@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 章 · LPWAN 概述与覆盖增强</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 5 章 · 小课 7/9 · 课件提炼</span>
+  <h1>LPWAN 概述与覆盖增强</h1>
+  <p class="subtitle">一句话：从短距离多跳转向"单跳 10~30km"的广域网，覆盖增强四技术（PSD/重传/多天线/扩频）各配一道可考的计算。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件"低功耗长距离通信"一节中的"概述、关键特性"两部分【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第五章 低功耗无线协议2026.pdf</p>
+  </div>
+
+  <h2>一、LPWAN 是什么、为什么需要</h2>
+  <p>低功耗短距离通信靠<strong>多跳</strong>实现长距离传输，问题：<strong>通信不可靠、能量黑洞（energy hole）</strong>（例：GreenOrbs、CitySee）。<strong>LPWAN（low-power wide-area networks）可以实现低功耗长距离通信</strong>，包括 NB-IoT、LoRaWAN 等技术；例如 <strong>NB-IoT 单跳通信距离可达 10km~30km</strong>。动态：2017.6.19 工信部发布全面推进 NB-IoT 建设发展的通知；<strong>2021 年 12 月 LoRaWAN 获批 ITU 国际标准</strong>（NB-IoT 于 2020 年成为 ITU 5G 标准的一部分）。规模：到 2023 年底全球 LPWAN 连接数近 13 亿，其中 <strong>NB-IoT 占 58%</strong>；中国之外 LoRa 市场份额 41%。</p>
+  <h3>1.1 LPWAN 典型协议（六个，选择填空）</h3>
+  <table>
+    <tr><th>协议</th><th>课件要点</th></tr>
+    <tr><td>NB-IoT</td><td>窄带物联网技术，由 3GPP 提出并标准化。演进：2014 沃达丰+华为 NB-M2M、2014.7 高通 NB-OFDMA → NB-CIoT、2015.7 爱立信阵营 NB-LTE、<strong>2016.6 NB-CIoT 与 NB-LTE 融合成 NB-IoT 标准</strong>。</td></tr>
+    <tr><td>LoRaWAN</td><td><strong>2013.8 Semtech 发布基于 chirp 扩频调制的 LoRa 芯片</strong>；2015.3 LoRa 联盟成立（290+ 成员，中国 35 名）；2015.6 提出 MAC 协议 <strong>LoRaWAN v1.0</strong>。</td></tr>
+    <tr><td>Sigfox</td><td>法国全球网络运营商 2009 年投资成立；<strong>超窄带技术（100Hz）</strong>实现极低功率覆盖大范围；已覆盖全球 30 多个国家。</td></tr>
+    <tr><td>eMTC</td><td>3GPP 于 2016.6 标准化，对 LTE 裁剪而成；<strong>与 NB-IoT/LoRa/Sigfox 不同：支持移动性和基站定位，可实现漫游和无缝切换，并支持语音业务</strong>。</td></tr>
+    <tr><td>EC-GSM</td><td>扩展覆盖 GSM，重用 GSM 物理层设计，与现有 GSM 终端共载波部署。</td></tr>
+    <tr><td>LTE Cat 1</td><td>3GPP 2009 年引入第 8 版；<strong>无缝接入现有 LTE 网络、无需升级基站</strong>；支持 10Mbps 下行/5Mbps 上行，常用于智能穿戴等场景。</td></tr>
+  </table>
+
+  <h2>二、协议大对比表（课件原表，必背）</h2>
+  <table>
+    <tr><th>技术</th><th>覆盖范围</th><th>频谱带宽</th><th>速率</th><th>终端价格</th><th>网络重构</th></tr>
+    <tr><td>WiFi</td><td>17-30+ 米</td><td>2.4G，802.11</td><td>150Mbps+</td><td>4$(2016)</td><td>无</td></tr>
+    <tr><td>BLE</td><td>1-10+ 米</td><td>2.4G，802.15.1</td><td>1Mbps</td><td>4$(2016)</td><td>无</td></tr>
+    <tr><td>ZigBee Pro</td><td>1-100+ 米</td><td>2.4G，802.15.4</td><td>250kbps</td><td>3$(2016)</td><td>无</td></tr>
+    <tr><td>SIGFOX</td><td>&lt;12 千米，160dB</td><td>未授权 900MHz，100Hz</td><td>&lt;100bps</td><td>4$(2016)→2.64$(2020)</td><td>大</td></tr>
+    <tr><td>LoRa</td><td>&lt;10 千米，157dB</td><td>未授权 900MHz，&lt;500kHz</td><td>&lt;10bps</td><td>5$(2015)→3.3$(2020)</td><td>大</td></tr>
+    <tr><td>LTE-M/(eMTC)</td><td>&lt;10 千米，156dB</td><td>授权 700-900MHz，1.4MHz 共享</td><td>&lt;1Mbps</td><td>4$(2015)→2.97$(2020)</td><td>小-中</td></tr>
+    <tr><td>EC-GSM</td><td>&lt;15 千米，164dB</td><td>授权 800-900MHz 共享</td><td>10kbps</td><td>&lt;2$</td><td>中（LTE 复用）</td></tr>
+    <tr><td>NB-IoT</td><td>&lt;15 千米，164dB</td><td>授权 700-900MHz，200kHz 共享</td><td>&lt;50kbps</td><td>4$(2015)→2-3$(2020)</td><td>小-中</td></tr>
+  </table>
+
+  <h2>三、通信距离：覆盖增强四大技术（本章计算重镇）</h2>
+  <p>增加距离的关键技术四种：<strong>增加功率谱密度（PSD）</strong>——单位频谱内的发送能量强度，密度越高传输距离越远；<strong>重传</strong>——连续重传，融合多次接收的数据解码，提升解码率；<strong>多接收天线</strong>——多根天线信号融合，提升解码概率；<strong>扩频</strong>——增加发送数据的冗余，提高解调成功率。<strong>NB-IoT 使用：PSD、重传、多接收天线；LoRa 使用：扩频</strong>（课件思考题高频）。</p>
+  <h3>3.1 功率谱密度（7dB）</h3>
+  <div class="calc">PSD = 功率 / 带宽（mW/KHz）
+NB-IoT：200mW / 3.75kHz = 53.33 mW/KHz，相比 GSM 提升 10*log(5.3) = <b>7dB</b>
+LoRaWAN：1000mW / 125kHz = 8 mW/KHz，相比 GSM 为 0.8 倍，反而下降 <b>−0.96dB</b>
+NB-IoT 上行两种带宽 3.75kHz 和 15kHz 可选：带宽越小，PSD 越大，覆盖增益越大</div>
+  <h3>3.2 重传（12dB）</h3>
+  <div class="calc">NB-IoT 任何信道都可重传：上行最大 128 次，下行最大 2048 次
+重传 n 次，数据欧式距离为 √n 倍；相当于传输 1 次功率增加 n 倍
+理论增益 = 10*lg(N)；上行最大 128 次 → 理论 20dB（10lg128≈21dB，课件称理论 20dB）
+考虑传输效率，一般取重传增益 <b>12dB</b></div>
+  <h3>3.3 多天线增益（0~3dB）</h3>
+  <div class="calc">1TmR 系统比 1T1R 有 10lg(m) 的增益
+  （1T：1 根发送天线；mR：m 根接收天线）
+例：1T2R 比 1T1R 有 3dB 增益（10lg2）</div>
+  <h3>3.4 扩频与 CSS（LoRa 的关键）</h3>
+  <p>常见扩频技术：<strong>DSSS（直接序列扩频）、CSS（线性频变扩频）、FHSS（跳频扩频）</strong>。扩频本质：增加数据/带宽冗余性提升抗干扰能力（如 DSSS 中 4bit 扩成 32bit 码元）。<strong>CSS 扩频</strong>：宽带线性调频脉冲对信息编码，增加信号带宽降低对信噪比的要求。chirp 是频率随时间增加或减少的正弦信号（up-chirp 频率渐增，down-chirp 相反），不同起始频率的 chirp 表示不同数据；用 <strong>2^SF/SF 个码片</strong>表示一个实际位（SF 为扩频因子）；解调实质是求 chirp 符号的起始频率——chirp 点乘 down-chirp 再 FFT，频域获得峰值，强度为信号累积，难以被噪声淹没。</p>
+
+  <h2>四、功耗与低功耗技术</h2>
+  <table>
+    <tr><th>状态</th><th>发送</th><th>空闲</th><th>接收</th><th>睡眠</th></tr>
+    <tr><td>NB-IoT（3.6V）</td><td>+26dBm, 120mA</td><td>1mA</td><td>50mA</td><td>5μA</td></tr>
+    <tr><td>LoRa（3.3V）</td><td>+20dBm, 120mA</td><td>1.5μA</td><td>12mA</td><td>0.2μA</td></tr>
+  </table>
+  <ul>
+    <li><strong>NB-IoT：PSM 机制</strong>——深度睡眠状态，UE 不能被访问（Idle 状态做周期性寻呼、UE 可被访问）；<strong>TAU</strong>（Tracking Area Update）：终端在空闲寻呼监听中发现 tracking area id 变化时向基站发起请求更新参数。</li>
+    <li><strong>NB-IoT：eDRX 机制</strong>——extended Discontinuous Reception，增长的非连续接收；<strong>DRX 默认寻呼周期 1.28s，eDRX 最长可达 2.92h</strong>；下行数据发送频率小时跳过大部分寻呼监听省电。</li>
+    <li><strong>总结</strong>：PSM 和 eDRX 都是 3GPP 技术，对 NB-IoT 和 eMTC 都适用；<strong>eDRX（idle，1mA）省电效果差些但实时性好些（PSM，5μA）</strong>；终端每天发一次 200byte 报文，5 瓦时电池寿命可达 <strong>12.8 年</strong>；中国移动策略：PSM 为必选项。</li>
+    <li><strong>LoRaWAN：低功耗 MAC（Class A、B）</strong>——Class A 设备初始化（RxDelay1 ≥ 1s，RxDelay2=1s），Class B 设备初始化+监听窗口；<strong>严格 duty cycle 控制</strong>：某信道发 0.5s 数据后，受 1% duty cycle 限制，需等待 49.5s 才能再次在同一信道发送。</li>
+  </ul>
+
+  <h2>五、数据率 / 频段 / 基站部署（速览）</h2>
+  <ul>
+    <li><strong>数据率</strong>：LPWAN 适用于延迟不敏感场景（如远程抄表）。最大物理层数据率：<strong>NB-IoT 上行 250kbps、下行 226.7kbps；LoRaWAN 上/下行最高 5.470kbps</strong>。实际更低：NB-IoT 下行一般 27.2kbps、上行一般 62.5kbps（如基站发完下行数据后 UE 至少间隔 12ms 才能反馈 ACK/NACK）；LoRaWAN 受 1% duty cycle 限制，数据率只能达 <strong>54.7bps</strong>。</li>
+    <li><strong>频段</strong>：LoRaWAN 用<strong>非授权频段</strong>——中国上行 470.3~489.3MHz（30 个）、下行 500.3~509.7MHz（48 个信道），带宽 200kHz，LoRa 调制实际用 125kHz（有保护带）；NB-IoT 用<strong>授权频段</strong>——系统带宽 200kHz、传输带宽 180kHz（电信上行 824~849MHz/下行 869~894MHz；移动联通上行 880~915MHz/下行 925~960MHz）。NB-IoT 三种部署方式：<strong>独立部署</strong>（用 LTE 未使用的 200kHz，常用 GSM 一个信道）、<strong>保护带部署</strong>（LTE 边缘保护频带中未使用的 180kHz）、<strong>带内部署</strong>（占 LTE 1 个 PRB；LTE 1.4MHz 带宽下不支持；避开中间 6 个 PRB——传 LTE 同步信号和 MIB 消息；中心频点需满足 100kHz 栅格）。</li>
+    <li><strong>基站部署</strong>：复用现有基站（如 LTE）——部署效率高，但覆盖深度有盲区、公网数据有暴露给第三方的危险；自行搭建基站——成本高效率低，可深度覆盖。<strong>NB-IoT：复用 LTE 基站，使用公网；LoRaWAN：自行搭建基站，使用私网</strong>。</li>
+    <li><strong>非技术特性</strong>：NB-IoT 闭源，LoRaWAN 开源（github.com/Lora-net）；LoRaWAN 更受研究界喜爱；NB-IoT 前向兼容、无须重新建网、射频天线复用，将 LTE 全双工收发器裁剪为<strong>半双工</strong>（器件两套减为一套）；LoRaWAN 靠开源吸引企业合作。</li>
+  </ul>
+
+  <div class="exam">
+    <h3>课件思考题（本课）</h3>
+    <p><strong>简答题</strong>：增强通信距离的技术有哪几种？NB-IoT 和 LoRaWAN 分别使用了哪些技术提升通信距离？</p>
+    <details><summary>点开看答案</summary>
+      <p>四种：<strong>增加功率谱密度、重传、多接收天线、扩频</strong>。NB-IoT：减小带宽增大功率谱密度、重传（增加接收冗余提高解码成功率）、多接收天线；具有 164dB 链路预算（相比 GPRS 和 LTE 提升 20dB，开阔环境覆盖范围可增加七倍），还可用低成本"中继"产品拓展盲区覆盖。LoRaWAN：扩频（高扩频因子把小容量数据用大范围频谱传输；GFSK 需要 8dB SNR，LoRa 可解调 −20dB SNR 的信号，差距 28dB）、chirp 线性调频商用扩频（延续 FSK 低功耗特性进一步增大距离）、中继产品。（课后习题答案第五章第 1 题）</p>
+    </details>
+    <p><strong>计算题 1</strong>：重传 1024 次，理论覆盖增益多少？</p>
+    <details><summary>点开看答案</summary>
+      <p>覆盖增益以基站能解调的最远上行传输计算：10×lg1024 dB ≈ <strong>30.1dB</strong>。（课后习题答案第五章第 2 题）</p>
+    </details>
+    <p><strong>计算题 2</strong>：NB-IoT 上行有两种带宽 3.75kHz 和 15kHz，发送功率相同时，选 3.75kHz 的功率谱密度是选 15kHz 的多少倍？</p>
+    <details><summary>点开看答案</summary>
+      <p>PSD = 功率/带宽；功率相同则 PSD 与带宽成反比：15/3.75 = <strong>4 倍</strong>。（课后习题答案第五章第 4 题）</p>
+    </details>
+    <p><strong>计算题 3</strong>：链路预算 = 发送功率 − 接收端灵敏度。GPRS/GSM 链路预算 144dB，LoRa 相较 GPRS/GSM 能实现多少倍覆盖增强？</p>
+    <details><summary>点开看答案</summary>
+      <p>LoRa CSS 方案接收灵敏度 −142dBm，最大发送功率 20dBm：链路预算 = 20 − (−142) = <strong>162dB</strong>；相比 GPRS/GSM 的 144dB 有 18dB 增益；由 dB=10lg(A/B)，A/B = 10^1.8 ≈ <strong>63 倍</strong>覆盖增强。（课后习题答案第五章第 6 题）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第五章 低功耗无线协议2026》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/通信协议速查.html">通信协议速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0506-BLE-Mesh与蓝牙5x.html">BLE Mesh 与蓝牙 5.x</a>
+    · 下一课：<a href="0508-NB-IoT协议详解.html">NB-IoT 协议详解</a>
+    · <a href="../课程总目录.html">课程总目录</a><br>
+    有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "覆盖增强四大技术中，LoRa 使用的是哪一项？",
+    options: [
+      "多接收天线",
+      "扩频（CSS）",
+      "重传"
+    ],
+    answer: 1,
+    explain: "课件：NB-IoT 使用增加功率谱密度、重传、多接收天线；LoRa 使用扩频（CSS 线性频变扩频）。四种技术为 PSD/重传/多天线/扩频。"
+  },
+  {
+    prompt: "NB-IoT 重传的理论增益公式与一般取值是？",
+    options: [
+      "10*lg(N)；一般取 12dB",
+      "20*lg(N)；一般取 20dB",
+      "10*lg(N)；一般取 30dB"
+    ],
+    answer: 0,
+    explain: "重传 n 次相当于功率增加 n 倍，增益 10*lg(N)；上行最大 128 次理论上限约 20dB，考虑传输效率一般取 12dB（课件原文）。"
+  },
+  {
+    prompt: "NB-IoT 的 PSM 与 eDRX 相比，课件结论是？",
+    options: [
+      "PSM 更省电（5μA），eDRX 实时性更好（idle 1mA）",
+      "eDRX 更省电，PSM 实时性更好",
+      "两者功耗相同，只是状态名不同"
+    ],
+    answer: 0,
+    explain: "课件：eDRX（idle，1mA）省电效果差些但实时性好些；PSM（5μA）更省电。DRX 默认寻呼周期 1.28s，eDRX 最长可达 2.92h。"
+  },
+  {
+    prompt: "NB-IoT 与 LoRaWAN 的基站部署方式分别是？",
+    options: [
+      "都自行搭建基站",
+      "NB-IoT 复用 LTE 基站用公网；LoRaWAN 自建基站用私网",
+      "NB-IoT 自建基站用私网；LoRaWAN 复用 LTE 基站"
+    ],
+    answer: 1,
+    explain: "课件：NB-IoT 部署方式为复用 LTE 基站、使用公网（效率高但覆盖有盲区）；LoRaWAN 为自行搭建基站、使用私网（成本高但可深度覆盖）。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 覆盖增强技术吃透了。" : " —— 回头看标红的解析，重点复习四大技术与 10lgN 公式。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · MQTT 通信接入</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 小课 2/7 · 课件提炼</span>
+  <h1>MQTT：发布订阅、主题通配符与 QoS 等级</h1>
+  <p class="subtitle">一句话：这节讲设备连接的核心协议 MQTT——发布订阅模型、+/# 通配符、三级 QoS 与吞吐估算，本章最重的计算与对比考点都在这里。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第六章-2026》6.2 主要功能之"设备连接"节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第六章-2026.pdf</p>
+  </div>
+
+  <h2>一、为什么用发布订阅 + 三种协议怎么选</h2>
+  <p><strong>设计动机</strong>：同一设备的数据要同时供看板、告警与存档使用，消费者还会不断变化。核心区别：<strong>设备按主题发布，应用按需求订阅，减少生产者与消费者的地址耦合</strong>。</p>
+  <table>
+    <tr><th>协议</th><th>定位</th><th>课件要点</th></tr>
+    <tr><td>HTTP/1.1</td><td>通用请求—响应</td><td>Web 生态成熟，小载荷需关注首部开销</td></tr>
+    <tr><td>CoAP</td><td>轻量资源访问</td><td>面向受限网络；Observe 可订阅资源变化</td></tr>
+    <tr><td>MQTT</td><td>Broker 发布—订阅</td><td>主题匹配、一对多分发、可选交付保障</td></tr>
+  </table>
+  <p>课件结论：<strong>MQTT 适合以 Broker 为中心的消息分发；CoAP 适合受限网络中的资源访问</strong>。</p>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：MQTT 报文类型（节选必背）</div>
+    <p>CONNECT(1, C→S 连接请求)、CONNACK(2, S→C 连接确认)、PUBLISH(3, 双向，向话题发布)、PUBACK(4, 双向，发布确认)、SUBSCRIBE(8, C→S 订阅请求)、SUBACK(9, S→C 订阅确认)、DISCONNECT(14, C→S 断开请求）。PUBLISH 报文标志位：Bit3 DUP（1=重传）、Bit1~2 QoS（0~2）、Bit0 RETAIN（1=代理保留消息）。</p>
+  </div>
+
+  <h2>二、报文顺序与主题通配符（与课件一致）</h2>
+  <p><strong>一次发布订阅的报文顺序</strong>（以温度看板订阅设备 A 为例）：① 连接建立：看板→Broker CONNECT，Broker→看板 CONNACK；② 订阅登记：SUBSCRIBE / SUBACK，Broker 登记主题过滤器；③ 发布分发：设备 A→Broker PUBLISH，Broker→看板 PUBLISH。<strong>订阅建立与数据发布是不同步骤；发布者不需要知道看板地址</strong>。</p>
+  <p><strong>主题组织</strong>：发布主题如 <code>campus/b1/A/temp</code>；一号楼全部温度 = <code>campus/b1/+/temp</code>；一号楼全部层级 = <code>campus/b1/#</code>。</p>
+  <div class="calc">发布主题：factory/A/temp（发布主题本身不能含通配符）
+
+factory/+/temp   → 匹配 factory/A/temp（+ 匹配一个层级）
+factory/#        → 匹配 factory/A/temp（# 匹配后续多个层级，位于过滤器末尾）
+factory/B/temp   → 不匹配 factory/+/temp
+factory/+/state  → 不匹配 factory/A/temp
+
+主题层级用于业务组织；订阅过滤器用于选择消息。</div>
+
+  <h2>三、三个 QoS 等级与两段连接（必背表）</h2>
+  <table>
+    <tr><th>等级</th><th>语义</th><th>机制</th><th>代价</th></tr>
+    <tr><td>QoS 0</td><td>至多一次</td><td>无协议确认重发</td><td>可能缺失，开销较低</td></tr>
+    <tr><td>QoS 1</td><td>至少一次</td><td>确认与必要重发</td><td>可能重复交付</td></tr>
+    <tr><td>QoS 2</td><td>恰好一次</td><td>额外交互与协议状态</td><td>避免同次交换重复交付</td></tr>
+  </table>
+  <p>QoS 描述<strong>相邻 MQTT 端点间</strong>的消息交付语义；等级提高通常<strong>增加交互与状态成本</strong>；<strong>协议交付不等同于业务动作执行一次</strong>。</p>
+  <p><strong>两段连接</strong>：设备→Broker 与 Broker→看板是<strong>两次交付</strong>，看板订阅时也提出 QoS 要求；<strong>下行 QoS 不高于订阅要求</strong>——发布 QoS 1、订阅最大 QoS 0，则下行按 QoS 0 交付。较高的上行 QoS 不会自动提升所有下游交付的保障。</p>
+  <p><strong>选择依据</strong>：缺失容忍度、重复后果、时效与资源开销。持续温度→QoS 0（允许少量缺点，后续采样及时更新）；重要告警→QoS 1（消费端应能处理重复）；严格交付需求→QoS 2（平台支持且可接受更多交互与状态）。</p>
+
+  <h2>四、确认等待与吞吐估算（计算题）</h2>
+  <div class="calc">QoS 1 下：在途上限 C（未确认消息数），确认往返时延 RTT
+理想吞吐上界 ≈ C / RTT
+
+课件例：C = 20，RTT = 80 ms = 0.08 s
+→ 20 / 0.08 = 250 条 / 秒
+
+变式（课件思考）：目标 500 条/秒 → 需要 C ≥ 500 × 0.08 = 40 条在途容量
+长距离链路例：RTT=100ms、每条 1 KB、W=20 → 20/0.1 = 200 条/s，载荷 ≈ 200 KB/s</div>
+  <p>注意：扩大窗口还需考虑<strong>内存和 Broker 处理能力</strong>；窗口增大，客户端状态也增大；实际吞吐仍受网络与 Broker 限制。</p>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：Paho Python 接口（课件 28–29 页同款）</div>
+    <p>发布：<code>publisher.publish("campus/b1/A/temp", payload, qos=1)</code>；订阅：<code>subscriber.subscribe("campus/b1/+/temp", qos=1)</code>，回调 <code>subscriber.on_message = handle_temperature</code>。连接成功回调 on_connect 中 rc==0 再订阅；on_message 打印 message.topic 与 payload.decode()；启动网络循环不等于订阅已成功。</p>
+  </div>
+  <p><strong>延伸了解（课件 30–33 页）</strong>：Sparkplug 3.0（2022）/ ISO/IEC 20237:2023 为 MQTT 提供工业语义互通，规范消息含义但不替代传输；MQTT over QUIC 探索连接迁移与弱网恢复（需客户端与 Broker 共同支持），标准 MQTT 3.1.1 以 TCP 为基础。案例：吉利/亿咖通车联网（200 万+ 接入车辆、平均同时在线 35 万+）；上汽大众 2020 年上线的车联网平台用 MQTT 解耦车机与云端业务。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>思考题（教材 PPT 第 41 页）：对比 MQTT、CoAP、HTTP。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（教材 PPT 第 42 页原表，三列均为应用层协议）MQTT：传输层 TCP；可靠；传输代价小；支持多播；支持双向通信（资源受限设备）；需要中间代理（Broker）转发；温度上传示例报文长度 20（MQTT）+32（TCP）字节。CoAP：传输层 UDP；可靠可选；传输代价小；支持多播；支持双向通信；无中间代理；32（CoAP）+8（UDP）字节。HTTP：传输层 TCP；可靠；传输代价大；不支持多播；资源受限设备难做双向；32+824（HTTP）字节。</p>
+    </details>
+    <p><strong>思考（课件 26 页）：QoS 1 下目标 500 条/秒、RTT=80ms，至少需要多少在途容量？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>由吞吐上界 ≈ C/RTT 得 C ≥ 500 × 0.08 = 40 条。课件未给出该问的正式标准答案，此为按课件公式的推算，建议向老师确认表述。（依据课件 26 页公式与例题）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0601-云平台是什么.html">0601-云平台是什么</a> · 下一课：<a href="0603-设备管理与OTA.html">0603-设备管理与OTA</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "MQTT 订阅过滤器中，“+”和“#”的匹配规则是？",
+    options: [
+      "“+”匹配多个层级，“#”匹配一个层级",
+      "“+”匹配一个层级，“#”匹配多个层级并位于过滤器末尾",
+      "两者都只能匹配一个层级，且可出现在任意位置"
+    ],
+    answer: 1,
+    explain: "课件：发布使用具体主题；“+”匹配一个层级，“#”匹配多个层级并位于过滤器末尾；发布主题本身不能含通配符。（课件 6.2 主题组织）"
+  },
+  {
+    prompt: "设备以 QoS 1 发布，看板订阅时最大 QoS 为 0，Broker 向看板的下行交付按什么等级？",
+    options: [
+      "按 QoS 1 交付，下行跟随发布端等级",
+      "按 QoS 0 交付，下行不高于订阅要求",
+      "按 QoS 2 交付，Broker 自动提升保障"
+    ],
+    answer: 1,
+    explain: "课件：Broker 分别处理两段连接，下行 QoS 不高于订阅要求；发布 QoS 1、订阅最大 QoS 0 → 下行交付 QoS 0。（课件 6.2）"
+  },
+  {
+    prompt: "QoS 1 在途上限 C=20、确认往返 RTT=80ms，理想吞吐上界约是多少？",
+    options: [
+      "160 条/秒（C × RTT）",
+      "250 条/秒（C / RTT）",
+      "800 条/秒（C / RTT×10）"
+    ],
+    answer: 1,
+    explain: "课件例：20 / 0.08 = 250 条/秒；理想吞吐上界 ≈ C/RTT，扩大窗口还需考虑内存和 Broker 处理能力。（课件 6.2 计算例）"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— QoS 与通配符已过关。" : " —— 重点复习 QoS 三级表、两段连接与 C/RTT 计算。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

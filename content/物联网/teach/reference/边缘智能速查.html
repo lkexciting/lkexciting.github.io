@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>边缘智能速查卡 · 第 4 章</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 4 章 · 考前速查 · 可打印</span>
+  <h1>边缘智能速查卡</h1>
+  <p class="subtitle">压缩《第四章-1009》全部高频考点：定义、指标公式、三大压缩技术对比、云边切分、框架选型。</p>
+  <div class="callout def"><div class="label">范围声明</div><p><strong>考试内容以课件《第四章-1009》为准</strong>。本章为老师自编内容，教材（第 4 章低功耗短距离通信）无对应章节。源文件：C:/iotpdf/ch4.txt（提取自 D:\学习文件\大三上\物联网技术基础与应用开发\第四章-1009.pdf）。</p></div>
+
+  <h2>1. 核心定义（必背）</h2>
+  <table>
+    <tr><td><strong>边缘智能</strong></td><td>将 AI 模型与算法部署于<strong>靠近数据源的 IoT 终端、边缘网关等计算节点</strong>，利用本地算力开展数据分析、模型推理、场景感知与智能决策（P4）</td></tr>
+    <tr><td><strong>模型使用三步</strong></td><td>训练（前向计算、损失计算、反向传播；PyTorch/TensorFlow）→ 压缩优化（量化 FP32→INT8、剪枝）→ 部署（推理引擎 ONNX Runtime / TensorRT / MNN；验证精度、时延、内存）（P7）</td></tr>
+    <tr><td><strong>DNN 三结构</strong></td><td>CNN 提取局部空间特征（图像分类、目标检测）｜RNN 按时间步传递状态（时序信号、语音）｜Transformer 注意力关联不同位置（语言、视觉）（P8）。边缘选型：FLOPs 不能直接代表实际速度，须实测时延、峰值内存与能耗（P8）</td></tr>
+    <tr><td><strong>模型压缩</strong></td><td>减少模型大小与复杂度使其能在资源受限设备部署；核心技术：量化、剪枝、蒸馏、算子分割、NAS（P27）。量化/剪枝/蒸馏＝模型层优化，云边协同＝系统部署优化，可组合（P28）</td></tr>
+  </table>
+
+  <h2>2. 关键特性：数字与公式（计算题高频）</h2>
+  <table>
+    <tr><th>特性</th><th>必背内容</th></tr>
+    <tr><td>精度格式</td><td>FP32＝4B；FP16/BF16＝2B；INT8＝1B（−128~127）；INT4＝0.5B（−8~7）（P12）</td></tr>
+    <tr><td>参数量换算（32 位）</td><td>1M→4MB；100M→400MB；1B→4GB；100B→400GB。验证：Bert-Base 110M≈440MB（P13）</td></tr>
+    <tr><td>运行时内存</td><td><strong>Mpeak ≈ MW（权重＝参数量×每参数字节数）+ MA（中间张量）+ MKV（自回归缓存）+ MR（工作区等额外开销）</strong>（P14）。模型文件大小 ≠ 运行内存（Orange Pi 5 Plus 实测 468.6MiB 模型峰值 609.2~651.2 MiB）</td></tr>
+    <tr><td>四大精度指标</td><td>Accuracy=(TP+TN)/全部；Precision=TP/(TP+FP)；Recall=TP/(TP+FN)；F1=2PR/(P+R)（P16–17）</td></tr>
+    <tr><td>延迟 vs 吞吐</td><td>增大 batch→吞吐升、单次延迟升；<strong>端侧多为实时单请求场景，优先保延迟</strong>（P18）</td></tr>
+    <tr><td>能耗</td><td><strong>能耗 = 平均功耗 × 推理时延</strong>；瓶颈＝频繁内存读写；优化＝量化 + 算子融合（P21）</td></tr>
+    <tr><td>支持硬件</td><td>CPU 通用/回退；GPU 卷积与矩阵并行；NPU 专用神经网络计算（另有 Jetson DLA）（P22）</td></tr>
+    <tr><td>不可能三角</td><td>精度 × 速度 × 资源三者互斥；压缩技术的作用＝扩展三角面积（P25）</td></tr>
+  </table>
+
+  <h2>3. 量化（P27–60）</h2>
+  <table>
+    <tr><td><strong>本质</strong></td><td>为高精度浮点数与低精度整数建立精确映射；类比高清照片→JPEG（P29–30）</td></tr>
+    <tr><td><strong>两参数</strong></td><td>Scale（步长，「汇率」）+ Zero Point（确保 0 精确映射，对 ReLU 激活关键）；MinMax 求解 + RTN 四舍五入 + 截断（P31–33）</td></tr>
+    <tr><td><strong>分类</strong></td><td>线性（均匀，业界主流）vs 非线性（对数量化/聚类量化/可学习量化）；对称（零点固定 0，常用于<strong>权重</strong>）vs 非对称（带零点，常用于<strong>激活值</strong>如 ReLU 输出）（P34–37）</td></tr>
+    <tr><td><strong>三方式</strong></td><td>动态量化（只量化权重，激活运行时量化；无需校准；适合 Transformer/RNN）｜静态量化（权重+激活均离线量化，靠<strong>校准</strong>统计激活范围；推理最快；适合 CNN）｜QAT（训练中插伪量化节点；精度最高、成本最高）。口诀：<strong>快速部署动态、推理速度静态、极致精度 QAT</strong>（P38–49）。INT8×INT8 需 INT32 累加器防溢出（P44）</td></tr>
+    <tr><td><strong>大模型失效</strong></td><td>RTN（Q=round(W/scale)+Z，Data-free）在<strong>约 60 亿参数</strong>以上失效：极大稀疏异常值（大 20 倍以上、占 0.1%）拉宽范围→scale 变大→正常值趋近 0；置零异常值困惑度升 600–1000%（P50–52）</td></tr>
+    <tr><td><strong>LLM.int8()</strong></td><td>99.9% 常规值 INT8 + 0.1% 异常值分离后 FP16；向量级量化（行/列独立缩放常数）+ 混合精度分解（识别→分离→合并）；内存减半性能不变（P53–56）</td></tr>
+    <tr><td><strong>效果实例</strong></td><td>DeepSeek-R1-Distill-Qwen-7B GGUF：F16 15.24GB → Q8_0 8.10GB（约 53%）→ Q4_K_M 4.68GB（约 31%，减约 69%）（P58）</td></tr>
+  </table>
+
+  <h2>4. 剪枝与蒸馏（P62–105）</h2>
+  <table>
+    <tr><td><strong>剪枝定义</strong></td><td>系统性移除冗余/不重要的权重、神经元、通道、网络层；三大优势：减小模型尺寸、加速推理、降低能耗（P62）</td></tr>
+    <tr><td><strong>彩票假设</strong></td><td>密集随机初始化网络含稀疏子网络（中奖彩票），从原始初始权重独立训练可达相当甚至更好性能；剪大模型可保留「涌现能力」（P63）</td></tr>
+    <tr><td><strong>非结构化</strong></td><td>剪单个权重、细粒度、不规则稀疏；精度保持好但<strong>通用硬件难加速</strong>（需专用稀疏库）（P65–69）</td></tr>
+    <tr><td><strong>结构化</strong></td><td>剪整个滤波器/通道/神经元/层，L1 范数＝<strong>绝对值之和</strong>；规则结构对齐硬件、<strong>可实际加速</strong>但精度损失较大（P70–76）；常见：L1 范数剪枝、BN 缩放因子（Network Slimming）</td></tr>
+    <tr><td><strong>重要性判据</strong></td><td>基于幅度（L1/L2 范数）与基于梯度（泰勒展开估计对损失的影响）（P78）</td></tr>
+    <tr><td><strong>剪枝示例</strong></td><td>AlexNet 只剪全连接层（卷积占 90% 计算量、剪卷积更易伤准确率）；参数 14,591,685→6,720,197，<strong>减 53.9%</strong>（P80–81）</td></tr>
+    <tr><td><strong>蒸馏定义</strong></td><td>Hinton 等 <strong>2015</strong> 年提出；教师模型监督训练学生模型，迁移「暗知识」；与量化（降数值精度）、剪枝（改拓扑）不同——蒸馏训练<strong>全新的小模型</strong>（P84–85）</td></tr>
+    <tr><td><strong>四概念</strong></td><td>教师模型（知识输出者）、学生模型（知识接受者）、硬标签（真实标注 One-Hot，如 [0,1,0]）、软标签（<strong>教师输出的概率分布</strong>）（P86–87）</td></tr>
+    <tr><td><strong>三类知识</strong></td><td>基于响应（最经典）/ 基于特征（中间层）/ 基于关系（样本间结构化关系）（P90–93）</td></tr>
+    <tr><td><strong>组合损失</strong></td><td>软标签损失（交叉熵，温度 T&gt;1 使分布平滑、突出低概率类别）+ 硬标签损失（锚点防偏离真实分布）；α 通常取大值（如 0.98）因软目标为主；软损失梯度乘 <strong>T²</strong> 平衡缩放；中等温度 2.5–4 适合小模型（P95–100）</td></tr>
+  </table>
+
+  <h2>5. 云边协同与推理框架（P107–147）</h2>
+  <table>
+    <tr><td><strong>两种模式</strong></td><td>智能路由（按<strong>请求</strong>选边缘/云端模型；决策依据：任务需求、模型能力、运行状态、网络约束；策略：前置路由、级联回退）｜分割计算（按<strong>模型内部计算</strong>划分，边缘算前段+云端算后段）（P107–110）</td></tr>
+    <tr><td><strong>两个规律</strong></td><td>数据量「先增后减」（conv 膨胀、pool 压缩）；计算延迟后端剧增（AlexNet fc6/fc7 占超 90% 时间——GPU 上卷积可并行延迟低、全连接密集矩阵无法 GPU 加速延迟高，与剪枝「卷积占 90% 计算量」不矛盾）（P114–116）</td></tr>
+    <tr><td><strong>最佳切分点</strong></td><td>数据量经池化压缩后、全连接层开始之前——AlexNet 即 <strong>pool5 之后</strong>：最小化数据传输 + 最大化计算卸载（P117）</td></tr>
+    <tr><td><strong>框架选型</strong></td><td>跨平台通用 → <strong>ONNX Runtime / TFLite</strong>；端侧 LLM → <strong>llama.cpp</strong>；特定 NPU 极致能效 → <strong>厂商工具链（RKNN/RKLLM、QNN）</strong>（P143）</td></tr>
+    <tr><td><strong>TFLite</strong></td><td>FlatBuffers（内存映射免解析）+ 算子融合/量化 + Delegate 委托（GPU/DSP/NPU）；核心运行时约 <strong>1MB</strong>；TFLite Micro 约 <strong>20KB Flash</strong>、无需操作系统（TinyML 标杆）；局限：约 60 个算子、不支持动态形状（P122–127）</td></tr>
+    <tr><td><strong>ONNX Runtime</strong></td><td>ONNX＝开放标准格式/通用中间表示，「一次转换，随处部署」；图优化：常量折叠、节点消除（去 Dropout）、节点融合（MatMul+Add）；特色机制 <strong>EPs 执行提供程序</strong>（不改模型换后端）（P128–131）</td></tr>
+    <tr><td><strong>llama.cpp</strong></td><td>GGUF 单文件（权重+分词器+架构参数+量化元数据）；2~8-bit 量化（Q4_K_M＝4-bit+K-quant 混合精度）；SIMD（AVX2/AVX-512、NEON）；按层 GPU 卸载（Metal/CUDA/Vulkan/OpenCL）；mmap 按需加载（模型大于物理内存也能跑）；不支持 CNN/RNN（P132–141）</td></tr>
+    <tr><td><strong>课程实验</strong></td><td>ResNet-50 V1：Group-L1 结构化剪枝（4.1→2.9 GMACs）→ 20 万张图微调 20 轮恢复 → PNNX 转 ncnn + 5,000 张 KL 校准混合 INT8 → 香橙派 Mali-G610 评测；提交 .param / .bin / model.json（P146）</td></tr>
+  </table>
+
+  <h2>6. 易错辨析（考前最后过一遍）</h2>
+  <table>
+    <tr><th>易混点</th><th>一句话区分（均出自课件）</th></tr>
+    <tr><td>量化 vs 剪枝 vs 蒸馏</td><td>量化：同一模型内<strong>降数值精度</strong>；剪枝：同一模型内<strong>移除结构单元、改拓扑</strong>；蒸馏：<strong>训练全新的小模型</strong>做知识迁移（P85）</td></tr>
+    <tr><td>对称 vs 非对称量化</td><td>对称零点固定 0、常用于<strong>权重</strong>；非对称带零点、位宽利用充分、常用于<strong>激活值</strong>（ReLU 非负）（P36–37）</td></tr>
+    <tr><td>动态 vs 静态量化</td><td>动态只量化权重、激活值推理时实时量化、无需校准数据；静态权重+激活均离线量化、靠校准集预计算 scale/zero_point（P39–47）</td></tr>
+    <tr><td>非结构化 vs 结构化剪枝</td><td>非结构化剪单个权重、不规则稀疏、通用硬件难加速；结构化剪整个通道/滤波器、规则对齐硬件、可实际加速（P65–76）</td></tr>
+    <tr><td>硬标签 vs 软标签</td><td>硬标签＝真实数据的独热编码 [0,1,0]；软标签＝教师模型输出的概率分布（P87）</td></tr>
+    <tr><td>智能路由 vs 分割计算</td><td>智能路由以<strong>推理请求</strong>为单位选边缘或云端；分割计算以<strong>模型内部计算</strong>为单位拆分到两侧（P108）</td></tr>
+    <tr><td>「卷积占 90% 计算量」vs「fc6/fc7 占 90% 计算时间」</td><td>不矛盾：前者是计算量口径（剪枝章节），后者是 NVIDIA Tegra K1 上 GPU 的延迟口径——卷积可并行延迟低、全连接密集矩阵 GPU 加速不了（P81、P116）</td></tr>
+    <tr><td>模型文件大小 vs 运行内存</td><td>4.68 GB 是文件体积；判断能否部署须在目标设备、目标上下文长度下验证（运行内存 ≈ 权重＋KV Cache＋激活/工作区＋框架开销）（P59）</td></tr>
+    <tr><td>FLOPs vs FLOPS</td><td>FLOPs／MACs＝模型计算量（「要算多少次」，模型＋输入为主）；FLOPS＝硬件峰值算力（「算得多快」，硬件为主）；实测速度还受访存与利用率影响（P19–20）</td></tr>
+  </table>
+
+  <h2>7. 课件未给标准答案的开放题（向老师确认）</h2>
+  <p>量化思考题 2（MinMax 取最大值的坏处）、3（LLM 比 CNN 难量化的原因）；剪枝思考题 1（绝对值小却重要的权重）、2（为何不从头训练小模型）；蒸馏思考题 1（为何要硬损失）、2（教师是否越强越好）；云边协同思考题 1（降低传输延迟的手段）、2（弱网下切分点移动方向）。课件正文有部分线索（见对应小课 details），但无标准答案。</p>
+
+  <footer>
+    主源：课件《第四章-1009》（老师自编，教材无对应章节）· 页码 P xx 均指课件页
+    · 小课：<a href="../lessons/0401-边缘智能是什么.html">0401</a> · <a href="../lessons/0402-关键特性与指标.html">0402</a> · <a href="../lessons/0403-模型量化.html">0403</a> · <a href="../lessons/0404-模型剪枝.html">0404</a> · <a href="../lessons/0405-知识蒸馏.html">0405</a> · <a href="../lessons/0406-云边协同与框架.html">0406</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · <a href="../课程总目录.html">课程总目录</a>
+    <br>有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,166 @@
+
+第七章 物联网云-端一体开发
+1. 简述云-端一体开发平台是如何简化物联网应用开发的。
+答：
+物联网应用的开发分为设备端开发、云服务开发、Web应用/移动应用开发。针对设备端开发，云-端一体开发平台为开发者提供设备开发SDK，物联网操作系统等内容，简化设备开发与设备入云流程；针对云服务开发，云-端一体开发平台为开发者提供IFTTT规则配置及流式服务编排等方式，通过可视化配置即可完成云服务的开发；针对Web应用/移动应用开发，云-端一体开发平台同样提供了可视化的开发方式。另外，在三端应用的集成方面，云-端一体开发平台通过物模型、命名机制等，对三端应用的集成进行了简化。
+2. 用表7-4作为硬件数据库，以下面的代码作为输入，试给出满足应用需求且价格最低的硬件配置。
+1void upload();
+2TL_HTTP http;
+3void setup() {
+4TL_WiFi.init();
+5TL_WiFi.join("SSID","PASSWORD");
+6http = TL_WiFi.fetchHTTP();
+7}
+8void loop() {
+9TL_Light.read();
+10TL_Soil_Moisture.read();
+11upload();
+12TL_Time.delayMillis(60000);
+13}
+14void upload() {
+15double light = TL_Light.data();
+16double sm = TL_Soil_Moisture.data();
+17String url = "http://hostname/ul.php?";
+18url += String("light=") + String(light);
+19url += String("&sm=") + String(sm);
+20http.get(url);
+21}
+解：
+使用TinyLink配置后的硬件如下图所示：
+
+3. 根据上一题配置，如果开发者想查看推荐配置，试为开发者计算出有多少种可用的组合？
+答：
+从图中可以看出，为开发者计算出8种可用的组合。
+
+4. 假设我们要使用IoT Studio平台定义一个空气盒子的物模型，模型需要包含的具体功能信息如下：
+属性：
+温度（Temp）：float 类型，最小值为-40，最大值为50，单位为℃，步长0.1，可读；
+湿度（Humi）： float 类型，最小值为0%RH，最大值为100%RH，单位为%RH， 可读；
+事件：
+属性数据上报事件（PropPost）：输出参数包含上述两个属性的值，事件对应的方法名称为“thing.event.prop.post”，其余参数可自定义。
+请参考上述信息，写出设备的物模型定义。
+解：
+{  
+  "schema":"https://iotx-tsl.oss-ap-southeast-1.aliyuncs.com/schema.json",  
+  "profile": {  
+    "productKey": "xxxxxx"  
+  },  
+  "properties": [  
+    {  
+      "identifier": "Temp",  
+      "dataType": {  
+        "specs": {  
+          "unit": "°C",  
+          "min": "-40",  
+          "max": "50",  
+          "step": "0.1"  
+        },  
+        "type": "float"  
+      },  
+      "name": "温度",  
+      "accessMode": "r",  
+      "required": false  
+    },  
+    {  
+      "identifier": "Humi",  
+      "dataType": {  
+        "specs": {  
+          "unit": "%RH",  
+          "min": "0",  
+          "max": "100",  
+          "step": "0.1"  
+        },  
+        "type": "float"  
+      },  
+      "name": "湿度",  
+      "accessMode": "r",  
+      "required": false  
+    }  
+  ],  
+  "events": [  
+    {  
+      "outputData": [  
+        {  
+          "identifier": "Temp",  
+          "dataType": {  
+            "specs": {  
+              "unit": "°C",  
+              "min": "-40",  
+              "max": "50",  
+              "step": "0.1"  
+            },  
+            "type": "float"  
+          },  
+          "name": "温度"  
+        },  
+        {  
+          "identifier": "Humi",  
+          "dataType": {  
+            "specs": {  
+              "unit": "%RH",  
+              "min": "0",  
+              "max": "100",  
+              "step": "0.1"  
+            },  
+            "type": "float"  
+          },  
+          "name": "湿度"  
+        }  
+      ],  
+      "identifier": "post",  
+      "method": "thing.event.property.post",  
+      "name": "post",  
+      "type": "info",  
+      "required": true,  
+      "desc": "属性上报"  
+    }  
+  ]  
+}  
+5. 假设我们要使用IoT Studio 服务编排工具开发一个智能电灯的云服务，实现以下功能：当房间没有人并且电灯打开时，关闭电灯（房间有没有人通过摄像头判断，处理时间较长；电灯是否打开通过当前光照强度判断，处理时间较短）；否则，不做任何处理。请列出此服务需要用到的服务节点，并对这些节点进行编排。
+解：
+在本示例中，我们需要开发一个设备触发服务。用到的节点有“设备触发”节点、“脚本节点”、“条件”节点、“自定义API”节点、以及“产品”节点，节点的编排如下图所示。每个节点的作用如下。
+“设备触发”节点：服务流的起始节点；
+第一个“脚本”节点：负责处理设备上传的数据，根据光照强度数据判断电灯是否打开，并将判断结果传给“条件”节点；
+第一个“条件”节点：判断电灯是否打开，如果打开则继续；否则服务结束；
+第二个“脚本”节点：获取设备上传的图像数据，并将其传给“自定义API”节点；
+“自定义API”节点：根据摄像头拍摄的图片数据，判断当前房间内是否有人，将判断结果传给“条件”节点；
+第二个“条件”节点：判断房间是否有人，如果无人则继续；否则服务结束；
+“产品”节点：调用设备服务，关闭电灯。编排如下：
+
+
+6. 现有一设备，其相关参数如表7-13所示。
+表 7-13 某设备相关属性
+clientID
+deviceName
+productKey
+securemode
+timestamp
+signmethod
+deviceSecret
+1001
+bulb
+bulbkey
+3
+123
+hmacsha1
+mysecret
+
+根据上述设备信息，计算使用 TinyLink 连接Link Develop 平台的MQTT 相关连接参数，填写在表7-14 中。
+表 7-14 该设备的MQTT 连接参数
+参数名称
+参数值
+serverName
+bulb.iot-as-mqtt.cn-shanghai.aliyuncs.com
+port
+1883
+clientName
+1001|securemode=3,signmethod=hmacsha1,timestamp=123|
+userName
+bulb&bulbkey
+passWord
+8ea1b574a7f1e6b51a1afb73149c8e5906635e93
+7. 基于TinyLink、IoT Studio平台和Tuya IoT平台，开发一个完整的物联网应用，主要包括以下功能。
+设备采集室内温度数据，每隔10s上报至Link Develop平台；
+云平台运行设备触发服务，当温度大于30℃，打开设备上的风扇；
+移动应用实时显示当前温度以及风扇状态，允许用户打开/关闭风扇。
+

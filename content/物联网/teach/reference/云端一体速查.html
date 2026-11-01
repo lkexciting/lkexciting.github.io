@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云端一体速查卡 · 第 7 章</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 7 章 · 考前速查 · 可打印</span>
+  <h1>云-端一体开发速查卡</h1>
+  <p class="subtitle">压缩课件《第七章》全部高频考点：四大功能、设备端/云服务/应用端三张对比表、TinyLink 流程与生成系统、物模型三件套与 Topic、MQTT 接入参数、三平台总结。</p>
+  <div class="callout def"><div class="label">范围声明</div><p><strong>考试内容以课件《第七章》为准</strong>。源文件：C:/iotpdf/ch7.txt（提取自 D:\学习文件\大三上\物联网技术基础与应用开发\第七章.pdf）。所有数字、结论均出自课件与教材课后习题答案，未额外引入。</p></div>
+
+  <h2>1. 核心概念（必背）</h2>
+  <table>
+    <tr><td><strong>云-端一体开发平台</strong></td><td>各大厂商（三星 SmartThings、阿里云 IoT Studio、涂鸦智能 Tuya IoT）推出的、涵盖物联网应用整个开发流程的平台，解决<strong>应用开发碎片化、标准不统一、技术栈复杂</strong>问题；背景＝物联网技术栈涉及嵌入式、网络协议、云平台、Web、移动开发多个领域</td></tr>
+    <tr><td><strong>理想四大功能</strong></td><td>①设备端开发 ②云服务开发 ③Web 应用/移动应用开发 ④三端集成开发流程简化</td></tr>
+    <tr><td><strong>设备端三方式</strong></td><td>本地编译（SDK＝API 函数/帮助文档/开发工具的集合，屏蔽底层硬件；物联网 OS＝统一接口 + 任务调度/资源管理/软件更新）｜云端编译（云端编译、免本地环境、资源动态分配、速度快成本低）｜解释型语言（JavaScript/MicroPython 免编译、装解释器、跨平台可移植强）</td></tr>
+    <tr><td><strong>云服务三内容</strong></td><td>设备接入（设备发现→控制认证→设备注册[分配 ID+对接属性和控制接口]）｜IFTTT 规则（简单云服务，OneNet 温度告警；接收方式邮箱/URL）｜服务编排（服务节点＝基础 API；组合节点配置实现功能）</td></tr>
+    <tr><td><strong>应用端三方式</strong></td><td>应用框架自动生成（基于设备端代码；TinyLink、中移 OneNet）｜可视化拖拽（IoT Studio 温度展示）｜插件（HTML/CSS/JS/JSON 定义设备 UI 和行为，官方 app 按需加载，SmartThings）</td></tr>
+    <tr><td><strong>三端集成简化</strong></td><td><strong>设备模型</strong>＝设备的抽象描述，规定设备与云端数据交互规范，解耦设备与云服务开发；<strong>命名机制</strong>＝物理设备与虚拟 ID 的映射</td></tr>
+  </table>
+
+  <h2>2. 四张平台对比表（填空高发）</h2>
+  <table>
+    <tr><th>平台</th><th>设备端（本地/云端/解释型）</th><th>云服务（IFTTT/编排）</th><th>应用（自动生成/拖拽/插件/传统）</th><th>三端简化（设备模型/命名）</th></tr>
+    <tr><td>TinyLink</td><td>× ／ 云端编译+自顶向下 ／ ×</td><td>√ ／ ×</td><td>√ ／ × ／ × ／ ×</td><td>× ／ 基于 TCP/IP</td></tr>
+    <tr><td>IoT Studio</td><td>多语言 SDK+AliOS Things ／ √ ／ 支持 JavaScript</td><td>× ／ √</td><td>× ／ √ ／ × ／ √</td><td>物模型 ／ 基于 TCP/IP</td></tr>
+    <tr><td>Tuya IoT</td><td>涂鸦 MCU SDK ／ × ／ ×</td><td>√ ／ ×</td><td>× ／ √ ／ √ ／ √</td><td>× ／ 基于 TCP/IP</td></tr>
+  </table>
+  <p>概览表补充：ARM Mbed（本地√云端√，命名√）；中移 OneNet（IFTTT√ 拖拽√）；三星 SmartThings（本地√ 插件√ 设备模型√）；LinkDevelop（本地√云端√解释型√ 编排√ 拖拽√ 设备模型√——覆盖最全）。</p>
+
+  <h2>3. 设备模型与命名机制</h2>
+  <table>
+    <tr><td><strong>SmartThings 设备档案</strong></td><td>JSON 描述；设备&gt;组件&gt;功能&gt;（属性，命令）；功能<strong>必须是平台已有的</strong>（capability 官方提供共 73 种）</td></tr>
+    <tr><td><strong>IoT Studio 物模型</strong></td><td>JSON 描述；功能分<strong>属性/事件/服务</strong>三类；可用标准功能也可<strong>自行定义</strong></td></tr>
+    <tr><td><strong>开发流程（智能灯泡）</strong></td><td>步骤 1 定义设备模型（开/关功能 + 光照/声音强度属性 + 属性上报事件）→ 步骤 2 并行开发：硬件人员写设备端代码，软件人员用<strong>虚拟设备</strong>模拟开发应用</td></tr>
+    <tr><td><strong>TCP/IP 命名机制</strong></td><td>分配 IP、多层映射；问题：复杂协议栈、操作多设备需分别建立连接</td></tr>
+    <tr><td><strong>NDN</strong></td><td>Name Data Networking，以数据为中心、与位置无关；<strong>兴趣包 Interest</strong>（请求数据名/操作）+<strong>数据包 Data</strong>（内容或 ACK）；分层命名 /location/fixture-namespace/command/timestamp；新设备经兴趣包向配置管理器注册 ID、名称前缀、功能集合</td></tr>
+  </table>
+
+  <h2>4. TinyLink（浙大 EmNets）</h2>
+  <table>
+    <tr><td><strong>版本线</strong></td><td>2017.3 TinyLink 1.0（软硬件一体快速开发）→ 2017.12 TinyLink 2.0（+Web 端/手机端＝一体化）</td></tr>
+    <tr><td><strong>开发模式</strong></td><td><strong>自顶向下</strong>：应用需求分析→节点软件编程→分析用户代码→硬件平台搭建（对比传统自底向上：选硬件→写代码→交叉编译→烧录→调试）</td></tr>
+    <tr><td><strong>使用流程五步</strong></td><td>①编写程序代码（TL_ API，setup/loop）②上传到云端 ③得到输出（<strong>硬件配置文件 + 二进制程序</strong>）④组装物联网平台 ⑤USB 连电脑一键烧写</td></tr>
+    <tr><td><strong>特点</strong></td><td>自顶向下｜自动（自动生成硬件配置和二进制代码、自动接入 IBM Watson IoT/OneNet、可优化价格/功耗）｜简单（Arduino setup/loop + 云编译）；客户端 69MB vs Arduino IDE+LinkIt One 420MB / 树莓派链 266MB / BBB 链 302MB</td></tr>
+    <tr><td><strong>推荐系统</strong></td><td>推荐同功能不同硬件平台：LinkIt One 例推荐 34 种可行方案，可支持编译 8 种</td></tr>
+    <tr><td><strong>硬件生成系统</strong></td><td>分析代码 + 硬件数据库（组件×ID×成本×提供/占用接口×功能）→ 约束求解：用户约束（如 WiFi 模块总量&gt;1）+ 接口约束（每类接口提供 Port ≥ 消耗 Port，类型含 Analog/UART/I2C/SPI/USB）→ <strong>价格最小化</strong>，通常 210 条约束，<strong>线性规划 + lp_solver</strong></td></tr>
+    <tr><td><strong>软件生成系统</strong></td><td>硬件配置头文件衔接：硬件无关（用户代码）+ 硬件相关（硬件配置 + 驱动库）；116 个公开项目提取 225 个 API、实现 24 类；调试：#REQUIRE DBGPrint（额外 UART 打印）/ #REQUIRE DBG（交互式，树莓派/BBB 用 gdb，提供源码）</td></tr>
+    <tr><td><strong>2.0 三端与特性</strong></td><td>设备（高层 API 封装 1.0、支持 LoRa/并发）；云服务（规则转 JSON→后缀表达式；规则引擎触发器分事件/时间；三线程 Redis FIFO 队列：消息/规则/命令）；移动端（@Client 微应用→WebView，AST→JS，HTML/JS 混合模板）；特性：微应用模型、隐式交互、云定义节点行为（类 IFTTT）、虚拟传感器（多源数据推理）</td></tr>
+  </table>
+
+  <h2>5. IoT Studio（阿里云）</h2>
+  <table>
+    <tr><td><strong>版本线</strong></td><td>2018.3 Link Develop 1.0 → 2018.6 2.0 → 2019.1 更名 IoT Studio → 2021.3 3.0（Web/移动可视化、业务逻辑、物联网数据分析）</td></tr>
+    <tr><td><strong>配套</strong></td><td>Bone 框架（Web/移动开发框架，集成物联网 UI 组件）；IoT 应用市场（硬件到解决方案，在线商业化）；四大工作台：设备开发（嵌入式 C/JS、AliOS Things、SDK；本地+云端编译）、业务逻辑（可视化服务编排）、Web 应用、移动应用</td></tr>
+    <tr><td><strong>物模型三类</strong></td><td>属性 Property＝运行时状态（温度湿度）；服务 Service＝可被外部调用的方法（开风扇；sync/async）；事件 Event＝需外部感知处理的通知（任务完成/故障；type：info/alert/error）</td></tr>
+    <tr><td><strong>物模型字段</strong></td><td>顶层：schema/link（云平台自动生成）+ profile(productKey) + properties/events/services；属性：identifier/name/accessMode(r,rw)/required/dataType(type:int,float,double,text,bool,array；specs:min,max,unit,unitName,size≤128,item)；服务：callType(sync,async)+inputData/outputData/method</td></tr>
+    <tr><td><strong>同步调用</strong></td><td>MQTT PUB/SUB 异步不适合同步返回；<strong>RRPC</strong>＝基于 MQTT 定制的请求响应同步机制</td></tr>
+    <tr><td><strong>物模型使用 Topic</strong></td><td>属性上报 /sys/{ProductKey}/{deviceName}/thing/event/property/post（method thing.event.property.post）；事件上报 .../thing/event/{dsl.event.identifer}/post；服务调用 .../thing/service/{dsl.service.identifer}（method thing.service.open）</td></tr>
+    <tr><td><strong>服务节点分类</strong></td><td>触发（空间/设备/定时/HTTP 请求/MQTT 订阅）、输出（HTTP 返回）、功能（路径选择≤10 分支、Python 2.7.9、条件判断、数值计算、Node.js 6.10）、AI（人脸/OCR/图像识别）、消息（短信/钉钉机器人/移动推送/MQTT 发布）、API（自定义/云市场/项目内）、数据（变量/表格存储/MySQL/键值对/数据分析）、设备（产品结点）</td></tr>
+    <tr><td><strong>编排案例</strong></td><td>温度&gt;30℃ 推钉钉：设备触发→NodeJS 脚本（payload.props.temperature.value）→路径选择（≥30℃）→钉钉机器人（access_token）；智能灯习题：设备触发→脚本→条件→脚本→自定义 API→条件→产品结点</td></tr>
+  </table>
+
+  <h2>6. Tuya IoT 与联合开发</h2>
+  <table>
+    <tr><td><strong>Tuya 简介</strong></td><td>涂鸦智能 2016 年推出；接入 Alexa/Google Assistant/HomeKit/SmartThings 生态；截至 2021.7 有 37.4 万开发者、覆盖 200+ 国家和地区</td></tr>
+    <tr><td><strong>设备端三档</strong></td><td>零代码（标准电工照明传感，可视化 UI+选模组→自动生成固件）｜低代码（有 MCU 产品，MCU SDK）｜多代码（网关/摄像头，设备 SDK）</td></tr>
+    <tr><td><strong>面板</strong></td><td>控制智能产品的界面程序，基于 React Native；嵌入方式：公版 App / OEM App（零代码）/ SDK 本地开发</td></tr>
+    <tr><td><strong>平台特性</strong></td><td>成熟硬件解决方案｜边缘计算网关（Docker 镜像安装、支持主流协议+私有协议驱动）｜SaaS 开发框架（前后端开源，用户登录/角色权限）｜全球公有云</td></tr>
+    <tr><td><strong>联合开发</strong></td><td>TinyLink 管设备端，IoT Studio 管云服务+Web/移动应用；关键点＝TinyLink 实现基于物模型的设备接入。IoT Studio 设备端不足：硬件种类少、仍自底向上</td></tr>
+    <tr><td><strong>MQTT 接入参数</strong></td><td>serverName＝${productKey}.iot-as-mqtt.cn-shanghai.aliyuncs.com；port＝1883；clientName＝clientId|securemode=x,signmethod=xxx,timestamp=xxx|（securemode：2 TLS/3 TCP；signmethod：hmacSha1/hmacSha256/hmacMd5）；userName＝deviceName&productKey；passWord＝sign_hmac(deviceSecret,(productKey,deviceName,timestamp,clientId))</td></tr>
+  </table>
+
+  <h2>7. 三平台总结表（简答收尾必背）</h2>
+  <table>
+    <tr><th>平台</th><th>设备开发</th><th>服务开发</th><th>应用开发</th><th>特点</th></tr>
+    <tr><td>TinyLink</td><td>硬件无关 TinyLink 语言，云端编译</td><td>IFTTT 规则</td><td>框架自动生成，难度最低</td><td>开发简单，适合初学者</td></tr>
+    <tr><td>Link Develop</td><td>SDK/AliOS-Things/解释型语言多种方式</td><td>可视化服务编排</td><td>可视化搭建，适合初学者</td><td>多种开发方式，更灵活</td></tr>
+    <tr><td>Tuya IoT</td><td>零代码 + SDK 低/多代码</td><td>基于脚本语言的规则开发</td><td>可视化搭建 + SDK 开发</td><td>开发简单、方案成熟、工业界支持多</td></tr>
+  </table>
+
+  <h2>8. 易错辨析（考前最后过一遍）</h2>
+  <table>
+    <tr><th>易混点</th><th>一句话区分（均出自课件）</th></tr>
+    <tr><td>IFTTT vs 服务编排</td><td>IFTTT＝工作台设规则、做<strong>简单</strong>云服务（TinyLink/Tuya/OneNet）；编排＝组合服务节点（每个＝基础 API）实现特定功能（IoT Studio/LinkDevelop）</td></tr>
+    <tr><td>设备模型 vs 命名机制</td><td>设备模型＝抽象描述+数据交互规范（解耦开发）；命名机制＝物理设备与虚拟 ID 映射（找数据/设备）</td></tr>
+    <tr><td>自顶向下 vs 自底向上</td><td>自顶向下＝先写应用代码由系统反推硬件（TinyLink）；自底向上＝先选硬件再写代码适配（传统开发，IoT Studio 设备端仍是这种方式）</td></tr>
+    <tr><td>属性 vs 事件 vs 服务</td><td>属性＝状态（上报）；事件＝通知（上报，info/alert/error）；服务＝方法（被调用，sync/async 用 RRPC 同步）</td></tr>
+    <tr><td>MCU SDK vs 设备 SDK</td><td>Tuya 低代码＝MCU SDK（有 MCU 产品）；多代码＝设备 SDK（网关/摄像头等复杂设备）</td></tr>
+  </table>
+
+  <footer>
+    主源：课件《第七章》· 教材 董玮等《从创意到原型（第2版）》· 课后习题答案 ch7<br>
+    · 小课：<a href="../lessons/0701-云-端一体开发概述.html">0701 概述与设备端</a> · <a href="../lessons/0702-云服务与应用开发.html">0702 云服务与应用</a> · <a href="../lessons/0703-设备模型与命名机制.html">0703 设备模型与命名机制</a> · <a href="../lessons/0704-TinyLink开发平台.html">0704 TinyLink</a> · <a href="../lessons/0705-IoTStudio物模型与服务编排.html">0705 IoT Studio</a> · <a href="../lessons/0706-Tuya平台与联合开发案例.html">0706 Tuya 与联合开发</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · <a href="../课程总目录.html">课程总目录</a>
+  </footer>
+</div>
+</body>
+</html>

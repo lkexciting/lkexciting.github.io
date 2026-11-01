@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 章 · 模型剪枝</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 4 章 · 小课 4/6 · 课件提炼</span>
+  <h1>模型剪枝</h1>
+  <p class="subtitle">一句话：移除冗余权重/通道的三大优势、彩票假设、非结构化 vs 结构化剪枝对比与 L1 范数判据——常考「为什么结构化剪枝更容易实际加速」。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第四章-1009》"关键技术——剪枝"节（第 62–82 页）。本章为老师自编课件，教材无对应章节。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第四章-1009.pdf</p></div>
+
+  <h2>一、剪枝概述与「彩票假设」</h2>
+  <p><strong>定义</strong>（课件第 62 页）：模型剪枝＝系统性地移除神经网络中<strong>冗余或不重要的组成部分（权重、神经元、通道、网络层）</strong>，降低模型复杂度。直接目标：减少参数总量与计算复杂度（FLOPs），生成更小更快的模型。利用网络内在稀疏性带来三大实际优势：</p>
+  <div class="flow">
+    <div class="node"><b>① 减小模型尺寸</b>移除大量参数后存储占用显著降低</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>② 加速模型推理</b>减少计算量降低推理延迟（实时响应场景如自动驾驶）</div>
+    <div class="arrow">→</div>
+    <div class="node"><b>③ 降低能耗</b>更少计算操作，适合电池供电的移动和边缘设备</div>
+  </div>
+  <div class="grid cols-2">
+    <div class="card"><h4>根本动机：过参数化／冗余性</h4><p>深度神经网络普遍存在「过参数化」问题：大量参数对最终预测结果的贡献微乎其微，甚至可以移除而不显著影响精度。与从零训练小模型相比，对大模型剪枝的价值在于可能<strong>保留大型网络训练中学到的「涌现能力」</strong>——这些复杂能力是小模型可能永远无法自行发展的。</p></div>
+    <div class="card"><h4>彩票假设（Lottery Ticket）</h4><p>一个<strong>密集的、随机初始化</strong>的前馈网络中，包含一个<strong>稀疏的子网络（「中奖彩票」）</strong>。当这个子网络<strong>从其在原始网络中的初始权重开始被独立训练</strong>时，能够在相似训练步数内，达到与原始密集网络相当甚至更好的性能。</p></div>
+  </div>
+  <table>
+    <tr><th>特性</th><th>模型量化</th><th>模型剪枝</th></tr>
+    <tr><td>操作对象</td><td>降低参数和激活值的数值精度</td><td>移除参数或结构单元，改变网络拓扑</td></tr>
+    <tr><td>引入误差来源</td><td>数值精度降低导致的离散化效应</td><td>移除网络组件导致的结构性变化</td></tr>
+    <tr><td>核心机制</td><td>改变数值表示，降低参数存储大小（用更轻更简单的建筑材料）</td><td>改变模型架构，减少参数数量（移除建筑中非必要的结构组件）</td></tr>
+  </table>
+
+  <h2>二、非结构化剪枝 vs 结构化剪枝（核心考点）</h2>
+  <p>按<strong>剪枝粒度</strong>（一次性移除的最小单元规模）分为两大类，另有介于两者之间的半结构化剪枝。这一分类直接关系到压缩后的<strong>实际推理加速效果</strong>，是连接理论压缩率与实际硬件性能之间的桥梁。</p>
+  <div class="grid cols-2">
+    <div class="card"><h4>非结构化剪枝（精细但加速难）</h4><p>操作：移除<strong>单个独立的权重</strong>或神经元连接；粒度精细（Fine-grained）；类比雕塑家一点点凿掉大理石碎屑。剪后权重矩阵稀疏但零元素分布<strong>完全不规则</strong>。<br>· L1 范数策略：设全局或层级阈值，绝对值小于阈值的单个权重直接置零（如 amount=0.5 保留 50% 权重）。<br>· 优点：高稀疏度（适合内存受限环境）、精细化控制（最小化精度损失同时最大化压缩比）。<br>· 缺点：<strong>硬件加速难度大</strong>（不规则稀疏结构，GPU/TPU 难以利用）、实现复杂（需专用稀疏矩阵库）。<br>· 常见方法：权重大小剪枝、基于梯度的剪枝（如梯度×权重绝对值）。</p></div>
+    <div class="card"><h4>结构化剪枝（硬件友好但精度挑战大）</h4><p>操作：移除<strong>整个结构化单元</strong>——滤波器（卷积核）、神经元、注意力头甚至整个网络层；粒度粗糙（Coarse-grained）；类比建筑师移除整根支柱或整个楼层。L1 范数定义为<strong>所有元素的绝对值之和</strong>，按范数排序移除最低的若干单元（卷积层 dim=0 即按输出通道/滤波器剪）。<br>· 优点：<strong>硬件友好</strong>（保留规则结构、充分利用矩阵运算并行性，显著推理加速）、简化部署（适配现有框架无需复杂修改）。<br>· 缺点：精度损失较大（每次剪枝单位大）、剪枝粒度较粗、灵活性差。<br>· 常见方法：L1 范数剪枝、基于 BN 层缩放因子的通道剪枝（如 Network Slimming）。</p></div>
+  </div>
+  <table>
+    <tr><th>特性</th><th>非结构化剪枝</th><th>结构化剪枝</th></tr>
+    <tr><td>移除单元</td><td>单个权重</td><td>整个滤波器、神经元、层等</td></tr>
+    <tr><td>稀疏模式</td><td>不规则、细粒度稀疏</td><td>规则，对齐硬件计算单元</td></tr>
+    <tr><td>主要优势</td><td>灵活性高，精度保持度好</td><td>可在通用硬件上实现显著的实际推理加速</td></tr>
+    <tr><td>主要挑战</td><td>难以在通用硬件上获得实际加速，需特殊库/硬件支持</td><td>灵活性较低，更容易造成精度下降</td></tr>
+    <tr><td>实际延迟增益</td><td>通常极小或无，依赖特定软硬件</td><td>显著，兼容标准密集计算库</td></tr>
+  </table>
+
+  <h2>三、重要性判据、方法清单与剪枝示例</h2>
+  <p><strong>剪枝的根本问题</strong>（课件第 78 页）：如何衡量网络组件的重要性？两大类标准：① <strong>基于幅度</strong>——最常用、最直观：参数绝对值大小与重要性正相关（用 L1 范数＝绝对值之和，或 L2 范数＝平方和的平方根量化），简单但有效；② <strong>基于梯度</strong>——更严谨：用泰勒展开近似估算移除组件后对损失函数的影响（一阶导数/梯度或二阶导数/Hessian），影响越大越重要。</p>
+  <p>课件方法表选记（第 77 页）：Level Pruner（按绝对值阈值逐元素）、L1/L2 Norm Pruner（剪 L1/L2 范数最小的输出通道）、FPGM（滤波器几何中位数）、Slim Pruner（BN 层缩放因子剪通道）、APoZ（按激活零值占比）、Taylor FO（一阶泰勒展开估计重要性）、Lottery Ticket（彩票假设迭代剪枝找可训练子网络）、ADMM、AGP（自动化渐进式）、Simulated Annealing（模拟退火）、AMC（AutoML 自动搜索）等。</p>
+  <div class="callout def"><div class="label">AlexNet 剪枝示例（第 80–81 页）</div><p>原始 fc1 [2048, 4608]、fc2 [2048, 2048]、fc3 [5, 2048] → 剪后 fc1 [1024, 4608]（只裁输出）、fc2 [1024, 1024]（输入输出都裁）、fc3 [5, 1024]（只裁输入）；方法是计算每行 L1 范数，选范数最大的保留、排序保持原顺序。<br>结果：参数量 14,591,685 → 6,720,197，<strong>参数减少 53.9%</strong>；推理精度无损失、略有提升，推理速度实测更快（存在硬件误差）。<br>只剪全连接层的原因：卷积层占 <strong>90% 计算量</strong>且负责特征提取——只剪全连接层性能提升有限，剪卷积层更易影响准确率。</p></div>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关·思考题 2）</h3>
+    <p><strong>1. 我们通常用 L1 范数（权重的绝对值大小）作为剪枝标准，认为绝对值越小的权重越不重要。是否存在「权重绝对值很小，但其实对模型非常重要」的情况？</strong></p>
+    <details><summary>点开看提示</summary>
+      <p>课件未给出标准答案，建议向老师确认。可结合本章其他小节的线索思考：量化一节指出大模型中存在数值极大却关键的异常维度——说明「用单一数值大小判重要性」并不总是可靠；基于梯度的剪枝标准（用泰勒展开估计移除组件对损失的影响）正是对幅度标准的补充。</p>
+    </details>
+    <p><strong>2. 为什么剪枝通常是「训练 → 剪枝 → 微调」的迭代过程，而不是直接从头训练一个本来就比较小的模型？</strong></p>
+    <details><summary>点开看提示</summary>
+      <p>课件第 63 页给出方向：与简单从零训练小模型相比，对大模型剪枝的价值在于可能<strong>保留大型网络在训练过程中学到的「涌现能力」</strong>，而这些复杂能力是小模型可能永远无法自行发展的；此外彩票假设表明，从原始初始权重出发训练的稀疏子网络能达到与密集网络相当甚至更好的性能。（课件未给出完整标准答案，建议向老师确认。）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第四章-1009》（老师自编，教材无对应章节）
+    · 速查：<a href="../reference/边缘智能速查.html">边缘智能速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0403-模型量化.html">0403 模型量化</a>
+    · 下一课：<a href="0405-知识蒸馏.html">0405 知识蒸馏</a>
+    · <a href="../课程总目录.html">课程总目录</a>
+    <br>有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "为什么结构化剪枝比非结构化剪枝更容易获得实际的推理加速？",
+    options: [
+      "因为结构化剪枝不损失任何精度",
+      "因为剪后模型保留规则结构，对齐硬件计算单元，可充分利用矩阵运算并行性",
+      "因为结构化剪枝移除的是单个权重，计算更简单"
+    ],
+    answer: 1,
+    explain: "课件第 75–76 页：结构化剪枝剪的是整个通道/滤波器/层，稀疏模式规则、对齐硬件计算单元，兼容标准密集计算库，可在通用硬件上显著加速；非结构化剪枝稀疏分布不规则，通常极小或无实际延迟增益。"
+  },
+  {
+    prompt: "结构化剪枝中，一个通道（结构单元）的 L1 范数定义为？",
+    options: [
+      "该单元内所有权重的绝对值之和",
+      "该单元内所有权重的平方和的平方根",
+      "该单元内所有权重的乘积"
+    ],
+    answer: 0,
+    explain: "课件第 70 页：结构化剪枝中 L1 范数定义为所有元素的绝对值之和；计算每个结构单元的 L1 范数并排序，移除范数值最低的若干单元。L2 范数才是平方和的平方根。"
+  },
+  {
+    prompt: "课件 AlexNet 剪枝示例只剪全连接层、不动卷积层，理由是？",
+    options: [
+      "卷积层没有可剪的冗余参数",
+      "卷积层占 90% 计算量且负责特征提取，剪它更易影响准确率",
+      "全连接层参数最多所以提升最大，卷积层剪了不省内存"
+    ],
+    answer: 1,
+    explain: "课件第 81 页：卷积层占 90% 计算量且负责特征提取——只剪全连接层性能提升有限，但剪枝卷积层更易影响准确率，故本例只剪全连接层。剪后参数量从 14,591,685 降至 6,720,197，减少 53.9%。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 剪枝关通过。" : " —— 回头看标红的解析，重点记两种剪枝对比表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

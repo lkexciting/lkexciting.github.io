@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 章 · Contiki与RIOT详解</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 3 章 · 小课 5/6 · 课件提炼</span>
+  <h1>Contiki 与 RIOT 详解</h1>
+  <p class="subtitle">一句话：两大经典 IoT OS 的机制细节——protothreads 单堆栈协作式、mt_thread、uIP/RPL，RIOT 微内核、GNRC、SAUL，全是代码填空与简答高发区。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第三章-dw(3)》"典型物联网操作系统"中 Contiki OS 与 RIOT 两节【教材 PPT 补充部分会单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第三章-dw(3).pdf</p></div>
+
+  <h2>一、Contiki OS</h2>
+  <h3>1.1 简介与发展历程</h3>
+  <p>Contiki OS 是一款<strong>开源、高度便携、多任务</strong>的操作系统，适用于资源有限的无线传感器网络，专为具有<strong>少量内存的微控制器（MCU）</strong>而设计。</p>
+  <table>
+    <tr><th>时间</th><th>事件</th></tr>
+    <tr><td>2002</td><td>瑞典计算机科学研究所的 <strong>Adam Dunkels</strong> 等人提出最早的 Contiki OS</td></tr>
+    <tr><td>2004</td><td>Contiki OS 2.0 诞生，加入网络模拟器 <strong>Cooja</strong> 和轻量级网络通信元语协议栈 <strong>Rime</strong></td></tr>
+    <tr><td>2011</td><td>加入丰富网络协议：基于 IPv6 的路由协议 <strong>Contiki RPL</strong>、低功耗 MAC 协议 <strong>Contiki MAC</strong></td></tr>
+    <tr><td>2012 起</td><td>瑞典公司 <strong>Thingsquare</strong> 接受并维护 Contiki OS 项目</td></tr>
+    <tr><td>2015 年 8 月</td><td><strong>Contiki OS 3.0</strong> 发布</td></tr>
+  </table>
+  <h3>1.2 关键特性表（课件原表）</h3>
+  <table>
+    <tr><th>特性</th><th>描述</th></tr>
+    <tr><td>编程模型</td><td>基于 <strong>protothreads</strong> 的编程模型，支持多线程编程风格；提供以多堆栈实现的多线程库 <strong>mt_thread</strong></td></tr>
+    <tr><td>任务调度</td><td>基于优先级的事件驱动、protothreads 调度、基于 mt_thread 的调度</td></tr>
+    <tr><td>内存分配</td><td><strong>静态内存分配和动态分配</strong>两种机制</td></tr>
+    <tr><td>软件更新</td><td><strong>基于模块化</strong>的软件更新方式</td></tr>
+    <tr><td>网络服务</td><td>路由协议 Contiki RPL、轻量级网络层协议 <strong>uIP</strong>、IPv6 地址压缩协议 <strong>6LowPAN</strong> 等</td></tr>
+    <tr><td>AI 支持</td><td><strong>官方不支持</strong>，开发者自行适配后可使用 TensorFlowLite</td></tr>
+    <tr><td>其他</td><td>提供<strong>基于 shell 的交互式编程接口</strong></td></tr>
+  </table>
+  <h3>1.3 protothreads（必考）</h3>
+  <p><strong>主要特点三条</strong>：基于<strong>协作式</strong>的调度模式、使用<strong>单个堆栈</strong>实现、<strong>不能使用局部变量</strong>（跨阻塞点）。由瑞士计算机学院的 Adam Dunkels 等人于 <strong>2006 年</strong>提出。五个核心宏：</p>
+  <div class="calc">PROCESS(name, strname);              // 所有 Contiki 程序必须以宏 PROCESS() 开头
+AUTOSTART_PROCESSES(&name);          // 程序启动时自动执行当前进程
+PROCESS_THREAD(name, ev, data) {     // 定义 protothread 的实现
+  static struct etimer wtimer;       // 变量初始化（须在 BEGIN 之前）
+  PROCESS_BEGIN();                   // 必须在初始化的变量之后调用
+  etimer_set(&wtimer, CLOCK_CONF_SECOND);  /* 1s */
+  while (1) {
+    PROCESS_WAIT_EVENT_UNTIL(etimer_expired(wtimer));  // 未到期: Yield
+    printf("Hello one.\n");
+    etimer_reset(&wtimer);
+  }
+  PROCESS_END();                     // 表示当前线程终止
+}</div>
+  <p>课件例子：两个 protothreads 分别每 1s、2s 输出 Hello one / Hello two，输出序列 <strong>Hello one. Hello one. Hello two. Hello one. Hello one. Hello two…</strong></p>
+  <p><strong>实现机理</strong>：宏展开后是一个 <strong>switch(process_pt-&gt;lc)</strong> 状态机——未到期时执行 case 0 / case 9、返回 1（yield）；到期时跳到 case 9 执行 printf。这就是"单堆栈、不能使用局部变量"的根源。</p>
+  <p><strong>mt_thread 多线程库</strong>：protothreads 基于单个堆栈，<strong>mt_thread 基于多个堆栈</strong>；mt_thread 支持<strong>协作式调度（主动 yield）和抢占式调度（系统负责抢占）</strong>。主要 API：<code>mt_init()</code> 初始化库、<code>mt_start(thread, function, data)</code> 启动线程、<code>mt_exit()</code> 退出、<code>mt_exec(thread)</code> 执行、<code>mt_stop(thread)</code> 终止。</p>
+  <h3>1.4 网络服务（必考表格）</h3>
+  <table>
+    <tr><th>提供服务</th><th>协议</th><th>内容</th></tr>
+    <tr><td>精简的 TCP/IP 协议栈</td><td>uIP</td><td>TCP、UDP、ICMP、IP；将 TCP/IP 协议栈<strong>精简为必须的最小的功能集合</strong>，减少内存占用</td></tr>
+    <tr><td>IPv6 层的适配层服务</td><td>6LowPAN</td><td><strong>数据包的分割重组、IPv6 包头压缩和 UDP 包头压缩</strong></td></tr>
+    <tr><td>数据分发和收集服务</td><td>RPL</td><td>针对<strong>低功耗有损网络</strong>设计的 IPv6 <strong>距离矢量路由协议</strong></td></tr>
+  </table>
+  <p><strong>RPL vs CTP</strong>（课件原文）：CTP <strong>仅提供了多对一的通信模式</strong>；RPL 支持多种网络通信模式——<strong>一对多（数据分发）、多对一（数据收集）和一对一（点对点）</strong>。</p>
+  <h3>1.5 基于 shell 的交互式编程</h3>
+  <p>sky-shell 样例默认提供多种交互式命令，可登录节点执行<strong>传感数据采集（sense）、改变发送能量（txpower）、改变通信信道（rfchannel）</strong>等操作（例：sense 输出 Light 1 4 / Temperature 23.2 / Relative humidity 79 / RSSI 8 / Voltage 2.50）。支持自定义命令：如 echoT 命令用 <code>shell_register_command()</code> 注册、<code>SHELL_COMMAND()</code> 定义、在 PROCESS_THREAD 里用 <code>shell_output()</code> 把参数字符串输出两次。</p>
+
+  <h2>二、RIOT</h2>
+  <h3>2.1 简介与特点</h3>
+  <p>RIOT 是一个专门面向物联网场景的<strong>实时多线程操作系统</strong>，<strong>基于微内核实现</strong>——所有系统服务（时钟、网络协议栈、网络服务等）都通过<strong>创建独立的线程</strong>来实现。最初由<strong>柏林自由大学</strong>开发维护；<strong>2008 年</strong>启动开源社区，现已发展成拥有 <strong>293 个贡献者</strong>的社区；支持 <strong>67 种处理器型号和 237 款开发板</strong>。</p>
+  <div class="grid cols-3">
+    <div class="card"><h4>开发者友好</h4><p>开发流程接近传统软件开发；支持 C/C++，兼容 gcc、gdb，可在 Linux/Windows/MacOS 编译；应用开发大多与硬件无关，代码无须修改即可跨开发板运行。</p></div>
+    <div class="card"><h4>资源占用低</h4><p>微内核 + 模块化裁剪；每个线程占用资源极少（<strong>通常少于 25 字节</strong>）。</p></div>
+    <div class="card"><h4>网络支持好</h4><p>支持大量传输层、网络层、链路层协议；提供 Shell、加密原语等工具。</p></div>
+  </div>
+  <h3>2.2 关键特性表（课件原表）</h3>
+  <table>
+    <tr><th>特性</th><th>描述</th></tr>
+    <tr><td>编程模型</td><td>原生支持<strong>多线程编程</strong>，大量系统服务基于多线程实现；模块化设计可裁剪</td></tr>
+    <tr><td>任务调度</td><td>支持<strong>基于优先级的线程调度</strong>，可按线程分配优先级满足实时性</td></tr>
+    <tr><td>内存分配</td><td>支持<strong>动态分配</strong></td></tr>
+    <tr><td>软件更新</td><td>支持<strong>模块化</strong>软件更新</td></tr>
+    <tr><td>网络服务</td><td>完善网络协议栈：向下支持大量无线通信协议，向上支持 TCP、UDP 等</td></tr>
+    <tr><td>AI 支持</td><td><strong>官方支持</strong>，兼容 TensorFlow Lite 库</td></tr>
+    <tr><td>其他</td><td><strong>SAUL</strong>：统一接口读写传感器和执行器</td></tr>
+  </table>
+  <h3>2.3 多线程编程（代码填空高发）</h3>
+  <div class="calc">uint8_t thread_stack[1024];          // 栈内存
+int main(void){
+  kernel_pid_t pid = thread_create(
+    thread_stack,           // 栈内存
+    1024,                   // 栈内存大小
+    8,                      // 优先级(0-15)，值越高优先级越低
+    THREAD_CREATE_STACKTEST,// flag 字段
+    thread_func,            // 线程函数
+    NULL,                   // 输入至函数的参数
+    "thread name");         // 线程名
+}
+Flag 三选一：
+  THREAD_CREATE_SLEEPING    创建后立刻进入休眠状态
+  THREAD_CREATE_WOUT_YIELD  创建后可能不会立即执行，等待系统调度
+  THREAD_CREATE_STACKTEST   创建后将立即执行并测试内存占用量</div>
+  <h3>2.4 模块化系统设计与 GNRC 协议栈</h3>
+  <p>模块在代码目录中表现为<strong>文件夹</strong>；几乎所有的硬件设备同样被抽象成模块（CPU、外设等）——移植到新开发板时<strong>仅需开发相应的 CPU 模块</strong>。用法：<code>USEMODULE += dht</code>（温湿度传感器）、<code>USEMODULE += xtimer</code>（计时器）。</p>
+  <p><strong>GNRC（Generic network stack）</strong>：最底层的 <strong>gnrc_netdev</strong> 是对下层各类网络协议的抽象——通过该层抽象，GNRC 可以<strong>兼容大量链路层协议而无需修改代码</strong>；GNRC <strong>完全实现了 6LowPAN 协议</strong>，向上提供 IPv6、UDP、TCP 支持；应用层可用 <strong>socket API</strong> 访问。GNRC 基于 RIOT 多线程机制：<strong>每一层分配一个独立线程</strong>，底层协议线程优先级普遍高于高层——<strong>MAC 层线程优先级最高、应用层最低</strong>。</p>
+  <h3>2.5 SAUL（传感器及执行器抽象层）</h3>
+  <div class="calc">// 每个外围设备用 saul_reg_t 抽象，所有设备以链表形式存储
+typedef struct saul_reg {
+  struct saul_reg *next;       // 链表指针
+  void *dev;
+  const char *name;
+  saul_driver_t const *driver;
+} saul_reg_t;
+
+typedef struct {
+  saul_read_t  read;           // 统一读接口
+  saul_write_t write;          // 统一写接口
+  uint8_t type;                // 设备类型
+} saul_driver_t;
+// phydat_t：统一存储传感器数据和控制执行器参数的数据类型
+
+// 遍历读取开发板上所有传感器：
+phydat_t res;
+saul_reg_t *dev = saul_reg;    // SAUL 初始化时创建，指向设备链表头部
+while (dev) {
+  int dim = saul_reg_read(dev, &res);   // 调用该设备驱动的 read 函数
+  phydat_dump(&res, dim);               // 打印 res 中的数据
+  dev = dev->next;
+}</div>
+
+  <div class="exam">
+    <h3>课件思考题 3（前四问）与课后习题（本课相关）</h3>
+    <p><strong>问 1</strong>：Contiki OS 的 protothreads 跟传统的多线程有什么区别？</p>
+    <details><summary>点开看参考答案</summary>
+      <p>protothreads 基于<strong>协作式调度模式</strong>、使用<strong>单个堆栈</strong>实现、<strong>不能使用局部变量</strong>（课件原文三大特点）；传统多线程每个线程有独立堆栈，可被抢占。Contiki 若需要多堆栈、支持抢占，可改用 mt_thread 多线程库。</p>
+    </details>
+    <p><strong>问 2</strong>：Contiki OS 中的 RPL 协议与 CTP 协议有什么区别？</p>
+    <details><summary>点开看参考答案</summary>
+      <p>课件：CTP 仅提供多对一通信模式；RPL 支持一对多（数据分发）、多对一（数据收集）和一对一（点对点）。课后习题答案补充细节：RPL 不仅提供多对一通信的接口 <strong>dao_output</strong>，还提供一对多的通信接口 <strong>dio_output</strong>；且 dao_output 指定的目的地址不仅可以是汇聚节点，还可以是网络中其他节点（即点对点模式）。</p>
+    </details>
+    <p><strong>问 3</strong>：RIOT GNRC 中哪一层实现了对下层各类网络协议的抽象，使 GNRC 可兼容大量链路层协议而无需修改代码？</p>
+    <details><summary>点开看参考答案</summary>
+      <p>最底层的 <strong>gnrc_netdev</strong> 层（课件原文）。</p>
+    </details>
+    <p><strong>问 4</strong>：RIOT 中一个外围设备对应 SAUL 中哪个数据结构？传感器数据和控制执行器的参数存在哪个数据结构中？</p>
+    <details><summary>点开看参考答案</summary>
+      <p>外围设备对应 <strong>saul_reg_t</strong> 结构（内含 saul_driver_t 驱动，以链表存储）；数据存在统一的 <strong>phydat_t</strong> 类型中（课件原文）。</p>
+    </details>
+    <p><strong>课后习题 8</strong>：基于 Contiki-OS uIP 的 TCP/IP 通信例子，填写空白处的代码。</p>
+    <details><summary>点开看参考答案</summary>
+      <p>该题的代码原图未在提取文本中给出，课件未给出可引用的完整题面，建议对照教材原书作答：题面背景是服务端监听 <strong>45 号端口</strong>、有数据到来时反馈 "ok"；客户端向 <strong>192.168.0.1</strong> 发起连接、连接成功后发送字符串 "hello"。</p>
+    </details>
+    <p><strong>课后习题 9</strong>：RIOT 节点得到 phydat_t 类型数据 d，补全打印温度整数位的代码。</p>
+    <details><summary>点开看参考答案</summary>
+      <p>两个空：scale &gt; 0 分支循环里填 <strong>printf("0")</strong>（逐个补零）；scale &lt; 0 分支填 <strong>int32_t output = (d.val[0] / (int32_t)e)</strong>，其中 e = _tenmap[d.scale]，再用 %ld 打印 output。（课后习题答案原文）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第三章-dw(3)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/操作系统速查.html">操作系统速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0304-网络AI与系统总览.html">网络AI与系统总览</a> · 下一课：<a href="0306-AliOS系统与案例前沿.html">AliOS系统与案例前沿</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师，可以要求更细的讲解或更多例题。</footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "protothreads 的三大特点，课件的说法是？",
+    options: [
+      "抢占式调度、多堆栈、支持局部变量",
+      "协作式调度、单个堆栈、不能使用局部变量",
+      "时间片轮转、双堆栈、可用局部变量"
+    ],
+    answer: 1,
+    explain: "课件原文：protothreads 基于协作式的调度模式、使用单个堆栈实现、不能使用局部变量。需要多堆栈/抢占时用 mt_thread。"
+  },
+  {
+    prompt: "Contiki 网络服务三件套中，6LowPAN 的功能是？",
+    options: [
+      "把 TCP/IP 协议栈精简为最小功能集合",
+      "数据包的分割重组、IPv6 包头压缩和 UDP 包头压缩",
+      "低功耗有损网络的距离矢量路由"
+    ],
+    answer: 1,
+    explain: "课件：6LowPAN 是 IPv6 层适配层，负责数据包分割重组与 IPv6/UDP 包头压缩；精简 TCP/IP 栈是 uIP；距离矢量路由是 RPL。"
+  },
+  {
+    prompt: "RIOT 的 thread_create 中优先级参数取值 0-15，规则是？",
+    options: [
+      "值越高优先级越高",
+      "值越高优先级越低",
+      "0 和 15 都是最高优先级"
+    ],
+    answer: 1,
+    explain: "课件代码注释：优先级 (0-15)，值越高优先级越低。GNRC 协议栈中 MAC 层线程优先级最高、应用层最低。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— Contiki 与 RIOT 稳了。" : " —— 回头看标红的解析，重点复习 protothreads 三特点与 RPL/CTP 区别。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

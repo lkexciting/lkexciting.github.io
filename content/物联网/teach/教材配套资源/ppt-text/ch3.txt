@@ -1,0 +1,168 @@
+--- ppt/slides/slide1.xml ---
+第三章：物联网操作系统
+--- ppt/slides/slide2.xml ---
+学习目标 理解物联网操作系统的作用 理解物联网操作系统与传统操作系统的区别 掌握 Contiki OS 的 protothreads 编程模型 理解 AliOS Things 和 HarmonyOS 的关键特性 掌握 基于 Contiki OS 和 AliOS Things 的应用软件开发方法 掌握 根据应用需求选择物联网操作系统的基本方法
+--- ppt/slides/slide3.xml ---
+目录 概述 关键特性 典型物联网操作系统 案例开发 学术研究进展
+--- ppt/slides/slide4.xml ---
+简介 物联网操作系统 物联网操作系统是支撑物联网大规模发展的核心软件。 物联网操作系统屏蔽了物联网硬件开发的差异性，提供了 统一的编程接口 ，为多个应用的执行提供了运行时环境，降低了物联网应用开发的成本和时间， 为物联网的统一管理奠定了基础 硬件抽象是操作系统核心功能之一 开发者可以基于统一的操作系统建议庞大的应用生态 对物联网操作系统尤为重要 物联网操作系统发展现状 数量众多，百家争鸣 包括谷歌（ Android Things ）、微软（ Windows 10 IoT Core ）、 ARM （ mbed OS ）、阿里巴巴（ AliOS Things ）、华为（ Huawei HarmonyOS ）等 4
+--- ppt/slides/slide5.xml ---
+简介 物联网操作系统与传统操作系统区别 存储空间占用不同：物联网操作系统与传统操作系统相比内存占用较小，一般只有几十 KB 5
+--- ppt/slides/slide6.xml ---
+简介 物联网操作系统与传统操作系统区别 内存管理方式不同 传统操作系统一般运行在具有内存管理单元（ MMU ）的设备上，能够提供 地址翻译和内存保护 功能 物联网操作系统则 因设备而异 ，当运行在缺乏 MMU 的设备上时，一般很难提供地址翻译和内存保护功能，当运行在具备 MMU 的设备上时，可以提供轻量级的地址翻译和内存保护功能 OS 特权模式不同 传统操作系统一般运行在具有特权模式的 CPU 上 很多物联网芯片不具有 CPU 特权模式，所有的指令都能访问任何硬件资源 由于缺乏 CPU 特权模式，物联网操作系统很难解决 控制冒险 (Control hazards) 的问题，这是因为有 Bug 的程序可以在不受操作系统的控制下轻松地占用 CPU 周期，从而导致传感器节点没有响应 6
+--- ppt/slides/slide7.xml ---
+简介 - 系统构成 任务调度 两种主要的任务调度方式：事件驱动任务调度、多线程任务调度 动态加载 允许模块动态加载，对物联网应用软件更新非常有用 存储空间管理 数据内存（随机存储器 RAM ）、程序闪存（ Flash ） 资源抽象 专用资源抽象、虚拟化资源抽象和共享资源抽象 传感器接口 为获取传感器读数提供了方便统一的方法 网络协议栈 支持高级服务：数据收集与分发 处理底层细节：无线芯片配置、介质访问控制和队列管理 7
+--- ppt/slides/slide8.xml ---
+思考题 物联网操作系统与传统操作系统的不同，有什么作用？ 8
+--- ppt/slides/slide9.xml ---
+目录 概述 关键特性 典型物联网操作系统 案例开发 学术研究进展
+--- ppt/slides/slide10.xml ---
+关键特性 编程模型 调度方式 I/O 操作方式 内存分配 软件更新 网络服务 10
+--- ppt/slides/slide11.xml ---
+编程模型 依据程序结构分类：非模块化编程、模块化编程 非模块：在非模块化编程中，应用程序作为一个整体来进行设计、测试和调试 模块化：模块化编程强调将程序的功能分离为独立的、可互换的模块，使得每个模块执行某一具体功能 编码层面的模块化 （如 TinyOS 组件化编程） 二进制层面的模块化 （如 SOS 模块化编程） 依据执行逻辑分类：基于事件的编程、基于线程的编程 事件：应用程序会实时地处理或响应系统中的事件；应用程序由多个事件处理函数构成 线程：一个线程对应一个逻辑上的任务 11
+--- ppt/slides/slide12.xml ---
+编程模型 TinyOS 组件化编程 应用程序由多个组件灵活组合而构成 便于程序复用，便于程序移植 编译后的应用程序是单个二进制程序映像，不再保留组件化的信息 12
+--- ppt/slides/slide13.xml ---
+编程模型 SOS 模块化编程 应用程序由一个或多个功能独立的模块组成 编译后的应用程序依然由多个模块组成 SOS 程序的模块化程度更高，且便于模块的动态修改，适用于程序更新频繁的应用 13 static const mod_header_t mod_header SOS_MODULE_HEADER = { . mod_id = SURGE_MOD_PID,  // 模块的 ID 为 SURGE_MOD_PID . state_size = sizeof ( surge_state_t ), . num_sub_func = 1,  // 订阅服务的个数 . num_prov_func = 0, . platform_type = HW_TYPE,  // or PLATFORM_ANY . processor_type = MCU_TYPE, . code_id = ehtons (SURGE_MOD_PID), . module_handler = surge_module_handler , . funct = {  // 订阅的服务 [0] = {error_8, "Cvv0", TREE_ROUTING_PID, MOD_GET_HDR_SIZE_FID}, }, };  // SOS 模块头部的例子
+--- ppt/slides/slide14.xml ---
+编程模型 基于事件的编程 应用程序会 实时 地处理或响应系统中的事件 基于事件的编程模型可以较好地保证系统的实时性和响应性 radio_pkt ; radio_busy =FALSE; event timer_fired : // 计时完成事件 light_sensor_read (); event light_senor_readDone : // 传感器读数完成事件 radio_pkt <- sensor_reading ; post sendTask (); // 提交传输读数的任务 event radio_sendDone : // 传输任务完成事件 if(not SUCCESS) // 若未成功，则继续提交 post sendTask (); task sendTask : // 传输读数的任务 if(not radio_busy ) radio_send (DEST, radio_pkt ); else post sendTask (); 14 周期性地采集传感器的读数，并通过无线通信芯片发送，应用程序实时地处理或响应系统中的事件的编程示例
+--- ppt/slides/slide15.xml ---
+编程模型 基于线程的编程 一个线程对应逻辑上的一个任务 基于线程的编程模型能够更好地组织程序的结构，使代码的可读性更高 大大减少了由代码分片带来的额外代码量 send_thread : // 发送线程 radio_pkt ; sensor_reading ; while (TRUE) { temperature_sensor_read (&temp); humidity_sensor_read (&humidity); light_sensor_read (&light); radio_pkt  temp | humidity | light; radio_send (DEST, radio_pkt ); cpu_sleep (PERIOD); } 15 周期性地采集传感器的读数，并通过无线通信芯片发送，应用程序实时地处理或响应系统中的事件的编程示例
+--- ppt/slides/slide16.xml ---
+调度方式 抢占式 高优先级线程会抢占低优先级线程的执行 非抢占式 系统一旦把处理器分配给就绪队列中的某线程后，该线程便一直执行下去，直至完成或阻塞 协作式 在协作式调度中，只有在线程主动交出 CPU 的控制权后，才可以让其他的线程得到 CPU 的控制权 时间片轮转 系统默认给每个线程分配了相同时间片的 CPU 资源，当某个线程的 CPU 时间片用完时，即使该线程的任务尚未执行完，也必须交出 CPU 的控制权，让其他线程执行 16
+--- ppt/slides/slide17.xml ---
+调度方式 代码示例 在多个线程同时对变量 x 有操作权限的情况下，如何进行原子操作，才能使变量 x 的数值在 RAM 与外存之间能够保持一致 { x++; write(x); } mutex m; m.lock (); { x++; write(x); } m.unlock (); { x++; Yield(); x write(x); Yield(); √ } 非抢占式 抢占式或时间片轮转 协作式 17
+--- ppt/slides/slide18.xml ---
+思考题 给定三个线程 a 、 b 、 c ，它们单独执行完的时间分别为 10s 、 20s 、 30s （ 1 ）在非抢占式的调度方式下，三个线程执行完时，各自花费了多少时间？ （ 2 ）在协同式和抢占式并存的调度方式下，线程的优先级为 c>b>a ，线程 a 、 b 、 c 的启动时间点分别为第 1s 、第 2s 、第 15s ，线程 b 执行完 4s 有 yield() 指令，则各自执行完花费的时间为多少？ （ 3 ）在时间片轮转的调度方式下，时间片的长度为 10s ，线程 a 、 b 、 c 的启动时间点分别为第 0s 、第 10s 、第 20s ，则各自执行完花费的时间为多少？ 18
+--- ppt/slides/slide19.xml ---
+I/O 操作方式 阻塞式 I/O 当程序调用一个 I/O 操作时，直到该 I/O 操作完成，这个调用才会返回；易于编程 分阶段 I/O 把 I/O 操作的调用和 I/O 操作的完成分成了两个独立的阶段 代码冗长，但可以保持系统的高响应性 { call SubSend.send (); // call phase ……//other tasks } event void sendDone ( error_t err) { if (err == SUCCESS) sendCount ++; } if (send() == SUCCESS) { sendCount ++; } 分阶段 I/O 阻塞式 I/O 19
+--- ppt/slides/slide20.xml ---
+内存分配 静态内存分配（如 TinyOS ） 静态内存区域在编译时确定，通常由未初始化数据段（ .bss ）和初始化数据段（ .data ）构成 静态内存分配可以通过静态数组的方式来实现 优点：效率高、内存池中无碎片 缺点：不能按需申请 动态内存分配（如 AliOS Things ） 动态内存区域在运行时确定 通过 malloc 申请，通过 free 释放（否则可能会造成系统安全隐患） 优点：可以按需分配 缺点：内存池中容易出现碎片、可能造成安全隐患 20
+--- ppt/slides/slide21.xml ---
+软件更新 连接方式 有线连接：例如通过串口、以太网等 无线连接：例如通过 WiFi 、 ZigBee 等 更新步骤 在操作系统启动前，通过 BootLoader 查找升级文件 找到文件后，擦除 Flash 中存储的旧文件 在 Flash 中写入升级的文件 检查新写入的文件是否正确 21
+--- ppt/slides/slide22.xml ---
+软件更新 更新方法 基于整个镜像的软件更新：对软件系统的所有部分进行更新 基于模块化的软件更新：将软件镜像细分为各个模块，根据需求选择其中的某些模块进行更新 基于差分的软件更新：将旧版本与新版本的代码做差分，得到升级部分的补丁即差分文件；可以对整个镜像进行差分，也可以对模块进行差分 新版本代码 旧版本代码 差分文件 - = 差分文件 22
+--- ppt/slides/slide23.xml ---
+网络服务 传统传感网的网络协议及服务 传感网主要关注多跳自组织的问题，这一类的网络协议大多是基于 IEEE 802.15.4 标准的低功耗局域网协议 典型的传感网网络协议有 CTP 、 FTSP 、 RPL 等 物联网的网络协议及服务 链路层协议增多： BLE 、 ZigBee 、 WiFi HaLow 等 关注低功耗广域网： LoRaWAN 、 NB-IoT 等 学术关注点：干扰共存、异构互联 23
+--- ppt/slides/slide24.xml ---
+目录 概述 关键特性 典型物联网操作系统 Contiki OS RIOT AliOS Things HarmonyOS 案例开发 学术研究进展
+--- ppt/slides/slide25.xml ---
+Contiki OS 简介 Contiki OS 是一款 开源、高度便携、多任务 的操作系统 适用于资源有限的无线传感器网络 Contiki OS 专为具有少量内存的微控制器（ MCU ）而设计 发展历程 在 2002 年，瑞典计算机科学研究所的 Adam Dunkels 等人提出了最早的 Contiki OS 2004 年， Contiki OS 2.0 诞生，它加入了早期版本的网络模拟器 Cooja 和轻量级的网络通信元语协议栈 Rime 在 2011 年，丰富的网络协议添加到 Contiki OS 中，例如基于 IPv6 的路由协议 Contiki OS RPL 和低功耗的 MAC 协议 Contiki OS MAC 从 2012 年开始，瑞典的公司 Thingsquare 开始接受并维护 Contiki OS 的项目 2015 年 8 月， Contiki OS 3.0 发布出来 25
+--- ppt/slides/slide26.xml ---
+Contiki OS- 关键特性 编程模型 Contiki OS 采用 基于 protothreads 的编程模型 ，支持多线程的编程风格 提供以多堆栈实现的 多线程库 mt_thread 任务调度： 采用基于优先级的事件和 protothreads 调度机制 内存分配： 两种轻量级内存分配机制，即静态内存分配和动态分配 软件更新： 基于模块化的软件更新方式，提升了软件更新的效率 网络服务 包括路由协议 Contiki OS RPL 、轻量级的网络层协议 uIP 和 IPv6 地址压缩协议 6LowPAN 等 其他 提供 基于 shell 的交互式编程接口 26
+--- ppt/slides/slide27.xml ---
+基于 protothreads 的编程模型 protothreads 由瑞士计算机学院的 Adam Dunkels 等人于 2006 年提出来的编程框架 基于协作式的调度模式 使用单个堆栈实现 不能使用局部变量 27
+--- ppt/slides/slide28.xml ---
+基于 protothreads 的编程模型 基本编程框架 所有的 Contiki OS 程序都必须以 宏 PROCESS() 开头 宏 AUTOSTART_PROCESSES() 用于在程序启动的时候自动地执行当前进程 宏 PROCESS_THREAD() 用来定义 protothread 的实现 宏 PROCESS_BEGIN() 必须在初始化的变量之后调用 宏 PROCESS_END() 的调用表示当前线程的终止 PROCESS (name, strname ); //name: 进程结构体 ; strname : 进程名称 AUTOSTART_PROCESSES ( struct process &name); PROCESS_THREAD (name, process_event_t , process_data_t ) { // process_event_t : 事件 ; process_data_t : 传递的进程数据 ----Initialization of required variables---- PROCESS_BEGIN (); ---Set of C statements--- PROCESS_END (); } 28
+--- ppt/slides/slide29.xml ---
+基于 protothreads 的编程模型 protothreads 基础 protothreads 基于协作式的调度模式，仅用单个堆栈就能够实现 PROCESS( hello_one , " hello_one "); PROCESS( hello_two , " hello_two "); AUTOSTART_PROCESSES(&hello_one,& hello_two ); PROCESS_THREAD( hello_one , ev , data){ static struct etimer wtimer ; PROCESS_BEGIN(); etimer_set (& wtimer ,      CLOCK_CONF_SECOND); /* 1s*/ while (1)    { PROCESS_WAIT_EVENT_UNTIL( etimer_expired ( wtimer )); printf (“Hello one.\n”); etimer_reset (& wtimer ); } PROCESS_END(); } PROCESS_THREAD( hello_two , ev , data){ static struct etimer wtimer ; PROCESS_BEGIN(); etimer_set (& wtimer , CLOCK_CONF_SECOND*2); /* 2s*/ while (1)    { PROCESS_WAIT_EVENT_UNTIL( etimer_expired ( wtimer )); printf (“Hello two.\n”); etimer_reset (& wtimer ); } PROCESS_END(); } 输出： Hello one. Hello one. Hello two. Hello one. Hello one. Hello two 29 代码创建了两个 protothreads ，轮流输出“ Hello one ”和“ Hello two ” If not expired : Yield
+--- ppt/slides/slide30.xml ---
+基于 protothreads 的编程模型 Protothreads 的实现机理 声明了一个定时器 wtimer ，每隔 2s 就会输出指定的内容 PROCESS(Contiki_OS_program_process, "Contiki_OS Program Demo"); AUTOSTART_PROCESSES(&Contiki_OS_program_process); PROCESS_THREAD( contiki_program_process , ev , data){ static struct etimer wtimer ; PROCESS_BEGIN(); etimer_set (& wtimer , CLOCK_CONF_SECOND * 2); /* 2s*/ while (1)    { PROCESS_WAIT_EVENT_UNTIL( etimer_expired ( wtimer )); printf (“demo. \n”); etimer_reset (& wtimer ); } PROCESS_END(); } 30
+--- ppt/slides/slide31.xml ---
+基于 protothreads 的编程模型 理解 protothreads 实现：宏展开 情况 1: wtimer 没有 expired, 执行了 case 0, case 8, 返回 1, yield 情况 2: wtimer expired, 执行了 case 8, 执行了 printf PROCESS_THREAD( contiki_program_process , ev , data){ static struct etimer wtimer ; { char PT_YIELD_FLAG = 1; switch(( process_pt )->lc) {  // PROCESS_BEGIN() case 0:; etimer_set (& wtimer , CLOCK_CONF_SECOND * 2); //2s while(1){ PT_YIELD_FLAG = 0;( process_pt )->lc = 8;  // PROCESS_WAIT_EVENT_UNTIL() case 8:; if((PT_YIELD_FLAG == 0) || !( etimer_expired ( wtimer ))) { return 1; } printf (“demo. \n”); etimer_reset (& wtimer ); } }; PT_YIELD_FLAG = 0; ( process_pt )->lc = 0;; return 3; }; // PROCESS_END() } 31
+--- ppt/slides/slide32.xml ---
+多线程库 mt_thread protothreads 是基于单个堆栈的， mt_thread 是基于多个堆栈的 mt_thread 支持协作式调度（主动 yield ）和抢占式调度（系统负责抢占） // 初始化库 void mt_init （ void ） // 启动一个线程 void mt_start （ struct mt_thread * thread ， void （ * function ）（ void * ）， void * data ） // 退出一个线程 void mt_exit （ void ） // 执行线程 void mt_exec （ struct mt_thread * thread ） // 终止一个线程 void mt_stop （ struct mt_thread * thread ） 32 mt_thread 主要 API 及状态转移
+--- ppt/slides/slide33.xml ---
+多线程库 mt_thread 编程示例：创建两个线程，轮流输出 one 、 two PROCESS_THREAD( multi_threading_process , ev , data){ static struct mt_thread alpha_thread ; static struct mt_thread count_thread ; static int c1, c2; PROCESS_BEGIN(); mt_init (); mt_start (& alpha_thread , thread_main , “one”); // 初始化线程 mt_start (& count_thread , thread_main , “two"); mt_exec (& alpha_thread ); // 启动线程 mt_exec (& count_thread ); while(1) { c1++;c2++; if(c1>5 && c2 > 5){  // 当计数器大于 5 时，停止线程 mt_stop (& alpha_thread ); mt_stop (& count_thread ); break; } } PROCESS_END(); } static void thread_main (void *data) { while(1) { puts(data); } } 33
+--- ppt/slides/slide34.xml ---
+网络服务 基于 uIP 的 TCP/IP 协议栈： uIP 将 TCP/IP 协议栈精简为必须的最小的功能集合，减少内存占用 6LowPAN ： 功能主要包括数据包的分割重组、 IPv6 包头的压缩和 UDP 包头的压缩 RPL: 一种针对低功耗有损网络设计的 IPv6 距离矢量路由协议。它支持多种网络通信模式，例如一对多（数据分发模式）、多对一（数据收集模式）和一对一（点对点模式） 34 网络服务 协议名称 提供服务 精简的 TCP/IP 协议栈 uIP TCP 、 UDP 、 ICMP 、 IP IPv6 层的适配层服务 6LowPAN IPv6 数据包的分割重组和包头压缩 数据分发和收集服务 RPL 多种数据的收集和分发
+--- ppt/slides/slide35.xml ---
+思考题 从提供的服务角度来看， CTP 和 RPL 有什么区别？ 35
+--- ppt/slides/slide36.xml ---
+基于 shell 的交互式编程 Contiki OS 的 sky-shell 的样例中，默认提供了多种交互式命令 当把样例程序烧录在节点上之后，能够登录到节点中，执行传感数据采集（ sense ）、改变发送能量（ txpower ）和改变通信信道（ rfchannel ）等操作 36 $ make TARGET=sky sky- shell.upload savetarget $ make login $ 5.0: Contiki OS> sense|senseconv SEND 16 bytes Light 1 4 Light 2 13 Temperature 23.2 Relative humidity 79 RSSI 8 Voltage 2.5
+--- ppt/slides/slide37.xml ---
+基于 shell 的交互式编程 编写自定义的 echoT 命令 37 void shell_echoT_init (void)// 注册 echoT 命令 { shell_register_command (&echo2_command); } // 实现 echoT 命令* PROCESS(shell_echo2_process, "echo2"); SHELL_COMMAND(echo2_command, "echo2", "echo2: echoes back entered text twice", &shell_echo2_process); PROCESS_THREAD(shell_echo2_process, ev , data) { PROCESS_BEGIN(); shell_output (&echo2_command, data, (int) strlen (data), data, (int) strlen (data)); PROCESS_END(); }
+--- ppt/slides/slide38.xml ---
+目录 概述 关键特性 典型物联网操作系统 Contiki OS RIOT AliOS Things HarmonyOS 案例开发 学术研究进展
+--- ppt/slides/slide39.xml ---
+RIOT 简介 RIOT 是一个专门面向物联网场景的实时多线程操作系统 RIOT OS 基于微内核实现，所有的系统服务包括时钟、网络协议栈、网络服务等，都是通过创建独立的线程来实现其最初由柏林自由大学开发维护 2008 年， RIOT OS 启动了其开源社区，目前已经发展成为一个拥有 293 个贡献者的庞大社区。得益于活跃的社区支持， RIOT OS 对开发板的支持非常全面，目前已支持 67 种不同的处理器型号以及 237 款开发板 。 作为一个广受欢迎的操作系统， RIOT OS 拥有三个特征： 开发者友好 资源友好 物联网友好 39
+--- ppt/slides/slide40.xml ---
+RIOT 主要特性 多线程编程 RIOT OS 的多线程编程方式与桌面级的多线程编程方式非常类似。一个简单的线程的例子如代码所示。 40 uint8_t thread_stack [1024]; void * thread_func (void * args ){//--- 线程运行代码 ---} int main(void){ kernel_pid_t pid = thread_create ( thread_stack 1024,  // 对应为该栈内存的大小 8,  // 线程优先级 (0-15) THREAD_CREATE_STACKTEST,  // flag 字段 collection_thread_func ,  // 线程的运行函数 NULL,  // 输入至函数的参数 "thread name"); } Flag 描述 THREAD_CREATE_SLEEPING 线程创建后立刻进入休眠状态 THREAD_CREATE_WOUT_YIELD 线程创建后可能不会立即执行，将等待系统的调度 THREAD_CREATE_STACKTEST 线程创建后将立即执行并测试内存占用量
+--- ppt/slides/slide41.xml ---
+RIOT 主要特性 模块化系统设计 RIOT OS 采用模块化设计。模块在 RIOT OS 的代码目录中表现为文件夹的形式。开发者根据用户需求将模块加载至应用程序中 同时，几乎所有的硬件设备同样被抽象成了模块，如 CPU 、外设等 当需要将 RIOT OS 移植至新开发板时，开发者仅需开发响应的 CPU 模块即可。模块的使用方法如代码所示 在本案例中导入了 dht 温湿度传感器的模块以及系统的计时器模块 xtimer 41 USEMODULE += dht USEMODULE += xtimer
+--- ppt/slides/slide42.xml ---
+RIOT 主要特性 RIOT OS 网络协议栈 RIOT OS 中包含了 GNRC 协议栈（ Generic network stack ） 其中最底层的 gnrc_netdev 时对下层的各类网络协议的一个抽象 通过该层抽象， GNRC 可以兼容大量的链路层协议而无需对其代码进行修改 GNRC 完全实现了 6LowPAN 协议。基于此，其向上提供了对 IPv6 、 UDP 以及 TCP 的支持 在应用层，开发者可以使用 socket API 访问 GNRC 协议栈的功能 42
+--- ppt/slides/slide43.xml ---
+RIOT 主要特性 传感器及执行器抽象层 RIOT OS 支持大量的传感器和执行器 RIOT OS 在设备的驱动和用户之间增加了一个传感器及执行器抽象层（ SAUL ）。通过 SAUL ，用户可以使用统一的代码对各类的传感器和执行器进行数据读取和控制 每个外围设备在 SAUL 中使用了 saul_reg_t 类型的数据结构进行抽象 SAUL 提供一个名为 saul_driver_t 的数据结构并包含在设备抽象中 SAUL 的驱动提供统一的读写接口，也同时提供了统一的 phydat_t 数据类型用于存储传感器数据和用于控制执行器的参数 通过 SAUL 对开发板上所有传感器进行数据读取的代码： phydat_t res; saul_reg_t *dev = saul_reg ; expect(dev != NULL); while (dev) { int dim = saul_reg_read (dev, &res); phydat_dump (&res, dim); dev = dev->next;8	} 43
+--- ppt/slides/slide44.xml ---
+目录 概述 关键特性 典型物联网操作系统 Contiki OS RIOT AliOS Things HarmonyOS 案例开发 学术研究进展
+--- ppt/slides/slide45.xml ---
+AliOS Things 简介 由阿里巴巴集团研发的智能终端操作系统 以驱动万物智能为目标，可应用于汽车、智能家居、手机等智能终端 为各行各业提供一站式的物联网解决方案，构建物联网云端一体化生态，使物联网终端更加智能 45
+--- ppt/slides/slide46.xml ---
+AliOS Things 系统架构 46
+--- ppt/slides/slide47.xml ---
+AliOS Things- 关键特性 简易开发和多种开发环境 支持多种开发语言： C 、 JavaScript 、 Python 提供强大的 IDE ，支持代码编辑与编译、 调试、内存泄漏检测 支持多种常用 Linux 平台工具 调试工具 GDB 、测试工具 Valgrind 与 Perf 支持组件式开发 支持 SoC I/O 接口标准定义 支持云端一体在线开发环境，提供 IoT 全链路开发、模拟和部署支持，让开发者能够全栈一体化地开发物联网应用 47
+--- ppt/slides/slide48.xml ---
+AliOS Things- 关键特性 高度优化的性能 内存占用小 AliOS Things 的内核是基于 Rhino 的实时操作系统进行研发的 ， Rhino 为内核对象提供静态和动态两种内存分配方式， 是专为小内存块管理而设计的内存分配器 由于能够对组件进行自由组装， Rhino 可以使最终镜像尽可能小 低功耗 Rhino 内核提供了空闲 CPU 模式，帮助系统节省电量并延长其使用时间 实时性与多任务 Rhino 提供了两种调度策略：基于优先级的抢占式调度和循环调度 48
+--- ppt/slides/slide49.xml ---
+AliOS Things- 关键特性 细粒度软件更新 支持 无线固件升级（ firmware over-the-air ， FOTA ） 支持应用的独立更新，以减少传输和储存的开销 支持差分更新和 A/B 系统更新等 丰富的组件和 网络服务 可以让开发者在不同网络层选择不同的方式来连接物联网，包括 uMesh 即插即用网络组件、套接字适配层（ SAL ）、 TCP/IP 网络协议栈（ LwIP ）和多种连接协议（例如 WiFi 、 BLE 、 LoRaWAN 、 GPRS 、 NB-IoT 等） 49
+--- ppt/slides/slide50.xml ---
+AliOS Things- 网络服务 自组织网络协议 uMesh 为 AliOS Things 提供了自组织网络和实现设备间本地互联的能力 特点是自组织、自我修复和多跳，适用于需要大规模部署的场景 由三部分组成：协议的核心部分、连接协议抽象层和 IP 适配层 50 主要功能 支持 IPv4 、 IPv6 支持多种链路层协议，如 WiFi 、 BLE 、 802.15.4 支持不同通信介质之间的异构网络 支持树状拓扑和网状拓扑 支持低功耗 可使用 ID² 对设备进行认证，并通过 AES-128 加密数据
+--- ppt/slides/slide51.xml ---
+AliOS Things- 网络服务 套接字适配层（ SAL ） SAL 可用于加速具有不同连接能力的 MCU 通信芯片的开发 MCU 与通信芯片之间的通信可以通过 AT 命令通道或其他专用协议通道实现 TCP/IP 网络协议栈（ LwIP ） AliOS Things 的 TCP/IP 网络协议栈是基于 LwIP2.0.0 深度定制和优化的协议栈 支持 IPv4/IPv6 、 TCP/UDP 、 ICMP 、 ARP 、 DHCP 等协议 LoRaWAN 连接协议 AliOS Things 可以支持 LoRaWAN 的双向传输终端（ Class A ）和最大化接收时隙的双向传输终端（ Class C ）两种模式的开发 可以通过 AliOS Things 和 LoRaWAN 来完成 LoRa 网关和服务器之间的基本连接和通信 51
+--- ppt/slides/slide52.xml ---
+AliOS Things- 关键特性 全方位安全防护 AliOS Things 既提供系统级别的安全保护，也提供芯片级别的安全保护 同时支持可信运行环境、设备身份认证 Link ID² 和非对称密钥，以及基于此的可信连接和安全服务 阿里云 Link ID ²（ Internet Device ID ） 物联网设备的可信身份标识 ， 具备不可篡改、不可伪造、全球唯一的安全属性 52
+--- ppt/slides/slide53.xml ---
+目录 概述 关键特性 典型物联网操作系统 Contiki OS RIOT AliOS Things HarmonyOS 案例开发 学术研究进展
+--- ppt/slides/slide54.xml ---
+HarmonyOS 简介 HarmonyOS 是一套由华为公司开发的，面向全场景的分布式操作系统，适用于移动办公、运动健康、社交通信、媒体娱乐等各类场景。 设计目标 面向消费者：将生活场景中的各类终端进行能力整合，实现不同的终端设备之间的快速连接、能力互补、资源共享，匹配合适的设备、提供流畅的全场景体验。 面向应用开发者：采用多种分布式技术，使得应用程序的开发实现与不同终端设备的形态差异无关。让开发者聚焦上层业务逻辑，更加便捷、高效地开发应用。 面向设备开发者：采用组件化的设计方案，根据设备的资源能力和业务特征进行灵活裁剪，满足不同形态的终端设备对于操作系统的要求。 54
+--- ppt/slides/slide55.xml ---
+HarmonyOS - 关键特性 多内核设计 HarmonyOS 主要分为内核层、系统服务层、框架层和应用层，支持根据实际需求裁剪某些非必要的子系统或功能 / 模块 在内核层， HarmonyOS 采用多内核设计，支持针对不同资源受限设备选用适合的 OS 内核 内核抽象层（ KAL ， Kernel Abstraction Layer ）通过屏蔽多内核差异，对上层提供基础的内核能力 分布式软总线 HarmonyOS 的使命和目标是将不同设备的串联起来，成为设备的“万能语言”，实现万物互联的终极目标 基于华为多年的通信技术积累， HarmonyOS 提出了分布式软总线的概念，参考计算机硬件总线，在 1+8+N 设备间搭建一条“无形”的总线，具备自发现、自组网、高带宽低时延的特点 全场景设备间可以基于软总线完成设备虚拟化、跨设备服务调用、多屏协同、文件分享等分布式业务 55
+--- ppt/slides/slide56.xml ---
+HarmonyOS - 关键特性 多内核设计 手机端设备主要使用 Linux 内核 IoT 领域的设备， HarmonyOS 有 LiteOS -A 和 LiteOS -M 两个内核可以使用，其中 LiteOS -A 主要针对标准设备（参考内存 ≥128MB ），可以支持有 MMU 的设备进行虚拟内存映射 LiteOS -M 则主要针对微设备（参考内存 ≥1MB ）及迷你设备（参考内存 ≥128KB ）这类没有通常 MMU 的设备 56
+--- ppt/slides/slide57.xml ---
+HarmonyOS - 关键特性 LiteOS -A 内核 LiteOS -A 内核是基于 Huawei LiteOS 内核演进发展的新一代内核 小体积、低功耗、高性能以及统一开放的生态系统能力 新增了丰富的内核机制、更加全面的 POSIX 标准接口以及统一驱动框架 HDF 等 OpenHarmony LiteOS -A 的内核架构图 57
+--- ppt/slides/slide58.xml ---
+HarmonyOS - 关键特性 LiteOS -M 内核 面向 IoT 领域构建的轻量级物联网操作系统内核 小体积、低功耗、高性能 LiteOS -M 代码结构简单，分为硬件相关层以及硬件无关层 硬件相关层提供统一的 HAL （ Hardware Abstraction Layer ）接口，提升硬件 易适配性，不同编译工具 链和芯片架构的组合分类， 满足 AIoT 类型丰富的硬件 和编译工具链的拓展 58
+--- ppt/slides/slide59.xml ---
+HarmonyOS - 关键特性 HarmonyOS 提出的分布式软总线具体设想 分布式软总线 分布式软总线是多设备终端的统一基座，为多设备间无缝互联提供了统一的分布式通信能力 能够快速发现并连接设备，高效地传输任务和数据 用异构网络组网的方式来解决设备间不同协议如何交互的问 题 HarmonyOS 在 1+8+N 设备间搭建一条“无形”的总线，具备自发现、自组网、高带宽低时延的特点 分布式数据管理 分布式数据管理位于分布式软总线之上，实现了应用程序数据和用户数据的分布式管理 用户数据不再与单一物理设备绑定，业务逻辑与数据存储分离，应用跨设备运行时数据无缝衔接，为打造一致、流畅的用户体验创造了基础 条件 59
+--- ppt/slides/slide60.xml ---
+HarmonyOS - 关键特性 HarmonyOS 提出的分布式软总线具体设想 分布式任务调度 基于分布式软总线、分布式数据管理、分布式 Profile 等技术特性 构建统一的分布式服务管理（发现、同步、注册、调用）机制，支持对跨设备应用进行远程启动、远程调用、绑定 / 解绑、以及迁移等操作 能够根据不同设备的能力、位置、业务运行状态、资源使用情况并结合用户的习惯和意图，选择最合适的设备运行分布式任务 设备虚拟化 分布式设备虚拟化平台可以实现不同设备的资源融合、设备管理、数据处理，将周边设备作为手机的延伸，共同形成一个超级虚拟终端 HarmonyOS 设想的分布式软总线目前可以实现的能力 服务发布、数据传输、安全（通信数据的加密） 60
+--- ppt/slides/slide61.xml ---
+思考题 HarmonyOS 提出的 1+8+N 指代哪些设备？ 61
+--- ppt/slides/slide62.xml ---
+物联网操作系统关键特性总结 操作系统 编程模型 任务调度 I/O 操作方式 内存 分配 软件更新 安全机制 Contiki OS protothreads （核心） mt_thread （扩展） protothreads ：协作式 mt_thread ：协作式 / 抢占式 阻塞式 I/O 分阶段 I/O 静态 ( 默认 ) 动态 模块化升级 Harbor 沙盒技术： 动态内存保护 RIOT 模块化 多线程 基于优先级的线程调度 阻塞式 I/O 分阶段 I/O 静态 动态 整个镜像升级 DTLS, IEEE 802.15.4 加密 , Secure Firmware Updates (SUIT) AliOS T hings 模块化 事件驱动 多线程 抢占式 时间片轮转 阻塞式 I/O 分阶段 I/O 静态 动态 整个镜像升级 模块化升级 差分升级 可信执行环境 LinkTEE ： 系统级别 可信 身份 认证 Link ID² ： 芯片级别 HarmonyOS 多线程 抢占式 时间片轮转 阻塞式 I/O 分阶段 I/O 静态 动态 差分升级 双向认证、 FOTA 固件差分升级， DTLS/DTLS+ 62
+--- ppt/slides/slide63.xml ---
+目录 概述 关键特性 典型物联网操作系统 3.3.1 Contiki OS 3.3.2 RIOT 3.3.3 AliOS Things 3.3.4 HarmonyOS 案例开发 学术研究前沿
+--- ppt/slides/slide64.xml ---
+学术研究前沿 在物联网领域中，操作系统的研究一直在持续推进之中 学术关注点 高安全性：物联网节点通常无人值守 , 且容易被俘获，系统的安全性一直是物联网操作系统考虑的重要方面 高拓展性：对多种语言、多种协议的支持 环境自适应性：硬件技术的发展使得某类物联网节点（如 WISP ）可以直接从环境中采集微弱能量（太阳能、无线电等）来运行 64
+--- ppt/slides/slide65.xml ---
+学术研究前沿 - 安全性 [SOSP 17] Multiprogramming a 64 kB Computer Safely and Efficiently 为嵌入式设备提供了一个新的软件系统 Tock ，它能够隔离软件错误、提供内存保护和有效的管理内存。 基于类型安全语言 Rust 编写的内核，能够隔离错误、保护内存 Tock 系统架构 65
+--- ppt/slides/slide66.xml ---
+学术研究前沿 - 多语言、多协议支持 [IPSN 16] System Design for a Synergistic, Low Power Mote/BLE Embedded Platform 设计了基于 32 位 ARM Cortex M4 的低功耗硬件平台 FireStorm ，并基于 TinyOS 开发了新的系统 利用 Lua 语言的高可拓展的特性，支持基于 libC 的语言的移植，如 C/C++ ，支持多种通信协议如 BLE ， 802.15.4 等 66
+--- ppt/slides/slide67.xml ---
+学术研究前沿 - 能量自适应性 [ SenSys 18] InK : Reactive Kernel for Tiny Batteryless Sensors 针对通过能量搜集（太阳能）获取能量的物联网设备，设计了操作系统内核 InK InK 可以感知系统能量，在能量用尽之前将必要信息保存，确保内存内存一致性以及程序正常恢复 67
+--- ppt/slides/slide68.xml ---
+谢谢！
+--- ppt/slides/slide69.xml ---
+目录 概述 关键特性 典型物联网操作系统 TinyOS Contiki OS AliOS Things 案例开发 学术研究前沿
+--- ppt/slides/slide70.xml ---
+AntiTheft 应用编程实例：增强版 案例具体功能描述 设计算法，检测传感器节点是否被偷 简单版 AntiTheft 应用解法 假设：小偷将节点放在口袋里，因此“黑暗”的节点就代表被偷了 小偷发现算法：每隔 N ms 检查光照传感器读数是否低于某阈值 小偷警告算法：点亮红色的 LED 灯并持续一段时间 70
+--- ppt/slides/slide71.xml ---
+AntiTheft 应用编程实例：增强版 简单版 AntiTheft 应用存在的问题 一个聪明的小偷偷节点的时候可能不装到口袋里，这样简单版 AntiTheft 应用就不能判断节点是否被偷 增强版 AntiTheft 应用解法切入点 小偷拿起节点时，节点的加速度会发生突变 增强版 AntiTheft 应用解法 具体解法：每隔 1s ，以 100Hz 的频率采集加速度读数，检查方差是否超出给定阈值。如果超出阈值，则判断节点被盗，点亮节点上红色的 LED 灯并持续一段时间 71
+--- ppt/slides/slide72.xml ---
+基于 Contiki-OS 的开发 - 环境搭建 Contiki-OS 配置教程 http://anrg.usc.edu/Contiki-OS/index.php/Installation Contiki-OS 的源代码 https://github.com/Contiki-OS-os/Contiki-OS/releases Windows 上部署 Contiki-OS 需要首先安装 Cygwin 来模拟 UNIX 环境 Linux 平台上部署 Contiki-OS （以 Contiki-OS 3.0 为例） 下载 Contiki 的源代码，并安装依赖库 wget https://github.com/contiki-os/contiki/archive/3.0.zip unzip 3.0.zip mv contiki-3.0 contiki sudo apt-get install build-essential binutils-msp430 gcc-msp430 msp430-libc msp430mcu mspdebug gcc -arm-none- eabi gdb -arm-none- eabi openjdk-8-jdk openjdk-8-jre ant libncurses5-dev 进入目录 contiki /example/hello-world/ 测试验证 $make TARGET=native $./hello-world 72
+--- ppt/slides/slide73.xml ---
+基于 Contiki-OS 的开发 - 程序编写 在主文件中 anti-theft.c 编写加速度采集的线程 PROCESS( accel_sample_process , " accel_sample "); // 该线程用来加速度的采样 AUTOSTART_PROCESSES( & accel_sample_process ); PROCESS_THREAD( accel_sample_process , ev , data) { static struct etimer etm ; PROCESS_BEGIN(); while(1){ etimer_set (& etm , ACCEL_INTERVAL); PROCESS_WAIT_EVENT_UNTIL( etimer_expired (& etm )); if( currentIndex < ACCEL_SAMPLES){ // 如果没有超出 采样 窗口范围 accelSamples [ currentIndex ] = get_accx (); currentIndex ++; } else{ sample_move (); // 采集的数据超过窗口范围，移动 数据 currentIndex = ACCEL_SAMPLES - 1; accelSamples [ currentIndex ] = get_accx (); } etimer_reset (& etm ); } PROCESS_END(); } 添加一个缓冲区，每隔 1s 以 100Hz 的频率循环读取传感器数据 73
+--- ppt/slides/slide74.xml ---
+基于 Contiki-OS 的开发 - 程序编写 在主文件中 anti-theft.c 编写检测任务 Enum { ACCEL_SAMPLES = 10; // 加速度样本数量 ACCEL_INTERVAL = CLOCK_SECOND / 100; // 加速度计的采样频率 10 ms CHECK_INTERVAL = CLOCK_SECOND; // 小偷检测的频率 } static uint16_t accelSamples [ACCEL_SAMPLES]; static void checkAccelation (){ uint16_t i , avg , var ; for ( avg = 0, i = 0; i < ACCEL_SAMPLES; i ++){ avg += accelSamples [ i ]; avg /= ACCEL_SAMPLES; for ( var = 0, i = 0; i < ACCEL_SAMPLES; i ++){ int16_t diff = accelSamples [ i ] - avg ; var += diff * diff; } if ( var > 4 * ACCEL_SAMPLES) leds_on (LEDS_RED); } 检测加速度数据是否超出一定阈值，若是，则亮红灯 74
+--- ppt/slides/slide75.xml ---
+基于 Contiki-OS 的开发 - 程序编写 在主文件中 anti-theft.c 编写检测小偷线程 PROCESS( antitheft_process , “Anti-theft”); // 负责周期性检测小偷的线程 AUTOSTART_PROCESSES(& antitheft_process , & accel_sample_process ); PROCESS_THREAD( antitheft_process , ev , data) { static struct etimer et; static int val ; PROCESS_BEGIN(); while(1){ etimer_set (&et, CHECK_INTERVAL); SENSORS_ACTIVATE( light_sensor ); PROCESS_WAIT_EVENT_UNTIL( etimer_expired (&et)); checkAccelation (); // 执行小偷行为的检测，根据加速度数据 etimer_reset (&et); } PROCESS_END(); } 每隔一秒检测加速度数据 75
+--- ppt/slides/slide76.xml ---
+基于 Contiki-OS 的开发 - 编译及烧录程序 编写 MakeFile 文件 编译程序 使用 motelist 命令发现节点的串口为 /dev/ttyUSB0 ，使用以下命令烧写程序 案例测试 将烧写完程序的节点放在静止的桌面上，从桌面上拿起节点，观察红色的 LED 灯是否亮起 CONTIKI_PROJECT = anti-theft-demo all: $(CONTIKI_PROJECT) CONTIKI = ../.. include $(CONTIKI)/ Makefile.include $ make TARGET=sky anti-theft $ make TARGET=sky MOTES=/ dev /ttyUSB0 anti- theft.upload 76
+--- ppt/slides/slide77.xml ---
+基于 AliOS Things 的开发 - 环境搭建 AliOS Things 配置教程 https://haas.iot.aliyun.com/aliosthings/index.html 基于支持 AliOS Things 的 IDE https://haas.iot.aliyun.com/aliosthings/haas_setup_env.html AliOS Things 的源代码 https://github.com/alibaba/AliOS-Things 基于命令行工具 CLI 部署 AliOS Things 下载安装 AliOS Things 下载安装项目管理工具包 aos -tools 下载安装交叉编译工具链 gcc -arm-none- eabi 77
+--- ppt/slides/slide78.xml ---
+基于 AliOS Things 的开发 - 环境搭建 AliOS Things 的源码可以从 以下网址下载 https://github.com/alibaba/AliOS-Things aos -tools 的安装方法，是在系统的命令行窗口中输入： pip install aos -tools gcc -arm-none- eabi 的安装会在第一次执行 aos make 命令时自动执行，无须用户手动下载安装 78
+--- ppt/slides/slide79.xml ---
+基于 AliOS Things 的开发 - 开发板选型 案例选用 HaaS EDU K1 开发板 79
+--- ppt/slides/slide80.xml ---
+基于 AliOS Things 的开发 - 目录结构 其中 package.yaml 是组件的配置文件，采用 yaml 文本的方式，配置组件包含哪些源文件，头文件，宏，以及组件依赖关系等等，替代了传统的 makefile 文件 80
+--- ppt/slides/slide81.xml ---
+基于 AliOS Things 的开发 - 编写程序 步骤 1 ：编写主程序代码 appdemo.c 所有源程序都写在应用程序目录中，用户可以根据需要进行组织管理。 AliOS Things 的应用程序入口是 application_start 函数，如代码所示。 程序其余部分请参考书本 int application_start (int argc , char * argv []) { g_haasboard_is_k1c = haasedu_is_k1c(); aos_set_log_level (AOS_LL_INFO); gyroscope_init (); while (1) { sensor_refresh_task (); aos_msleep (50); } return 0; } 81
+--- ppt/slides/slide82.xml ---
+基于 AliOS Things 的开发 - 配置工程 步骤 2 ：编写 package.yaml 文件 name: anti_theft version: master description: 防盗节点示例程序 type: solution depends: - init : master - cli: master - osal_aos : master - haas100: master - haaseduk1:  master supported_boards : - haas100: master - haas200: master - haaseduk1: master 82
+--- ppt/slides/slide83.xml ---
+基于 AliOS Things 的开发 - 配置工程 步骤 2 ：编写 package.yaml 文件 （续） solution: cpu_id : cpu0 board_name : haaseduk1 build_config : internal_include : - include source_file : - " maintask.c " - " appdemo.c " 83
+--- ppt/slides/slide84.xml ---
+基于 AliOS Things 的开发 - 编译程序 步骤 4 ：编译程序 通过运行编译指令，可以获得 HaaS EDU K1 开发板的二进制文件。第一次执行以下命令时，会自动下载安装交叉编译工具链 gcc -arm-none- eabi 。 步骤 5 ：烧写程序 步骤 6 ：案例测试 将烧写完程序的节点放在静止的桌面上，从桌面上拿起节点，观察红色的 LED 灯是否亮起 aos make aos burn 84

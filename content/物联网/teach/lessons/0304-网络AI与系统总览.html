@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 章 · 网络AI与系统总览</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 3 章 · 小课 4/6 · 课件提炼</span>
+  <h1>网络 AI 与系统总览</h1>
+  <p class="subtitle">一句话：关键特性 6–7（网络服务、TinyML）+ 七大典型物联网操作系统总对比表——选连线题与对比题的弹药库。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第三章-dw(3)》"关键特性 6：网络服务""关键特性 7：AI 支持能力""典型物联网操作系统（总表）"节【教材 PPT 补充部分会单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第三章-dw(3).pdf</p></div>
+
+  <h2>一、网络服务</h2>
+  <table>
+    <tr><th>阶段</th><th>课件要点</th></tr>
+    <tr><td>传统传感网</td><td>主要关注<strong>多跳自组织</strong>的问题，大多是基于 <strong>IEEE 802.15.4 标准</strong>的低功耗局域网协议；典型协议包括<strong>数据收集协议、数据分发协议、时间同步协议</strong>等</td></tr>
+    <tr><td>物联网</td><td>通信技术与协议增多：<strong>BLE、ZigBee、WiFi HaLow、LoRaWAN、NB-IoT</strong> 等；学术关注点：<strong>干扰共存、异构互联</strong></td></tr>
+  </table>
+  <p>课件介绍的课题组工作 <strong>TinyNet</strong>：<strong>2.5 层抽象：uniMAC 接口</strong>；关键模块：<strong>邻居发现、通信调度</strong>。</p>
+
+  <h2>二、AI 支持能力与 TinyML</h2>
+  <h3>2.1 常见开发框架（对应设备必背）</h3>
+  <table>
+    <tr><th>框架</th><th>适用设备</th></tr>
+    <tr><td>TensorFlow Lite</td><td>嵌入式 Linux 设备，如 <strong>Raspberry Pi</strong></td></tr>
+    <tr><td>TensorFlow Lite for Micro</td><td>微控制器，如 <strong>ESP32</strong></td></tr>
+    <tr><td>PyTorch Mobile</td><td><strong>Android 和 iOS 设备</strong></td></tr>
+  </table>
+  <h3>2.2 TinyML 定义与特点</h3>
+  <div class="callout def"><div class="label">TinyML（名词解释必背）</div><p>TinyML（微型机器学习）是<strong>机器学习的一个分支，旨在将模型部署到微控制器和其他低功耗边缘设备</strong>。</p></div>
+  <p>课件给出的六个特点（围成一圈）：<strong>低延迟、保护隐私、低功耗、高可靠、精度稍低、内存小</strong>。应用案例三类：<strong>音频视频推理、穿戴计算、健康监测传感器</strong>。</p>
+  <h3>2.3 TinyML 常见优化技术</h3>
+  <table>
+    <tr><th>技术</th><th>课件定义</th></tr>
+    <tr><td>模型压缩——剪枝</td><td>设定阈值判断训练好的模型<strong>权重的重要性</strong>；剪掉小于阈值的权重连接；微调剪枝后的模型</td></tr>
+    <tr><td>模型压缩——量化</td><td>将模型参数从 <strong>32 bit 或 64 bit 浮点数</strong>变为使用 <strong>8 bit 或更低的定点数</strong>表示</td></tr>
+    <tr><td>模型压缩——知识蒸馏</td><td>把一个大模型或多个模型（<strong>教师模型</strong>）学到的知识迁移到另一个轻量级模型（<strong>学生模型</strong>）</td></tr>
+    <tr><td>高效架构</td><td>设计紧凑高效的模型结构，如 <strong>MobileNetV2</strong></td></tr>
+    <tr><td>硬件加速</td><td>充分利用微控制器的硬件特性进行优化，如 <strong>DSP</strong></td></tr>
+  </table>
+
+  <h2>三、典型物联网操作系统总表（课件原表，必背）</h2>
+  <table>
+    <tr><th>OS</th><th>开发者</th><th>主要特点（课件原文压缩）</th></tr>
+    <tr><td>TinyOS</td><td>UC Berkeley</td><td>开源、面向无线传感器网络；<strong>事件驱动</strong>执行模型，专注低功耗和小型化；支持 IPv6 和 6LoWPAN；使用 <strong>nesC</strong> 编程语言，支持组件式编程</td></tr>
+    <tr><td>Contiki OS</td><td>瑞典皇家理工学院</td><td>开源、多任务事件驱动的 IoT 网络操作系统；支持 IPv6、6LoWPAN、RPL 和 CoAP；包括 <strong>protothread</strong> 轻量级线程库和基于 Flash 的小型文件系统</td></tr>
+    <tr><td>RIOT</td><td>最初由柏林自由大学开发维护</td><td>设计轻巧、占用内存小；<strong>优先级驱动的抢占式调度器</strong>、实时多线程；模块化设计；支持 IPv6、6LoWPAN、UDP、RPL、CoAP 及 LoRa、Sigfox、LoRaWAN 等 LPWAN 技术</td></tr>
+    <tr><td>Zephyr</td><td>Linux 基金会</td><td>可扩展的实时操作系统，支持多种处理器架构；模块化；支持蓝牙、LoRa、LTE、Ethernet、Wi-Fi；安全启动和数据加密；构建系统强大、社区活跃</td></tr>
+    <tr><td>RT-Thread</td><td>熊谱翔先生于 2006 年创建</td><td>非常低的内存需求；实时性能和良好网络支持（802.15.4、LoRa、Wi-Fi）；丰富的<strong>软件包管理系统</strong></td></tr>
+    <tr><td>HarmonyOS</td><td>华为</td><td><strong>全场景分布式操作系统</strong>；统一 IDE、一次开发多端部署；确定时延引擎和高性能 IPC</td></tr>
+    <tr><td>AliOS Things</td><td>阿里云</td><td>面向 IoT 的轻量级操作系统；支持 LoRaWAN、NB-IoT 等，与阿里云无缝连接；设备身份认证和数据加密</td></tr>
+  </table>
+  <div class="callout"><div class="label">教材 PPT 补充：四 OS 关键特性总结表（高频对比）</div>
+  <table>
+    <tr><th>OS</th><th>编程模型</th><th>任务调度</th><th>内存分配</th><th>软件更新</th><th>安全机制</th></tr>
+    <tr><td>Contiki OS</td><td>protothreads（核心）+ mt_thread（扩展）</td><td>protothreads：协作式；mt_thread：协作式/抢占式</td><td>静态（默认）、动态</td><td>模块化升级</td><td>Harbor 沙盒技术：动态内存保护</td></tr>
+    <tr><td>RIOT</td><td>模块化、多线程</td><td>基于优先级的线程调度</td><td>静态、动态</td><td>整个镜像升级</td><td>DTLS、IEEE 802.15.4 加密、SUIT</td></tr>
+    <tr><td>AliOS Things</td><td>模块化、事件驱动、多线程</td><td>抢占式、时间片轮转</td><td>静态、动态</td><td>整个镜像/模块化/差分升级</td><td>可信执行环境 LinkTEE；可信身份认证 Link ID²</td></tr>
+    <tr><td>HarmonyOS</td><td>多线程</td><td>抢占式、时间片轮转</td><td>静态、动态</td><td>差分升级</td><td>双向认证、FOTA 固件差分升级、DTLS/DTLS+</td></tr>
+  </table>
+  <p>两表的 I/O 操作方式一栏，四者均支持<strong>阻塞式 I/O 与分阶段 I/O</strong>。</p></div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第三章-dw(3)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/操作系统速查.html">操作系统速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0303-IO内存与软件更新.html">IO内存与软件更新</a> · 下一课：<a href="0305-Contiki与RIOT详解.html">Contiki与RIOT详解</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师，可以要求更细的讲解或更多例题。</footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "TensorFlow Lite for Micro 适用的设备是？",
+    options: [
+      "Android 和 iOS 手机",
+      "嵌入式 Linux 设备，如 Raspberry Pi",
+      "微控制器，如 ESP32"
+    ],
+    answer: 2,
+    explain: "课件：TensorFlow Lite 用于嵌入式 Linux 设备（如 Raspberry Pi）；TensorFlow Lite for Micro 用于微控制器（如 ESP32）；PyTorch Mobile 用于 Android 和 iOS 设备。"
+  },
+  {
+    prompt: "TinyML 的量化技术，课件的定义是？",
+    options: [
+      "把教师模型的知识迁移到轻量级学生模型",
+      "将模型参数从 32/64 bit 浮点数变为 8 bit 或更低的定点数表示",
+      "剪掉小于阈值的权重连接再微调"
+    ],
+    answer: 1,
+    explain: "课件：量化 = 参数从 32/64 bit 浮点 → 8 bit 或更低定点。选项 A 是知识蒸馏，选项 C 是剪枝。"
+  },
+  {
+    prompt: "七 OS 总表中，Zephyr 的开发者和特点正确的是？",
+    options: [
+      "Linux 基金会；可扩展实时 OS，支持蓝牙、LoRa、LTE、Ethernet、Wi-Fi",
+      "UC Berkeley；事件驱动、nesC 语言",
+      "阿里云；轻量级、与阿里云无缝连接"
+    ],
+    answer: 0,
+    explain: "课件总表：Zephyr 由 Linux 基金会开发，是可扩展的实时操作系统，模块化设计，支持蓝牙/LoRa/LTE/Ethernet/Wi-Fi，包括安全启动和数据加密。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 网络服务与总表稳了。" : " —— 回头看标红的解析，重点复习框架-设备对应与七 OS 总表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

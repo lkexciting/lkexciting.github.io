@@ -3,6 +3,7 @@ import matter from 'gray-matter'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { convertImagesToWebp, applyContentUpgrades, cleanNoteTitle } from './note-transforms.mjs'
+import { syncTeach } from './sync-teach.mjs'
 
 const site = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // 默认同步上级目录的库；也可用 VAULT_DIR 环境变量指向任意 Obsidian 库
@@ -115,6 +116,7 @@ for (const [name] of courses) {
   await flattenPublishedNotes(dest, name)
 }
 const total = counts.reduce((a, b) => a + b, 0)
+await syncTeach(site)
 // 统计发布副本的总字数：中文字符逐字计 + 英文/数字单词计
 let totalWords = 0
 for (const [name] of courses) {

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>第 12 课 · 期中推导训练题</title>
+<link href="../assets/course.css" rel="stylesheet"/>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<body>
+<div class="page">
+<p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+<p class="lesson-no">LESSON 12 · 练习</p>
+<h1>期中推导训练题</h1>
+<p class="lede">这课不教新内容，只练"笔头推导"——期中/作业最常考的六类题：单比特门矩阵、双比特门、Deutsch 末态、QFT 电路、QPE→Shor 归约、Grover 旋转角。每题先自己推，再点"看解答"核对。答案严格对应课件 01–03。</p>
+<div class="keybox">
+<span class="label">题型分布</span>
+<p>A 单比特门矩阵（X/Y/Z/H/S/T）· B 双比特门与纠缠判定 · C Deutsch 末态 · D QFT 电路与矩阵 · E QPE→Shor 归约 · F Grover 旋转角 θ。把这 14 题推顺，期中计算题基本不慌。</p>
+</div>
+<h2>A. 单比特门矩阵</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>1.</strong> 写出泡利 X 门（NOT）的矩阵，并证明 \(X^{2} = I\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(X = [[0,1],[1,0]]\)，作用是 \(X|0\rangle=|1\rangle, X|1\rangle=|0\rangle\)。</p>
+<p>\(X^{2} = [[0,1],[1,0]][[0,1],[1,0]] = [[1,0],[0,1]] = I\)。X 是对合（involution）门。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>2.</strong> 写出 Hadamard 门矩阵 \(H\)，验证 \(H^{2} = I\)，并计算 \(H|0\rangle\)、\(H|1\rangle\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(H = 1/\sqrt{2} [[1,1],[1,-1]]\)。</p>
+<p>\(H^{2} = 1/2 [[1,1],[1,-1]][[1,1],[1,-1]] = 1/2 [[2,0],[0,2]] = I\)。</p>
+<p>\(H|0\rangle = (|0\rangle+|1\rangle)/\sqrt{2} = |+\rangle\)；\(H|1\rangle = (|0\rangle-|1\rangle)/\sqrt{2} = |-\rangle\)。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>3.</strong> 写出 Y、Z 门矩阵，验证 \(Y^{2} = Z^{2} = I\)，并说明 \(HXH = Z\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(Y = [[0,-i],[i,0]]\)，\(Z = [[1,0],[0,-1]]\)。</p>
+<p>两者都是对角或半对角且平方为单位阵：\(Z^{2} = diag(1,1)=I\)；\(Y^{2} = [[0,-i],[i,0]]^{2} = [[1,0],[0,1]]=I\)。</p>
+<p>\(HXH = 1/2 [[1,1],[1,-1]][[0,1],[1,0]][[1,1],[1,-1]] = [[1,0],[0,-1]] = Z\)。含义：在 H 基下 X 看起来像 Z。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>4.</strong> 写出相位门 \(S\) 与 \(T\) 的矩阵，验证 \(S^{2} = Z\)、\(T^{2} = S\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(S = diag(1, i) = e^{i\pi/4} R_z(\pi/2)\)；\(T = diag(1, e^{i\pi/4}) = e^{i\pi/8} R_z(\pi/4)\)。</p>
+<p>\(S^{2} = diag(1, i^{2}) = diag(1, -1) = Z\)；\(T^{2} = diag(1, e^{i\pi/2}) = diag(1, i) = S\)。</p>
+</div>
+</details>
+</div>
+<h2>B. 双比特门与纠缠判定</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>5.</strong> 写出 CNOT 矩阵（以 q0 为控制、q1 为目标，基序 \(|00\rangle,|01\rangle,|10\rangle,|11\rangle\)），验证 \(CNOT^{2} = I\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>CNOT 翻转目标 q1 当且仅当控制 q0 = 1，故 \(|10\rangle\le ftrightarrow|11\rangle\)：</p>
+<p>\(CNOT = [[1,0,0,0],[0,1,0,0],[0,0,0,1],[0,0,1,0]]\)。</p>
+<p>它对 \(|10\rangle,|11\rangle\) 两次交换回到自身，其余不变，所以 \(CNOT^{2} = I\)。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>6.</strong> 判断 \((|00\rangle+|01\rangle)/\sqrt{2}\) 与 \((|00\rangle+|11\rangle)/\sqrt{2}\) 哪个纠缠、哪个可分，给出判定式。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>判定式：双比特态 \(\alpha_{00}|00\rangle+\alpha_{01}|01\rangle+\alpha_{10}|10\rangle+\alpha_{11}|11\rangle\) 可分 ⇔ \(\alpha_{00}\alpha_{11} = \alpha_{01}\alpha_{10}\)（矩阵秩为 1）。</p>
+<p>\((|00\rangle+|01\rangle)/\sqrt{2}\)：系数 (1,1,0,0)/√2，\(1\cdot0 = 1\cdot0 = 0\) ⇒ 可分，且 = \(|0\rangle\otimes(|0\rangle+|1\rangle)/\sqrt{2}\)。</p>
+<p>\((|00\rangle+|11\rangle)/\sqrt{2}\)：系数 (1,0,0,1)/√2，\(1\cdot1 - 0\cdot0 = 1 \neq 0\) ⇒ 纠缠（即贝尔态 \(|\Phi^{+}\rangle\)）。</p>
+</div>
+</details>
+</div>
+<h2>C. Deutsch 末态</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>7.</strong> 对 \(f(x)=x\)（标识函数，平衡），推导 Deutsch 算法第一寄存器末态，并给最终判定。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>初态 \(|0\rangle|1\rangle\) → 双 H → \(|+\rangle|-\rangle\)。U_f: \(|x\rangle|y\rangle\to|x\rangle|y\oplus f(x)\rangle\)，在 \(|-\rangle\) 上产生相位反冲 \((-1)^{f(x)}\)：</p>
+<p>\(|\psi_{1}\rangle = [|0\rangle(-1)^{0} + |1\rangle(-1)^{1}]\otimes|-\rangle/\sqrt{2} = (|0\rangle-|1\rangle)\otimes|-\rangle/\sqrt{2}\)。</p>
+<p>第一寄存器 = \(|-\rangle\)。再 H：\(H|-\rangle = |1\rangle\)。测定第一比特得 \(|1\rangle\) ⇒ <strong>平衡函数</strong>。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>8.</strong> 对 \(f(x)=1\oplus x\)（反转函数，平衡），重做第 7 题，并指出课件 p64 的笔误。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(f(0)=1, f(1)=0\)，\(s=f(0)\oplus f(1)=1\) 仍是平衡。相位反冲：\((-1)^{1}=-1\) 在 \(|0\rangle\) 上、\((-1)^{0}=1\) 在 \(|1\rangle\) 上，第一寄存器同样为 \(|-\rangle\)，末态 \(|1\rangle\) ⇒ 平衡。</p>
+<p>⚠ 课件 p64 原句把"测 |0⟩→平衡"写反了，正确应为 <strong>|0⟩→常数、|1⟩→平衡</strong>（s=0 才是常数）。</p>
+</div>
+</details>
+</div>
+<h2>D. QFT 电路与矩阵</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>9.</strong> 写出 2-比特 QFT 的矩阵 \(U_F\)，并说明它由哪些门构成（课件 03）。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(U_F = 1/2 [[1,1,1,1],[1,i,-1,-i],[1,-1,1,-1],[1,-i,-1,i]]\)（基 \(|00\rangle,|01\rangle,|10\rangle,|11\rangle\) 对应 x=0,1,2,3）。</p>
+<p>电路（n=2）：\(H(q0) \to CR_{2}(q0\text{控}\to q1\text{标}) \to H(q1) \to SWAP(q0,q1)\)，其中 \(R_{2}\) 相位 \(e^{2\pi i/4}=i\)（即 S 门）。CR₂ 是受控相位门。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>10.</strong> 画出 3-比特 QFT₃ 的电路结构（门序列，不用展开矩阵）。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>从最高位到最低位依次：</p>
+<p>\(H(q0) \to CR_{2}(q0\to q1) \to CR_{3}(q0\to q2) \to H(q1) \to CR_{2}(q1\to q2) \to H(q2) \to SWAP(q0,q2)\)</p>
+<p>其中 \(R_k\) 相位 \(e^{2\pi i/2^k}\)。规律：每个比特先 H，再接收所有更高位的受控相位（间距递减），最后整体逆序 SWAP。</p>
+</div>
+</details>
+</div>
+<h2>E. QPE → Shor 归约</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>11.</strong> QPE：幺正 \(U\) 的特征向量 \(|u\rangle\)，特征相位 \(\phi = 3/8\)，用 3 个计数比特。写出概率最大的测量结果（二进制）及其估计的 \(\hat{\phi}\)。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>QPE 输出最接近 \(2^{3}\cdot\phi = 8\cdot3/8 = 3\) 的整数，即二进制 \(011\)。在理想（无相位误差）情况下测得 \(|011\rangle\) 概率最大。</p>
+<p>估计 \(\hat{\phi} = 3/8\)，与真实值一致（精确到 3 位计数比特）。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>12.</strong> Shor 如何把"分解大数 \(N\)"归约到"求 \(a\) 模 \(N\) 的阶 \(r\)"？QPE 起什么作用？</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>归约链条：分解 \(N\) → 随机取 \(a\) 与 \(N\) 互素，求满足 \(a^r \equiv 1 (mod N)\) 的最小正整数 \(r\)（阶）→ 若 \(r\) 为偶数且 \(a^{r/2} ≢ -1\)，则 \(gcd(a^{r/2}\pm1, N)\) 给出 \(N\) 的非平凡因子。</p>
+<p>求阶 \(r\) 用周期查找：构造 \(f(x)=a^x mod N\)，其周期为 \(r\)；用 QPE 估计 \(U|y\rangle=|y\cdot a mod N\rangle\) 的特征相位 \(s/r\)，连分数展开还原出 \(r\)。QPE 是 Shor 的核心量子子程序。</p>
+</div>
+</details>
+</div>
+<h2>F. Grover 旋转角</h2>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>13.</strong> 无结构数据库 \(N=8\)（8 个元素，1 个目标），求最优迭代次数 \(m\)、单步旋转角 \(\theta\)、成功概率。</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>由 \(sin\theta = 1/\sqrt{N} = 1/\sqrt{8} \approx 0.3536\) 得 \(\theta \approx 0.361 rad \approx 20.7^{\circ}\)。</p>
+<p>最优迭代 \(m \approx ⌊(\pi/4)\sqrt{N}⌋ = ⌊(\pi/4)\cdot2.828⌋ = ⌊2.22⌋ = 2\)。</p>
+<p>两次后成功概率 \(sin^{2}((2m+1)\theta) = sin^{2}(5\theta) = sin^{2}(103.5^{\circ}) \approx 0.947\)。比经典逐一查找（需平均 4.5 次）显著加速。</p>
+</div>
+</details>
+</div>
+<div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
+<p><strong>14.</strong> Grover 算子 \(G = (2|\psi\rangle\langle\psi| - I)O\) 中各部分含义？为何约 \(\sqrt{N}\) 次迭代？</p>
+<details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
+<div style="margin-top:0.6rem">
+<p>\(|\psi\rangle\) 是均匀叠加态，\(O\) 是 Oracle（对目标态翻相位、其余不变，即条件 Z）。\(2|\psi\rangle\langle\psi|-I\) 是关于 \(|\psi\rangle\) 的反射（扩散变换）。G 是两个反射的复合 = 在由 \(|\psi\rangle\) 与目标态张成的平面内做旋转。</p>
+<p>每次 G 把态朝目标态旋转 \(2\theta\)，初始与目标夹角为 \(\theta\)，需约 \((\pi/2)/2\theta \approx \pi/(4\theta) \approx (\pi/4)\sqrt{N}\) 次到达目标，即 \(O(\sqrt{N})\) 次，相比经典的 \(O(N)\) 平方加速。</p>
+</div>
+</details>
+</div>
+<h2>速测（单选，点选项看对错）</h2>
+<div class="quiz" data-answer="a" data-explanation="Z=diag(1,−1)，S=diag(1,i)，故 S²=Z，T²=S；T 不是 Z 的平方根，S 才是。">
+<p class="quiz-q"><span class="qno">Q1</span>下列关系正确的是？</p>
+<div class="opts">
+<button data-opt="a">S² = Z，T² = S</button>
+<button data-opt="b">T² = Z</button>
+<button data-opt="c">S = T² 且 Z = T</button>
+<button data-opt="d">X² = Z</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="b" data-explanation="Deutsch 正确判定：测第一比特 |0⟩→常数、|1⟩→平衡（课件 p64 写反，以推导为准）。">
+<p class="quiz-q"><span class="qno">Q2</span>Deutsch 算法测得第一比特为 |1⟩，说明 f 是？</p>
+<div class="opts">
+<button data-opt="a">常数函数</button>
+<button data-opt="b">平衡函数</button>
+<button data-opt="c">既不是常数也不是平衡</button>
+<button data-opt="d">无法确定</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="c" data-explanation="Grover 最优迭代次数约 (π/4)√N；N=8 时≈2.22→取 2 次。">
+<p class="quiz-q"><span class="qno">Q3</span>N=8 的 Grover 搜索，最优迭代次数约为？</p>
+<div class="opts">
+<button data-opt="a">1</button>
+<button data-opt="b">3</button>
+<button data-opt="c">2</button>
+<button data-opt="d">4</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="ask">
+<p><strong>哪题推不动？</strong>直接告诉我题号（如"第 9 题"），我就把那一步拆开重讲，不必从头来。</p>
+</div>
+<p class="lesson-footer">
+    上一课：<a href="0011-grover-algorithm.html"><strong>Grover 算法</strong></a>　·
+    课程回顾：从 <a href="0000-course-introduction.html"><strong>第 00 课 · 课程引言</strong></a> 重新开始，系统复习"态 → 门 → 测量 → 算法"主线。
+  </p>
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

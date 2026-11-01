@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>0001 · OS课程地图：Chapter 0–6</title><link rel="stylesheet" href="../assets/course.css"></head>
+<body><main><p class="eyebrow">OPERATING SYSTEMS · LESSON 0001</p><h1>先把 Chapter 0–6 串成一条线</h1><p class="lede">目标：你能说清每一章在回答什么问题，以及为什么必须按 0→1→2→3→4→5→6 学。</p>
+<section><h2>课程主线</h2><ol><li><b>Chapter 0 · Course Orientation：</b>明确教材、实验和评价方式，知道学习要落到“能解释、能推导、能动手”。</li><li><b>Chapter 1 · Introduction：</b>OS 是硬件与程序之间的资源管理者；中断让 CPU 与 I/O 协同。</li><li><b>Chapter 2 · Operating-System Structures：</b>OS 把服务组织成系统调用、内核和不同结构。</li><li><b>Chapter 3 · Processes：</b>程序执行成为进程，进程有状态、PCB 和上下文切换。</li><li><b>Chapter 4 · Threads：</b>把进程内的执行流拆成线程，理解并发与并行。</li><li><b>Chapter 5 · CPU Scheduling：</b>多个就绪执行者竞争 CPU，调度器决定谁先运行。</li><li><b>Chapter 6 · Process Synchronization：</b>多个执行者共享数据，必须约束交错顺序，避免竞态。</li></ol></section>
+<section><h2>一条因果链</h2><p>硬件会产生中断（Chapter 1）→ OS 提供系统调用和抽象（Chapter 2）→ 程序以进程/线程运行（Chapter 3–4）→ 调度器交错它们（Chapter 5）→ 交错访问共享数据时需要同步（Chapter 6）。</p></section>
+<section class="callout"><h2>主动回忆</h2><p>先不要看笔记，用自己的话回答：</p><ol><li>如果只有一个 CPU，为什么仍然可能出现竞态条件？</li><li>Chapter 5 的调度和 Chapter 6 的同步，分别在解决什么不同问题？</li><li>你目前最熟悉的是哪一章？最陌生的是哪一章？</li></ol><p>把答案直接发给我。我会根据你的回答决定下一节从 Chapter 0 的课程与实验要求，还是从 Chapter 1 的 OS 基础概念开始。</p></section>
+<p class="source">主资料：用户提供的 Chapter 0–6 PPT 与 <code>OS/notes</code>；补充阅读：<a href="https://pages.cs.wisc.edu/~remzi/OSTEP/">OSTEP</a>。</p></main></body></html>
+

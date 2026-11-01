@@ -1,0 +1,288 @@
+--- ppt/slides/slide1.xml ---
+第七章 物联网云 - 端一体开发
+--- ppt/slides/slide2.xml ---
+学习目标 了解物联网云 - 端一体开发平台的概念 了解主流的物联网云 - 端一体开发平台 掌握 TinyLink 物联网应用开发流程 掌握 IoTStudio 物模型定义及服务编排流程 掌握 TinyLink 与 IoT Studio 联合开发方法
+--- ppt/slides/slide3.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 案例开发 总结 3
+--- ppt/slides/slide4.xml ---
+概述 物联网技术栈复杂，一个完整的物联网应用涉及嵌入式开发、网络协议、云平台开发、 Web 开发、移动开发等多个领域
+--- ppt/slides/slide5.xml ---
+空气质量监测应用 传感器网络层 嵌入式开发 云服务层 云服务开发 应用层 Web 应用、 APP 、小程序 数据传输 WiFi 、蓝牙、 GRPS
+--- ppt/slides/slide6.xml ---
+共享单车 数据传输 蓝牙、 NB-IoT 、 GRPS…… 服务端 微软 Azure （摩拜） …… 移动应用 APP 、小程序 ……
+--- ppt/slides/slide7.xml ---
+智能楼宇 设备端 多种异构的嵌入式设备， SDS018 、 DHT11…… Web 应用 复杂的数据展示页面，折线图、文本框、仪表盘 ……
+--- ppt/slides/slide8.xml ---
+概述 为解决上述问题，各大厂商推出云 - 端一体开发平台，如三星 SmartThings 、阿里云 IoT Studio 、涂鸦智能 Tuya IoT 等，旨在通过云 - 端一体开发平台涵盖物联网应用的整个开发流程，解决物联网开发领域存在的应用开发碎片化、标准不统一、技术栈复杂等问题
+--- ppt/slides/slide9.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 案例开发 总结 9
+--- ppt/slides/slide10.xml ---
+主要功能 我们认为，理想的物联网云 - 端一体开发应该包括如下功能 支持设备端开发 支持云服务开发 支持 Web 应用 / 移动应用开发 支持三端集成开发流程的简化
+--- ppt/slides/slide11.xml ---
+设备端开发 现状与问题 物联网设备种类繁多，不同种类的设备需要不同的开发语言、开发环境 开发语言： C/C++ 、 Python 、 JavaScript…… IDE ： Keil ， IAR ， ARDUINO……
+--- ppt/slides/slide12.xml ---
+设备端开发 基于本地编译的设备端开发 基于设备模型，通过 SDK 等方式，提供统一的设备操作与平台接入接口 需要开发者在本地配置开发环境 基于云端编译的设备端开发 代码编译过程放在云端，本地无需配置开发环境 基于解释型语言的设备开发 使用 JavaScript ， MicroPython 等解释型语言，无需编译 设备端需要安装解释器
+--- ppt/slides/slide13.xml ---
+设备端开发 基于本地编译的设备端开发 基于 SDK 的设备端开发 SDK 是开发所需资源的集合，包括 API 函数、帮助文档、开发工具等 通过提供平台接入和设备开发的统一接口，为开发者屏蔽底层硬件细节，降低设备端应用的开发难度 基于物联网操作系统的设备端开发 提供统一的开发接口 提供任务调度、资源管理、软件更新等一系列功能
+--- ppt/slides/slide14.xml ---
+设备端开发 基于云端编译的设备端开发 代码可在本地或云端编写，在云端实现代码的编译 无需在本地搭建编译环境 编译资源可动态分配，编译速度快、编译成本低
+--- ppt/slides/slide15.xml ---
+设备端开发 基于解释型语言的设备端开发 与基于编译型语言的设备端开发的不同 跨平台容易，代码可移植性强 需要在设备端运行解释器 IoT Studio 在线 JavaScript 开发工作台
+--- ppt/slides/slide16.xml ---
+设备端开发 平台对比 一体开发平台 设备端开发 本地编译 云端编译 解释型语言 TinyLink × 云端编译 + 自顶向下的开发方式 × IoT Studio 提供多语言 SDK ，以及基于 AliOS Things 的开发方式 √ 支持基于 JavaScript 语言的开发 Tuya IoT 平台 提供涂鸦 MCU SDK × ×
+--- ppt/slides/slide17.xml ---
+主要功能 我们认为，理想的物联网云 - 端一体开发应该包括如下功能 支持设备端开发 支持云服务开发 支持 Web 应用 / 移动应用开发 支持三端集成开发流程的简化
+--- ppt/slides/slide18.xml ---
+云服务开发 物联网云服务的特点 需要接入大量不同厂商制造的拥有不同功能的设备，这些设备支持的通信协议也不尽相同 云服务包含大量由传感数据触发的规则 云服务包含大量可重用的应用逻辑，如数据存储、数据读取等 云服务开发 设备接入 基于 IFTTT 规则的云服务开发 基于服务编排的云服务开发
+--- ppt/slides/slide19.xml ---
+云服务开发 设备接入 设备发现：云平台发现可连接的物联网设备 控制认证：让设备确认云平台对其拥有控制权 设备注册：云平台会为设备分配 ID ，同时将设备的属性和控制接口对接到云平台
+--- ppt/slides/slide20.xml ---
+云服务开发 基于 IFTTT 规则的云服务开发 通过开发工作台，设置 IFTTT 规则，可实现简单的云服务 示例为使用中国移动 OneNet 平台，通过 IFTTT 规则配置，开发一个温度告警服务 接收信息方式： 邮箱：用于把信息推送给用户 URL ：用于数据的进一步处理
+--- ppt/slides/slide21.xml ---
+云服务开发 基于服务编排的云端服务开发 服务节点 每一个服务节点代表一个基础的 API ，如数据查询、数据存储等 服务编排 组合不同的服务节点，并对节点进行配置，从而实现特定的功能
+--- ppt/slides/slide22.xml ---
+云服务开发 基于服务编排的云端服务开发 智能家居灯 当房间没有人并且电灯打开时，关闭电灯（房间有没有人通过摄像头判断，处理时间较长；电灯是否打开通过当前光照强度判断，处理时间较短）
+--- ppt/slides/slide23.xml ---
+云服务开发 平台对比 一体开发平台 云端服务开发 基于 IFTTT 规则 基于服务编排 TinyLink √ × IoT Studio × √ Tuya IoT 开发平台 √ ×
+--- ppt/slides/slide24.xml ---
+主要功能 我们认为，理想的物联网云 - 端一体开发应该包括如下功能 支持设备端开发 支持云服务开发 支持 Web 应用 / 移动应用开发 支持三端集成开发流程的简化
+--- ppt/slides/slide25.xml ---
+Web 应用 / 移动应用开发 物联网 Web 应用 / 移动应用特点 应用 UI 与设备端所提供的功能密切相关 应用组件的可重用性高（开关、文本框、折线图、仪表盘等） Web 应用 / 移动应用开发方式 基于设备端代码的应用框架自动生成 基于可视化拖拽的 Web 应用 / 移动应用开发 基于插件的 Web 应用 / 移动应用开发
+--- ppt/slides/slide26.xml ---
+Web 应用 / 移动应用开发 基于设备端代码的应用框架自动生成 基于设备端应用代码，自动生成 Web 应用 / 移动应用框架，用户只需要简单的配置即可完成 Web 应用 / 移动应用开发 支持这种开发方式的有 TinyLink 、中移 OneNet 等 void mes g Arrived(MQTT::MessageData& md){ MQTT::Message &message = md.message; /* 根据 MQTT 下行信息响应 */ switch(message) case 'MOTOR_TURNON': TL_Motor.turnOn (); ...... } // 主循环周期读取环境温度数据上传 void loop() { TL_Temperature.read(); String data = "{"; data += ",\"Temperature\":"; data += TL_Temperature.data(); data += "}"; char buf[100]; data.toCharArray( buf,100 ); ...... } 关联节 点 ID 应用 描述 数据展 示模块 控制 模块
+--- ppt/slides/slide27.xml ---
+Web 应用 / 移动应用开发 基于可视化拖拽的 Web/ 移动应用开发 采用可视化组件，开发者只需拖拽相关组件并进行简单配置，即可完成开发 示例为使用 IoT Studio 平台开发一个简单的温度数据展示应用 组件配置 可视化组件
+--- ppt/slides/slide28.xml ---
+用户在官方 app 中下载的插件 点击 ADD DEVICE 可以添加新的设备（插件） Web 应用 / 移动应用开发 基于插件的 Web/ 移动应用开发 插件：使用 HTML 、 CSS 、 JavaScript 和 JSON 来定义设备用户界面和行为的网页应用程序 开发者可自行开发插件并上传到平台，然后在官方 app 上按需加载插件 示例为 SmartThings app 设备插件界面和其中一个空调插件界面 App 中嵌入的插件
+--- ppt/slides/slide29.xml ---
+Web 应用 / 移动应用开发 平台对比 一体开发平台 Web 应用 / 移动应用开发 基于设备端代码的应用框架自动生成 基于可视化拖拽 基于插件 传统的 Web 应用 / 移动应用开发 TinyLink √ × × × IoT Studio × √ × √ Tuya I oT 平台 × √ √ √
+--- ppt/slides/slide30.xml ---
+主要功能 我们认为，理想的物联网云 - 端一体开发应该包括如下功能 支持设备端开发 支持云服务开发 支持 Web 应用 / 移动应用开发 支持三端集成开发流程的简化
+--- ppt/slides/slide31.xml ---
+三端应用集成简化 现状与问题 很多平台可以提供对三端应用开发的支持 三端应用的集成还较为复杂，如设备端与云端服务交互的数据格式不统一，导致设备端数据无法被云端服务直接解析 三端应用集成简化 设备模型 命名机制 设备模型 设备的抽象描述，规定设备与云端数据交互规范 解耦设备开发与云服务开发 命名机制 物理设备与虚拟 ID 的映射
+--- ppt/slides/slide32.xml ---
+三端应用集成简化 设备模型 传统的物联网开发方式 应用开发依赖硬件设备，开发流程无法同步进行 设备模型 设备所能提供功能的描述 设备开发和应用开发的桥梁，基于设备模型，应用开发与设备开发可完全分离
+--- ppt/slides/slide33.xml ---
+三端应用集成简化 基于设备模型的开发流程（以智能灯泡为例） 步骤 1 ：设备模型定义 包括开、关两个功能，可通过云平台进行控制 包含光照、声音强度两个属性 包含一个属性上报事件 步骤 2 ：应用开发 硬件开发人员设计电路，编写设备端代码，实现开灯、关灯两个功能 软件开发人员基于设备模型定义，使用虚拟设备模拟真实设备，开发 Web 应用 / 移动应用
+--- ppt/slides/slide34.xml ---
+三端应用集成简化 设备模型 : SmartThings VS IoT Studio 设备档案（三星 SmartThings ） 使用 JSON 语言描述 设备 > 组件 > 功能 > （属性，命令） 设备所包含的功能必须是平台已有的 物模型（ IoT Studio ） 使用 JSON 语言描述 将设备功能划分为“属性”、“事件”、“服务”三类 设备功能可使用平台提供的标准功能，也可由开发者自行定义
+--- ppt/slides/slide35.xml ---
+三端应用集成简化 智能灯泡设备模型定义 - 三星 SmartThings { "name": “smart-bulb", “components”: [ { // 该灯泡包含一个组件 "id": "main", // 该灯泡包含的二个功能 “capabilities”: [ // 每个 id 对应具体的功能定义 { "id": “switch"}, { "id": “ soundSensor "} ] } ], "metadata": { " dthName ": “Smart Bulb", " dthNamespace ": " smartthings " } } id: switch, //ID 由官方提供，共 73 种，与功能对应 name: Switch attributes: // 定义属性 switch: schema: type: object properties: type: string enum : // 属性数据类型：数字，字符串 - 'off’ // 枚举（ ENUM ）等 - ‘on’ // 开关有 ”on” 和 ”off” 两种状态 required: ["value"] commands: // 定义命令 ‘off’: // off 命令 arguments:[] // 命令参数 ‘on’: // on 命令 arguments:[] // 命令参数 注：平台无 Light 相关功能定义
+--- ppt/slides/slide36.xml ---
+三端应用集成简化 智能灯泡设备模型定义 -IoT Studio { “services”: [   { // 服务定义 “ outputData ”: [], // 输出参数 “identifier”: “ turnOn ”, // 标识符 “ inputData ”: [], // 输入参数 “method”: “ thing.service.turnOn ”, // 对应方法名 “name”: “ 开灯 ”, // 名称 “required”: false, // 是否必须 “ callType ”: “ async ”    }, // 调用方式 ( 同步 / 异步 ) { “identifier”: ” turnOff ” "method": " thing.service.turnOff ", …… }], } { “properties”: [   { // 属性定义 “identifier”: “ SoundValue “ // 标识符 dataType “: { // 数据类型 “specs”: { // 数据参数 “unit”: “dB”, // 单位 “min”: “0.0”, // 最小值 “ unitName ”: “ 分贝 ”, // 单位名称 “max”: “100.0”, // 最大值 “step”: “0.1” // 步长 }, “type”: “float”      }, // 类型 “name”: “ 声音强度 ”, // 属性名称 “ accessMode ”: “r”, // 是否可读写 “required”: false // 是否必须 }, {     "identifier”: “ LightLuxValue “ …… }  ] }
+--- ppt/slides/slide37.xml ---
+三端应用集成简化 智能灯泡设备模型定义 -IoT Studio “events”: [ { // 事件定义 “ outputData ”: [{ // 输出参数，包含声音强度和光照数据 “identifier”: “ SoundValue ”, // 声音强度数据 “ dataType ”: { // 参数类型 "specs": {  …….}, “type”: “float“ // 数据类型 }, “name”: “ 声音强度 “ // 参数名称 }, { “identifier”: “ LightLuxValue ”, // 光照数据 } ], “identifier”: “post”, // 事件标识符 “method”: “ thing.event.property.post ”, // 方法 “name”: “post”, // 事件名称 “ type”: “info”, // 事件类型 “required”: true, // 是否必须 “ desc ”: “ 属性上报 " // 事件描述 } ]
+--- ppt/slides/slide38.xml ---
+三端应用集成简化 命名机制 物联网场景中，内容检索和命令推送是两个基本功能 例如，“查询现在的室内光线强度” , “打开客厅的灯” 命名机制是支持这两种操作的基础 需要通过名字找到对应的数据或设备 传统基于 TCP/IP 的命名机制 为设备分配 IP 地址，建立从设备到 IP ，再到应用层名称等多层映射关系 问题 关注于建立设备之间的连接，需要实现复杂的协议栈，通过多层映射建立设备之间的连接 当用户需要操作多个设备时，需要和多个设备分别建立连接
+--- ppt/slides/slide39.xml ---
+三端应用集成简化 命名机制：基于 TCP/IP 的命名机制 一个简单的例子 APP: “查询现在的卧室光强” “打开卧室的台灯” 操作过程 查询映射：“卧室光强” -> 光强计 URI 连接到 AlexHome.com 服务上 DNS 查询 AlexHome.com 服务 IP 地址 DHCP 为所有设备分配 IP 地址 建立手机到光强计设备的连接
+--- ppt/slides/slide40.xml ---
+三端应用集成简化 命名机制：基于 NDN 的命名机制 NDN: Name Data Networking 以 数据 为中心 的网络 与位置无关，直接通过名字获取数据 基于两种数据包通信， “兴趣包（ Interest ）”和“数据包（ Data ）”，分别用于请求和传送内容 兴趣包：请求的数据名称，或希望执行的操作（作为名称的一部分） 数据包：回复的数据内容，或对操作执行的 ACK
+--- ppt/slides/slide41.xml ---
+三端应用集成简化 命名机制：基于 NDN 的命名机制 分层命名机制 按照约定好的命名规则对数据对象命名 常见的命名规则： /location/fixture-namespace/command/timestamp 例如， / MyHome /Bedroom/Lighting/sensing/Intense/202112311920 数据高度可聚合 收集所有光强读数： / MyHome /Bedroom/Lighting/sensing/Intense/ 新设备的加入 新设备可以通过兴趣包来告诉配置管理器其设备标识和功能 例如，“ / local / discovery / lighting / serial = 123456” 配置管理器进一步配置其属性，包括 ID ， NDN 名称前缀，功能集合等 ID: “/ MyHome /Bedroom/_fixtures/123456” 关联事物：“ / MyHome /Bedroom/ Lighting/ TableLamp ” 功能集合： “ .../action/ON ”，“ .../action/OFF”
+--- ppt/slides/slide42.xml ---
+三端应用集成简化 命名机制：基于 NDN 的命名机制 一个简单的例子 “查询现在的室内光强” “打开卧室的台灯” INTREST(/ MyHome /Bedroom/Lighting/Intense) DATA( name|data|signature ) INTREST(/ MyHome /Bedroom/Lighting/ TableLamp /action/ON) DATA( name|ACK|signature )
+--- ppt/slides/slide43.xml ---
+三端应用集成简化 平台对比 一体开发平台 三端应用集成简化 设备模型 命名机制 TinyLink × 基于 TCP/IP IoT Studio 物模型 基于 TCP/IP Tuya IoT 平台 × 基于 TCP/IP
+--- ppt/slides/slide44.xml ---
+思考题 简述云 - 端一体开发平台是如何简化物联网应用开发的。
+--- ppt/slides/slide45.xml ---
+市场主流云 - 端一体开发平台概览 一体化平台 设备端开发 服务开发 应用开发 三端应用集成简化 本地编译 云端编译 解释型语言 IFTTT 规则配置 服务编排 可视化拖拽 应用框架自动生成 基于插件 设备模型 命名机制 ARM Mbed √ √ × × × × × × × √ 中移 OneNet × × × √ × √ × × × √ TinyLink × √ × √ × × √ × × √ 三星 SmartThings √ × × × × × × √ √ √ Tuya IoT √ × × √ × √ × √ × √ LinkDevelop √ √ √ × √ √ × × √ √
+--- ppt/slides/slide46.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 TinyLink IoT Studio Tuya IoT 开发平台 案例开发 总结 46
+--- ppt/slides/slide47.xml ---
+TinyLink 简介 2017 年 3 月浙大 EmNets 实验室推出软硬件一体快速开发平台 ——Tinylink 1.0 2017 年 12 月浙大 EmNets 实验室推出 Tinylink 2.0 开发平台，在 1.0 平台设备端开发的基础上，集成 Web 端应用和手机端应用开发，构成了物联网一体化开发平台 TinyLink 2.0 云端 设备端 手机端 TinyLink 1.0
+--- ppt/slides/slide48.xml ---
+传统物联网应用开发 编程模式：自底向上 根据应用需求，构思应用程序的功能和逻辑 选择满足需求的开发板、外设和扩展板，设计与之相对应的硬件连接图，并组装硬件平台 开发物联网应用程序，包括将网络配置和外设管脚连接等信息写入程序 交叉编译程序代码，得到二进制文件 将二进制文件烧录至开发板 最后，观察应用运行结果并调试程序。
+--- ppt/slides/slide49.xml ---
+案例回顾：室内环境监测应用 确定物联网节点所需功能： PM25 、温度和光照 根据功能确定硬件选型： Arduino+SDS018+Light+DHT11 ，根据硬件连接特点，组装硬件平台 基于 Arduino 编程环境，进行软件编程 Arduino UNO I/O 扩展板 PM2.5 传感器 光照传感器 温湿度 传感器 硬件组装图
+--- ppt/slides/slide50.xml ---
+案例回顾：室内环境监测应用 确定物联网节点所需功能： PM25 、温度和光照 根据功能确定硬件选型 Arduino+SDS018+Light+DHT11 根据硬件连接特点，组装硬件平台 基于 Arduino 编程环境，进行软件编程
+--- ppt/slides/slide51.xml ---
+案例回顾：室内环境监测应用 打开 Arduino IDE ，编写应用程序代码 #include " DHT.h “ DHT dht (2, DHT11); // 温湿度传感器数据引脚接开发板 2 号端口 SoftwareSerial SDS018_Serial(14, 15); //PM2.5 传感器连接开发板（ 14,15 ）引脚 void setup () { Serial.begin (9600); // 串口初始化，串口打印波特率为 9600 SDS018_Serial.begin(9600); //PM2.5 传感器初始化 dht.begin (); } void loop () { float h = dht.readHumidity (); // 读取 DHT11 传感器的温度和湿度数据 float t = dht.readTemperature (); float l = analogRead (A0); // 光照传感器数据引脚接开发板 A0 号引脚 float p = pm25Read(); // 读取 PM2.5 传感器数据 Serial.println ("Humidity: " + h); Serial.print ("Temperature: "  + t); Serial.print ("Light: " + l); Serial.print ("PM25: " + p); delay(3000); // 每间隔 3 秒打印一次环境数据 }
+--- ppt/slides/slide52.xml ---
+案例回顾：室内环境监测应用 PM2.5 传感器需要自行封装读取函数 double pm25Read () { //PM2.5 传感器读取函数实现 …… while(SDS018_Serial.available()){ …… readSerialDataFromSDS018(); // 从 SDS018 读取串口数据 …… fetchPM25DataFromSerialData(); // 从串口数据中提取 PM2.5 数据 …… checkCRC (); // 传输数据 crc 校验 …… } …… storePM25DataToBuffer(); // 将 PM25 数据放入数据缓冲区 …… return movingAverageOfPM25Buffer(); // 从数据缓冲区取滑动平均值返回 }
+--- ppt/slides/slide53.xml ---
+传统物联网应用开发的不便之处 硬件选择方面 需要了解一定硬件知识，根据应用需求选择适合的 硬件 需要掌握一定的硬件特性，正确地选择开发板和外接设备的连接关系，保证硬件之间的兼容性 软件设计方面 需要掌握各类外设在不同硬件平台下的驱动编写 需要有一定的开发经验，选择合适的驱动库开发应用 软硬件协同方面 硬件选型需要考虑外设驱动库在所选硬件平台的兼容性 软件设计需要基于硬件连接关系确定每个外接设备对应到硬件平台的通信引脚和端口 由于物联网没有固定硬件平台且各平台差异性较大，更换硬件平台时，将原有软件迁移到新硬件平台需要大量的开发工作
+--- ppt/slides/slide54.xml ---
+分析用户代码 应用需求分析 硬件平台搭建 TinyLink 1.0 开发过程 http://tinylink.emnets.org G. Guan, W. Dong*, et. al, TinyLink: a Holistic System for Rapid Development of IoT Applications, ACM MobiCom 2017 . void setup()	{ TL_WiFi.init (); TL_WiFi.join ("SSID", "PASSWORD"); TL_Light.setMeasuringRange (1, 30000, "LUX"); } void loop()	{ TL_Light.read (); TL_Soil_Humidity.read (); …… } 自 顶 向 下 节点软件编程
+--- ppt/slides/slide55.xml ---
+TinyLink 1.0 使用 流程 用户端 服务器端 ④组装物联网 平台 ①编写程序代码 ②上传到云端 ⑤程序代码烧入 开发板 ③得到输出 （硬件配置文件） ③得到输出 （二进制程序） 硬件生成 系统 TinyLink 系统 软件生成 系统
+--- ppt/slides/slide56.xml ---
+TinyLink 开发流程 准备 1 ：下载 TinyLink 客户端并注册 http://tinylink.emnets.org TinyLink 网页 TinyLink 客户端
+--- ppt/slides/slide57.xml ---
+TinyLink 开发流程 准备 2 ：阅读 TinyLink 文档 TinyLink 用户手册 TinyLink API 文档
+--- ppt/slides/slide58.xml ---
+TinyLink 开发流程 步骤①：编写程序代码 本地文本编辑器编写室内环境监测程序 void setup() { TL_Serial.begin (9600); // 初始化串口，波特率为 9600 } void loop() { TL_PM25.read(); // 读取各传感器 TL_Temperature.read (); TL_Humidity.read (); TL_Light.read (); /* 打印各传感器数据 */ TL_Serial.println (String("Temperature data is ") + TL_Temperature.data ()); TL_Serial.println (String("Humidity data is ") + TL_Humidity.data ()); TL_Serial.println (String("Light: ") + TL_Light.data ()); TL_Serial.println (String("PM25 data is ") + TL_PM25.data()); TL_Time.delayMillis (3000); // 每间隔 3 秒打印一次环境数据 }
+--- ppt/slides/slide59.xml ---
+TinyLink 开发流程 步骤②：上传代码并编译 选择待上传文件 提交上传文件 生成硬件及代码编译的结果 具体信息
+--- ppt/slides/slide60.xml ---
+TinyLink 开发流程 步骤③：获取硬件配置 硬件列表 类型 名称 功能 链接 开发板 Arduino MEGA 2560 https://detail.tmall.com/item.htm?spm=a230r.1.14.1.4c7b5c9dRzIn7c&id=38816270178&cm_id=140105335569ed55e27b&abbucket=3 扩展板 Mega Shield https://detail.tmall.com/item.htm?spm=a230r.1.14.8.46f914famJ2fgU&id=560459071060&cm_id=140105335569ed55e27b&abbucket=3 外设 Grove Light Sensor TL_Light https://item.taobao.com/item.htm?spm=a1z10.3-c-s.w4002-17798475645.11.6e2933dbzZbcZV&id=544373791068 外设 Grove Temperature and Humidity Sensor TL_Temperature TL_Humidity https://item.taobao.com/item.htm?spm=a1z09.2.0.0.310a2e8dAJ51zN&id=520059997040&_u=k1pckkov703e 外设 SDS018 TL_PM25 https://item.taobao.com/item.htm?spm=a1z09.2.0.0.3ff52e8d5FMsWV&id=530210699388&_u=k1pckkov4fa7
+--- ppt/slides/slide61.xml ---
+TinyLink 开发流程 步骤③：获取硬件配置 硬件连接图
+--- ppt/slides/slide62.xml ---
+TinyLink 开发流程 步骤④：组装物联网平台 购买硬件列表中的硬件 按照硬件连接示意图组装硬件平台 硬件连接示意图 物联网平台图 购买硬件并组装
+--- ppt/slides/slide63.xml ---
+TinyLink 开发流程 步骤⑤：烧录应用程序 硬件平台通过 USB 线连接电脑 点击 TinyLink 客户端一键烧写按钮即可
+--- ppt/slides/slide64.xml ---
+TinyLink 特点小结 开发模式转变 自顶向下 vs 自底向上 自动 自动生成硬件配置和二进制代码 自动接入物联网平台，如 IBM Waston IoT, OneNet 并能优化指定目标，如价格、功耗 简单 TinyLink 编程简单 （ Arduino setup/loop, TinyLink APIs ） 云编译：不需要复杂的本地编译环境 64 客户端 大小 Arduino IDE + LinkIt One 包 420 MB 树莓派交叉编译链 266 MB BBB 交叉编译链 302 MB TinyLink 客户端 69 MB
+--- ppt/slides/slide65.xml ---
+TinyLink 推荐系统 为用户推荐可实现相同功能的不同硬件平台 上述例子，选择 LinkIt One 平台后，推荐了 34 种不同可行硬件方案，其中 TinyLink 目前可支持编译的有 8 种
+--- ppt/slides/slide66.xml ---
+TinyLink 功能描述 支持设备列表 开发板 Arduino UNO/Mega2560/DUE LinkIt One/Smart 7688 树莓派 2/3 BeagleBone Black Mbed TinyBLE AliOS MK3060 扩展板 Grove Base Shield Grove WiFi Shield Grove SD Shield GrovePi + 传感器 Temperature and Humidity Sensor Pro (DHT22) Temperature and Humidity Sensor (DHT11) Grove UART WiFi Grove GPS Air Quality SDS018 Sound Sensor Grove Dust Sensor Loudness Sensor Grove BLE Grove IMU 9DOF Grove Digital Light Sensor Grove IMU 10DOF Grove Temperature Sensor Grove 3-Axis Analog Accelerometer Grove 3-Axis Digital Compass Grove 3-Axis Digital Gyro Grove Light Sensor
+--- ppt/slides/slide67.xml ---
+TinyLink 1.0 系统框架 硬件生成系统 通过分析应用程序代码，结合硬件数据库的领域知识，自动生成硬件配置 软件生成系统 结合硬件配置和对应软件库，通过交叉编译链生成应用程序的二进制代码
+--- ppt/slides/slide68.xml ---
+TinyLink 1.0 硬件生成系统 硬件数据库 主要包含已有硬件的信息及其特征 作为自动生成配置的关键信息源 组件 ID 成本 ( ￥ ) 提供接口 占用接口 功能 模拟信号引脚 UART 引脚 模拟信号端口 UART 端口 模拟信号引脚 UART 引脚 模拟信号端口 UART 端口 Arduino UNO 开发板 1 149.5 6 2 0 0 0 0 0 0 LED WiFi 扩展板 V2.0 4 271.7 6 2 1 0 6 2 0 0 WiFi 基础扩展板 V1.3 5 60.5 6 2 2 1 6 2 0 0 - Grove 光照传感器 6 19.7 0 0 0 0 0 0 1 0 Light Grove UART WiFi 模块 10 94.5 0 0 0 0 0 0 0 1 WiFi 表 4-3  TinyLink 数据库举例
+--- ppt/slides/slide69.xml ---
+TinyLink 1.0 硬件生成系统 用户需求功能 void upload() { int light = TL_Light .data (); int sm = TL_Soil_Moisture.data (); String url =   "http://localhost/upload.php?"; url += String("light=") + String(light); url += String("& sh =") + String( sm ); TL_WiFi .get ( url ); } void setup() { TL_WiFi.init (); TL_WiFi.join ("SSID", "PASSWORD"); } void loop() { TL_Light.read (); TL_Soil_Moisture .read (); upload(); } 应用代码 光照 土壤湿度 WiFi
+--- ppt/slides/slide70.xml ---
+TinyLink 1.0 硬件生成系统 用户约束条件 所有包含 WiFi 功能的模块总数量应该大于 1 主板 · LinkIt One 扩展板 · WiFi Shield V2.0 外设 · Grove UART WiFi 含有 WiFi 功能的模块有如下三种 …… …… ……
+--- ppt/slides/slide71.xml ---
+TinyLink 1.0 硬件生成系统 接口约束条件 主板 扩展板 外设 提供 P ort 的数量 主板 扩展板 外设 消耗 P ort 的数量 对 {Analog, UART, I2C, SPI, USB, …} 中每一类型的接口
+--- ppt/slides/slide72.xml ---
+TinyLink 1.0 硬件生成系统 问题规约 在 { 主板 扩展板 外设 } 里找到一组子集 优化目标 价格最小化 满足用户需求 保证硬件选型是正确有效的 通常生成 210 条约束条件 该问题为经典的线性规划问题 使用经典的线性规划求解器 lp_solver 进行求解
+--- ppt/slides/slide73.xml ---
+TinyLink 1.0 软件生成系统 硬件配置头文件 用户代码 硬件无关 硬件相关 驱动和库文件
+--- ppt/slides/slide74.xml ---
+TinyLink 1.0 软件生成系统 硬件配置头文件 用户代码 硬件配置 硬件配置头文件 驱动和库文件 硬件无关 硬件相关
+--- ppt/slides/slide75.xml ---
+TinyLink 1.0 软件生成系统 从 116 个网上公开的 IoT 项目中提取出 225 个常用的 API 按照功能种类将其分组 实现 24 种类别的 API 包括 LED ，温湿度，显示， WiFi 等等
+--- ppt/slides/slide76.xml ---
+TinyLink 1.0 软件生成系统 基础调试 用户在代码中编写 “#REQUIRE DBGPrint;” IoT 平台一定会引入额外的 UART 接口来打印所有的调试信息 交互式调试 用户在代码中编写 “#REQUIRE DBG;” 如果开发板原生系统支持交互式调试，那么该开发板可以被选入硬件平台 树莓派和 Beaglebone 平台会利用 gdb 调试 同时 TinyLink 会提供项目源代码供用户深入调试
+--- ppt/slides/slide77.xml ---
+TinyLink 2.0 平台架构 一键生成应用 节点数据上行 节点控制下行 Web后台 服务器 源码 导入 应用 源码 生成 硬件方案和可烧写代码 数据库 节点 数据 同步 手机交互 上行
+--- ppt/slides/slide78.xml ---
+TinyLink 2.0 三端开发 设备开发 基于软硬一体快速开发技术实现 添加了领域特定元素，例如宏和数据类型 实现了许多任务处理操作，以方便物联网节点之间的交互和管理控制节点行为 高层 API 封装了大量原先 TinyLink 1.0 的 API ，对开发者隐藏了不重要的细节内容 丰富了系统功能，如支持 LoRa 传输和程序并发执行
+--- ppt/slides/slide79.xml ---
+TinyLink 2.0 三端开发 云服务开发 将云端规则转换为 JSON 格式的规则配置，分析规则的条件并将其与 RESTful API 一起解释为后缀表达式 规则引擎在云端运行，可以加载、解释大量规则配置，并为每个规则注册触发器。触发器分为基于事件的触发和基于时间的触发 规则引擎包含三个线程，每个线程都有一个由 Redis 实现的简单 FIFO 消息队列，包括： 1 ）消息队列； 2 ）规则队列和 3 ）命令队列
+--- ppt/slides/slide80.xml ---
+TinyLink 2.0 三端开发 移动端开发 客户端生成器将客户端代码（例如带有 @Client 后缀的微应用）编译为 WebView 客户端程序 首先构建抽象语法树，然后将与其它微应用的交互转换为 JavaScript 代码 使用默认的混合模板，用 HTML 和 JS 代码来表示代码中的 UI
+--- ppt/slides/slide81.xml ---
+TinyLink 2.0 关键特性 微应用模型 定义了物联网节点的功能和行为，抽象了物联网节点的传感数据、检测到的事件，以及暴露给其他微应用和策略的服务调用接口，屏蔽了数据传输、事件上报和服务调用的底层实现细节 隐式交互 采用了结构化的方式与微应用模型相结合，允许开发者跨微应用查询接口中定义的数据 实现了每个物联网节点状态的自动跟踪，可以自动保持节点一致性，包括数据流和服务调用的一致性
+--- ppt/slides/slide82.xml ---
+TinyLink 2.0 关键特性 云定义节点行为 设计了类 IFTTT 规则，添加了新关键词来增强其开发多应用实例的功能 控制物联网节点根据任务计划在适当时间点执行任务 虚拟传感器 自动从多源传感器数据组合生成推理模型
+--- ppt/slides/slide83.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 TinyLink IoT Studio Tuya IoT 开发平台 案例开发 总结
+--- ppt/slides/slide84.xml ---
+IoT Studio 2018 年 3 月，阿里巴巴宣布进军物联网领域，推出 Link Develop 1.0 版本，涵盖物联网应用全链路开发流程；
+--- ppt/slides/slide85.xml ---
+IoT Studio 2018 年 6 月，阿里巴巴推出 Link Develop 2.0 版本 2019 年 1 月， Link Develop 正式更名为 IoT Studio 2021 年 3 月， IoT Studio 发布 3.0 版本，目前提供 Web 可视化开发、移动可视化开发、业务逻辑开发与物联网数据分析等一系列便捷的物联网开发工具
+--- ppt/slides/slide86.xml ---
+IoT Studio 系统架构
+--- ppt/slides/slide87.xml ---
+IoT Studio Bone 框架 阿里巴巴推出的 Web 应用 / 移动应用开发框架 集成常用的物联网应用 UI 组件 IoT 应用市场 包含从硬件到解决方案一系列产品，开发者可将自己开发的产品放到 IoT 应用市场，实现在线商业化
+--- ppt/slides/slide88.xml ---
+IoT Studio 设备开发 支持基于 SDK 的开发、基于物联网操作系统的开发、基于 JavaScript 语言的开发等多种开发方式 云端服务开发 集成服务开发工作台，支持服务编排 Web 应用 / 移动应用开发 支持基于可视化搭建的 Web 应用 / 移动应用开发 三端应用集成简化 通过物模型对设备功能进行抽象，简化应用集成
+--- ppt/slides/slide89.xml ---
+IoT Studio 设备开发工作台 用于设备端应用的代码编写、应用调试 提供嵌入式 C 开发、嵌入式 JavaScript 开发、基于 AliOS Things 的开发以及基于 SDK 的开发等开发方式 同时支持本地编译、云端编译及基于解释型语言的开发 IoT Studio 在线嵌入式 JavaScript 开发工作台
+--- ppt/slides/slide90.xml ---
+IoT Studio 业务逻辑开发工作台 用于云端服务的开发 支持可视化的服务编排 节点配置区 编辑区 节点 服务管理
+--- ppt/slides/slide91.xml ---
+IoT Studio Web 应用开发工作台 用于 Web 应用开发 基于可视化拖拽的 Web 应用开发 基于 Bone 框架的 Web 应用开发
+--- ppt/slides/slide92.xml ---
+IoT Studio 移动应用开发工作台 用于移动应用开发 基于可视化拖拽的移动应用开发 基于 Bone 框架的移动应用开发
+--- ppt/slides/slide93.xml ---
+IoT Studio 关键特性 设备开发 基于 物模型 的设备抽象 服务开发 支持流式 服务编排 ，可与应用无缝集成
+--- ppt/slides/slide94.xml ---
+物模型 由设备开发者和服务开发者共同定义 使用 JSON 语言，描述一类设备所具有的功能 将设备所具有的功能划分为三类 功能类型 功能说明 举例 属性（ Property ） 设备运行时的状态 环境监测设备测量的温度、湿度等环境数据 服务（ Service ） 设备可被外部调用的方法 设备向外部提供的打开风扇方法，分为同步调用服务和异步调用服务 事件 （ Event ） 设备运行时的事件，包含需要被外部感知和处理的通知信息 任务完成的信息、设备发生故障的信息
+--- ppt/slides/slide95.xml ---
+物模型定义 { “schema”:“ 物的 TSL 描述 schema”, 由云平台自动生成 “link”:“ 云端系统级 uri , 用来调用服务 / 订阅事件 ”, 由云平台自动生成 “profile”:{ “ productKey ”: “ 产品 key” }, “properties”:[], // 属性定义 “events”:[], // 事件定义 “services”:[] // 服务定义 }
+--- ppt/slides/slide96.xml ---
+物模型定义 属性 "properties":[ { "identifier":" 属性唯一标识符 ( 产品下唯一 )", "name":" 属性名称 ", " accessMode ":" 属性读写类型，只读 (r) ，读写 ( rw )", "required":" 是否是标准功能的必选属性 " " dataType ":{ "type":" 属性类型 : int ， float ， double, text ， bool ， array( 数组类型，支持 int /double/float/text)", "specs":{ "min":" 参数最小值 ( int , float, double 类型特有 )", "max":" 参数最大值 ( int , float, double 类型特有 )", "unit":" 属性单位 ", " unitName ":" 单位名称 ", "size":" 数组大小，默认最大 128( 数组特有 )", "item":{   "type":" 数组元素的类型 "  }  }  } } ]
+--- ppt/slides/slide97.xml ---
+物模型定义 事件 "events":[ { "identifier":" 事件唯一标识符 ( 产品下唯一 )", "name":" 事件名称 ", "desc":" 事件描述 ", "type":" 事件类型 ( info,alert,error )", "required":" 是否是标准功能的必选事件 ", " outputData ":[ { "identifier":" 参数唯一标识符 ", "name":" 参数名称 ", " dataType ":{ "type":" 属性类型 : int ， float ， double, text ， bool ， array( 数组类型，支持 int/double/float/text)", "min":" 参数最小值 (int, float, double 类型特有 )", "max":" 参数最大值 (int, float, double 类型特有 )", "unit":" 属性单位 ", " unitName ":" 单位名称 ", "size":" 数组大小，默认最大 128( 数组特有 )", "item":{ "type":" 数组元素的类型“ }}}}], "method":" 事件对应的方法名称 ( 根据 identifier 生成 )" }]
+--- ppt/slides/slide98.xml ---
+物模型定义 服务 "services":[  { "identifier":" 服务唯一标识符 ( 产品下唯一 )", "name":" 服务名称 ", "desc":" 服务描述 ", "required":" 是否是标准功能的必选服务 ", “ callType ”: “ 服务调用方式， sync: 同步调用； async: 异步调用 ", " inputData ":[  { ...... } ], " outputData ":[  { ...... } ], "method":" 服务对应的方法名称 ( 根据 identifier 生成 )" } ] }
+--- ppt/slides/slide99.xml ---
+物模型服务 同步调用 MQTT 协议提供基于 PUB/SUB 的异步通信，不适用于服务端同步控制设备端返回结果的场景。 RRPC ：基于 MQTT 协议定制的请求和响应的同步机制
+--- ppt/slides/slide100.xml ---
+物模型示例 设备描述：智能空调 设备功能 属性 温度（ temperature ）， float 类型，最小值为 -40 ，最大值为 50 ，单位为 ℃ 事件 温度告警（ temp_alert , 输出值为枚举类型， 0 代表正常温度， 1 代表高温报警（温度 > 30 ℃）） 服务 打开空调（ open ，返回值为 bool 类型， 0 代表打开空调失败， 1 代表打开空调成功，服务调用方式为同步调用）
+--- ppt/slides/slide101.xml ---
+物模型示例 设备属性定义 "properties": [  { “identifier”: “temp”,    // 属性标识符 " dataType ": { “specs”: {                // 属性相关特性定义 “unit”: “ ℃ ", "min": "-40", "max": "50", "step": "0.1" }, “type”: “float“            // 数据类型 }, “name”: “ 温度 ”,           // 属性名称 “ accessMode ”: “r”,      // 属性读写类型 “required”: false          // 是否是标准功能的必选属性 }  ]
+--- ppt/slides/slide102.xml ---
+物模型示例 设备事件定义 "events": [  { “ outputData ”: [  {                 // 事件返回参数 “ identifier”: “ AlarmType ”,    // 参数标识符 " dataType ": { "specs": {  "0": " 恢复正常 ",  "1": " 高温报警“ }, “type”: “ enum “               // 属性类型：枚举 }, “name”: “ 报警类型“ // 参数名称 } ], “identifier”: “ TemperatureAlarm ”,  // 事件标识符 “ method”: “ thing.event.TemperatureAlarm.post ”,  // 事件对应的方法名称 “ name”: “ 温度报警” ,                // 事件名称 “ type”: “alert”,                  // 事件类型 “ required”: false                 // 是否是标准功能的必选事件 } ]
+--- ppt/slides/slide103.xml ---
+物模型示例 设备服务定义 "services": [  { “ outputData ”: [  {                       // 服务返回参数 “ identifier”: “ successOrNot ”,        // 参数标识符 “ dataType ”: {                        // 参数类型 "specs": {  "0": " 失败 ",  "1": " 成功 "  }, "type": "bool" }, “name”: “ 打开空调是否成功“ // 参数名称 } ], “identifier”: “open”,                   // 服务标识符 “ inputData ”: [],                       // 入参（此例无入参） “ method”: “ thing.service.open ”,        // 服务对应的方法名称 “ name”: “ 打开空调” ,                     // 服务名称 “ required”: false,               // 是否是标准功能的必选服务 “ callType ”: “sync”} ]            // 服务调用方式，此处为同步
+--- ppt/slides/slide104.xml ---
+思考题 现在我们要定义一个空气盒子的物模型，模型具体功能信息如下 属性： 温度（ Temp ）： float 类型，最小值为 -40 ，最大值为 50 ，单位为 ℃，步长 0.1 ，可读 湿度（ Humi ）： float 类型，最小值为 0% ，最大值为 100% ，单位为 % ，步长 0.1 ， 可读 事件： 属性数据上报事件（ PropPost ）：输出参数包含上述两个属性的值，事件对应的方法名称为“ thing.event.prop.post ”，其余参数自定义即可
+--- ppt/slides/slide105.xml ---
+物模型的使用 ( 以智能空调为例 ) 设备属性上报 Topic ： /sys/{ProductKey}/{deviceName}/thing/event/property/post 数据格式 { "id": "123", "version": "1.0", " params ": { “temp”:30, }, "method": " thing.event.property.post " }
+--- ppt/slides/slide106.xml ---
+物模型的使用 ( 以智能空调为例 ) 设备事件上报 Topic ： /sys/{ProductKey}/{deviceName}/thing/event/{dsl.event.identifer}/post 数据格式 { "id": "123", "version": "1.0", " params ": { “ AlarmType ”: 0, }, "method": " thing.event.TemperatureAlarm.post " }
+--- ppt/slides/slide107.xml ---
+物模型的使用 ( 以智能空调为例 ) 设备服务调用 Topic ： /sys/{ProductKey}/{deviceName}/thing/service/{dsl.service.identifer} 数据格式 { "id": "123", "version": "1.0", " params ": { }, "method": " thing.service.open ” }
+--- ppt/slides/slide108.xml ---
+服务编排 业务逻辑 IoT Studio 提供了物联网业务逻辑的开发工具，支持通过编排服务节点的方式快速完成简单的物联网业务逻辑的设计 开发者只需要拖拽不同功能的节点，并按一定的应用逻辑进行连接，即可实现设备属性查询、数据转储、信息推送等服务 此外，开发者还可以通过自定义脚本节点实现数据处理和服务调用，进一步实现较为复杂的应用逻辑
+--- ppt/slides/slide109.xml ---
+服务编排 案例描述：使用 IoT Studio 业务逻辑功能，开发设备触发服务，当温度大于 30 ℃，将信息通过钉钉机器人发送到钉钉群 步骤一：根据节点功能，选择需要的节点。本案例选择 4 种节点，分别是设备触发节点、 NodeJS 脚本节点、路径选择节点和钉钉机器人节点
+--- ppt/slides/slide110.xml ---
+服务编排 步骤二：将节点按照应用逻辑进行连接，并对节点进行配置 设备触发节点：指定产品、设备、以及触发条件。
+--- ppt/slides/slide111.xml ---
+服务编排 步骤二：将节点按照应用逻辑进行连接，并对节点进行配置 NodeJS 脚本节点：编写 NodeJS 代码指定节点逻辑，获取设备上报的属性中的温度信息。 1	/** 2	* @param {Object} payload 上一节点的输出 3	* @param {Object} node 指定某个节点的输出 4	* @param {Object} query 服务流第一个节点的输出 5	* @param {Object} context  { appKey , appSecret } 6	*/ 7 module.exports = async function(payload, node, query, context) { 8	    let temp = payload.props.temperature.value ;    // 获取温度数据 9	    console.log("temperature: ", temp);           // 将温度数据打印 10	    return temp;                   // 将温度数据传递给下一个节点 11	}
+--- ppt/slides/slide112.xml ---
+服务编排 步骤二：将节点按照应用逻辑进行连接，并对节点进行配置 路径选择节点节点：配置路由节点，根据温度是否大于等于 30 ℃，若温度大于等于 30 ℃，输出到钉钉机器人节点，否则，结束
+--- ppt/slides/slide113.xml ---
+服务编排 步骤二：将节点按照应用逻辑进行连接，并对节点进行配置 钉钉机器人节点：配置钉钉机器人节点的 access_token, access_token 的获取参考 钉钉机器人 。
+--- ppt/slides/slide114.xml ---
+服务编排 步骤三：部署应用，服务逻辑是否正确
+--- ppt/slides/slide115.xml ---
+IoT Studio 提供的服务节点 类别 服务节点名称 服务节点描述 触发 空间触发 可配置业务服务在指定的地理空间执行。 触发 设备触发 是将设备上报的属性（读写型）、事件数据或状态变更作为服务的输入，触发服务的后续逻辑。 触发 定时触发 定时触发节点用于设置时间，使服务在指定时间执行。 触发 HTTP 请求 HTTP 请求节点是创建 API 服务的开始节点， API 服务必须以 HTTP 返回节点作为终止节点。 触发 MQTT 订阅 MQTT 订阅节点支持开启对设备属性、事件、工作状态等的监听功能，用来获取设备的实时信息。 输出 HTTP 返回 HTTP 返回节点可配置为业务服务的结束节点。 功能 路径选择 分支节点，一个输入，多个输出，实现 if-else 的应用逻辑，目前最多支持 10 个分支 功能 Python 脚本 可编写自定义 Python 代码来实现功能逻辑，目前支持 Python v2.7.9 版本、支持使用基本库和基本语法。 功能 条件判断 根据设定的条件对输入值进行判断，再根据判断结果执行不同的路径。
+--- ppt/slides/slide116.xml ---
+IoT Studio 提供的服务节点 类别 服务节点名称 服务节点描述 功能 数值计算 实现简单的逻辑运算 功能 Node.js 脚本 自定义数据处理逻辑，可编写自定义 JavaScript 代码，目前支持 Node.js 6.10 版本 人工智能 人脸识别 可调用云市场购买的 API ，进行人数监测、人脸与身份证对比、识别性别、年龄和情绪等 人工智能 OCR 可调用云市场购买的 API 进行驾驶证、车牌、身份证等图像文字识别 人工智能 图像识别 可调用云市场购买的 API 进行烟雾火焰火灾、动物、植物花卉、花草树木鉴定等识别。 消息 短信 用于给目标手机发送短信，且支持批量发送。 消息 钉钉机器人 支持顶顶群信息推送，不支持返回消息处理。 消息 移动应用推送 可用于将设备、服务的信息、自定义提示信息和定时信息推送到移动应用。 消息 MQTT 发布 支持下发设备消息和自定义消息包，可用于获取设备的信息和动态。
+--- ppt/slides/slide117.xml ---
+IoT Studio 提供的服务节点 类别 服务节点名称 服务节点描述 API 调用 自定义 API 调用开发者自己实现的 HTTP/HTTPS 接口，节点的输出为自定义接口的返回值。 API 调用 云市场 API 调用在阿里云市场中购买的 API ，如空气质量查询等。 API 调用 项目内 API 调用该项目下开发者开发的其它服务。 数据 变量设置 点可修改已添加的全局或局部变量值。 数据 表格存储 阿里云表格存储服务的封装，支持数据的增删改查 数据 云数据库 MySQL 阿里云关系型数据库服务的封装，支持数据的增删改查 数据 键值对存储 阿里云 Key-Value 存储服务的封装，提供数据删除、数据获取、数据写入 数据 数据分析 对接物联网平台数据分析开发的接口。 设备 产品结点 向设备下发设置属性或调用服务的指令、查询设备属性快照值或历史值，和查询设备其他信息。
+--- ppt/slides/slide118.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 TinyLink IoT Studio Tuya IoT 开发平台 案例开发 总结 118
+--- ppt/slides/slide119.xml ---
+Tuya IoT 开发平台 Tuya IoT 开发平台是涂鸦智能于 2016 年推出的全球化 IoT 开发平台，平台向开发者提供硬件开发、云服务开发和 App 开发等工具 平台开发设备可以接入 Amazon Alexa ， Google Assistant ， Apple HomeKit 、 SmartThings 等生态。 截至 2021 年 7 月 , 涂鸦 IoT 开发平台累计有超过 37.4 万注册开发者 , 产品和服务覆盖超过 200 个国家和地区。
+--- ppt/slides/slide120.xml ---
+Tuya IoT 开发平台 设备端开发 零代码开发 低代码开发 多代码开发
+--- ppt/slides/slide121.xml ---
+设备端开发 零代码开发 针对电工、照明、传感等功能相对标准的设备 例如，平台预定义了插座功能，开发者通过可视化 UI 完成功能配置并选择所使用的无线通信模组，平台将自动为无线通信模组生成固件 低代码开发 针对硬件方案中有 MCU 的产品，平台提供 MCU SDK ，开发者调用相关接口完成应用 多代码开发 针对其它复杂硬件设备如网关和摄像头，平台提供了对应的设备 SDK
+--- ppt/slides/slide122.xml ---
+Tuya IoT 开发平台 云服务开发流程 创建并配置云项目 添加设备 代码开发 1	from env import ENDPOINT, ACCESS_ID, ACCESS_KEY, USERNAME, PASSWORD, DEVICE_ID # 应用基本配置，包括应用密钥，用户名和密码等 2	from tuya_iot import TuyaOpenAPI , tuya_logger 3	# 初始化 Tuya API 4 openapi = TuyaOpenAPI (ENDPOINT, ACCESS_ID, ACCESS_KEY) 5 openapi.login (USERNAME, PASSWORD) 6	import logging 7 tuya_logger.setLevel ( logging.DEBUG ) 8	flag = True 9	while True: 10	    input('Hit Enter to toggle light switch.') 11	    flag = not flag 12		commands = {'commands': [{'code': ' switch_led ', 'value': flag}]} # 控制灯开关命令 13 openapi.post ('/v1.0/devices/{}/ commands'.format (DEVICE_ID), commands) # 命令由云服务下发
+--- ppt/slides/slide123.xml ---
+Tuya IoT 开发平台 移动端开发 控制智能产品的界面程序 —— 面板 基于 React Native 框架实现，保留原生移动应用的流畅体验 可以在工作台拖拽组件完成设计，也可以基于 SDK 设计新面板 面板嵌入移动应用 公版 App 零代码开发 OEM App 使用 SDK 进行本地 App 开发
+--- ppt/slides/slide124.xml ---
+Tuya IoT 开发平台 平台特性 成熟的硬件解决方案 针对电工，照明和家电等应用提出了硬件解决方案，涵盖了丰富的硬件产品品类 灵活的边缘计算网关 Docker 镜像方式安装，跨平台，部署方便，支持多种主流物联网标准协议的接入，也支持用户使用工具集快速开发私有协议的驱动 便捷的 SaaS 开发框架 IoT SaaS 开发者提供的前、后端开源框架，集成了多项基本功能如用户登录、角色权限等 全球公有云 整合了不同主流公有云的全球服务节点，保障高效稳定的使用体验
+--- ppt/slides/slide125.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 TinyLink IoT Studio Tuya IoT 开发平台 案例开发 总结 125
+--- ppt/slides/slide126.xml ---
+IoT Studio 开发案例 智能教室座位使用统计系统：设备部署在教室，可自动监测座位上是否有人，并在 Web 页面实时显示 需要的设备： 树莓派 4B 红外热释电运动传感器
+--- ppt/slides/slide127.xml ---
+IoT Studio 开发案例 步骤 1 ：进入 IoT Studio 工作台 (https://studio.iot.aliyun.com/) ，创建空白项目，并在项目下创建产品
+--- ppt/slides/slide128.xml ---
+IoT Studio 开发案例 步骤 2 ：为产品自定义功能。本例中，我们为产品添加两个属性，分别是设备编号（ deviceID ）和红外检测状态（ motionState ）
+--- ppt/slides/slide129.xml ---
+IoT Studio 开发案例 步骤 3 ：硬件连接。将树莓派和红外热释电运动传感器进行连接，引脚对应关系如下。 VCC GND D1 GPIO18 GND 5V
+--- ppt/slides/slide130.xml ---
+IoT Studio 开发案例 步骤 4 ： SDK 安装 在项目目录下运行如下命令，安装所需模块 aliyun - iot -device- sdk : 云平台接入 SDK Pigpio ：树莓派 GPIO 相关接口
+--- ppt/slides/slide131.xml ---
+IoT Studio 开发案例 步骤 5 ：设备端代码编写，代码如下 const aliyunIot = require(' aliyun - iot -device- sdk '); const Gpio = require(' pigpio '). Gpio ; const device_id = 0; const gpio_pir = new Gpio (18, { mode: Gpio.INPUT , }); // 创建设备实例 const device = aliyunIot.device ({ // 激活凭证 这里替换成你自己上一步申请到的激活凭证 productKey : ‘xxx', deviceName : ‘xxx', deviceSecret : ‘xxx' }); // 读取传感器数值 function getMotionState = function() { return gpio_pir.digitalRead (); } // 上传数据 function postProps () { device.postProps ({ deviceID : device_id , motionState : getMotionState () }); console.log('post'); } // 定义定时器，周期上传数据 var myInterval = setInterval ( postProps , 10000); device.on ('connect', () => { console.log('connect successfully'); });
+--- ppt/slides/slide132.xml ---
+IoT Studio 开发案例 步骤 6 ：进入 IoT Studio 项目，新建基于可视化搭建的 Web 应用
+--- ppt/slides/slide133.xml ---
+IoT Studio 开发案例 步骤 7 ：使用指示灯、文本框、文字时钟等组件搭建 Web 页面
+--- ppt/slides/slide134.xml ---
+IoT Studio 开发案例 步骤 8 ：配置指示灯组件的数据源
+--- ppt/slides/slide135.xml ---
+IoT Studio 开发案例 步骤 9 ：在 Web 应用开发控制台，点击页面预览，查看 Web 页面效果
+--- ppt/slides/slide136.xml ---
+IoT Studio 设备端开发的不足 针对设备端开发，目前 IoT Studio 支持的硬件如下（以 JavaScript 开发为例） IoT Studio 在设备端开发上的不足 支持的硬件种类较少 仍采用传统的自底向上的开发方式 芯片型号 厂商 操作系统 ESP32 乐鑫 AliOS -Things ， FreeRTOS ， UCOSII STM32F/L4XX 意法半导体 AliOS -Things ， FreeRTOS ， UCOSII EMW3060/EMW3080 庆科 AliOS -Things STM32F103X 意法半导体 UCOSII STM32F7XX 意法半导体 AliOS -Things ， FreeRTOS ， UCOSII
+--- ppt/slides/slide137.xml ---
+IoT Studio + TinyLink 开发流程 使用 TinyLink 实现设备端开发，云端服务开发和 Web 应用 / 移动应用开发由 IoT Studio 完成 关键点：使用 TinyLink 实现基于物模型的设备接入
+--- ppt/slides/slide138.xml ---
+IoT Studio + TinyLink 设备接入 使用 MQTT 协议连接阿里云，连接参数如下 参数名称 参数值 serverName ${ productKey }.iot-as-mqtt.cn-shanghai.aliyuncs.com port 1883 clientName clientId +“| securemode = x,signmethod = xxxxxx,timestamp = xxxxxx |” ，其中， clientId 由用户自定义， 64 字符以内； timestamp 表示当前时间； signmethod 代表签名算法类型，支持 hmacSha1 ， hmacSha256 ， hmacMd5 ； securemode 代表目前安全模式，可取 2 （ TLS 直连模式）， 3 （ TCP 直连模式） userName deviceName +"&"+ productKey passWord sign_hmac ( deviceSecret , content) ， 其中， content = （ productKey , deviceName , timestamp, clientId ）
+--- ppt/slides/slide139.xml ---
+IoT Studio + TinyLink 设备接入示例 假设设备相关属性如下 设备使用 MQTT 连接 Link Develop 参数 clientId deviceName productKey tinestamp signmethod deviceSecret 12345 device pk 789 hmacsha1 secret 参数名称 参数值 serverName pk.iot-as-mqtt.cn-shanghai.aliyuncs.com port 1883 clientName 12345|securemode=3,signmethod=hmacsha1,timestamp=789| userName device&pk passWord hmacsha1("secret","clientId12345deviceNamedeviceproductKeypktimestamp789"). toHexString () = FAFD82A3D602B37FB0FA8B7892F24A477F851A14
+--- ppt/slides/slide140.xml ---
+IoT Studio + TinyLink 设备开发示例 示例描述：基于 TinyLink 系统，开发智能教室座位使用统计系统设备端，接入 IoT Studio TL_MQTT mqtt ; // 设置 MQTT 参数 int port = 1883; char serverName []= “pk.iot-as-mqtt.cn-shanghai.aliyuncs.com"; char clientName [] = "12345|securemode=3,signmethod=hmacsha1,timestamp=789|"; char userName [] = " device&pk "; char password[] = "FAFD82A3D602B37FB0FA8B7892F24A477F851A14"; char propertyPostTopic [] = "/sys/ pk /device/thing/event/property/post"; unsigned int messageID = 0; // 消息 ID ， 自增 unsigned int deviceID = 0; // deviceID ，默认为 0 void setup() { TL_Serial.begin (9600); TL_WiFi.init ();                        // 连接 WiFi bool wifi_conn = TL_WiFi.join ("EmNets-301", "eagle402"); mqtt = TL_WiFi.fetchMQTT ();          // 连接 MQTT int mqtt_conn = mqtt.connect ( serverName , port, clientName , userName , password); }
+--- ppt/slides/slide141.xml ---
+IoT Studio + TinyLink 设备开发示例 void loop() { int motionState = TL_PIR.read (); // 读取传感器数据 char buf [150]; String payload = “{\”id\“:\”“; // 根据物模型，构造数据包 payload += messageID ; payload += "\""; payload += ",\"version\":\"1.0\""; payload += ",\" params \":{\" deviceID \":"; payload += deviceID ; payload += ",\" motionState \":"; payload += motionState ; payload += "},\"method\":\" thing.event.property.post \"}"; int payloadlength = payload.length (); payload.toCharArray ( buf , 150 ); mqtt.publish ( propertyPostTopic , buf , payloadlength ); // 数据包发送到指定 Topic messageID ++; TL_Serial.println ( buf ); mqtt.yield (4000); }
+--- ppt/slides/slide142.xml ---
+目录 概述 云 - 端一体开发平台主要功能 典型物联网云 - 端一体开发平台 TinyLink IoT Studio Tuya IoT 开发平台 案例开发 总结 142
+--- ppt/slides/slide143.xml ---
+总结 物联网云 - 端一体开发平台涵盖了设备开发、云服务开发、 Web 应用 / 移动应用开发等物联网应用开发的全链路流程 本章涉及三个主流的物联网云平台， TinyLink 、 IoT Studio 和 Tuya IoT 平台，三个平台的比较如下 平台名称 设备开发 服务开发 Web 应用 / 移动应用开发 特点 TinyLink 采用硬件无关的 TinyLink 语言，支持云端编译 支持基于 IFTTT 规则的服务开发 基于设备端代码，自动生成 Web 应用 / 移动应用框架，开发难度最低 开发简单，适合物联网技术的初学者 Link Develop 提供基于 SDK 、基于 AliOS -Things 、基于解释型语言多种设备端开发方式 提供基于可视化服务编排的服务开发方式 提供可视化搭建的 Web 应用 / 移动应用开发方式，适合初学者 支持多种开发方式，开发更为灵活 Tuya IoT 平台 提供零代码开发方式和基于 SDK 的低代码 / 多代码开发 支持基于脚本语言的规则开发 提供可视化搭建的 Web 应用 / 移动应用开发方式，也提供基于 SDK 的开发方式 开发简单，解决方案成熟，对工业界支持较多
+--- ppt/slides/slide144.xml ---
+谢谢！

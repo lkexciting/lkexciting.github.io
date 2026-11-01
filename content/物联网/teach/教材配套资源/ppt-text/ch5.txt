@@ -1,0 +1,268 @@
+--- ppt/slides/slide1.xml ---
+第五章 低功耗广域网
+--- ppt/slides/slide2.xml ---
+学习目标 了解低功耗广域网技术与低功耗短距离通信技术的区别 了解低功耗广域网的关键特性 掌握 NB-IoT 小区容量的计算方式 掌握 卷积码的编码与解码算法 掌握 LoRaWAN 的覆盖增强计算方式 理解 LoRaWAN 的调制方式
+--- ppt/slides/slide3.xml ---
+目录 概述 关键特性 代表性协议 学术研究进展 案例开发
+--- ppt/slides/slide4.xml ---
+概述 低功耗短距离通信：多跳  长距离传输 问题：通信不可靠、能量黑洞（ energy hole ） Ex ： GreenOrbs 、 CitySee 4
+--- ppt/slides/slide5.xml ---
+概述 低功耗广域网技术 LPWAN ：可以实现低功耗长距离通信 low-power wide-area networks ，包括 NB-IoT 、 LoRaWAN 等技术 e.g. NB-IoT 单跳通信距离可以达到 10km~30km LPWAN 近年来受到广泛关注 2017 年 6 月 19 日工信部发布了 《 工业和信息化部办公厅关于全面推进移动物联网（ NB-IoT ）建设发展的通知 》 中国移动、电信、华为大力推进 NB-IoT 2021 年 12 月， LoRaWAN 获批 ITU 国际标准， LoRaWAN 成为真正的 LPWAN 全球标准 5
+--- ppt/slides/slide6.xml ---
+概述 物联网传输技术 6 短距离 长距离
+--- ppt/slides/slide7.xml ---
+概述 LPWAN 的典型协议 NB-IoT ： Narrow Band Internet of Things ，窄带物联网技术 LoRaWAN ： Long Range (LoRa), 长距离广域网技术 Sigfox ：法国的一家全球网络运行商建立的广域网通信公司 eMTC (LTE enhanced MTC) ： 3GPP 对 LTE 裁剪后的低功耗广域网技术 EC-GSM ：重用了 GSM 的广域网技术 LTE Cat 1 ： 专为机器对机器 (M2M) 物联网应用设计的一种通信 技术 7
+--- ppt/slides/slide8.xml ---
+典型协议 NB-IoT NB-IoT (Narrowband Internet-of-Things) 是由通信行业联盟和标准化组织 3GPP 提出并标准化的低功耗广域网技术 2014 年，英国的沃达丰和华为一起提出了 NB-M2M 解决方案 2014 年 7 月，美国的高通提出了 NB-OFDMA ，最终融合成第一个满足低功耗、提升室内覆盖性能、支持大规模设备连接的统一方案： NB-CIoT 2015 年 7 月，以爱立信等公司为首的阵营提出了 NB-LTE 接着， NB-CIoT 和 NB-LTE 被融合起来，最终在 2016 年 6 月形成了现在的 NB-IoT 技术标准 8
+--- ppt/slides/slide9.xml ---
+典型协议 LoRaWAN 2013 年 8 月， Semtech 公司发布一款新型的基于 chirp 扩频调制的、用于进行超长距低功耗通信的芯片 ——LoRa （ Long Range ） 2015 年 3 月， Semtech 公司牵头成立了 LoRa 联盟，目前拥有超过 290 多家成员，中国有 35 名成员，如阿里巴巴和腾讯等。其他还包括各类运营商、系统、软件、芯片、模组、云服务和应用厂商等。 2015 年 6 月， LoRa 联盟提出了基于 LoRa 的 MAC 协议 LoRaWAN v1.0 。 LoRaWAN 定义了 LoRa 通信的网络架构， LoRa 设备与基站之间通信的模式等。 9
+--- ppt/slides/slide10.xml ---
+典型协议 Sigfox Sigfox 是由法国的一家全球网络运行商与 2009 年投资成立的一家公司。 Sigfox 采用 超窄带技术 (100Hz) 实现极低功率覆盖大范围区域的目的 目前， Sigfox 已经实现了全球 30 多个国家的网络覆盖 eMTC eMTC (enhanced Machine-Type Communication) 由 3GPP 组织于 2016 年 6 月标准化。 3GPP 对 LTE 协议进行裁剪 ，舍弃大部分复杂功能，形成适用于低功耗、低成本设备联网的新的 eMTC 协议 与 NB-IoT/LoRa/Sigfox 不同的是， eMTC 支持移动性和基站定位，可实现漫游和无缝切换，并且支持语音业务 10
+--- ppt/slides/slide11.xml ---
+典型协议 EC-GSM 扩展覆盖 GSM 技术（ Extended Coverage-GSM ） 是 GSM 向物联网演进的技术， 重用了 GSM 物理层设计 ，与传统的 GSM 终端可以共载波部署。运用此技术，现有已布建的 GSM （ 2G ）基地台也能更适合用于物联网应用，相同的 GSM 基地台，可以拥有更大的通讯覆盖面积，支援更多 GSM 终端节点的通讯 LTE Cat 1 LTE Cat 1 是 专为机器对机器 (M2M) 物联网应用设计的一种通信规范，由 3GPP 组织于 2009 年引入 3GPP 第 8 版中，成为标准化的 LTE 物联网通信技术 Cat 1 可 无缝接入现有 LTE 网络当中 ，无需针对基站进行软硬件升级，网络覆盖成本低 支持 10mbit /s 下行和 5Mbit/s 上行速度，拥有比 NB-IoT 技术更高的数据速率，更广的网络覆盖范围等优势，因此常用于智能穿戴设备等对性价比、时延性、覆盖范围、通信速度有需求的应用场景 11
+--- ppt/slides/slide12.xml ---
+WiFi BLE ZigBee Pro SIGFOX LoRa LTE-M/( eMTC ) EC-GSM NB-IOT 5G 覆盖范围 17-30+ 米 1-10+ 米 1-100+ 米 <12 千米 160 dB <10 千米 157 dB <10 千米 156 dB <15 千米 164 dB <15 千米 164 dB <12 千米 160 dB 频谱带宽 2.4G 802.11 2.4G 802.15.1 2.4G 802.15.4 未授权 900MHz 100Hz 未授权 900MHz <500kHz 授权的 7-900MHz 1.4MHz 共享频段 授权的 8-900MHz 共享频段 授权的 7-900MHz 200kHz 共享频段 授权的 7-900MHz 共享频段 速率 150Mbps+ 1Mbps 250kbps <100bps <10bps <1Mbps 10kbps <50kbps <1Mpbs 终端价格 4$ (2016) 4$ (2016) 3$ (2016) 4$ (2016) 2.64$ (2020) 4$ (2016) 2.64$ (2020) 5$ (2015) 3.3$ (2020) 4.5$ (2015) 2.97$ (2020) 4$ (2015) 2-3$ (2020) <2$ 网络重构 无 无 无 大 大 小 中（ LTE 复用） 小 - 中 需 5G 网络 概述 不同无线通信技术的比较 12
+--- ppt/slides/slide13.xml ---
+目录 概述 关键特性 代表性协议 学术研究进展 案例开发
+--- ppt/slides/slide14.xml ---
+关键特性 通信距离 功耗 数据率 频段的分配与使用 基站部署 非技术特性
+--- ppt/slides/slide15.xml ---
+通信距离 增加距离的关键技术 增加功率谱密度 (Power Spectrum Density) ：单位频谱内的发送能量强度。密度越高，传输距离越远。 重传 ：连续重传，融合多次接收的数据进行解码，提升解码率 多接收天线 ：多根天线接收的信号融合，提升解码概率 扩频 ：通过增加发送数据的冗余，提高数据解调的成功率 NB-IoT 使用的技术 增加功率谱密度、重传、多接收天线 LoRa 使用的技术 扩频 15
+--- ppt/slides/slide16.xml ---
+通信距离 增加功率谱密度 (7dB)——NB-IoT 提升距离的技术 PSD (Power Spectral Density) = 功率 / 带宽 , PSD 越大意味着单位频谱上发送信号强度增强 因此，相比 GSM, NB-IoT 的 PSD 提升 10*log(5.3)=7dB NB-IoT 上行传输有两种带宽 3.75KHz 和 15KHz 可供选择，带宽越小，功率谱密度越大，覆盖增益越大 相比 GSM ， LoRaWAN 并没有在 PSD 上有增益，相反，有所下降 —— 0.96dB 技术 功率 ( mW ) 使用带宽 (KHz) 功率谱密度 = 功率 / 带宽 ( mW /KHz) 比值 ( 与 GSM 相比 ) NB- IoT 200 3.75 53.33 5.33 LoRaWAN 1000 125 8 0.8 16
+--- ppt/slides/slide17.xml ---
+通信距离 重传（ 12dB ） ——NB-IoT 提升距离的技术 NB- IoT 无论什么信道都可以重传，且上行最大 128 次，下行最大 2048 次。 ( 信号强度增益 ) 重传 n 次，与传 1 次相比，数据的欧式距离为 倍；相当于传输 1 次，功率增加 n 倍 重传次数越多，速率降低，误码率降低。上行最大重复传输 128 次，理论上增益 20dB ，即 10*lg(N) ， N 是次数 而考虑到传输效率，系统不会无限制重传，一般取重传增益为 12dB 17
+--- ppt/slides/slide18.xml ---
+通信距离 多天线增益（ 0~3dB ） ——NB-IoT 提升距离的技术 多根接收天线会融合接收到的信号，增强 SINR 理论来说， 1 T m R 的系统比 1 T 1 R 有 10lg(m) 的增益 1 T ： 1 根发送天线 m R ： m 根接收天线 对于 1 T 2 R 来说，比 1 T 1 R 会有 3dB 的增益 18
+--- ppt/slides/slide19.xml ---
+通信距离 CSS 扩频 ——LoRa 提升距离的技术 常见的扩频技术： DSSS( 直接序列扩频 ), CSS ( 线性频变扩频 ) ， FHSS ( 跳频扩频 ) 扩频技术本质上是通过增加数据 / 带宽冗余性来提升抗干扰的能力，增加解码成功率 比如，下述的 DSSS 扩频技术中， 4 bit 数据扩频成了 32 bit 的码元 Byte 4 bits Byte 4 bits 4 bits 4 bits 1110 二进制数据 32 位码元 10011100001101010010001011101101 DSSS 扩频 19
+--- ppt/slides/slide20.xml ---
+功耗 常见的状态：发送、接收、空闲、睡眠 较低的芯片功耗状态 NB-IoT 低功耗技术 PSM(Power Saving Mode) 机制 eDRX(extended Discontinuous Reception) 增长的休眠时间 LoRaWAN 低功耗技术 低功耗 MAC 协议 (Class A, Class B) 发送状态 空闲状态 接收状态 睡眠状态 NB-IoT(3.6V) +26dBm,120mA 1mA 50mA 5uA LoRa (3.3V) +20dBm, 120mA 1.5uA 12mA 0.2uA 20
+--- ppt/slides/slide21.xml ---
+功耗 NB-IoT 的 PSM 机制下，不同的功耗状态 PSM: 深度睡眠状态， UE 不能被访问 Idle: 做周期性寻呼， UE 可以被访问，因为 UE 会周期性醒来 红色：发送状态 ( 120mA ) 黑色：空闲状态 ( 1mA ) 灰色： PSM 状态 ( 睡眠状态 )( 5 μ A ) 蓝色：接收状态 ( 50mA ) 21
+--- ppt/slides/slide22.xml ---
+功耗 NB-IoT 低功耗技术： PSM 机制状态转换 TAU ： (Tracking Area Update) ，当终端在空闲状态的寻呼监听中发现自己所处的 tracking area id 变化时，需要向基站发起 TAU 请求，更新自己的相关参数 22
+--- ppt/slides/slide23.xml ---
+功耗 NB-IoT 低功耗技术： eDRX 机制 DRX = Discontinuous Reception ，非连续接收 eDRX = extended Discontinuous Reception ，增长的非连续接收 DRX 默认寻呼周期为 1.28s , eDRX 最长可达 2.92h 在下行数据发送频率小时，通过核心网和终端的协商配合，终端跳过大部分的寻呼监听，从而达到省电的目的 23
+--- ppt/slides/slide24.xml ---
+功耗 NB-IoT 低功耗技术总结 PSM 和 eDRX 都是属于 3GPP 协议中的技术，且对 NB-IoT 和 eMTC 都是适用的 相比较而言， eDRX （ idle ， 1mA ）的省电效果差些，但是实时性好些 (PSM, 5 μ A ) 如果终端每天发送一次 200byte 报文， 5 瓦时电池寿命可达 12.8 年 中国移动目前的策略是 PSM 为必选项，目前现网试点中主要开的也是 PSM 技术 24
+--- ppt/slides/slide25.xml ---
+功耗 LoRaWAN 低功耗技术：低功耗 MAC 技术 LoRaWAN 定义了三种 MAC 类型（ A,B,C ），其中两种是低功耗的 MAC （ A ， B ） Class A, 设备初始化 . (RxDelay1>= 1s, RxDelay2=1s) Class B, 设备初始化 + 监听窗口 严格的 duty cycle 控制 比如， LoRa 设备在某个信道上发送了 0.5s 长的数据后，由于该信道 1% duty cycle 的限制，该设备需等待 49.5s 之后才能再次在同一个信道上发送数据。 Class A Class B 25
+--- ppt/slides/slide26.xml ---
+数据率 LPWAN 适用于数据传输延迟不敏感的场景，比如远程抄表，因此，其数据率相对较低。 最大的物理层数据率 NB-IoT 上行为 250kbps , 下行为 226.7kbps LoRaWAN 上行和下行一样，最高为 5.470kbps 实际的数据率将会更低 NB-IoT 规定了上行和下行的不同类型数据包的传输间隔，比如，基站发完下行数据后， UE 至少间隔 12ms 才能反馈 ACK/NACK 数据包。因此，实际使用中， NB-IoT 的下行一般为 27.2kbps ，而上行一般为 62.5kbps LoRaWAN 对信道使用有严格的 duty cycle 限制。比如 , 1% 的信道使用限制，数据率则只能达到 54.7bps 26
+--- ppt/slides/slide27.xml ---
+频段分配与使用 LPWAN 中使用了不同的频段类型 ( 授权与非授权 ) LoRaWAN 使用了非授权频段 , 分配给中国的是上行 470.3 ~ 489.3MHz ( 共 30 个 ) ，下行 500.3~509.7MHz (48 个信道 ), 带宽都是 200kHz 。实际上 LoRa 调制使用的带宽为 125kHz ，存在保护带 NB-IoT 使用了授权频段 系统带宽为 200kHz, 传输带宽为 180kHz 上行频率 下行频率 运营商 824~849MHz 869~894MHz 中国电信 880~915MHz 925~960MHz 中国移动、中国联通 27
+--- ppt/slides/slide28.xml ---
+频段分配与使用 NB-IoT 的带宽部署方式 独立部署：利用 LTE 系统未使用的 200kHz 带宽。通常使用 GSM 的一个信道（一个 GSM 200KHz 带宽 >NB-IoT 180KHz 带宽 ) 保护带部署：利用 LTE 边缘保护频带中未使用的 180KHz 带宽的资源块 带内部署：占用 LTE 的 1 个 PRB 资源（下一页） 28
+--- ppt/slides/slide29.xml ---
+频段分配与使用 带内部署：占用 LTE 的 1 个 PRB ，但不是任意 PRB ( 续 ) 在 LTE 1.4MHz 的带宽下是不支持带内部署方案的 NB-IoT 无论哪种带宽采用 IB 部署方式，都避开了中间的 6 个 PRB ，因为这里是要用来传 LTE 的同步信号和 MIB 消息的 除了中间的 6 个 PRB 不能部署 NB-IoT 外，还有一些 PRB 也是不能用来部署 NB-IoT 的， e.g. NB 的中心频点要满足 100kHz 的栅格。因为 UE 仅在 100kHz 的倍数点上搜索 29
+--- ppt/slides/slide30.xml ---
+基站部署 / 公私网的使用 低功耗广域网的网络架构 基站 是 LPWAN 终端实现互通互联的关键 应用层服务访问、控制 LPWAN 终端的关键 两种基站部署方式 复用现有的基站，比如 LTE 基站：部署效率高；但覆盖深度存在盲区，公网传输数据面临数据暴露给第三方的危险 自行搭建基站：部署成本高效率低，可以根据需求做到深度覆盖 NB-IoT 的部署方式： 复用 LTE 基站，使用公网 LoRaWAN 的部署方式： 自行搭建基站，使用私网 LPWAN 终端 基站 / 网关 网络服务器 应用 服务器 30
+--- ppt/slides/slide31.xml ---
+非技术特性 协议开放性 NB-IoT 闭源， LoRaWAN 开源 LoRaWAN 代码 : https://github.com/Lora-net LoRaWAN 比 NB-IoT 更受到研究界的喜爱， LoRa 相关的论文频现计算机网络顶级会议 [ sigcomm 18] PLoRa , [ sigcomm 17] Chior , … 低成本特性 NB-IoT 在产业链上尽量前向兼容、无须重新建网，射频和天线基本上都是复用的 NB-IoT 将 LTE 的全双工收发器裁剪为半双工收发器，因此，收发器的器件从 LTE 的两套减少到一套 LoRaWAN 主要通过技术的开源来吸引企业的合作，利用企业的资金打开 LoRaWAN 的产业链 31
+--- ppt/slides/slide32.xml ---
+思考题 增强通信距离的技术有哪几种？ NB-IoT 和 LoRaWAN 分别使用了哪些技术提升通信距离？
+--- ppt/slides/slide33.xml ---
+目录 概述 关键特性 代表性协议 NB-IoT LoRaWAN 学术研究进展 案例开发
+--- ppt/slides/slide34.xml ---
+NB-IoT 简介 物理层 链路层 网络层 实例分析
+--- ppt/slides/slide35.xml ---
+NB-IoT 广域物联网通信的典型场景 城市范围的垃圾桶使用状态检测 城市范围的家庭水箱泄露检测 城市范围智能垃圾桶 城市范围智能水箱 35
+--- ppt/slides/slide36.xml ---
+NB-IoT 整体网络架构 NB-IoT UE ：用户终端设备（ User Equipment ） BS ：基站（ Base Station ），主要承担 UE 接入处理，小区管理等功能 IoT 核心网：承担 UE 移动性、安全性等管理功能，并将 IoT 业务相关数据转发到 IoT 平台进行处理。 移动性管理实体 (MME):NB-IoT 协议参数设置（如协商包头压缩算法）和连接切换管理 服务网关 SGW ：转发速率控制 分组数据网关 PGW ：数据转发 36
+--- ppt/slides/slide37.xml ---
+NB-IoT 整体网络架构 IoT 平台：汇聚从各种接入网得到的 IoT 数据，并根据不同类型转发至相应的业务应用器进行处理 应用服务器：是 IoT 数据的最终汇聚点，根据客户的需求进行数据处理等操作 说明： NB-IoT UE 通过无线空口连接到 BS ，而 BS 通常可以通过有线方式连接到核心网。当前很多工作主要分析和优化 NB-IoT 无线空口协议（如：空口承载、空口数据交互及空口加密等）的性能 NB-IoT 基站可以依赖现有移动运营商的基站（ GSM 或 LTE ）进行部署（节省建网成本），也可以独立建站部署 用户 NB-IoT 应用服务器主要由移动通信运营商及相关协议制定方提供（如华为） 37
+--- ppt/slides/slide38.xml ---
+NB-IoT 简介 物理层 链路层 网络层 实例分析
+--- ppt/slides/slide39.xml ---
+NB-IoT 物理层 下行 带宽 180kHz , 分为 12 个子载波（ subcarrier ），子载波间隔（ subcarrier spacing ）为 15kHz OFDM 技术 上行 带宽 180kHz , 子载波间隔有 15kHz , 3.75kHz 两种 SC-FDMA 技术 39
+--- ppt/slides/slide40.xml ---
+NB-IoT 物理层 下行资源分配 频域上：下行带宽 180kHz , 分为 12 个子载波（ subcarrier ），子载波间隔（ subcarrier spacing ）为 15kHz 时域上：一个时隙（ slot ）长度为 0.5ms ，每个时隙中有 7 个符号（ symbol ） 子帧 (subframe) ：基本调度单元 , = 1 ms/2 slots ( 每个 slot 上有 7 个 symbol) 无线帧 (frame) ：包含 10 个子帧 = 10ms 40
+--- ppt/slides/slide41.xml ---
+NB-IoT 物理层 下行 下行物理信号： NPSS: Narrowband Primary Sync Signal NSSS: Narrowband Secondary Sync Signal NRS: Narrowband Reference Signal 下行物理信道： NPBCH: Narrowband PHY Broadcast Channel NPDCCH: Narrowband PHY DL Control Channel NPDSCH: Narrowband PHY DL Shared Channel 注：信号不承载具体的信息 bit， 而信道是要传 data 的 41
+--- ppt/slides/slide42.xml ---
+NB-IoT 物理层 下行同步信号 (NPSS & NSSS) 用于 NB-IoT UE 进行小区搜索 (cell search) Time and Frequency Synchronization Cell ID detection NPSS 用于完成时间和频域的同步 在每个无线帧的子帧 #5 上发送，发送周期 10ms 具体而言， NPSS 使用最后 11 个 OFDM 符号，每个符号占据 (lowest)11 个 subcarrier; 在 IB 部署下，避免与 LTE CRS 碰撞，避开相应 RE 42
+--- ppt/slides/slide43.xml ---
+NB-IoT 物理层 下行 ZC 序列 Zadoff-Chu Sequence: ：代表需要生成的序列的长度， =11 in NB-IoT 。因为是复数，所以有 I 、 Q 两个支路。 q ：代表是根序列的索引，生成任何一个 ZC 序列都需要赋一个根索引值 , =5 in NB-IoT m ：代表这个序列的第 m+1 个 (m 从 0 开始 ) 序列点的值 ZC 序列好的特性： This sequence has a constant amplitude. 如果在坐标轴上表示就是分布在一个圆上，幅度就是圆的半径，是恒定不变的（这里即为 1 ） Zero Autocorrelation. 序列的自相关性很好 43
+--- ppt/slides/slide44.xml ---
+NB-IoT 物理层 ZC 序列 生成的 I 、 Q 支路序列值 根序列 序列长度 生成公式 循环移位数 44
+--- ppt/slides/slide45.xml ---
+NB-IoT 物理层 下行 -NSSS 携带小区 ID(PCI) 信息，范围 0-503 ; 80ms 内帧定时信息 在偶数无线帧的子帧 #9 上发送，发送周期 20ms NSSS 占用 11(symbol)* 12(subcarrier)= 132 RE 先生成 131 的根底序列 , 再循坏拓展成 132 长 ZC 序列，正好填充 132 RE 45
+--- ppt/slides/slide46.xml ---
+NB-IoT 物理层 下行参考信号 NRS 主要作用是下行信道质量测量的估计 下行 NPBCH, NPDCCH, NPDSCH 信道无论有无数据传输，所有下行子帧 ( 除了 NPSS, NSSS) 都要传输 NRS 每个子帧每个天线端口使用 8 个 RE, 最多支持两个天线端口 NRS 资源映射 NRS 作用 上行功率控制，通过测量结果计算路损， 从而设置终端发射功率 终端判断所处覆盖等级，从而确定 NPRACH 的发送格式等 46
+--- ppt/slides/slide47.xml ---
+NB-IoT 物理层 上行资源分配 频域上 ：上行带宽 180kHz , 支持两种子载波间隔： 12 个 subcarrier, 每个宽 15kHz 48 个 subcarrier, 每个宽 3.75kHz 两种模式： single tone: 1 user 用 1 个 carrier; 支持 15kHz , 3.75kHz multi tone: 1 user 用多个 carrier; 支持 15kHz 47
+--- ppt/slides/slide48.xml ---
+NB-IoT 物理层 上行资源分配 时域上： 基本资源单位为一个时隙（ slot ） 对于 15kHz 子载波间隔： 1 slot = 0.5ms 对于 3.75kHz 子载波间隔： 1 slot = 2ms ，记为 NB-slot ，以示区别 注：频域上子载波间隔 3.75K 是 15K 的 1/4 ，而时域上时隙 2ms 正好是 0.5ms 的 4 倍，两者其实是等效的。 无线帧 (frame) = 10ms = 5 NB-slot RU (resource unit) ： 时域、频域两个域的资源组合，是 资源分配的基本单位 (smallest unit to map a TB) 例如当子载波间隔为 15kHz 时，定义了以下 4 种 RU ： ① 频域 12 个子载波，时域 1ms ; ② 频域 6 个，时域 2ms ; ③ 频域 3 个，时域 4ms ; ④ 频域 1 个，时域 8ms 48
+--- ppt/slides/slide49.xml ---
+NB-IoT 物理层 上行物理信号 DMRS: Demodulation Reference Signal 上行物理信道 NPUSCH: Narrowband PHY UL Shared Channel Format 1 ：用于传输上行信号的数据 Format 2 ：用于传输上行控制信息（ UCI ） , 目前限于 HARQ ACK NPRACH: Narrowband PHY Random Access Channel 多址接入方式 采用单载波频分多址接入 SC-FDMA 基于传统的正交频分多址接入 ： OFDMA 由于 SC-FDMA 采用单载波的方式，与 OFDMA 相比具有更低的峰值平均功率比 PAPR 49
+--- ppt/slides/slide50.xml ---
+NB-IoT 物理层 上行下行总结 物理信道 作用及性质 下行 NPSS 用于时间和频率同步，在每个无线帧的子帧 #5 上发送，发送周期 10ms NSSS 携带小区 ID 信息，在偶数无线帧的子帧 #9 上发送，发送周期 20ms NRS 用于下行信道质量估计 NPBCH 承载主系统消息块（ MIB-NB ，包括部署方式指示等），在每个无线帧的子帧 #0 上发送 NPDCCH 承载 DCI ，包含一个或多个 UE 上的资源分配和其他控制信息 NPDSCH 携带下行业务数据和系统消息，包括单播业务数据 , 寻呼消息和随机接入响应消息 上行 DMRS 用于信道估计，根据 NPUSCH 格式， DMRS 每时隙传输 1 个或者 3 个 SC-FDMA 符号 NPRACH 用于设备随机接入过程，采用跳频传输方式 NPUSCH 用于传输上行数据和上行控制信息，支持多载波传输方式 50
+--- ppt/slides/slide51.xml ---
+NB-IoT 简介 物理层 链路层 网络层 实例分析
+--- ppt/slides/slide52.xml ---
+NB-IoT 链路层 卷积码 卷积码是一种差错控制编码，由 P. Elias 于 1955 年提出 卷积码是一种有记忆的纠错码，编码规则是将 k 个信息比特编码形成 n 个比特，编码后的 n 个码元不仅与当前输入的 k 个信息有关，而且与之前的 L-1 组的信息比特有关 卷积码可用三元组 (n, k, L) 表示，其中， n 为输出码字， k 为输入的比特信息， L 为约束长度，也称为记忆深度。卷积码码率 R 可以表示为 R = k/n 52
+--- ppt/slides/slide53.xml ---
+NB-IoT 链路层 卷积码 样例： 输出码长 n=2 ，输入比特 k=1 ，约束长度 L=2 的卷积码编码器 输入序列 : 0110; 移位寄存器的初始值都为 0 当输入第一位 (0) 时，输出码字为 (00) ，寄存器状态为 (00) 当输入第二位 (1) 时，输出码字为 (11) ，寄存器状态为 (10) 当输入第三位 (1) 时，输出码字为 (01) ，寄存器状态为 (11) 当输入第四位 (0) 时，输出码字为 (01) ，寄存器状态为 (01) 卷积码最终的输出序列为 (00 11 01 01) 53
+--- ppt/slides/slide54.xml ---
+思考题 在卷积码中，假设编码器只含有两个移位寄存器（且初始状态为 00 ），当节点收到序列为 [00 10 01 01] 的数据时，用维特比算法需要如何解码出原始的数据？请写出译码结果及实际编码数据。
+--- ppt/slides/slide55.xml ---
+NB-IoT 链路层 TBCC 输入块 : c0c1,...,ck-1 共 k 位 初始化 : S0S1,...,S5=ck-1,ck-2,...,ck-6 当最后的比特 Ck-1 进行编码完成后，寄存器又回到了初始状态，这种编码称为咬尾卷积码 (Tail Bitting Convolutional Code, TBCC) 。 NB-IoT 下行采用 TBCC S0 S5 S4 S3 S2 S1 55
+--- ppt/slides/slide56.xml ---
+NB-IoT 链路层 Trellis diagram 输入数据： u = [1 1 0 1] 初始状态 : 00 编码： V = [11 01 01 00] 正确接收： R = [11 01 01 00] ( 上 ) 错误接收： R = [11 01 11 00] ( 下 ) 56
+--- ppt/slides/slide57.xml ---
+NB-IoT 链路层 Turbo code 广泛应用于现有的 LTE 系统 Turbo code 充分利用了 Shannon 信道编码定理的基本条件，从而获得了接近 Shannon 理论极限的性能。 更好的纠错能力 通过交织处理，使码重分布合理，降低数据序列的相关性，增大输出码字的最小汉明距，实现随机编码。相比 TBCC ，有更好的纠错能力 译码较为复杂，译码时延大 需使用迭代译码方式。相比 TBCC ，对接收端的译码能力有更高的要求，更适用于长数据包的发送 57
+--- ppt/slides/slide58.xml ---
+NB-IoT 链路层 随机接入过程 竞争随机接入过程的四个步骤 RRC(Radio Resource Control, 无线资源控制 ) ：包含对无线资源进行分配并发送相关控制信令， RRC 消息承载了建立、修改和释放链路层和物理层协议实体所需的全部参数 58
+--- ppt/slides/slide59.xml ---
+NB-IoT 链路层 随机接入过程 Msg1 ：随机接入前导发送 Preamble 采用 Single-tone 方式传输，子载波间隔为 3.75kHz ，且默认通过调频发送 NPRACH （窄带物理随机接入信道）通过重复发送前导码获得覆盖增强，重发次数可选择为 {1,2,4,8,16,32,64,128} 设置发射功率 根据基站 BS 在广播消息中指示的 NPRACH 期望接收功率和前导发送次数，进行 NPRACH 发送功率计算和功率调整过程： TRANSMISSION_POWER =INITIAL_POWER + (TRANSMISSION_COUNTER-1) × POWER_RAMP_STEP 其中， POWER_RAMP_STEP 为功率递增的步长（取值范 围与 LTE 系统相同： {0,2,4,6} dB ） 这个过程体现了随机接入在 Msg1 发送过程中所采用的开环功控的方式确定 UE 的发射功率，从而提高接入概率。 59
+--- ppt/slides/slide60.xml ---
+NB-IoT 链路层 随机接入过程 Msg2 ：随机接入响应（ Random Access Response ， RAR ） 在 NPDSCH (Narrowband Physical Downlink Share Channel) 上发送，其位置由 NPDCCH (Narrowband Physical Downlink Control Channel) 指示 携带的信息 RA-preamble identifier Timing alignment information （定时调整量） Msg3 传输的 UL grant Temporary C-RNTI UE ：发送前导后在一个时间窗口内等待 RA response, 如果在时间窗内没有等到属于此 UE 的响应，认为本次接入失败，则重新发送 preamble ；否则，进入 step3 60
+--- ppt/slides/slide61.xml ---
+NB-IoT 链路层 随机接入过程 Msg3 ：上行调度传输 在 NPDSCH (Narrowband Physical Downlink Share Channel) 上发送，根据 RAR 响应授权，按指定的资源和格式在 NPUSCH (Narrowband Physical Uplink Share Channel) 上进行 Msg3 发送 根据基站 BS 指示的相关功控参数、路损估计、 NPUSCH 资源占用等，计算 Msg3 的开环发射功率（与 Msg1 类似） 携带的信息 初始接入：传输 RRC 连接请求 RRC 连接重建立：传输 RRC 连接重建请求 其他情况至少传输 UE 的 C-RNTI UE ：发送 Msg3 之后，启动竞争解决定时器等待 Msg4 61
+--- ppt/slides/slide62.xml ---
+NB-IoT 链路层 随机接入过程 Msg4 ：竞争解决 BS 在 MAC 层进行竞争检测，并通过在 NPDCCH 上发送 C-RNTI 或者在 NPDSCH 上发送竞争解决 ID 来指示 UE 内容包括 UE ID (C-RNTI) 上行信道资源分配情况等 UE ：在竞争解决定时器超时前，一直监听 NPDCCH 信道 若在定时器内，检测到自己的 C-RNTI ，则认为竞争解决成功，并通知上层，上行同步过程结束，等待基站调度，发送上行数据 若在定时器到时，还未收到自己的 C-RNTI ， UE 将认为本次竞争解决失败。失败后，如果 UE 的随机接入尝试次数小于最大尝试次数，在随机退避一段时间后，重新进行一次随机接入尝试。否则，通知上层随机接入失败 62
+--- ppt/slides/slide63.xml ---
+NB-IoT 链路层 随机接入过程 覆盖增强等级 ( CE level , coverage enhancement level ) 估计、传输失败 (RAR missing) 处理 63
+--- ppt/slides/slide64.xml ---
+NB-IoT 网络层和传输层 NB-IoT 基于 PHY, MAC 层可以构建网络层和传输层协议 钛比科技 STM32 NB-IoT 开发板提供了 IP 和 UDP 网络服务，可以通过Ａ T command 调用 AT command 其实是个接口标准 IP 协议相关主要的 AT command AT+NBAND=n;  // 设置模块工作频段。 n=5,8,20 分别对应 850MHz 、 900MHz 、 800MHz AT+CSCON=? ; // 查询模块连接状态。返回 1 代表连接状态， 0 代表 IDLE 状态 AT+CGPADDR=? ; // 查询模块 IP 地址 UDP 协议相关主要的 AT command AT+NSOCR= DGRAM,17,3000,1; //DGRAM 指 socket 类型， 17 代表 UDP 协议 , 3000 为 UDP 端口号 ,1 代表能接收下行数据 AT+NSOST=0,120.162.113.26,3000,1,40; //0 代表 UDP 协议， 120.162.113.26 代表服务器 IP, 3000 为 UDP 端口号 , 1 指明发送数据长度为 1byte ， 40 为数据内容 ( 十六进制数，代表 ASCCI 的 10 ）。最大支持发送数据为 512 个字节 64
+--- ppt/slides/slide65.xml ---
+NB-IoT 实例分析 上行数据传输 1. 通过 AT command 将节点模块 (BC95) 与网络服务器建立连接 AT+NBAND=5// 设置工作频段为 850MHz ，电信模组 AT+NBAND? // 查询模块频段信息，确认设置成功 AT+CGATT?=1// 小区附着 AT+CGATT? // 查询是否模块附着成功 , 返回 1 代表成功 2. 通过 AT command 将 20bytes 的数据发送给服务器 AT+NSOCR=DGRAM,17, 3000,1// 创建 UDP 端口 3000 AT+NSOST=0,120.162.113.26,3000,20,40, 6162632C3017A05C161948D317A02FD5C0000000// 发送 20bytes 数据 AT+NUESTATS=ALL// 返回模块状态信息，包括收发发功率、收发时间、收发数据大小、收发数据块数量等 65
+--- ppt/slides/slide66.xml ---
+NB-IoT 实例分析 上行数据传输 3. 协议层包头转换 ① UDP 层添加 8bytes 的首部字段（包括端口号、校验和等） ② IP 层添加 20bytes~40bytes 的首部字段（包括源 IP 地址、目的 IP 地址等） ③ 数据链路层首先将压缩数据包头（减小到 1~2 字节）并添加 1~4 字节的首部字段（包括数据类型等） 假设 : 20bytes 的 payload 数据经过各协议层包头转换后，其长度变为 25bytes 4. 信道编码 首先添加冗余字段（ 3bytes CRC ），再使用 1/3-turbo code 编码 问：编码后总长度变为多少 ? 5. 速率匹配 66
+--- ppt/slides/slide67.xml ---
+NB-IoT 实例分析 上行数据传输 6. 分段 假设基站分配 8 个 RUs （基站 DCI 指定），将编码块分成若 2 个相同大小的编码子块（ BL1 、 BL2 ） 7. 调制 每个编码子块使用 QPSK 调制 8. 资源映射 将每个编码块调制后的符号映射到 RU 上传输 假设 UE 分配到 8 个 RUs ( 且每 RU 占 3 个 subcarriers 和 8 个 slots) ，同时重复传输次数 NREP=4 (DCI 指定 ) Tn, Wn: 代表分配的一个 RU 67
+--- ppt/slides/slide68.xml ---
+目录 概述 关键特性 代表性协议 NB-IoT LoRaWAN 学术研究进展 案例开发
+--- ppt/slides/slide69.xml ---
+LoRaWAN 简介 2013 年 8 月， Semtech 公司发布了一款基于 chirp 扩频调制（ chirp spectrum spread ， CSS ）、用于超长距低功耗通信的芯片 ——LoRa （ Long Range ） chirp 信号又称扫频信号，是频率随时间变化的信号 根据频率随时间变化的情况，分为线性 chirp 信号和指数 chirp 信号 CSS 扩频调制方案凭借具有的更优链路预算，在部分牺牲数据率的基础上，达到更远的通信距离 显著特性 长距离 ：在相同的发射功率下， LoRa 通信距离更远 低功耗 ： LoRa 发送端仅需要 100mW （ 20dBm ）的发送功率，即可获得 162dB 的链路预算 大连接 ：在低数据率、低频次的通信场景下，网关能接入更多的设备 低成本 ： LoRa 工作在公用频段
+--- ppt/slides/slide70.xml ---
+LoRaWAN LoRaWAN 采用星形拓扑，以 LoRaWAN 网关作为中继，终端设备采用 LoRa 协议与一个或多个网关进行单跳通信 LoRa 工作在小于 1GHz 的非授权频段，如 433MHz 、 868MHz 、 915MHz 等
+--- ppt/slides/slide71.xml ---
+LoRaWAN 物理层 信道分配（选择 CN470 ～ 510 频段进行说明） 上行信道： 96 个， 470.3 ～ 489.3 频段 LinkADRReq < ChMaskCntl > 下行信道： 48 个， 500.3 ～ 509.7 频段，编号 0~47 RXParamSetupReq <Frequency> ChMaskCntl 信道 0 0-15 1 16-31 2 32-47 3 48-63 4 64-79 5 80-95 6 所有信道开启 7 保留 71
+--- ppt/slides/slide72.xml ---
+LoRaWAN 物理层 扫码序列扩频（ Chirp ）调制 Chirp 信号：频率随时间线性变化的一种信号 Chirp 调制关键参数 BW ：带宽，中国取 125KHz ，美国可取 125KHz 和 500KHz SF ： spreading factor ，一个 chirp 表示 SF 个 bits ， 7-12 : 一个 chirp 发送时间 通过起始频率所在纵轴的 offset 调制数据 0 125 (ms) 1 2 3 Frequency (KHz) 72
+--- ppt/slides/slide73.xml ---
+LoRaWAN 物理层 Chirp 扩频调制优势 提升传输并发性：同一信道中， 6 个用户选择 6 个不同的 SF ，则他们相互正交，可并发传输 SF 7 8 9 10 11 12 73
+--- ppt/slides/slide74.xml ---
+LoRaWAN 物理层 调制数据案例 SF=8 ， BW=125KHz 发送数据 [0, 0, 50] Chirp 频率随时间线性变化 频率偏移等价于时间偏移 偏移 0/256Ts 偏移 0/256Ts 偏移 50/256Ts 74
+--- ppt/slides/slide75.xml ---
+LoRaWAN 物理层 包结构 Preamble ： up-chirp 信号 同步字： 2 个 up-chirp 信号 帧定界符： 2.25 个 dwon-chirp 信号 Preamble 同 步 字 帧 定 界 符 数据 75
+--- ppt/slides/slide76.xml ---
+LoRaWAN 入网流程 入网激活 空中激活（ OTAA ）：需要入网流程，与服务器协商，获取设备地址和会话密钥和 个性化激活（ ABP ）：事先将必需的通信信息，烧录在设备上 入网前 JoinEUI ： 8 字节长地址， OTAA 中唯一标识处理入网过程的入网服务器 DevEUI ： 8 字节长地址，唯一标识设备 NwkKey ： AES-128 密钥，制造时分配给设备 AppKey ： AES-128 密钥，制造时分配给设备 入网后 DevAddr ： 4 字节设备地址，用于当前网络 FNwkSIntKey ：计算上行数据的 MIC SNwkSIntKey ：计算上行数据的 MIC ；检查下行数据的 MIC NwkSEncKey ：加密和解密上下行的 MAC 指令 AppSKey ：加密和解密上下行的应用数据 76
+--- ppt/slides/slide77.xml ---
+LoRaWAN 入网流程 终端设备使用 AppKey 密钥，发送 Join-request 信息 JoinEUI DevEUI ： 64 位全球唯一 ID ，标识唯一的应用提供商和唯一的终端设备 DevNonce ，用于设备端计数入网请求，每发送一次 Join-request 加 1 网关 设备 Join-request MType =000 JoinEUI DevEUI DevNonce 77 MType 消息类型 000 入网请求 001 入网许可 010 不需要确认的上行数据 011 不需要确认的下行数据 100 需要确认的上行数据 101 需要确认的下行数据
+--- ppt/slides/slide78.xml ---
+LoRaWAN 入网流程 网关返回 AppKey 加密的 Join-accept 信息 用于生成 NwkSKey 和 AppSKey 的信息，以及设备短地址（ DevAddr ）、 RXDelay 信息、当前网络可用信道 CFList 等 网关 设备 Join-request MType=000 JoinEUI DevEUI DevNonce Join-accept MType=001 DevAddr Home_NetID DLSettings RxDelay CFList JoinNonce JOIN_ACCEPT_DELAY1 78 Home_NetID ：指明设备加入的网络 DLSettings ：指明 RX1 和 RX2 的数据率 RXDelay ：指明 RECEVE_DELAY1 CFList ：指定设备上行信道 JoinNonce ：随 Join-accept 消息数增长。分配给设备，用于生成 FNwkSIntKey 、 SNwkSIntKey 、 NwkSEncKey 和 AppSKey
+--- ppt/slides/slide79.xml ---
+LoRaWAN 入网流程 设备将发送确认信息到网关 网关 设备 Join-request MType=000 JoinEUI DevEUI DevNonce Join-accept MType=001 DevAddr Home_NetID DLSettings RxDelay CFList JoinNonce ReKeyId 79
+--- ppt/slides/slide80.xml ---
+LoRaWAN 入网流程 网关回复相应的确认信息，设备的 OTAA 入网激活完成 网关 设备 Join-request MType=000 JoinEUI DevEUI DevNonce Join-accept MType=001 DevAddr Home_NetID DLSettings RxDelay CFList JoinNonce ReKeyId RekeyConf 80
+--- ppt/slides/slide81.xml ---
+LoRaWAN 入网流程 LoRaWAN 标准中，设备发送消息采用纯 ALOHA 机制 采用 duty-cycle 机制来限制设备的发送频次 1% 的 duty-cycle ：设备 A 在其信道上发送数据用了 10ms ，那么设备 A 在该信道接下来的 990ms 内都不能再收发数据
+--- ppt/slides/slide82.xml ---
+LoRaWAN 入网流程 未收到 Join-accept Join-request 信息丢失或 Join-accept 信息丢失 网关 设备 Join-request Join-accept Duty cycle Join-request Random back off DevNonce=6 DevNonce=5 channel x channel y 82
+--- ppt/slides/slide83.xml ---
+LoRaWAN- 入网流程 重放攻击 网关侧 网关 设备 Join-request DevNonce=5 DevNonce<=5 Join-request DevNonce>5 Join-request 83 一旦网关收到的 Join-request 信息中的 DevNonce 不比上一次收到的大，网关就认为是受到了重放攻击不予接收，同时采取相应的措施
+--- ppt/slides/slide84.xml ---
+LoRaWAN- 入网流程 重放攻击 设备侧 网关 设备 Join-accept Join-accept Join-accept JoinNonce=5 JoinNonce<=5 JoinNonce>5 84
+--- ppt/slides/slide85.xml ---
+LoRaWAN 设备类型 根据能耗和时延的不同需求， LoRaWAN 中的设备被进一步划分为 A 、 B 、 C 三种类型 Class A ： LoRaWAN 中的默认设备类型 Class B ：可以减小下行通信的时延 Class C ：以终端设备的能耗为代价，进一步减小下行通信的时延 85
+--- ppt/slides/slide86.xml ---
+Class A 概述 设备 想发即发 ，发送的信道和数据率在入网过程中，由网关指定 RXDelay1 和 RXDelay2 在不同地区的频段各有不同。通常默认为上行传输完成后的 1s 和 2s RX1 的信道频率和数据率与上行传输相关 RX2 的信道频率和数据率由网关指定 网关在 RX1 和 RX2 的起始处发送数据 接收窗口长度至少保证设备能检测到 5 个 symbol 没有则休眠，有则进行数据的接收、解调、地址匹配和一致性校验 RX1 成功接收数据， RX2 不打开 当网关需要发送下行数据时，只能等到设备发来上行数据之后，在随后的 RX1 、 RX2 中发送 86
+--- ppt/slides/slide87.xml ---
+Class A 数据传输 不需要确认的上行数据 网关 设备 MType =010 RX1 RX2 RECEIVE_DELAY1 RECEIVE_DELAY2 87
+--- ppt/slides/slide88.xml ---
+Class A 数据传输 需要确认的上行数据 网关在 RX1 或 RX2 中进行回复 网关 设备 MType=100 RECEIVE_DELAY1 ACK=1 88 RECEIVE_DELAY2 ACK=1
+--- ppt/slides/slide89.xml ---
+Class A 数据传输 需要确认的上行数据 未收到 ACK 传输次数 [1,15] 网关 设备 MType=100 ACK=1 RECEIVE_DELAY1 RECEIVE_DELAY2 ACK_TimeOut Random back off MType=100 FCntUp=5 FCntUp=5 channel y channel x 89
+--- ppt/slides/slide90.xml ---
+Class A 数据传输 不需要确认的下行数据 网关 设备 RECEIVE_DELAY1 Mtype=011 数据待发 90 RECEIVE_DELAY2 Mtype=011
+--- ppt/slides/slide91.xml ---
+Class A 数据传输 需要确认的下行数据 设备立刻回复 ACK ，负载为空 设备发送上行数据时捎带 ACK 网关 设备 Mtype=101 数据待发 channel x channel y ACK=1 Payload=NULL 91 channel y ACK=1 Payload=data/MAC
+--- ppt/slides/slide92.xml ---
+Class A 数据传输 需要确认的下行数据 未收到 ACK 网关 设备 数据待发 channel x ACK=1 RECEIVE_DELAY1 RECEIVE_DELAY2 ACK_ TimeOut Random back off ACK=1 channel y 数据： AFCntDown =5 指令： NFCntDown =5 数据： AFCntDown=6 指令： NFCntDown=6 92
+--- ppt/slides/slide93.xml ---
+Class B 在 Class A 的 RX1 和 RX2 窗口的基础之上，给网关提供更多的下行窗口 设备通过接收网关周期性发送的 beacon 进行同步。在 beacon 周期内，设备定时开启 ping slot 进行数据的接收。设备以 beacon 中包含的时间信息，作为时间参考 设备首先处于 class A 状态，搜索到 beacon 之后，先通过在上行帧中将 class B 位置 1 通知网关，再切换到 class B 设备设置其 ping slot 周期，网关设置设备 ping slot 的信道和数据率 93
+--- ppt/slides/slide94.xml ---
+Class B 所有网关同时广播 beacon ，设备能接收最强信号的 beacon 。根据接收到的 beacon ，设备能从中获取时间参考，用于周期性开启接收窗口 ping slot 由于多个网关能同时收到一个设备发送的上行数据，网络服务器根据接收到的信号强度，选择发送下行数据 ping 帧的网关 设备均以 class A 入网，此后按需切换成 class B 设备搜寻 beacon ，可通过 DeviceTimeReq 指令加快搜寻 一旦切换到 class B ，设备所有上行数据中 class B 位置 1 网关通过 PingSlotChannelReq 指令修改 ping slot 的频率和数据率 设备先修改自己的 ping slot 周期。设备先切到 class A ，通过 PingSlotInfoReq 通知网关后，再切换到回 class B 2 小时内没有再收到 beacon ，设备切回 class A 94
+--- ppt/slides/slide95.xml ---
+Class B 支持单播、多播，多播组的设备共享多播地址和会话密钥 单播和多播 ping 帧和 class A 下行帧格式大致一样，除了 多播帧不携带 MAC 指令 不支持下行 ACK 多播建立和密钥分发应用层确定 周期性搜索 beacon ，校准网络时间 暂时搜不到 beacon 时，设备逐渐增大 beacon 和 ping 接收窗口，以应对可能的时钟偏差 最大能允许丢失 beacon 2 小时，在此期间，设备处于 beacon-less 状态，按本地时间开启窗口。 95
+--- ppt/slides/slide96.xml ---
+Class B 窗口时隙 beacon 在 BEACON_RESERVED 起始时发送 ping slots 在 BEACON_WINDOW 里打开 BEACON_GUARD BEACON_RESERVED Ping slot BEACON_WINDOW BEACON_PERIOD BEACON_PERIOD 128s BEACON_RESERVED 2.12s BEACON_GUARD 3s BEACON_WINDOW 122.88s Slot length 30ms 4096 个 96
+--- ppt/slides/slide97.xml ---
+Class B 窗口时隙 BEACON_GUARD BEACON_RESERVED Ping slot pingNb 实际可用 ping slot 数量，为 pingPeriod 可用 ping slot 间间隔，为 pingOffset 第一个可用 ping slot 的偏移，为 pingNb pingPeriod pingOffset … … … … pingPeriod pingOffset 97
+--- ppt/slides/slide98.xml ---
+Class B 数据传输 Confirmed Downlink 未收到 ACK 网关可利用 RX1 、 RX2 和 slot 重传 网关 设备 ACK=1 Beacon Beacon Mtype=101 Slot 1 Slot 2 RX1 RX2 98
+--- ppt/slides/slide99.xml ---
+Class C 当设备处于供电状态，不必考虑能耗问题时，设备始终开启接收窗口 在 Class A 的 RX1 和 RX2 窗口的基础之上，当设备不在发送数据或者不在 RX1 状态时，均通过配置 RX2 参数，开启设备进行数据的接收 RX1 开启时，若网关仍在发送数据，设备停止当前的数据接收 RX2 99
+--- ppt/slides/slide100.xml ---
+Class C 数据传输 设备上行窗口有限，因此网关不能频繁发送请求确认的下行数据 Time_out 之后或者收到上行确认数据，才能再次发送请求确认的下行数据。期间可以发送任意不需要请求确认的下行数据 网关 设备 Time_out MType=101 MType=011 MType=011 MType=101 100
+--- ppt/slides/slide101.xml ---
+LoRaWAN FPending =1 ，表明网关有更多数据要传 Class A 网关 设备 RECEIVE_DELAY1 RECEIVE_DELAY2 Random back off FPending=1 Duty-cycle Payload=Null 或 Payload=data/MAC 101
+--- ppt/slides/slide102.xml ---
+LoRaWAN FPending=1 ，表明网关有更多数据要传 Class B 设备立即发送空白帧，以开启 RX1 、 RX2 Class C 设备始终打开，除了设备发送数据时，网关想发即发，因此 FPending=1 不触发设备任何行为 网关 设备 Beacon Beacon FPending=1 Slot 1 Slot 2 Payload=NUll RECEIVE_DELAY1 102
+--- ppt/slides/slide103.xml ---
+LoRaWAN 帧结构 103
+--- ppt/slides/slide104.xml ---
+LoRaWAN 帧结构 入网响应 入网请求 数据或其他指令 MHDR 中 Mtype 字段指明消息类型 104
+--- ppt/slides/slide105.xml ---
+LoRaWAN 帧结构 105 Fport 用于指示 FRMPayload 中的数据类型 FPort =0 ， FRMPayload 存放 MAC 指令（如 LinkADRReq ） FPort≠0 ， FRMPayload 存放应用层数据 Fport 空， FRMPayload 为空
+--- ppt/slides/slide106.xml ---
+LoRaWAN 帧结构 106 一个帧中可发送多条指令，接收方在一个帧中按序组织回复 若回复超过 FOpts 最大长度，则在 FRMPayload 中回复 同时有数据和 MAC 指令回复时，优先 MAC 指令回复 发送 MAC 指令序列时，保证接收能在一个帧中答复完成
+--- ppt/slides/slide107.xml ---
+LoRaWAN 帧结构 107 Fopts FOpts 不为空时，存放 MAC 指令，此时 FPort≠0 ， 即 FRMPayload 和 FOpts 不能同时存放 MAC 指令
+--- ppt/slides/slide108.xml ---
+LoRaWAN 帧结构 108 Fctrl 下行 ARD ：网关通知设备，使用更高的数据率和更小的发送功率 FPending =1 ：网关通知设备其还有下行数据要发送，请求接收窗口 ACK=1 ，回复上行请求确认的数据 FOptsLen 指明 FOpts 的长度，若 FOptsLen =0 ，则 FOpts 不存在
+--- ppt/slides/slide109.xml ---
+LoRaWAN 帧结构 109 Fctrl 上行 ADR ：设备通知网关，为其设置更高的数据率和更小的发送功率 ADRACKReq ：设备向网关确认，是否仍然能收到设备的上行数据 ACK=1 ，回复下行请求确认的数据 Class B=1 ，告诉网关设备处于 Class B 状态
+--- ppt/slides/slide110.xml ---
+思考题 LoRa 网关有采用 8 通道 8 解调器芯片 SX1301 的，也有采用单通道单解调器芯片 SX1276/8 的。根据数学统计分析，采用 ADR 机制后的 SX1301 网关，网关容量能提高 232.6% 。问前者的容量是后者的多少倍？
+--- ppt/slides/slide111.xml ---
+LoRaWAN 帧结构 111 Fcnt ：进行帧计数 上行： FCntUp 下行： NFCntDown 统计收到的 MAC 指令帧，由网络服务器管理 AFCntDown 统计收到的应用数据帧，由应用服务器管理 OTAA 设备入网清 0 ， ABP 不重置
+--- ppt/slides/slide112.xml ---
+LoRaWAN 帧结构 上行： FCntUp 下行： NFCntDown 统计收到的 MAC 指令帧，由网络服务器管理 AFCntDown 统计收到的应用数据帧，由应用服务器管理 OTAA 设备入网清 0 ， ABP 不重置 112
+--- ppt/slides/slide113.xml ---
+LoRaWAN- 常见 MAC 指令 LinkADRReq 网关要求设备改变数据率、发射功率、发送信道 RXParamSetupReq 网关配置设备 RX1 数据率、 RX2 的数据率和信道 DLChannelReq 网关配置设备 RX1 信道 RXTimingSetupReq 网关配置设备 RECEIVE_DELAY1 RekeyInd OTAA 设备用于通知网关更新密钥 RekeyConf 网关通知 OTAA 设备确认密钥更新 113
+--- ppt/slides/slide114.xml ---
+LoRaWAN- 常见 MAC 指令 ADRParamSetupReq 网关用于设置 ADR_ACK_LIMIT PingSlotInfoReq Class B 设备告知网关其 ping slot 周期 PingSlotChannelReq 网关设置 class B 设备的 ping slot 信道 BeaconFreReq 网关修改 beacon 的发送信道 DeviceModeInd 设备告知网关其当前是 class A 还是 class C 114
+--- ppt/slides/slide115.xml ---
+目录 概述 关键特性 代表性协议 学术研究进展 案例开发
+--- ppt/slides/slide116.xml ---
+学术研究进展 性能分析 在 NB-IoT 标准形成初期，有较多工作分析验证了 NB-IoT 系统在不同实际场景中（市区 / 郊区，独立 / 带内部署等）的性能，其中包括对 NB-IoT 基站覆盖范围、连接数目的测试，对 NB-IoT 终端设备数据通信、功耗、安全模式等的测试 对 LoRaWAN 技术进行介绍讲解，研究其网络架构、协议设计、安全性分析等，大部分工作也将 LoRaWAN 与其他 LPWAN 技术进行比较，分析其电池寿命、网络容量、通信时延、通信距离等 116
+--- ppt/slides/slide117.xml ---
+学术研究进展 性能优化及建模仿真 随着 NB-IoT 网络规模的扩大和结构的复杂化，其性能难以同时满足各类用户的实际需求。近两年，有一些工作关注于 NB-IoT 网络关键性能指标的优化，并提出了自适应的网络参数设置方法。例如：通过调整编解码策略提高数据传输的可靠性；通过调整节点 duty cycle 模式降低其使用能耗 对 LoRaWAN 进行建模分析，通过对网络通信参数的修改，仿真大规模节点的性能，如研究不同终端设备数量和分布下，使用相同扩频因子时的网络性能 117
+--- ppt/slides/slide118.xml ---
+学术研究进展 实际应用 NB-IoT 作为低功耗广域网的一项重要技术，具备突出的性能优势，催生了越来越多的实际应用。比如，在智慧城市、智能家居、农业物联网、可穿戴智能设备等方面已经开始有一些实际的部署和使用 设计了各种原型系统，用于收集数据用于研究 , 如环境相关数据的收集。或者基于特定应用场景，部署了具体的 LoRaWAN 系统，使用的硬件常为 Semtech LoRa 模组与 Arduino 或者 Raspberry Pi 118
+--- ppt/slides/slide119.xml ---
+学术研究进展 [SenSys'2021] NELoRa: Towards Ultra-low SNR LoRa Communication with Neural-enhanced Demodulation 实现超低信噪比下解码 LoRa 信号。它首先利用深度神经网络 (DNN) 滤波器提取多维特征，捕获干净的 chirp 符号，并用基于谱图的 DNN 解码器来解码这些信号 119
+--- ppt/slides/slide120.xml ---
+学术研究进展 [INFOCOM'2020] CoLoRa: Enabling MultiPacket Reception in LoRa 一个适用于 LoRa 的多包接收协议。 CoLoRa 利用冲突数据包之间的时间偏差，能直接从一个冲突中分解除多个并发传输的数据包，大大提高网络吞吐量 120
+--- ppt/slides/slide121.xml ---
+学术研究进展 [MobiCom'2020] LMAC: Efficient Carrier-Sense Multiple Access for LoRa 专为 LoRa 设计的基于 CSMA 的 MAC 层协议。 LMAC 利用用于检测前导码的信道活动检测（ CAD ）机制来检测信道状况。和现有默认的 ALOHA 机制相比， LMAC 能将网络吞吐量提升一倍 121
+--- ppt/slides/slide122.xml ---
+学术研究进展 [MobiCom‘2021] Seirios: Leveraging Multiple Channels for LoRaWAN Indoor and Outdoor Localization 一个基于 LoRa 的定位系统。它利用多通道的 CSI 作为多通道测量并在多个锚点（即 LoRaWAN 网关）上使用超分辨率算法，为 LoRaWAN 设备提供了室内外较为精确的定位服务 122
+--- ppt/slides/slide123.xml ---
+学术研究进展 [UbiComp‘20] Exploring LoRa for Long-range Through-wall Sensing 建立 LoRa 信号传播模型用来捕捉运动物体与 LoRa 信号相位变化之间的关系，并在这个基础上设计了基于 LoRa 的长距离智能感知系统，能准确感知 30m 外人行走的信息 123
+--- ppt/slides/slide124.xml ---
+谢谢！
+--- ppt/slides/slide125.xml ---
+目录 概述 关键特性 代表性协议 学术研究进展 案例开发
+--- ppt/slides/slide126.xml ---
+案例开发 —— 智能垃圾桶 实验设置： LoRa 节点将从传感器中获取监测数据，并将这些数据发送到 LoRa 网关。当网关收到数据后，它将把数据传递给物联网服务器 实验搭建 LoRa 终端节点： LoRa Shield + Arduino UNO +  HX711 压力传感器 LoRa 网关： Dragino LG01 IoT server ： TTN LoRaWAN 服务器 126
+--- ppt/slides/slide127.xml ---
+案例开发 —— 智能垃圾桶 步骤一：创建 TTN 物联网服务器账户 ( 网址： https://www.thethingsnetwork.org/) 步骤二：注册登录后，点击进入“ Console ”页面，在“ Console ”页面中创建一个 gateway 目录 127
+--- ppt/slides/slide128.xml ---
+案例开发 —— 智能垃圾桶 步骤三：在 TTN 服务器上创建一个终端节点目录。具体地，在“ Console ”页面上，添加一个 application ；接着在“ Application ”页面上，点击“ register device ”。同时将节点激活方式设置为 ABP 128
+--- ppt/slides/slide129.xml ---
+案例开发 —— 智能垃圾桶 步骤四：将 LG01 网关用网线连接入网，并在 LG01 页面（网址： 10.130.1.1 ）上配置 LG01 端的 Lora radio 参数 129
+--- ppt/slides/slide130.xml ---
+案例开发 —— 智能垃圾桶 步骤四：在 LG01 页面（网址： 10.130.1.1 ）上配置 LoRaWAN 服务器的地址、端口和网关 ID 信息 130
+--- ppt/slides/slide131.xml ---
+案例开发 —— 智能垃圾桶 步骤五：烧录 LoRa 节点程序。将 Arduino UNO( 接有 LoRa shield 及 HX711) 连上电脑，接着使用 Arduino IDE 烧写应用程序代码 ( 包括传感器数据收集和发送 ) 到 LoRa Shield #include < lmic.h > #include < hal.h > // LoRaWAN 终端节点地址及密钥信息的设置 ( 适用于 ABP 入网方式 ) static const PROGMEM u1_t NWKSKEY[16] = {0xB3,0xC2,0x99,0x8A,0x2B,0x04, 0x83,0x5A,0x34,0xF6,0xF1,0x2E,0x5A,0x5F,0xF8,0x17 };// LoRaWAN 网络密钥 static const u1_t PROGMEM APPSKEY[16] = {0xE6,0xA3,0xC2,0x13,0x08,0xFF,0x89, 0xA0,0x5B,0x41,0x39,0x83,0xC7,0xFD,0xB6,0xAA}; // LoRaWAN 应用密钥 static const u4_t DEVADDR = 0x26011880; // LoRaWAN 终端节点地址 void setup(){ Serial.begin (9600); LMIC.setFrequency (433000000); LMIC_setDrTxpow (DR_SF7,14); } …… LoRa 物理层参数设置： - 发送频段 : 433MHz - 数据率 : SF7, 发送功率： 14dBm 131
+--- ppt/slides/slide132.xml ---
+案例开发 —— 智能垃圾桶 步骤六：烧录网关程序。使用 Arduino IDE 烧写应用程序代码（包括数据接收和转发）到 LG01 网关 #include < Console.h > #include < LoRa.h > …… void setup(){ Bridge.begin (115200); if (! LoRa.begin ( freq )){ Console.println (F(" init LoRa failed"));} setLoRaRadio (); // 设置接收频段，编码率，带宽等 } void loop(){ if (! send_mode ) { receivepacket (); // 接收并转发 LoRa 数据包 } else if ( send_mode == 1) { sendpacket (); // 回复消息给终端节点 } else { emitpacket (); } …… 132
+--- ppt/slides/slide133.xml ---
+案例开发 —— 智能垃圾桶 步骤七：打开 Arduino IDE 串口监视器查看实时的 LoRa 节点数据发送状态 数据包发送成功 133
+--- ppt/slides/slide134.xml ---
+案例开发 —— 智能垃圾桶 步骤七：登录 TTN 账号，在 TTN 网页查看实时的服务器接收数据 收到节点发送的数据 (ASCII 码表示 ) 134

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · 安全认证与无服务器</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 小课 6/7 · 课件提炼</span>
+  <h1>安全认证（对称/非对称/IBC）与无服务器计算</h1>
+  <p class="subtitle">一句话：这节讲设备怎么证明"我是我"（共享密钥、X.509、IBC）与权限控制，以及 Lambda 冷启动的时延账怎么算——名词解释与计算的高发区。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第六章-2026》6.2 主要功能之"安全认证"与"无服务器计算"节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第六章-2026.pdf</p>
+  </div>
+
+  <h2>一、三类设备认证机制</h2>
+  <h3>1.1 基于共享密钥（对称密钥）的认证</h3>
+  <p>设备与平台持有共享秘密，平台验证设备提供的认证信息：设备端计算<strong>消息认证码</strong>，平台端按约定验证、确认设备持有对应密钥。认证数据可包含<strong>设备标识、时间戳或随机挑战</strong>。要点：<strong>消息认证码用于验证来源与完整性，不等于把业务载荷加密</strong>；连接认证与业务数据的链路加密应分别考虑；防重放需要独立的新鲜性检查。适合资源受限设备（开销较小）；主要风险：<strong>设备端或平台端对称密钥泄露会影响认证安全</strong>。</p>
+  <div class="calc">Python 标准库 HMAC 示例（课件）：
+body = b"A|1700000000|nonce7"        # 身份 + 时间戳 + 随机数
+tag = hmac.new(key, body, hashlib.sha256).digest()
+valid = hmac.compare_digest(received_tag, expected_tag)
+key 是双方持有的秘密；body 包含身份与新鲜性信息。</div>
+
+  <h3>1.2 基于非对称密钥与 X.509 证书的认证</h3>
+  <p>设备使用<strong>私钥签名</strong>，云平台获取<strong>公钥</strong>认证；为管理公钥使用基于 <strong>X.509 证书的 PKI 机制</strong>。证书三种获取方式：<strong>CA 机构颁发、物联网云平台生成、第三方工具创建</strong>。特点：PKI 提升公钥管理的可信性；<strong>大量设备的证书传输增加开销</strong>。</p>
+  <p><strong>双向 TLS 流程（课件 114 页）</strong>：设备验证服务器证书 → 设备提交客户端证书 → 设备证明持有对应私钥（私钥留在设备中）→ 双方建立受保护连接 → 平台再检查主题与操作权限。<strong>连接认证不等于任意授权</strong>。</p>
+
+  <h3>1.3 IBC：基于设备标识的公钥管理</h3>
+  <p>以<strong>设备标识及系统参数确定公钥</strong>（如设备序列号、网络地址），减少证书传输与维护；用户根据设备标识向密钥生成中心 <strong>KGC</strong> 申请设备私钥，KGC 加密传送私钥、用户在设备程序中配置；设备与云平台利用标识公钥及对应私钥完成认证。</p>
+
+  <h2>二、身份认证与权限控制</h2>
+  <p>平台先<strong>验证访问者身份</strong>（账号、证书或令牌），再依据<strong>权限策略</strong>判断可操作的设备、主题和数据，最后<strong>授权执行</strong>。课件例子：设备 A 可发布自身温度；看板可订阅温度，但无权控制门锁——<strong>身份可信不意味着可访问全部资源；权限应限定到相应操作和对象</strong>。AWS IoT 策略片段：Effect Allow + Action iot:Publish + Resource 指定温度主题 ARN；订阅还需相应独立授权，不使用全主题授权代替设计。</p>
+
+  <h2>三、无服务器计算与 Lambda 冷启动</h2>
+  <p>同一任务（温度异常→告警→通知）：<strong>常驻服务由应用维持进程；函数计算由平台管理按需执行环境</strong>。AWS Lambda 链路：AWS IoT Core → Lambda（Python 3.12）→ SNS。</p>
+  <div class="calc">冷启动时延构成（课件例，业务执行 40 ms）：
+冷调用：调度 10 + 环境 50 + 初始化 350 + 业务 40 = 450 ms
+热调用：调度 10 + 业务 40 = 50 ms（额外准备 50+350 = 400 ms）
+初始化越长、业务越短，冷启动对响应时间的影响越显著。
+热调用可复用已初始化环境；顶层语句（读配置、建 SDK 对象）只在环境初始化时执行一次。</div>
+  <p><strong>部署内容</strong>：代码包 + 配置（Handler: app.handler、Runtime: python3.12、MemorySize: 256、Timeout: 3）——部署对象是代码与配置的组合，仅上传一个函数名字不能运行。<strong>日志观测</strong>：Duration 观察调用执行，Init Duration 观察初始化，Billed Duration 属于计费口径；冷环境日志 INIT→INVOKE→REPORT，环境复用只有 INVOKE→REPORT。</p>
+  <div class="calc">冷启动优化的取舍（100 次串行调用，10 次需新环境；热调用 50 ms，业务 40 ms）：
+从头启动：平均 50 + 10% × 400 = 90 ms（新环境调用 450 ms）
+快照恢复（SnapStart，恢复假设 60 ms）：平均 50 + 10% × 60 = 56 ms（新环境 110 ms）
+预先保温：容量覆盖时 50 ms；代价是保持环境驻留（如 0.5 GiB × 60 s = 30 GiB·s）
+同时比较平均时延、慢调用和资源占用；平均值不能替代时延上限。
+SnapStart 与预置并发是不同策略，不能在同一函数上同时启用。</div>
+  <p><strong>前沿了解</strong>：初始化快照把重复初始化转为恢复，但恢复仍需 I/O、内存映射和状态校验（Holmes 等 OSDI 2026 的 Spice：快照恢复 0.6–18 ms vs 对比系统 3.6–1197 ms，端到端平均改善 7.5×/9.5×——论文特定部署，非通用加速比）。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>思考题（课后习题答案第 9 题）：结合对称/非对称密钥认证的优缺点，讨论各自适合什么物联网场景。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（习题答案第 9 题原解要点）<strong>对称密钥</strong>：加/解密速度快，适合大数据量加密与资源受限设备；最大缺点是密钥的管理与分配——密钥需在网络传输、有很大风险被拦截解密，只适合安全性要求不高的场景。<strong>非对称密钥</strong>：公钥可公开、私钥安全保管，提供非常安全的加解密方法；但加解密速度比对称加密慢得多，不适合数据传输频繁的场景，适合数据安全性较高的情景，如国家安全、军队通信方面。</p>
+    </details>
+    <p><strong>思考题（课后习题答案第 10 题）：Azure Function 每隔 0.05 s 被调用一次，每次执行 0.1 s，每次调用需 0.03 s 冷启动；相对 PaaS 架构，无服务器计算一个月（30 天）节省多少 CPU 时间？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（习题答案第 10 题原解）空闲时间为 0.03 + 0.05 = 0.08 s，占周期（0.1 + 0.05 + 0.03 = 0.18 s）的百分比：0.08/0.18 × 100% ≈ 44.44%。PaaS 架构一直都在执行，因此节省的 CPU 时间即空闲时间：30 × 24 × 60 × 60 × 44.44% ≈ 1,152,000 s。答：节省约 1152000 s。</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0605-时序数据库与流计算.html">0605-时序数据库与流计算</a> · 下一课：<a href="0607-边缘计算与典型平台.html">0607-边缘计算与典型平台</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "关于消息认证码（HMAC），课件的说法是？",
+    options: [
+      "HMAC 验证来源与完整性，防重放需要独立的新鲜性检查",
+      "HMAC 本身就能防止报文被重放攻击",
+      "HMAC 对业务载荷完成了加密保护"
+    ],
+    answer: 0,
+    explain: "课件：HMAC 验证来源与完整性，不等于把业务载荷加密；防重放需要独立的新鲜性检查（时间戳或随机挑战）。（课件 6.2 安全认证）"
+  },
+  {
+    prompt: "IBC（基于标识的密码体制）中，设备公钥由什么确定？",
+    options: [
+      "CA 机构颁发的 X.509 证书",
+      "设备标识及系统参数（如序列号、网络地址）",
+      "设备每次连接时随机生成的密钥对"
+    ],
+    answer: 1,
+    explain: "课件：IBC 以设备标识及系统参数确定公钥（如设备序列号、网络地址），减少证书传输与维护；私钥向 KGC 申请。（课件 6.2 IBC）"
+  },
+  {
+    prompt: "课件冷启动例题：调度 10ms + 环境 50ms + 初始化 350ms + 业务 40ms，冷调用总时延是？",
+    options: [
+      "90 ms",
+      "400 ms",
+      "450 ms"
+    ],
+    answer: 2,
+    explain: "课件：冷调用 10+50+350+40 = 450 ms；热调用 10+40 = 50 ms，额外准备 400 ms。（课件 6.2 冷启动时延构成）"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 认证三机制与冷启动已过关。" : " —— 重点复习 X.509/IBC 对比与 450ms 冷启动账单。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+--- ppt/slides/slide1.xml ---
+第二章：物联网硬件平台
+--- ppt/slides/slide2.xml ---
+学习目标 了解常见的物联网硬件平台 掌握 典型物联网硬件平台的能耗计算方法 了解开发板和外设的常用物理接口类型、数据通信协议，掌握 UART 缓存区的计算方法，掌握基于总线频率计算 SPI 数据传输率的基本方法，掌握 I 2 C 的数据传输过程 了解传感器节点平台、 STM32 平台、 Arduino 平台、树莓派平台的特点，掌握根据应用需求进行硬件选型的基本方法 掌握 基于 Arduino IDE 和 Grove Pi 的应用软件开发方法 2
+--- ppt/slides/slide3.xml ---
+目录 概述 关键特性 常见的硬件平台 案例开发 学术研究进展
+--- ppt/slides/slide4.xml ---
+生活中的物联网硬件 每个物体都是一台计算机 燃气报警器 智能车锁 智能电表 4
+--- ppt/slides/slide5.xml ---
+物联网硬件发展历程 体积越来越小，价格越来越低 智能物联网芯片 5
+--- ppt/slides/slide6.xml ---
+物联网硬件平台类型 异构性强，功能差异大 属性 类 PC 的嵌入式设备 ≈ 1 亿台 智能物件 ≈ 8 亿台 物件 ≈ 90 亿台 典型处理器 Intel Core ARM Cortex-A7, Intel Atom MCU 典型操作系统 Windows Embedded, Linux Linux, Wind River, Android Things TinyOS , Contiki, LiteOS , AliOS Things 典型运行环境 Win32, Linux Node.js, Python, C APIs C APIs 典型设备 自动取款机、零售服务点 可编程逻辑控制器、边缘网关 温度传感器、 智能灯泡 6
+--- ppt/slides/slide7.xml ---
+硬件平台的组成 狭义的 硬件平台 ：开发板（ PCB 、 SoC ） 广义的 硬件平台 ：开发板（ PCB 、 SoC ） + 外接传感设备或通信模块 7
+--- ppt/slides/slide8.xml ---
+目录 概述 关键特性 常见的硬件平台 案例开发 学术研究进展
+--- ppt/slides/slide9.xml ---
+关键特性 低成本与微型化 能耗 运算速度和内存大小 接口类型 物理接口 通信协议 可扩展性
+--- ppt/slides/slide10.xml ---
+低成本与微型化 节点价格低廉，微型化  更高的部署密度，更好的感知效果 *价格参考 2022 年 3 月淘宝平台售价 10 开发板 属性 价格 / 元 尺寸 / （ mm×mm ）（长 × 宽） TelosB 850 63.75×32 Arduino UNO 130 68.8×53.4 Arduino GEMMA 90 27.94×27.94 STM32F103 268 130x100 树莓派 4B 735 88x58
+--- ppt/slides/slide11.xml ---
+能耗 物联网节点一般会周期性采集数据并上报数据到云平台，或者不定时、间断地收到来自云平台的控制命令，其他大部分时间基本都处于休眠状态 ，以延长应用的生命周期 n ：部件能耗状态的数量 部件在能耗状态 i 下的工作时间，假设部件在时间 内都处于能耗状态 i 部件在能耗状态 i 下的功率 可取 1 或 0 。 =1 意味着 大于 0 ； =0 意味着 等于 0 11
+--- ppt/slides/slide12.xml ---
+能耗 能耗计算： Arduino Uno, 电压保持 5V 不变， 1s 时间， 0.5s 休眠， 0.5s 工作 开发板 属性 MCU MCU 供电电压 /V MCU 睡眠能耗 / μA MCU 工作能耗 /mA TelosB MSP430 1.8 ～ 3.6 2.6 0.5 Arduino UNO ATmega328 1.8 ～ 5.5 0.1 0.2 12
+--- ppt/slides/slide13.xml ---
+思考题 下表描述了两块 MCU 的部分属性，基于此表回答以下问题 对于一段给定程序，假设在 Msp430F2618 和 Msp430F5437 都执行了 10s ，当 Duty-cycle 为 80% 时，谁的能耗低？当 Duty-cycle 为 0.1% 时，谁的能耗低？（假设两个处理器工作电压恒定为 3V ） MCU 工作电压 /V RAM/KB Flash/KB 工作能耗 /mA 睡眠能耗 /μA Msp430F2618 1.8 ～ 3.6 8 116 0.5 1.1 Msp430F5437 1.8 ～ 3.6 16 256 0.28 1.7
+--- ppt/slides/slide14.xml ---
+运算速度和内存大小 平台运算速度 MCU时钟主频 平台内存 RAM（存数据，易失性） Flash（存程序，非易失性） 14 开发板 属性 MCU MCU 主频 位数 RAM Flash TelosB MSP430 8MHz 8 10KB 48KB Arduino UNO ATmega328 16MHz 8 2KB 32KB STM32F103 Cortex-M3 72MHz 32 64KB 512KB 树莓派 4B BCM 2711 1.5GHz 64 1/2/4/8GB 由外接 SD 卡 决定
+--- ppt/slides/slide15.xml ---
+关键特性 低成本与微型化 能耗 运算速度和内存大小 接口类型 物理接口 通信协议 可扩展性
+--- ppt/slides/slide16.xml ---
+接口类型 物理接口：引脚和 Grove port 引脚接口：通过杜邦线连接 ， 过程复杂 且 易出错 ，引脚接错可能会导致程序无法工作，甚至烧坏外设和主板 Grove port 接口 ： 通过 Grove port 线连接 ， 外设接入 容易 、 快速而且 不易出错 16
+--- ppt/slides/slide17.xml ---
+接口类型 通信协议 模拟信号 （ Analog ） ：使用模拟量表示数据的信号 数字信号 （ Digital ） ： 使用序列离散值表示数据的信号 PWM （ Pulse-width modulation ） ： 基于数字信号的脉冲调制技术 UART （ Universal Asynchronous Receiver/Transmitter ） ： 用于异步逐位传输数据的全双工通信接口标准 I 2 C （ Inter Integrated Circuit ） ： Phillips 公司推出的高性能串行总线 SPI （ Serial Peripheral Interface ） ： 高速、全双工、同步的通信总线 17
+--- ppt/slides/slide18.xml ---
+通信协议 模拟信号 （ Analog ） ：使用模拟量表示数据的信号 表示物理世界中随时间变化的连续变量，例如声音、压力、光照强度等 处理器并不能直接解析模拟信号所表示的数据，一般需要借助模拟数字转换器（ ADC ， Analog to Digital ） 接口连接方式： 18
+--- ppt/slides/slide19.xml ---
+通信协议 数字信号 （ Digital ） ： 使用序列离散值表示数据的信号 抗干扰能力强 可以使用不同的编码模式 不归零编码（NRZ）、归零编码（RZ）、曼彻斯特编码、差分曼彻斯特编码 19
+--- ppt/slides/slide20.xml ---
+通信协议 PWM （ Pulse-width modulation ） ： 基于数字信号的脉冲调制技术 组成：频率，占空比 频率决定了信号的周期，占空比决定了单个周期内高电平的持续时间 用途：一般用于控制LED灯或电机功率，降低能耗 20
+--- ppt/slides/slide21.xml ---
+通信协议 UART （ Universal Asynchronous Receiver/ Transmitter ） ： 用于异步逐位传输数据的全双工通信接口标准 全双工：同一时刻用两个引脚 RX 和 TX 分别收发数据 异步：没有时钟同步，收发方规定好数据位长和传输波特率即可开始通信 21
+--- ppt/slides/slide22.xml ---
+通信协议 UART 数据传输 为了保证数据正确传输，收发双方必须在传输开始和结束设置统一的 标志位和波特率 为了保证数据正确解析，收发双方还需要保证接收方具有足够大小的 接收缓冲区 22 UART 波特率和数据采样关系（收发端波特率一致）
+--- ppt/slides/slide23.xml ---
+通信协议 I 2 C （ Inter Integrated Circuit ） ： Phillips 公司推出的高性能串行总线 两根传输线 双向数据传输的 SDA 数据线，用于数据同步的 SCL 时钟线 多设备支持 半双工： 同一时刻 SDA 数据线只有一个数据传输方向 总线调度采用先来先服务方式 23
+--- ppt/slides/slide24.xml ---
+通信协议 I 2 C属性 数据属性 地址表示 高七位代表从设备地址 低一位表示数据传输方向，“ 0” 表示写，“ 1” 表示读 传输速率（ bps ） 最大长度（ m ） 支持设备数 标准模式 (Sm) 快速模式 ( Fm ) 增强快速模式 ( Fm +) 高速模式 (Hs-Mode) 7.62 127 100k 400k 1M 3.4M 24
+--- ppt/slides/slide25.xml ---
+通信协议 SPI （ Serial Peripheral Interface ） ： 高速、全双工、同步的通信总线 全双工：两根数据线 MISO 和 MOSI ，允许双向通信 时钟频率很高，数据传输率很高 配置复杂：控制寄存器配置工作模式，波特率寄存器配置数据传输率 25
+--- ppt/slides/slide26.xml ---
+通信协议 SPI 数据传输 通过 波特率 寄存器 配置数据传输率 波特率分频因子 BRD 和波特率 BR 计算公式 如果当前时钟频率为 25MHz ， SPPR 和 SPR 都是 000 时钟频率 26
+--- ppt/slides/slide27.xml ---
+思考题 以写数据 “10101” 到 0x0B 设备为例，按步描述 I 2 C 的传输过程，要求画出传输信号波形 27
+--- ppt/slides/slide28.xml ---
+接口类型 可扩展性： 开发板对同时接入外接设备数量的支持程度 接口数量和接口类型是评估开发板可扩展性的重要指标 树莓派 4B ： 28 个 Digital 接口、 6 个 UART 接口、 6 个 I 2 C 接口、 5 个 SPI 接口、 2 个 PWM 引脚 BeagleBone Black ： 65 个 Digital 接口、 7 个 Analog 接口、 2 个 I 2 C 接口、 4 个 UART 接口、 8 个 PWM 引脚、 2 个 SPI 接口 BeagleBone Black 平台的可扩展性要 优于 树莓派 考虑后续应用的功能扩充 ， 往往需要在硬件平台预留几个常用类型的通信接口 28
+--- ppt/slides/slide29.xml ---
+目录 概述 关键特性 常见的硬件平台 案例开发 学术研究进展
+--- ppt/slides/slide30.xml ---
+常见的硬件平台 传感节点平台（TelosB等） 集成度高、功耗低 STM32平台 适合应用快速开发、物联网教学实验 Arduino平台 适合应用快速开发、物联网教学实验 树莓派平台 适合做数据处理、复杂计算 30
+--- ppt/slides/slide31.xml ---
+传感器节点平台 早期传感器节点研究的两条主线
+--- ppt/slides/slide32.xml ---
+传感器节点平台 传感器节点的发展缓慢 技术发展不均衡 功耗的制约 成本的制约 32
+--- ppt/slides/slide33.xml ---
+传感器节点平台 33 代表性传感器节点平台 传感器节点平台版本 代表平台 处理器频率 处理器位数 RAM Flash 第一代 Mica 4 MHz 8 4 KB 128 KB MicaZ 4 MHz 8 4 KB 128 KB 第二代 TelosB 4 MHz 16 10 KB 48 KB 第三代 Firestorm 48 MHz 32 64 KB 512 KB Imote2 104 MHz 32 256 KB 32 MB Hamilton 48 MHz 32 32 KB 256 KB
+--- ppt/slides/slide34.xml ---
+传感器节点平台 主要特点 低功耗 ：传感器节点平台是低功耗物联网硬件平台，以 TelosB 节点为例，在睡眠状态下，节点的电流只有 5.1μA 体积小 ：传感器节点平台体积小。最初被设计为军事探测系统，隐蔽性高。以 TelosB 节点为例，其大小为 63.75mm×32mm 集成度高 ：传感器节点平台集成了 MCU 、传感模块和通信模块。以 TelosB 节点为例，单个节点集成了温度、湿度、光照强度等传感模块，还有无线通信模块 低成本 ：单个传感器节点的成本较低，目前最新的 Hamilton 节点单价也只有 6.75 美元 34
+--- ppt/slides/slide35.xml ---
+STM32 系列硬件平台 STM32 系列是由意法半导体公司推出的 ARM Cortex-M 内核单片机 从内核上分有 Cortex-M0 、 M3 、 M4 和 M7 ，每个内核又大概分为主流、高性能和低功耗 包含众多 基于 ARM Cortex 内核的 32 位 MCU 和 MPU 产品 35
+--- ppt/slides/slide36.xml ---
+STM32 系列硬件平台 STM32 命名规则 通过命名规则在选择型号时可对其封装、存储器、性能和引脚数量进行选择，最大程度以最小的硬件变化来满足个性化的应用需求 36
+--- ppt/slides/slide37.xml ---
+STM32 系列硬件平台 开发板 主要由主控芯片、 USB 电源、扩展接口、电源接口、下载接口、复位按键构成 37
+--- ppt/slides/slide38.xml ---
+STM32 系列硬件平台 微控制器 2007 年 6 月 11 日 STM32 在北京发布 经过十年的发展，如今已经拥有 10 大产品系列， 700 余款产品，从超低功耗到高性能，其强大的产品阵容覆盖各种应用，满足不同需求 38
+--- ppt/slides/slide39.xml ---
+STM32 系列硬件平台 电源与能耗 ( 以 STM32F103 为例 ) STM32F103 产品支持三种低功耗模式：睡眠、停机和待机，可以在要求低功耗、短启动时间和多种唤醒事件之间达到最佳的平衡。 条件 频率 最大电流（ mA ） 温度 =85℃ 温度 =105℃ 外部时钟 使能所有时钟 72 30 32 48 20 20.5 36 15.5 16 外部时钟 关闭使能所有时钟 72 7.5 8 48 6 6.5 36 5 5.5 条件 最大电流（ mA ） 温度 =85℃ 温度 =105℃ 外部时钟 使能所有时钟 72 30 32 48 20 20.5 36 15.5 16 外部时钟 关闭使能所有时钟 72 7.5 8 48 6 6.5 36 5 5.5 39 睡眠模式下，代码运行在 Flash 或 RAM 中的最大供应电流
+--- ppt/slides/slide40.xml ---
+STM32 系列硬件平台 扩展接口 STM32 开发板上各通信协议的引脚数量 接口类型 STM32F103C8T6 STM32F103VET6 Digital 32 100 PWM 6 14 UART 3 3 I2C 2 2 SPI 2 2 40
+--- ppt/slides/slide41.xml ---
+开发板型号 MCU/ 时钟频率 /MHz Flash/RAM/KB UART/I 2 C/SPI 尺寸 / （ mm×mm ） （长 × 宽） 电源输入 STM32 最小系统板 STM32F103C8T6/72 64/20 3/2/2 53×23 5V 野火指南者开发板 STM32F103VET6/72 512/64 5/2/3 130×100 5V 正点原子精英开发板 STM32F103ZET6/72 512/64 5/2/3 115×117 5V STM32 系列硬件平台 常见开发板 41
+--- ppt/slides/slide42.xml ---
+STM32 系列硬件平台 主要特点 开发成本低 ： STM32 可以通过库文件进行开发，程序都是模块化的，接口相对简单，只要一个串口即可对程序进行烧写 丰富的通信接口 ： STM32 提供多个通信接口，包括 I2C 接口、 USART 接口、 SPI 接口、 CAN 接口、 USB 2.0 全速接口 调试简单 ： STM32 支持标准的 20 脚 JTAG 仿真调试以及针对 Cortex- M3 内核的串行单线调试（ SWD ）功能 低功耗 ： STM32 在功耗方面控制得比较好，支持睡眠、停机和待机模式。可以在要求低功耗、短启动时间和多种唤醒事件之间达到最佳的平衡 42
+--- ppt/slides/slide43.xml ---
+Arduino 系列硬件平台 2005 年，第一块 Arduino 问世 Arduino 名字来源于意大利一家酒吧 不仅仅是 一块开发板 ，还包括软件、开发团队、开源社区和设计原理等。 43
+--- ppt/slides/slide44.xml ---
+Arduino 处理器的演变 44
+--- ppt/slides/slide45.xml ---
+Arduino 系列硬件平台 Arduino 处理器的演变
+--- ppt/slides/slide46.xml ---
+Arduino 系列硬件平台 开发板组成 微处理器、USB串口、扩展插座、电源 代表性开发板尺寸与价格 开发板 价格（元） 尺寸（长 * 宽 /mm ） Arduino UNO 149.25 68.8*53.4 Arduino Mega 2560 299 101.52*53.3 46
+--- ppt/slides/slide47.xml ---
+Arduino 系列硬件平台 微控制器的演变 47
+--- ppt/slides/slide48.xml ---
+Arduino 系列硬件平台 两种微控制器属性 参数 ATmega 328 ATmega 2560 时钟频率 /MHZ 0 ～ 20 0 ～ 16 RAM/KB 2 8 Flash/KB 32 256 能耗（时钟为 1MHz ） 0.1μA ～ 0.2mA 3μA ～ 0.8mA 48
+--- ppt/slides/slide49.xml ---
+Arduino 系列硬件平台 电源与能耗（以 ATmega 328 为例） ATmega 328 的供电电压为 1.8 ～ 5.5V ，更高的电压可以支持更快的时钟频率 最小供电电压 最高时钟频率 1.8V 4MHz 2.7V 10MHz 4.5V 20MHz 49
+--- ppt/slides/slide50.xml ---
+Arduino 系列硬件平台 扩展插座 用于提供连接外接设备 开发板上各通信协议的引脚数量 接口类型 Arduino UNO Arduino Mega 2560 Digital 14 54 Analog 6 16 PWM 6 14 UART 1 4 I2C 1 1 SPI 1 1 50
+--- ppt/slides/slide51.xml ---
+Arduino 系列硬件平台 盾板 ：为 Arduino 提供了非常强大的扩展能力 Marc de Vinck的创客盾板 Seeed Studio系列的Grove扩展板 WiFi功能 Grove Port SD卡 51
+--- ppt/slides/slide52.xml ---
+Arduino 系列硬件平台 52 开发板型号 /MCU MCU 时钟频率 /MHz Flash/RAM /KB Digital/Analog/PWM/UART/I 2 C/SPI 尺寸 / （ mm×mm ） （长 × 宽） MCU 睡眠能耗 / 工作能耗 Arduino MICRO/ ATmega32U4 16 32/2.5 14/12/7/1/1/1 48×17.7 0.35mA/1.1mA Arduino NANO/ ATmega 328 16 32/2 14/8/6/1/1/1 45×18 0.1μA/0.2mA Arduino ZERO/ ATSAMD21G18 48 256/32 14/6/6/1/2/1 68×53 4.06μA/3.37mA LilyPad Arduino/ ATmega168 8 16/1 14/6/6/1/0/0 27.94×27.94 0.1μA/250μA Arduino GEMMA/ ATtiny85 8 8/0.5 3/1/2/1/0/0 27.94×27.94 0.1μA/300μA
+--- ppt/slides/slide53.xml ---
+Arduino 系列硬件平台 平台特点 上手容易 ： Arduino 设计初衷是为学生提供一款便宜又好用的开发平台，为了达到此效果， Arduino 对底层电路做了很高的封装 开发简单 ： Arduino 为旗下多块不同型号的开发板提供了统一的编程接口，相同应用可以在不同开发板间快速移植，达到快速开发的效果 可扩展性强 ： Arduino 盾板的出现使其功能和接口都可以得到扩展 低功耗 ：其主频和其他性能远小于一些高性能平台如树莓派和 BeagleBone 开源创新 ： Arduino 以软硬件技术全部开源并使用 CC （ Create Commons ）授权的方式让 Arduino 的灵魂出现在各类厂商的 Arduino 开发板中 个人都可以使用面包板加 AVR 处理器构建简单 Arduino 开发板 53
+--- ppt/slides/slide54.xml ---
+树莓派系列硬件平台 树莓派是一款微型计算机，性能几乎和一台计算机相同 2006 年的原型树莓派，采用 22.1MHz 的 ATmega 664 作为微控制器，整个板子成本只需 25 美元 2011 年，树莓派新集成的功能包括 HDMI 、 USB 、以太网 2012 年，树莓派二代发布，处理器换成了 BCM 2836 树莓派三代发布于 2016 年，集成了 WiFi 和 BLE 功能，处理器更新为 BCM 2837 树莓派四代发布于 2019 年，支持 BLE5.0 ，处理器更改为 BCM2711 54
+--- ppt/slides/slide55.xml ---
+树莓派系列硬件平台 开发板 组成：微控制器、扩展接口、 USB 电源、 SD 卡、 HDMI 、音频接口、以太网口、 USB 接口 树莓派不愧为一台微型计算机，只要接上电源、插上外设鼠标、键盘和显示器就可以随时随地开机办公。 55
+--- ppt/slides/slide56.xml ---
+树莓派系列硬件平台 微控制器 从最初只有 22MHz 的 Atmega ATmega 664 到如今 1GHz 的 BCM 2837 ，树莓派始终定位在高性能硬件平台 下表展示了部分树莓派开发板处理器时钟频率、内存大小的变化 开发板型号 时钟频率/GHz RAM/MB 树莓派1B 0.7 512 树莓派2B 0.9 1024 树莓派3B 1.2 1024 树莓派3B+ 1.4 1024 树莓派 4B 1.5 1024/2048/4096/8192 56
+--- ppt/slides/slide57.xml ---
+树莓派系列硬件平台 电源与能耗 树莓派 4B 的标准工作电压为 5V （可以有一定的波动），在 5V 工作模式下，根据 CPU 核数的负载情况其能耗如表所示 树莓派属于高功耗类型 CPU负载 /% 平均能耗 /mA 0 760 单核100 900 双核100 1000 三核100 1100 四核100 1200 57
+--- ppt/slides/slide58.xml ---
+树莓派系列硬件平台 扩展接口 和 Arduino 类似，树莓派也有扩展接口，可以用来连接外设或者盾板 开发板型号 接口 Digital Analog PWM UART I2C SPI 树莓派4B 28 0 2 6 6 5 58
+--- ppt/slides/slide59.xml ---
+树莓派系列硬件平台 盾板 Grove Pi+ 让原本不支持 Analog 外设的树莓派可以接入 Analog 外设 GrovePi + 通过 I 2 C 和树莓派通信， GrovePi + 上 Analog 类型的 Grove port 将外设发送的传感数据通过 I 2 C 再转发给树莓派 盾板 功能 GrovePi + 为树莓派开发板扩展 Grove port ，兼容树莓派 2/3/4/Zero Grove Base HAT 为树莓派开发板扩展 Grove port ，兼容树莓派 2/3/4
+--- ppt/slides/slide60.xml ---
+其他树莓派开发板 开发板型号 MCU时钟频率 RAM/GB 数字引脚数量 / 模拟引脚数量 集成功能 尺寸 / mm长×宽 应用场景 树莓派2B BCM28360.9GHz 1 40 /0 以太网、HDMI 85×56 教育 树莓派3B+ BCM2837B01.4GHz 1 40 /0 以太网、WiFi、BLE、HDMI 85×56 教育 树莓派 4B BCM2711 1.5GHz 1/2/4/8 40/0 以太网、 WiFi 、 BLE 、 BLE5.0 、 HDMI 88×58 教育 树莓派Zero W BCM28351GHz 0.5 24/0 WiFi、BLE 、 Mini HDMI 65×30 可穿戴 60
+--- ppt/slides/slide61.xml ---
+其他树莓派开发板 主要特点 开发简单 ：树莓派软件开发库支持 C 、 Python 开发语言，除此之外还支持 JavaScript 。这些语言都是跨平台的高级编程语言，所以在开发方面树莓派也具有快速、易上手的特点 上手容易 ：树莓派就是一台微型计算机，可以接入键盘、鼠标、显示器等外设，装好系统后就可以像普通计算机一样使用 功能强大 ：树莓派采用基于 Cortex-A 系列的高频微控制器，主频可达 1.5GHz ，配有高达 8GB 内存，还有 HDMI 、 USB 、 AV 、以太网等接口，硬件配置方面堪比普通计算机 61
+--- ppt/slides/slide62.xml ---
+思考题 列举 Arduino 、 STM32 、传感器节点、树莓派四个硬件平台的常见开发板，对比四个平台各自的特点，并简述各自平台的使用场景 62
+--- ppt/slides/slide63.xml ---
+目录 概述 关键特性 常见的硬件平台 案例开发 学术研究进展
+--- ppt/slides/slide64.xml ---
+Arduino 平台编程 统一编程接口 开发语言基于C++，在此之上封装了很多编程接口 使用setup-loop的代码结构 setup是程序入口函数，仅执行一次，往往用于程序的初始化 loop是setup执行完后紧接着执行的循环体 void setup(){ // put your setup code here, to run once: Serial.begin (9600); } void loop(){ // put your main code here, to run repeatedly: Serial.println (“Hello Arduino”); delay(1000); } 64
+--- ppt/slides/slide65.xml ---
+Arduino 平台编程 集成开发环境-Arduino IDE 支持部分Arduino开发板的交叉编译、程序烧写和串口调试 支持Windows、Mac OS、Linux三种操作系统 65
+--- ppt/slides/slide66.xml ---
+Arduino 平台使用案例 - 室内环境检测 步骤 1 ：确定硬件解决方案 Arduino UNO 开发板只包含 MCU 和执行模块 LED ，没有集成任何的传感模块。需要外接温度传感模块和湿度传感模块，这里选择温湿度传感模块 DHT11 实物连接关系如图所示 66
+--- ppt/slides/slide67.xml ---
+Arduino 平台使用案例 - 室内环境检测 步骤 2 ：确定软件解决方案 Arduino IDE 是为 Arduino 系列硬件平台旗下开发板定制的集成开发环境，包括软件库支持、交叉编译、程序烧写和串口通信等功能 打开 Arduino IDE ，编写应用程序代码 67
+--- ppt/slides/slide68.xml ---
+Arduino 平台使用案例 - 室内环境检测 Arduino 使用 setup-loop 的代码结构，如图所示。 setup 是程序入口函数，仅执行一次，往往用于程序的初始化； loop 是循环体， setup 返回之后会被重复执行。 void setup(){ // 初始化，仅执行一次 } void loop(){ // 循环体，重复执行 } 68
+--- ppt/slides/slide69.xml ---
+Arduino 平台使用案例 - 室内环境检测 案例程序如下： DHT11 库： https://github.com/Seeed-Studio/Grove_Temperature_And_Humidity_Sensor #include “ DHT.h ” DHT dht (2, DHT11); //DHT11的数据引脚连接开发板2号引脚 void setup(){        // 程序初始化代码，执行一次 Serial.begin (9600); 	//串口打印波特率为9600 Bd/s dht.begin ();        	//初始化DHT11模块 } void loop() { float h = dht.readHumidity ();     // 读湿度数据 float t = dht.readTemperature ();  // 读温度数据 Serial.print ("Humidity: "); Serial.println (h);               	// 打印湿度 Serial.print ("Temperature: "); Serial.println (t);               	// 打印温度 delay(3000);        //每间隔3s打印一次环境数据 } 69
+--- ppt/slides/slide70.xml ---
+Arduino 平台使用案例 - 室内环境检测 步骤 3 ：交叉编译 如图所示，在 Arduino IDE 下，选择“工具”→“开发板”→“ Arduino UNO” 。单击“验证”，开始交叉编译程序。 70
+--- ppt/slides/slide71.xml ---
+Arduino 平台使用案例 - 室内环境检测 步骤 4 ： 烧写程序 通过 USB 把开发板接至计算机 71
+--- ppt/slides/slide72.xml ---
+Arduino 平台使用案例 - 室内环境检测 步骤 5 ：案例测试 打开串口，设置波特率为 9600 ，查看实时监测的室内环境数据 72
+--- ppt/slides/slide73.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 步骤 1 ：确定硬件解决方案 树莓派 4B 开发板只包含 MCU 和通信模块 WiFi /BLE/ 以太网，没有集成任何的传感模块。需要外接温度传感模块和湿度传感模块 DHT11 73
+--- ppt/slides/slide74.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 步骤 2 ：确定软件解决方案 为了进行树莓派 4B 的软件开发，需要操作系统的支持。目前树莓派 4B 支持 Linux （ Raspbian 、 Ubuntu 等）、 Windows 10 IoT Core 、 RISC OS 等操作系统，这里选择 Raspbian Stretch with desktop 系统进行应用开发 在 Linux 系统下，有两个常用的树莓派开源开发库，分别是 WiringPi 和 GrovePi 。类似于 Arduino IDE ， WiringPi 和 GrovePi 也为树莓派开发提供了统一的编程接口 74
+--- ppt/slides/slide75.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 WiringPi 是一个专门为树莓派应用开发提供通用输入 / 输出（ general purpose input output ， GPIO ）操作的 C++ 库 unsigned int millis (void); unsigned int micros(void); void delay(unsigned int howLong ); void delayMicroseconds (unsigned int howLong ); /* GPIO Module */ void pinMode (int pin, int mode); void digitalWrite (int pin, int value); void pwmWrite (int pin, int value); int digitalRead (int pin); analogRead (int pin); analogWrite (int pin, int value); int serialOpen (char *device, int baud); void serialClose (int fd ); void serialPutchar (int fd , unsigned char c); 75
+--- ppt/slides/slide76.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 GrovePi 是针对树莓派扩展板 GrovePi 和 GrovePi+ 的软件库，它提供了扩展板的驱动程序，并在此之上为开发者封装了较完整的编程接口，目前支持 C++ 、 Java 、 C# 、 Go 、 Java 、 Node.js 、 Python 等主流开发语言 /* I2C */ def write_i2c_block(address, block) def read_i2c_block(address) /* Digital */ def digitalRead (pin) def digitalWrite (pin, value) /* Analog */ def analogRead (pin) def analogWrite (pin, value) /* DHT */ def dht (pin, module_type ) /* Accelerometer */ def acc_xyz () 76
+--- ppt/slides/slide77.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 这里选择 GrovePi 作为树莓派开发的软件库，选择 Python 作为程序开发语言，选择树莓派搭载的 Linux 系统作为应用开发环境。通过 SSH 远程登录到树莓派搭载的 Linux 系统，这里假设已经完成树莓派网络配置和 GrovePi 配置工作，远程 SSH 连接后树莓派控制界面如图所示 login as: pi pi@10.214.149.121's password: Linux raspberrypi 4.14.34-v7+ #1110 SMP Mon Apr 16 15:18:51 BST 2018 armv71 The programs included with the Debian GNU/Linux system are free software; Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent permitted by applicable law. Last login: Wed Sep 26 19:28:53 2018 from 10.214.149.130 pi@raspberrypi :~$ls Desktop Documents Music Public sketch Videos Dexter Downloads Pictures Python_games Templates tmp 77
+--- ppt/slides/slide78.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 基于 GrovePi 的编程接口编写出如下所示的代码 import grovepi import math import time sensor = 2    # DHT11数据接口和开发板2号引脚连接 blue = 0 while True: try: [ temp,humidity ] = grovepi.dht ( sensor,blue )# 读取温湿度 if math.isnan (temp)==False and math.isnan (humidity)==False: print("temperature = %.02f C\ nhumidity =%.02f%%"% (temp, humidity)) time.sleep (3)   # 每间隔3s打印一次环境数据 except IOError : print ("Error") 78
+--- ppt/slides/slide79.xml ---
+基于树莓派 4B 的开发 - 室内环境监测 步骤 3 ：案例测试 如图所示，在树莓派系统下，运行“ Python indoorEnv.py” 命令，观察控制台打印的环境数据。 pi@raspberrypi :~/ GrovePi $ Python indoorEnv.py temperature = 27.00 C humidity =95.00% temperature = 27.00 C humidity =95.00% temperature = 29.00 C humidity =93.00% 79
+--- ppt/slides/slide80.xml ---
+目录 概述 关键特性 常见的硬件平台 案例开发 学术研究进展
+--- ppt/slides/slide81.xml ---
+研究进展 高性能 智能硬件、边缘计算的发展对硬件处理能力提出了更高的要求 随着处理器工艺的进步，芯片计算能力增强，功耗降低 目前最新发布用于边缘计算的芯片有谷歌的 Edge TPU ，华为的昇腾 310 等 谷歌的Edge TPU开发板 81
+--- ppt/slides/slide82.xml ---
+研究进展 模块化 提高硬件可定制性。开发者可选择不同的模块搭建适合应用的硬件平台 提高模块可重用性。避免重复设计相同功能的电路模块 82
+--- ppt/slides/slide83.xml ---
+研究进展 [IPSN’18]The Signpost Platform for City-Scale Sensing 环境感知模块 电源模块 控制模块 通信模块 83
+--- ppt/slides/slide84.xml ---
+谢谢！

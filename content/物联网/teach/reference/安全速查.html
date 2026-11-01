@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 安全速查卡</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 速查卡 · 可打印</span>
+  <h1>物联网安全速查</h1>
+  <p class="subtitle">压缩《第八章-v2(2)》全部高频考点：攻击分类、五大无线机制、防护对比、框架结论。考前 10 分钟过一遍。</p>
+
+  <h2>一、攻击分类（网络层面 + 硬件层面）</h2>
+  <table>
+    <tr><th>类别</th><th>成员（背全）</th></tr>
+    <tr><td>被动攻击</td><td>嗅探、扫描、窃听（不引起觉察；无线信道开放故易被窃听）</td></tr>
+    <tr><td>主动攻击</td><td>假冒/Sybil、信息篡改、重放/重传、DoS 与 DDoS、干扰 Jamming、病毒与恶意软件（威胁完整性+可用性）</td></tr>
+    <tr><td>硬件攻击</td><td>故障注入（激光/电压干扰→打开受保护寄存器）；接口植入（UART/JTAG/I2C 开放→串口取 shell）；逆向工程（读 Flash 固件→重打包刷回）；侧信道 SCA（声音/温度/功耗/电磁；SPA 采集单条功耗曲线推断密钥位，适用 RSA、ECC）</td></tr>
+  </table>
+
+  <h2>二、硬件安全机制速记</h2>
+  <table>
+    <tr><th>机制</th><th>一句话</th></tr>
+    <tr><td>熔断</td><td>高电平烧断熔丝→程序不可读写只能运行；依托 OTP/EFUSE；ARM Cortex-M FLASH_OPTR.RDP、ESP32 eFuse；STM32 RDP 三级：L0 无保护 / L1 调试接口锁定 / L2 完全不可调试不可擦除；正退出历史舞台（暴力破解成本越来越低）</td></tr>
+    <tr><td>看门狗</td><td>电子/软件计时器，无法定期重置（喂狗）→超时重启；HW WDT 独立时钟（CPU 故障仍工作）、SW WDT 操作系统喂狗（Zephyr wdt_feed()，示例 3 秒超时）</td></tr>
+    <tr><td>PUF</td><td>晶圆制造中形成的独特物理性质模块 = IC 指纹；不可复制；密钥启动时重新生成、不存闪存</td></tr>
+    <tr><td>RoT</td><td>信任链来源、SoC 安全根基；典型例子 = 硬件安全模块 HSM</td></tr>
+    <tr><td>Secure Boot</td><td>Root Key（OTP/eFuse/HSM）→ 1st Bootloader（ROM，验 2nd 签名）→ 2nd Bootloader（验 Boot Image）→ 层层验签才可执行</td></tr>
+    <tr><td>TEE</td><td>TrustZone 划分安全/非安全世界；CA（REE）经 TEE Client API 调 TA（TEE），TEE Manager 负责 TA 加载/生命周期/通信路由；结果经共享内存返回；开源 TEE OS：OP-TEE（移动）、TF-M（低端 IoT）；接口统一遵循 GlobalPlatform</td></tr>
+  </table>
+
+  <h2>三、软件与系统安全速记</h2>
+  <table>
+    <tr><th>机制</th><th>一句话</th></tr>
+    <tr><td>存储</td><td>设备存储：TEE 硬件特性+加密；云存储重点 = 加密后的数据上计算（安全多方计算、隐私计算、加密数据库）</td></tr>
+    <tr><td>漏洞</td><td>挖掘（找未知潜在漏洞）vs 分析（已发现漏洞深入分析）；静态分析=符号执行（不运行）；动态分析=Fuzzing（运行）</td></tr>
+    <tr><td>沙盒</td><td>隔离环境；Harbor：安全域（存返回地址+跨域调用帧）+ 栈界限（限制被调用函数栈范围）；保护域划分内核/用户</td></tr>
+    <tr><td>蜜罐 Potd</td><td>诱饵环境（重定向器+协议进程，提供入侵接口）+ 监视器（采集威胁数据、维护安全）</td></tr>
+    <tr><td>OTA</td><td>空中下载在线升级；安全性需求：传输安全性、OTA 操作权限、更新完整性与回滚机制（教材 PPT：连接安全性/真实性和完整性/操作人员安全性）</td></tr>
+  </table>
+
+  <h2>四、无线安全机制对比（必背表）</h2>
+  <table>
+    <tr><th>协议</th><th>核心机制</th><th>防什么</th></tr>
+    <tr><td>蓝牙</td><td>4 种安全模式（数字越大级别越高）；配对 5 步：请求→交换配对信息→认证加密（换公钥生对称密钥+按方案认证）→长期密钥→加密通道</td><td>——</td></tr>
+    <tr><td>ZigBee</td><td>刷新计数器；CRC 完整性检查；认证（网络层=公共网络密钥/设备层=唯一链接密钥）；128 位 AES；密钥 3 种：主密钥、链接密钥、网络密钥</td><td>重放 / 改包 / 模仿 / 窃听</td></tr>
+    <tr><td>RFID</td><td>Hash-Lock：metaID 代真实 ID，但无刷新、ID 与 key 明文→易重放、假冒、追踪；随机化 Hash-Lock：随机数询问-应答防重放假冒，但 ID 仍明文可追踪</td><td>部分防住，追踪未解决</td></tr>
+    <tr><td>LoRaWAN</td><td>AppKey（128 位 AES）+ DevEUI 认证；派生 NwkSKey（终端↔网络服务器完整性）+ AppSKey（终端↔应用服务器机密）；帧计数器防重传 + MIC + CMAC</td><td>重放 / 篡改 / 窃听</td></tr>
+    <tr><td>NB-IoT</td><td>授权频段；凭证 SIM 卡存储；3GPP AKA/DTLS 网络层/传输层认证；HKDF 密钥派生、两层密钥独立互不影响</td><td>——</td></tr>
+  </table>
+
+  <h2>五、认证 / 传输 / 隐私速记</h2>
+  <table>
+    <tr><th>主题</th><th>要点</th></tr>
+    <tr><td>口令认证</td><td>盐值 salt + 口令 → 散列值存库；登录重算散列对比，相等即合法</td></tr>
+    <tr><td>设备认证</td><td>阿里云三元组 = ProductKey + DeviceName + DeviceSecret（DeviceSecret 加签，全球唯一）；射频指纹（功率放大器非线性指纹 + 帧间时间分布指纹）鉴别伪 AP</td></tr>
+    <tr><td>TLS</td><td>前身 SSL；HTTP+SSL=HTTPS；独立于应用程序；低层=记录协议，高层=握手/改变密码标准/警报协议；握手 4 阶段：client_hello/server_hello → 服务器证书密钥→ 客户端证书密钥 → 密码组合交换完成</td></tr>
+    <tr><td>MQTT</td><td>发布者/代理/订阅者；应用层标识符+密码；传输层 TLS 单向（仅服务器证书）/双向（双方证书）；网络层专线或 VPN</td></tr>
+    <tr><td>身份隐私</td><td>假名技术：Alice（医院）+ Amy（保险公司），不出具真实身份、两假名不可关联</td></tr>
+    <tr><td>位置隐私</td><td>标识信息（匿名/假名隐藏）+ 位置信息（假位置、路标位置）；假位置=多位置仅一真，攻击者不知真假</td></tr>
+  </table>
+
+  <h2>六、三大安全框架必背结论</h2>
+  <table>
+    <tr><th>框架</th><th>必背</th></tr>
+    <tr><td>AWS IoT</td><td>三种类别验证：X.509 证书 / IAM 用户组角色 / Amazon Cognito；Web 桌面→IAM 或联合身份，移动→Cognito，IoT 设备→X.509；未验证身份永不交换数据</td></tr>
+    <tr><td>Link ID2</td><td>四大功能：设备身份认证（双向）、安全连接（iTLS/iDTLS）、业务数据保护（可信根派生密钥）、密钥管理（生成/销毁/端到端分发）；认证两方式：挑战-应答（设备端+业务服务端+ID² 认证服务端）、时间戳</td></tr>
+    <tr><td>百度函谷 HISK</td><td>基于 GP 标准；基础服务（证书和密钥保护角度）+ PKI 证书服务（签发数字证书、TLS 双向认证）</td></tr>
+  </table>
+
+  <h2>七、教材 PPT 补充考点（标注：非校课件主线，认识即可）</h2>
+  <table>
+    <tr><th>主题</th><th>要点</th></tr>
+    <tr><td>无线系统安全技术分类</td><td>WEP 加密（802.11b/a/g 可选安全组件：身份识别+加密）；MAC 地址过滤（白/黑名单）；禁用 SSID 广播（广播暴露路由器位置）</td></tr>
+    <tr><td>智能卡（令牌）</td><td>IC card 物理电子授权设备（门禁卡/交通卡/就诊卡）；交互：插入→复位→复位应答 ATR→协议类型选择 PTS→数据交换</td></tr>
+    <tr><td>生物特征认证</td><td>静态：指纹、手部几何形状、面部特征；动态：步态、动作、行为；指纹认证 = 注册建模板 + 认证比对特征</td></tr>
+    <tr><td>SM4 算法</td><td>分组对称密码：分组 128bit、密钥 128bit、32 轮非线性迭代结构、S 盒可灵活替换</td></tr>
+    <tr><td>挑战-应答协议</td><td>用户传身份 U → 主机回随机数 r → 用户回 f(r', h(P')) → 主机与模板 f(r, h(P(U))) 比较判合法性</td></tr>
+    <tr><td>RFID 三类隐患</td><td>常规（窃听/中间人/欺骗/重放/DoS）+ 设备（物理破坏/篡改/电子破坏/屏蔽干扰/拆除）+ 隐私（无察觉被读取、位置被跟踪）</td></tr>
+  </table>
+
+  <h2>八、案例接口对照表（CA ↔ TA，5 组必背）</h2>
+  <table>
+    <tr><th>TEE Client API（CA 侧）</th><th>TEE Internal API（TA 侧）</th><th>作用</th></tr>
+    <tr><td>TEEC_InitializeContext()</td><td>TA_CreateEntryPoint()</td><td>构造 TA 并初始化上下文，仅调用一次</td></tr>
+    <tr><td>TEEC_OpenSession()</td><td>TA_OpenSessionEntryPoint()</td><td>建立会话，连接 REE 和 TEE</td></tr>
+    <tr><td>TEEC_InvokeCommand()</td><td>TA_InvokeCommandEntryPoint()</td><td>CA 调用 TA 的命令</td></tr>
+    <tr><td>TEEC_CloseSession()</td><td>TA_CloseSessionEntryPoint()</td><td>关闭会话，断开 REE 和 TEE</td></tr>
+    <tr><td>TEEC_CloseSession()</td><td>TA_DestroyEntryPoint()</td><td>销毁 TA</td></tr>
+  </table>
+  <p>参数类型：<strong>VALUE_INPUT/OUTPUT/INOUT</strong>（整数，REE→TEE / TEE→REE / 双向）；<strong>MEMREF_TEMP_*/PARTIAL_*</strong>（共享内存，TEMP 临时、PARTIAL 父块分区）；一次最多 4 个参数，不传用 TEEC_NONE。</p>
+
+  <h2>九、案例与前沿一句话</h2>
+  <ul>
+    <li><strong>温度监控（安全版）</strong>：树莓派 3B（TrustZone）+ Raspberry Pi OS（REE）+ OP-TEE（TEE）；CA（MQTT 发布）↔ TA（DHT11 读数 + RSA 加密）↔ PTA（驱动，也有唯一 uuid）；<code>TEEC_InvokeCommand()</code> 经 SMC 指令切安全状态；mosquitto_pub 发 8883 端口（ca.crt/clientpub.crt/clientpub.key）；云端 TA 用 RSA 私钥解密；3 秒采样。</li>
+    <li><strong>前沿 4 项</strong>：dTEE（TrustZone 声明式安全）；WebAssembly/MiTEE（资源受限设备安全隔离）；CHIP→Matter（2019 CHIP，2021-5 更名 Matter、联盟改 CSA，2022-10 Matter 1.0）；海豚音攻击（DolphinAttack，CCS 2017 Best Paper；超声波 >20kHz；滤波器过渡带非完美 + AM 调制 + 器件非线性还原指令）。</li>
+  </ul>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 小课：<a href="../lessons/0801-物联网安全概述与攻击.html">0801</a> · <a href="../lessons/0802-硬件安全机制.html">0802</a> · <a href="../lessons/0803-软件与系统安全.html">0803</a> · <a href="../lessons/0804-无线安全机制.html">0804</a> · <a href="../lessons/0805-认证传输与隐私保护.html">0805</a> · <a href="../lessons/0806-安全框架案例与前沿.html">0806</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+</body>
+</html>

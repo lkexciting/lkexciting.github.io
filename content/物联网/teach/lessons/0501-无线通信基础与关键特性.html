@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 章 · 无线通信基础与关键特性</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 5 章 · 小课 1/9 · 课件提炼</span>
+  <h1>无线通信基础与关键特性</h1>
+  <p class="subtitle">一句话：物联网通信"无线、低速、低功耗"，本节把短距离协议家族和功耗/距离/频带三大关键特性一次理清，是全章数字表格的锚点。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第五章 低功耗无线协议2026》"低功耗短距离通信"之"概述 + 关键特性"两节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第五章 低功耗无线协议2026.pdf</p>
+  </div>
+
+  <h2>一、需求与协议家族（概述）</h2>
+  <p>物联网中<strong>万物互联</strong>是关键（例：智慧家居）。物联网通信三大特点：<strong>无线、低速、低功耗</strong>。低功耗意味着采用<strong>无线短距离通信技术</strong>——发射功率与传输距离满足 <strong>P ∝ dⁿ</strong>（课件原文）。课件列出的无线低功耗短距离通信技术：<strong>IEEE 802.15.4、ZigBee、传感网协议、BLE、WiFi Halow/802.11ah</strong>。</p>
+
+  <h3>1.1 典型协议演进时间线（选择填空高发）</h3>
+  <table>
+    <tr><th>协议</th><th>课件要点</th></tr>
+    <tr><td>IEEE 802.15.4</td><td><strong>2003 年 10 月</strong>由 IEEE 发布，覆盖低速无线个域网的<strong>物理层和 MAC 层</strong>。修订版：4b（PHY/MAC 技术改进）、4c/4d（增加中国 780MHz 频段与日本 950MHz 支持）、4a（精密测距定位、更高吞吐量）、<strong>4e（2010，MAC 层 TDMA 与信道跳频，支持工业市场）</strong>、4f（RFID 与定位）、4v（欧洲 870~876MHz 等频段）。</td></tr>
+    <tr><td>ZigBee</td><td>"紫蜂"，<strong>2004 年</strong>诞生，基于 IEEE 802.15.4 的低功耗短距离无线网络协议；2007 年 ZigBee PRO，2011 年 ZigBee RF4CE。分工：<strong>物理层和 MAC 层由 IEEE 802.15.4 定义，上层网络层和应用层由 ZigBee 联盟定义</strong>。优点：低功耗、低速率、低成本、组网灵活。</td></tr>
+    <tr><td>传感网协议</td><td>大量低功耗节点组成的<strong>无线自组织多跳网络</strong>。低功耗 MAC 研究：2002 S-MAC → 2004 LPL-MAC、Wise-MAC → 2008 RI-MAC → 2010 A-MAC；组网：2009 CTP（多对一）→ 2010 IETF RPL（多对一、一对多、一对一）。早期：CC1000，38.4kbps，FSK 调制；近期基于 802.15.4 协议架构（高度开放性促成大量研究）。</td></tr>
+    <tr><td>BLE</td><td>1994 年蓝牙由<strong>爱立信</strong>推出；<strong>2010 年蓝牙 4.0</strong> 最重要的特性是低功耗，即 BLE；2016 年蓝牙 5；2017.7.18 蓝牙多跳功能定义增加到蓝牙 5.0。</td></tr>
+    <tr><td>RFID / NFC</td><td>RFID 射频识别：用电磁场把数据从标签传出，自动辨识与追踪物品。<strong>NFC：2004 年由飞利浦半导体、诺基亚和索尼研制，13.56 MHz、20 厘米距离内，由 RFID 演变而来</strong>。</td></tr>
+    <tr><td>THREAD</td><td>针对 IEEE 802.15.4 设备设计的 <strong>IPv6 网络协议栈</strong>；节点两种角色：<strong>路由节点（router）与端节点（end device）</strong>。</td></tr>
+  </table>
+
+  <h2>二、关键特性 1：功耗（必会计算）</h2>
+  <table>
+    <tr><th>协议</th><th>最大传输功率</th></tr>
+    <tr><td>802.15.4</td><td>100mW</td></tr>
+    <tr><td>BLE</td><td>10mW</td></tr>
+    <tr><td>802.11b</td><td>1W</td></tr>
+  </table>
+  <p>换算口诀（课件 TIPS）：<strong>D(dBm) = 10 lg P(mW)</strong>，如 100mW=20dBm、1mW=0dBm。</p>
+  <p>无线收发器状态与能耗（CC2420，符合 15.4 标准）：工作电压 <strong>2.1~3.6V，通常 3.0V</strong>；两节 750mAh 电池以最大输出功率不停发数据最多工作 <strong>86h</strong>。电流能耗：<strong>TX 8.5~17.4mA（可调，PA_LEVEL 越大电流越大，31 级对应 17.4mA/0dBm，3 级对应 8.5mA/-25dBm）、RX 18.8mA、CCA 0.426mA</strong>。</p>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：通信功耗主导整机功耗</div>
+    <p>TelosB 节点上 <strong>CC2420 能耗占总能耗的 81%</strong>；对比通信与计算：<strong>CC2420 发送最大电流 17.4mA</strong>，而 <strong>TI MSP430 在 1MHz 工作电流仅 330μA</strong>——通信比计算费电约 50 倍。</p>
+  </div>
+  <p><strong>降低无线收发器占空比</strong>：占空比 = 活跃时间 / 总运行时间。课件例题（复算）：</p>
+  <div class="calc">活跃功耗 10mW，休眠功耗 10μW，占空比 0.1%：
+平均功耗 = 0.1% × 10mW + 99.9% × 10μW
+        = 10μW + 9.99μW = <b>19.99μW</b></div>
+
+  <h2>三、关键特性 2：通信距离（计算模型）</h2>
+  <p>课件通信距离表：802.15.4 <strong>~100m</strong>、BLE <strong>~300m</strong>、802.11b <strong>~140m</strong>。最远通信距离的定义：<strong>节点接收信号强度等于接收器灵敏度</strong>时对应的距离。</p>
+  <p>常用<strong>路径损耗模型（对数-常态分布）</strong>：</p>
+  <div class="calc">PL(d) = PL0 + 10n·lg(d/d0) + Xσ
+PL0 ：传输 d0 距离的路径损耗，d0 通常取 1m
+n   ：衰减指数
+Xσ  ：高斯随机误差
+RSSI = Ptx + Pta + Pra − PL(d)   （Ptx 发射功率；Pta、Pra 发射/接收天线增益）</div>
+  <div class="calc">课件例题复算：不考虑天线增益与随机误差，发射功率 0dBm，
+接收灵敏度 −85dBm，PL0=28.5dBm，n=3：
+85 = 28.5 + 30·lg(d) → lg(d)=1.883 → d ≈ <b>76.4m</b></div>
+  <p><strong>多跳网络——获得更大的通信距离</strong>（课件结论）。</p>
+
+  <h2>四、关键特性 3：频带与数据率（必背表格）</h2>
+  <p><strong>授权频段</strong>需要许可证（如 AM/FM 广播）；<strong>ISM 频段</strong>（Industrial Scientific Medical Band）开放给工业、科学、医学机构，无需许可证或费用。常见 ISM band：<strong>2.45GHz、5.8GHz、915MHz</strong> 等；2.45GHz ISM Band = <strong>2.4–2.4835 GHz</strong>。</p>
+  <table>
+    <tr><th>协议</th><th>中心频率</th><th>频宽</th><th>最高数据率</th></tr>
+    <tr><td rowspan="3">802.15.4</td><td>2.45G（全球通用）</td><td>2M</td><td>250kbps</td></tr>
+    <tr><td>915M（北美）</td><td>—</td><td>40kbps</td></tr>
+    <tr><td>868M（欧洲）</td><td>—</td><td>20kbps</td></tr>
+    <tr><td>BLE</td><td>2.45G</td><td>2M</td><td>2Mbps</td></tr>
+    <tr><td>802.11b</td><td>2.45G</td><td>22M</td><td>11Mbps</td></tr>
+  </table>
+  <p><strong>2.45GHz 频段信道分配</strong>：802.15.4 <strong>16 个信道、每信道 2MHz</strong>；BLE <strong>40 个 2MHz 信道</strong>；802.11b <strong>14 个信道、22MHz</strong>。</p>
+  <p><strong>实际数据率 ≠ 最大数据率</strong>：802.15.4 物理层最大 250kbps，但发送前会主动退避 initialbackoff ∈ (0, CWinit)（CWinit ≈ 10ms），<strong>实际数据率一般为最大数据率的 1/3</strong>。传输效率：</p>
+  <div class="calc">η = 数据载荷传输时间 / (退避时间 + 包头部传输时间 + 数据载荷传输时间)
+Rreal = η × R   （R 为最大数据率）</div>
+
+  <h2>五、安全性与非技术特性（速览）</h2>
+  <ul>
+    <li><strong>芯片加密</strong>：CC2420 支持 <strong>AES-128 硬件加密</strong>。</li>
+    <li><strong>802.15.4</strong> 在 MAC 层向上提供帧安全服务：<strong>数据保密性</strong>（AES-128 对称加密）+ <strong>数据完整性</strong>（附加消息完整性代码 MIC 校验）。</li>
+    <li><strong>蓝牙</strong>的安全手段：<strong>跳频</strong> + <strong>应用层加密</strong>。</li>
+    <li><strong>非技术特性</strong>：ZigBee 芯片厂商 TI/飞思卡尔/Ember/Atmel；BLE 芯片厂商 TI/CSR/博通/Nordic/上海锐迪科；TI 官网 BLE 与 ZigBee 核心产品价格都在 <strong>3 美元左右</strong>；BLE 用于手机、共享单车、智能手表，ZigBee 用于小米智能家居；标准化组织：ZigBee 联盟、蓝牙技术联盟（Bluetooth SIG）；802.15.4 与 BLE 协议规范均向全球公开。</li>
+  </ul>
+  <h3>典型协议关键特性总表（课件原表，收尾必背）</h3>
+  <table>
+    <tr><th>协议</th><th>802.15.4/ZigBee</th><th>BLE</th><th>802.11b</th></tr>
+    <tr><td>通信距离</td><td>~100m</td><td>~100m</td><td>~100m</td></tr>
+    <tr><td>功耗</td><td>~10mW</td><td>~10mW</td><td>~1W</td></tr>
+    <tr><td>频带</td><td>868/915MHz、2.4GHz</td><td>2.4~2.5GHz</td><td>2.4~2.5GHz</td></tr>
+    <tr><td>数据率</td><td>250kbps</td><td>2Mbps</td><td>11Mbps</td></tr>
+    <tr><td>数据包长度</td><td>127 B</td><td>265 B</td><td>2304 B</td></tr>
+  </table>
+  <p class="note">注：本表通信距离与第二节"距离表"（BLE ~300m、802.11b ~140m）均为课件原文，答题时按题目出处引用。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>计算题 1</strong>：无线信号传播服从对数-常态分布模型，发射功率 1mW，接收灵敏度 −90dBm，PL0 为 28.5dBm，衰减指数 3，不考虑天线增益与随机误差，最远通信距离？</p>
+    <details><summary>点开看答案</summary>
+      <p>先把功率换算为 dBm：P=1mW → D=10lg1=<strong>0dBm</strong>。路径损耗 PL(d)=PL0+10n·lg(d/d0)+Xσ，令 PL(d)=90dB（0−(−90)），PL0=28.5dBm，n=3，d0=1m，Xσ=0，解得 d=10^((90−28.5)/30) m ≈ <strong>112.2m</strong>。（课后习题答案第四章第 1 题）</p>
+    </details>
+    <p><strong>计算题 2</strong>：IEEE 802.15.4 中物理层与 MAC 层头部共 13 bytes，载荷 30 bytes，平均退避 5ms，实际数据率？</p>
+    <details><summary>点开看答案</summary>
+      <p>η = l/(W·R/8 + H + l)，其中 H=13B、l=30B、W=5ms、R=250Kbps：η = 30/(5×250/8 + 13 + 30) = 30/200.5 ≈ <strong>0.1506</strong>；Rreal = ηR = 0.1506×250kbps ≈ <strong>37.6Kbps</strong>。（课后习题答案第四章第 2 题）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第五章 低功耗无线协议2026》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/通信协议速查.html">通信协议速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0406-云边协同与框架.html">第 4 章 末课 0406</a>
+    · 下一课：<a href="0502-802.15.4物理层调制.html">802.15.4 物理层调制</a>
+    · <a href="../课程总目录.html">课程总目录</a><br>
+    有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "课件归纳的物联网通信三大特点是？",
+    options: [
+      "高速、大容量、长距离",
+      "无线、低速、低功耗",
+      "有线、实时、高可靠"
+    ],
+    answer: 1,
+    explain: "课件概述：物联网通信的特点是无线、低速、低功耗；低功耗 → 无线短距离通信技术，发射功率与传输距离满足 P∝dⁿ。"
+  },
+  {
+    prompt: "占空比例题：设备活跃 10mW、休眠 10μW，占空比 0.1%，平均功耗为？",
+    options: [
+      "约 19.99μW",
+      "约 10μW（休眠功耗主导）",
+      "约 1mW"
+    ],
+    answer: 0,
+    explain: "0.1%×10mW + 99.9%×10μW = 10μW + 9.99μW = 19.99μW（课件原文例题）。"
+  },
+  {
+    prompt: "802.15.4 在欧洲 868MHz 频段的最高数据率是？",
+    options: [
+      "250kbps",
+      "40kbps",
+      "20kbps"
+    ],
+    answer: 2,
+    explain: "课件频带表：802.15.4 全球通用 2.45G 频段 250kbps、北美 915M 40kbps、欧洲 868M 20kbps；BLE 2Mbps；802.11b 11Mbps。"
+  },
+  {
+    prompt: "路径损耗例题：0dBm 发射、灵敏度 −85dBm、PL0=28.5dBm、n=3，最远通信距离约？",
+    options: [
+      "约 76.4m",
+      "约 112.2m",
+      "约 300m"
+    ],
+    answer: 0,
+    explain: "85 = 28.5 + 30·lg(d) → d≈76.4m（课件例题）。112.2m 是灵敏度 −90dBm、发射 1mW 的习题 1 版本，注意区分两套数字。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 协议参数表记牢了。" : " —— 回头看标红的解析，重点复习功耗例题与频带表。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

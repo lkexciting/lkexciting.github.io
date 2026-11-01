@@ -1,0 +1,280 @@
+--- ppt/slides/slide1.xml ---
+第四章：低功耗短距离通信协议
+--- ppt/slides/slide2.xml ---
+学习目标 了解常见的低功耗短距离通信技术及其关键特性 掌握 IEEE 802.15.4 的调制与解调技术 了解常见的 IEEE 802.15.4 低功耗 MAC 技术及其优缺点 掌握 链路 PRR 的计算与估计方法 掌握 CTP 协议的基本工作原理，以及路由指标 ETX 的计算方法 掌握 BLE 的基础协议架构及链路层工作流程 掌握 BLE Mesh 中的数据包路由过程
+--- ppt/slides/slide3.xml ---
+目录 概述 关键特性 基于 IEEE802.15.4 的传感网协议架构 Bluetooth 应用案例 研究进展
+--- ppt/slides/slide4.xml ---
+低功耗短距离通信需求 万物相连的网络 4
+--- ppt/slides/slide5.xml ---
+低功耗短距离通信需求 在物联网中，万物互联是关键 例如，智慧家居 物联网通信的特点 无线 低速 低功耗 5
+--- ppt/slides/slide6.xml ---
+低功耗短距离通信需求 低功耗  无线短距离通信技术 发射功率与传输距离的关系： 无线低功耗短距离通信技术 IEEE 802.15.4 ZigBee 传感网协议 BLE WiFi Halow /802.11ah 6
+--- ppt/slides/slide7.xml ---
+典型协议 IEEE 802.15.4 2003 年 10 月 , 由 IEEE 发布，覆盖低速无线个域网的 物理层 和 MAC 层 2001 年 3 月 , IEEE 802.15.4c 修订版，增加专门用来解决我国新开放的 881~787MHz 无线传感网络频段的物理层（也称为 780MHz 中国频段） 2010 年， IEEE 802.15.4e, 定义了 MAC 层时分多址（ TDMA ）和信道跳频的支持，更好的支持了工业市场需求 7
+--- ppt/slides/slide8.xml ---
+典型协议 ZigBee “紫蜂”， 2004 年诞生，是基于 IEEE 802.15.4 标准的低功耗短距离无线网络协议 2007 年，推出 ZigBee PRO 2011 年，推出 ZigBee RF4CE, 具备更强的灵活性和远程控制能力 ZigBee 与 IEEE 802.15.4 其协议栈的物理层和 MAC 层由 IEEE 802.15.4 定义，而上层的网络层和应用层由 ZigBee 联盟定义 ZigBee 技术具有低功耗、低速率、低成本、组网灵活等优点 8
+--- ppt/slides/slide9.xml ---
+典型协议 传感网协议 由大量低功耗节点组成的无线自组织多跳网络，实时感知、处理和传输网络覆盖区域内监测对象的信息 传感网协议是传感网应用的基础，自 2002 年以来大量研究围绕 低功耗 与 组网技术 展开 低功耗 MAC 的研究： 2002 年 ,S-MAC ； 2004 年 , LPL-MAC, Wise-MAC; 2008 年 , RI-MAC; 2010 年 A-MAC 组网 ： 2009 年 , CTP 协议支持多对一的路由模式； 2010 年 , IETF ROLL 工作组提出 RPL 支持多对一 , 一对多，一对一的路由模式 早期的传感网技术 CC1000, 38.4kbps, FSK 调制 近期的传感网协议是基于 802.15.4 的协议架构 802.15.4 具有高度开放性，促进了大量研究工作的产生 9
+--- ppt/slides/slide10.xml ---
+典型协议 BLE 1994 年，蓝牙技术由爱立信公司推出，目标是在移动电话和其他配件间进行低功耗、低成本无线通信连接 2010 年，蓝牙技术联盟推出了蓝牙 4.0 规范，其最重要的特性是低功耗，此版本的蓝牙被称为低功耗蓝牙，即 BLE （ Bluetooth Low Energy ） 在 2016 年 6 月 16 日伦敦举行的媒体活动中，蓝牙 SIG 正式公布了蓝牙 5 标准 随着功能的逐步增加，在 2017 年 7 月 18 日，蓝牙 SIG 正式发布了蓝牙多跳的功能定义和多跳模型定义，并增加到了蓝牙 5.0 中。在家居物联网中，蓝牙多跳标准的确定使得多设备和多设备之间的通信成为可能 10
+--- ppt/slides/slide11.xml ---
+典型协议 RFID 射频识别 , 无线电的信号是通过调成无线电频率的电磁场，把数据从附着在物品上的标签上传送出去，以自动辨识与追踪该物品 NFC 近场通信技术， 2004 年由飞利浦半导体、诺基亚和索尼共同研制开发，是一种短距高频的无线电技术，在 13.56 MHz 频率运行于 20 厘米距离内，由 RFID 演变而来 THREAD 针对 IEEE 802.15.4 设备设计的 IPv6 网络协议栈 THREAD 网络中的节点可分为两种角色：路由节点（ router ）和端节点（ end device ） 11
+--- ppt/slides/slide12.xml ---
+目录 概述 关键特性 基于 IEEE802.15.4 的传感网协议架构 Bluetooth 应用案例 研究进展
+--- ppt/slides/slide13.xml ---
+关键特性 功耗 通信距离 频带与数据率 安全性 非技术特性
+--- ppt/slides/slide14.xml ---
+功耗 不同协议的最大传输功耗 无线收发器状态与能耗 符合 15.4 标准的 CC2420 radio 工作 电压为 2.1~3.6V ，通常为 3.0V 对于两节 750mAh 的电池来说 , 以最 大输出功率不停发数据最多工作 86h 协议 最大传输功率 802.15.4 100mW BLE 10mW 802.11b 1W CC2420 电流能耗 TX 8.5~17.4mA RX 18.8mA CCA 0.426 mA PA_LEVEL 电流能耗 (mA) 输出功率 ( dBm ) 31 17.4 0 27 16.5 -1 23 15.2 -3 11 13.1 -5 15 12.5 -7 11 11.2 -10 7 1.1 -15 3 8.5 -25 可调节 能耗级别 TIPS: D( dBm ) 与 P( mW ) 换算 D= 10lgP 14
+--- ppt/slides/slide15.xml ---
+功耗 嵌入式设备的功耗很大部分来源于通信 功耗 例如，对于 TelosB 节点， CC2420 能耗 占其总能耗的 81% 通信功耗与计算功耗 CC2420 发送数据时的最大电流为 17.4mA TI MSP430 在 1MHz 时工作电流为 330 μ A 降低无线收发器占空比 无线收发器占空比 = 活跃时间 / 总运行时间 示例：设备活跃时的能耗为 10 , 休眠时的 能耗为 10 , 若占空比为 0.1%, 则平均功耗为 19.99 睡眠 活跃 睡眠 睡眠 活跃 15
+--- ppt/slides/slide16.xml ---
+通信距离 不同协议的通信距离 通信距离的计算模型 常用的路径损耗模型 : 传输 距离的路径损耗，通常 =1m; n: 衰减指数 ; : 高斯随机误差 最远通信距离（节点接收信号强度等于接收器灵敏度） R SSI : 发射功率， ：发射，接收天线增益 示例 不考虑天线增益与随机误差，假设发射功率为 0dBm ，接收灵敏度 -85 dBm , PL0 为 28.5dBm, 衰减指数 3 ：最远通信距离为 76.4m 多跳网络 —— 获得更大的通信距离 协议 最大通信距离 802.15.4 ~100m BLE ~300m 802.11b ~140m 16
+--- ppt/slides/slide17.xml ---
+频带和数据率 授权频段与 ISM 频段 授权频段 使用授权频段需要许可证 , 例如 AM,FM 广播频段 ISM 频段 (Industrial Scientific Medical Band), 主要开放给工业，科学和医学机构使用，无需许可证或费用 常见的 ISM band 包括 2.45GHz , 5.8GHz, 915MHz 等 2.45GHz ISM Band ： 2.4–2.4835 GHz 17
+--- ppt/slides/slide18.xml ---
+频带和数据率 不同协议频带与数据率 协议 中心频率 (Hz) 频宽 (Hz) 最高数据率 802.15.4 全球通用 2.45G 2M 250kbps 北美 915M 40kbps 欧洲 868M 20kbps BLE 2.45G 2M 2Mbps 802.11b 2.45G 22M 11Mbps 18
+--- ppt/slides/slide19.xml ---
+频带和数据率 2.45GHz 频段信道分配 802.15.4 ： 16 个信道， 2MHz BLE ： 40 个 2MHz 信道 802.11b ： 14 个信道， 22MHz 19
+--- ppt/slides/slide20.xml ---
+频带和数据率 实际数据率与最大数据率 最大数据率 802.15.4 物理层最大数据率是 250kbps BLE 最大数据率为 2Mbps 实际中通常不能最高数据率 802.15.4 数据包发送前会主动退避一段时间 ( , 通常 ，实际数据率一般为最大数据率的 1/3 实际传输效率为 实际数据率： R real = ηR 20
+--- ppt/slides/slide21.xml ---
+安全性 芯片加密 CC2420 支持 AES-128 硬件加密 协议提供的安全服务 IEEE 802.15.4 标准在 MAC 层向上提供帧安全服务 数据保密性 使用 AES-128 对称加密算法 数据完整性 在消息中附加消息完整性代码 (MIC) 来校验 蓝牙 跳频 应用层加密 21
+--- ppt/slides/slide22.xml ---
+非技术特征 芯片厂商 ZigBee:TI , 美国飞思卡尔 , 美国 Ember, 美国 Atmel 等 BLE: TI, 英国 CSR, 美国博通 , 挪威 Nordic, 上海锐迪科等 模组价格 TI 官网公布的几款 BLE 和 ZigBee 核心产品的价格都在 3 美元左右 常用设备支持 BLE: 手机，共享单车，智能手表等 ZigBee: 小米智能家居等 标准化情况 标准化组织： ZigBee 联盟，蓝牙技术联盟 (Bluetooth SIG) 协议开放性 IEEE 802.15.4 协议与 BLE 的协议规范都是向全球公开的 22
+--- ppt/slides/slide23.xml ---
+典型协议的关键特性 协议 802.15.4/ZigBee BLE 802.11b 通信距离 ~100m ~100m ~100m 功耗 ~10mW ~10mW ~1W 频带 868/115MHz, 2.4GHz 2.4~2.5GHz 2.4~2.5GHz 数据率 250kbps 2Mbps 11Mbps 数据包长度 127 B 265 B 2304B 23
+--- ppt/slides/slide24.xml ---
+目录 概述 关键特性 基于 IEEE802.15.4 的传感网协议 Bluetooth 应用案例 研究进展
+--- ppt/slides/slide25.xml ---
+基于 IEEE802.15.4 的传感网协议 传感网协议的典型使用场景 : 自组织无线多跳网络 传感网应用场景 Great Duck Island ，生态环境监测 Volcano monitoring ，火山监测 绿野千传，森林火灾监测 25
+--- ppt/slides/slide26.xml ---
+基于 IEEE802.15.4 的传感网协议 传感网协议架构 26
+--- ppt/slides/slide27.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide28.xml ---
+IEEE 802.15.4 技术物理层 物理层功能：从比特流到 RF 信号 工作流程 DSSS 扩频 O-QPSK 调制 脉冲成形 数模转换及信号发送 Byte 4 bits Byte 4 bits 4 bits 4 bits 1110 二进制数据 32 位码片 1010010001011110 0110011100001011 O-QPSK 调制 I-phase Q -phase 脉冲成形 10011100001101010010001011101101 数模转换及信号发送 偶数位码片 奇数位码片 DSSS 扩频 28
+--- ppt/slides/slide29.xml ---
+IEEE 802.15.4 技术物理层 DSSS 扩频 每 4bit 数据转化为 32 位码片 (chips) Chip rate ： 2M chip/s ， data rate: 250kb/s 数据符号 (b0 b1 b2 b3) 码片序列 (c0 c1 … c30 c31) 0000 11011001110000110101001000101110 1000 11101101100111000011010100100010 0100 00101110110110011100001101010010 1100 00100010111011011001110000110101 0010 01010010001011101101100111000011 1010 00110101001000101110110110011100 0110 11000011010100100010111011011001 1110 10011100001101010010001011101101 0001 10001100100101100000011101111011 1001 10111000110010010110000001110111 0101 01111011100011001001011000000111 1101 01110111101110001100100101100000 0011 00000111011110111000110010010110 1011 01100000011101111011100011001001 0111 10010110000001110111101110001100 1111 11001001011000000111011110111000 29
+--- ppt/slides/slide30.xml ---
+IEEE 802.15.4 技术物理层 O-QPSK 调制 将 32 位码元序列调制到信号的 I 和 Q 相位上 每个相位的 chip rate = C/2 = 1M chip/s 每个码元的发送时间： 1s/(1Mchip/s )= 1us O 表示 offset ，表示相位偏移， offset=0.5 us 脉冲成形 上半正弦表示 1 下半正弦表示 0 30
+--- ppt/slides/slide31.xml ---
+IEEE 802.15.4 技术物理层 帧结构 物理层数据单元 (PPDU)= 物理层头部 +MAC 层数据单元 (MPDU) 物理层头部 SHR (4B) – 用于实现码元和位同步 SFD (1B) – 帧定界符，固定的特殊值，用于标志 SHR 的结束和实际数据报文的开始 PSDU(0~127B): 实际数据报文，从 MAC 层传过来的数据单元 PHR (1B) – PSDU 的长度 31
+--- ppt/slides/slide32.xml ---
+IEEE 802.15.4 技术物理层 帧结构 物理层数据单元 (PPDU)= 物理层头部 +MAC 层数据单元 (MPDU) MAC 层数据单元 (MPDU) MHR: MAC 头部 Preamble Control (2B) – 帧控制字段 Data Seq. No. (1B)- 序列号字段 Address Information (4~20B) – 地址信息字段 MSDU: MAC 载荷 , 长度可变 MFR(2B) – PSDU 的长度 32
+--- ppt/slides/slide33.xml ---
+思考题 现有数据流 10111110 ，要通过 IEEE 802.15.4 物理层发送，请给出经过物理层调制后， I 相位与 Q 相位上的码元序列。
+--- ppt/slides/slide34.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide35.xml ---
+低功耗 MAC 设计目标 尽可能降低传感器节点的通信能耗 无线通信中造成能源浪费的原因 空闲侦听：能源浪费的主要来源 冲突：可能会造成接收方无法解码所涉及的任何数据包 偷听：传感器节点接收不是发给自己的数据包 控制开销：包头和其他类型的数据包开销 CSMA MAC （传统的 802.11 网络） Carrier Sense Multiple Access ，载波侦听多路访问 在发数据前先侦听，如果信道空闲，则立刻发送数据；否则，退避一段时间 问题： 接收者始终需要在线，不适用于无线传感器网络 35
+--- ppt/slides/slide36.xml ---
+低功耗 MAC 无线传感器网络中，降低功耗：使节点实现低占空比 通过让节点在活动状态和睡眠状态之间交替来实现的 问题 需要 在发送节点和接收节点之间找到同处于活动状态的“汇合点” 解决 基于同步机制的 MAC 节点协同活动和睡眠状态以便对齐其活动时间 会带来额外的同步开销 基于异步机制的 MAC 发送方发起 MAC （ Sender-initiated MAC ） 基本技术：前导码采样 接收方发起 MAC （ Receiver-initiated MAC ） 持续监听信道，等待接收方发送信标 36
+--- ppt/slides/slide37.xml ---
+同步 MAC ： S-MAC 基本模式 节点与邻居节点同步苏醒和睡眠时间，并在苏醒时间内传输数据 冲突避免 多个邻居同时想要与同一节点通话，需要争夺介质访问权 listen 睡眠 睡眠 listen Pe riod time 睡眠 睡眠 D1 D2 睡眠 睡眠 D1 D2 D 发送数据 D 接收数据 发送节点 接收节点 调度 37
+--- ppt/slides/slide38.xml ---
+同步 MAC ： S-MAC S-MAC 采用与 802.11 类似的冲突避免机制 虚拟载波侦听 每个发送的数据包中都含有一个记录持续时间的字段 节点将该持续时间记录在网络分配向量（ NAV ）中 ，并随时间递减 在节点开始传输之前，先查看 NAV ，如果其值不为零，则继续等待 物理载波侦听 在物理层执行，通过监听信道能量以发现可能正在进行的传输行为 RTS/CTS 机制 隐藏 / 暴露终端问题 减少空闲侦听 睡眠 D1 睡眠 发送节点 S1 接收节点 睡眠 发送节点 S2 RTS CTS D1 RTS CTS t o S1 ACK ACK D2 D2 ACK RTS CTS ACK D 发送数据 D 接收数据
+--- ppt/slides/slide39.xml ---
+同步 MAC ： S-MAC 39 多跳传输延迟问题 多跳传输中睡眠造成的延时会逐跳累加的问题 示例
+--- ppt/slides/slide40.xml ---
+同步 MAC ： S-MAC 自适应侦听机制 邻居 C 依据 CTS 包知道 B 传输结束的时间，并在 C 传输结束时短暂醒来侦听 该例中， C 正好是 B 的下一跳，减少了延迟 40
+--- ppt/slides/slide41.xml ---
+同步 MAC ： S-MAC S-MAC 回顾 比传统 802.11 中的 CSMA/CA MAC 更节能 空闲侦听依然开销很大 所有人一开始都必须醒着，直到某个人开始传输数据 网络空闲时有同步的开销 发送数据时有 RTS/CTS 开销 41
+--- ppt/slides/slide42.xml ---
+发送方发起异步 MAC ： LPL MAC LPL (Low Power Listening) MAC 发送方发送足够长的探测包（ preamble ）列来唤醒接收者 , LPL MAC 直接使用数据包作为探测包 接收方周期性做 CCA ，一旦发现能量大于阈值，就进入接收状态接收数据 CCA: Clear Channel Assessment, 对无线信道进行简短的采样以检测信道能量 数据包列 接收节点 发送节点 D D D D D D D D A A T sleep T CCA T train R adio 打开 发现 TX D 数据包 A ACK 包 42
+--- ppt/slides/slide43.xml ---
+发送方发起异步 MAC ： LPL MAC CS 和 CCA 对比 相似点：检测能量是否高于阈值，探测周围是否有人发包 不同点：结果不同 CS 发现则退避 CCA 发现则进入唤醒 阈值设置 ( 默认 -77dBm) 偏高 CS 可能无法感知潜在的传输，引起冲突 CCA 可能无法检测潜在的传输，错过接收 偏小 CS ： 环境噪音也可能引起不必要的退避 CCA: 环境噪音也可能唤醒节点 43
+--- ppt/slides/slide44.xml ---
+发送方发起异步 MAC ： LPL MAC LPL 单播 vs. 广播 单播 (UNICAST) ： ACK 包可以缩短数据包列 广播 (BROADCAST) ：发送的数据包列持续时间必须大于等于接收者的睡眠时间（ Ttrain >= Tsleep ） 在这个例子里，广播的开销是单播的两倍 T sleep T CCA 广播 单播 44
+--- ppt/slides/slide45.xml ---
+发送方发起异步 MAC ： LPL MAC 自适应机制 接收方回复完 ACK 之后持续监听一段时间 (delay after receive) 来接收发送者接下来可能会连续发送的数据包 Receiver Sender D D D D A A D1 A D1 A D2 A D2 A delay after receive delay after receive 45
+--- ppt/slides/slide46.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题 由于 WiFi ，蓝牙等与 802.15.4 公用 2.4G 频段，节点可能会被信道上的 WiFi 信号错误唤醒 持续空听 (delay after receive) 将引起不必要的开销 错误唤醒 46
+--- ppt/slides/slide47.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 广播时间 数据包间隔 峰均比 RSSI 是否可能小于 噪声强度 47
+--- ppt/slides/slide48.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 广播时间 48
+--- ppt/slides/slide49.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 广播时间 数据包间隔 49
+--- ppt/slides/slide50.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 广播时间 数据包间隔 峰均比 50
+--- ppt/slides/slide51.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 广播时间 数据包间隔 峰均比 RSSI 是否可能小于 噪声强度 51
+--- ppt/slides/slide52.xml ---
+发送方发起异步 MAC ： LPL MAC 错误唤醒问题可行解决方法 通过 RSSI 特征来区分 ZigBee 信号与其它微波信号，在 CCA 时判断是否为 ZigBee 信号，是则醒过来收包，否则直接睡眠 可以利用的 RSSI 特征 协议 \RSSI 特征 广播时间 数据包间隔 峰均比 RSSI 是否会小于噪声强度？ ZigBee [576, 4256]μ s 2.8ms or 192 μ s ≤ 1.3 FALSE WiFi [194, 542]μ s ≥ 28μ s ≥ 1.9 FALSE Bluetooth 366μ s NA ≤ 1.3 FALSE Microwave 10ms 10ms ≥ 2.9 TRUE 52
+--- ppt/slides/slide53.xml ---
+发送方发起异步 MAC ： LPL MAC LPL MAC 回顾 比同步 MAC 更节能，无需所有节点一开始都醒着 然而发送方需要持续发送探测包直到接收方醒来，这个过程中将持续占用信道，影响了发送方通信范围内其他节点的通信 53
+--- ppt/slides/slide54.xml ---
+思考题 在 LPL MAC 中，发送节点持续发送探测包来唤醒接收节点。已知， LPL MAC 采用数据包作为探测包，接收节点在周期性醒来进行 CCA ，在每次 CCA 期间采样 400 次，只有当采样得到的信号强度平均值超过 -77dBm 才醒来。假设每次 CCA 的时间长度是 11ms ，探测包长度是 2ms ，接收的信号强度 -56dBm ，环境噪声 -100dBm 。那么，为了使接收方正确收到包，探测包间隔最大为多少 ? 54
+--- ppt/slides/slide55.xml ---
+接收方发起异步 MAC ： RI-MAC RI-MAC 工作机制 发送者如果有数据需要发送，一直处于侦听状态，直到收到接收者的探测包才可以发送数据 接收者周期性醒来，并发送探测包 55
+--- ppt/slides/slide56.xml ---
+接收方发起异步 MAC ： RI-MAC 接收方发起 vs. 发送方发起 发送方发起的 MAC 机制要持续占用信道，导致其他邻居无法收发数据 接收节点 发送节点 D D D D D D D D A A 接收节点 发送节点 D D A A B B 发送方发起 接收方发起 56
+--- ppt/slides/slide57.xml ---
+接收方发起异步 MAC ： RI-MAC 数据冲突问题 : 冲突避免 二进制指数退避 57
+--- ppt/slides/slide58.xml ---
+接收方发起异步 MAC ： EE-RI-MAC 进一步减少 RI-MAC 发送者的能耗 在发送者空闲侦听的过程中，时醒时睡，而不是持续侦听 58
+--- ppt/slides/slide59.xml ---
+接收方发起异步 MAC ： A-MAC 进一步减少接收者的能耗 RI-MAC 问题： Receiver 发送 probe 后需要等待一段时间试图去接收可能收到的数据 解决方法： A-MAC 可以减少等待时间，通过 backcast 机制测试网络中是否有潜在的 sender 59
+--- ppt/slides/slide60.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide61.xml ---
+链路质量估计 链路质量估计是路由协议的基础 一个好的路由协议会选择链路质量好的链路进行通信 链路质量的评估指标 物理层指标 接收信号强度 RSSI 信噪比 SNR 链路质量指示 LQI 链路层指标 数据包接收率 PRR 61
+--- ppt/slides/slide62.xml ---
+链路质量估计 接收信号强度 (Radio Signal Strength Indicator, RSSI) 是接收信号总能量的度量 RSSI 获得方法 计算方法 : 8 个 symbol(128us) 周期的信号强度平均值 CC2420 记录在 RSSI VAL 寄存器中 CC2420 的 RSSI 计算公式 P = RSSI VAL + RSSI OFFSET RSSI_OFFSET -45dBm Per byte: 读寄存器 Per packet ：根据 SFD 后 8 个 symbol 计算 经验值 -95dbm ~-55dBm 62
+--- ppt/slides/slide63.xml ---
+链路质量估计 RSSI 与 PRR 之间的关系 当 RSSI>-87dBm 时 , PRR>85%, 链路质量好 当 RSSI<-92dBm 时 , PRR<50%, 链路质量差 当 RSSI 低于 -87dBm 时，进入灰色区域， PRR 非常不稳定，难以预测 RSSI 问题 灰色区域测不准 和接收器灵敏度有关 发送功率为 0dBm 发送功率为 -7dBm 63
+--- ppt/slides/slide64.xml ---
+链路质量估计 SNR (Signal to Noise Ratio) 信号功率与噪声功率的比率 , 单位 dB SNR=10log(S/N), S 为信号功率， N 为噪声功率 802.15.4 硬件不支持直接读取 SNR 的接口 获取方法 ( 以 cc2420 为例 ) 噪声功率 (Noise Floor): RSSI 寄存器在不收包时的读数 通常为 -98dBm 左右 信号功率：收到的数据包的 RSSI 值 例如， RSSI 为 -75dBm 时， SNR 为 23dB SNR 与 PRR 的关系 SNR 经验值 : 3~43dB 64
+--- ppt/slides/slide65.xml ---
+链路质量估计 LQI (Link Quality Indicator) 计算方法 帧定界符（ SFD ）之后 8 个 symbol 的码元错误率 (CER) LQI=(CORR-a)*b CORR 为数据包 SFD 后 8 个 symbol 的 平均 correlation value ，在 0~255 之 间， a 和 b 为经验参数 LQI 经验值： 50( 最差 )~110( 最好 ) 在 CTP 中，认为 LQI 高于 105 的链路为 高质量链路 LQI 与 PRR 之间的关系 单个 LQI 值与 PRR 关联性低 ( 上图 ) 例如 LQI 85 对应的 PRR 从 10% 到 100% 不等 平均 LQI 与 PRR 关联性高 ( 下图 ) 65
+--- ppt/slides/slide66.xml ---
+链路质量估计 PRR (Packet Reception Ratio) 数据包成功接收率 （不考虑重传） 衡量链路质量的最终指标 PRR 估计方法：一段时间内，成功接收的包数与发送的总数的比率 通过 Beacon 包 缺陷：包长不同，预测不准 通过数据包 通过 receiver feedback 通过 ack 计数 66
+--- ppt/slides/slide67.xml ---
+链路质量估计 通过 ack 计数的 PRR 估计方法 固定时间窗口中 , 统计收到的 ACK 数据包个数与发送的数据包总数的比值 指数加权移动平均 ( Eexponentially weighted moving average EWMA) PRR = + (1- ) PRR 可调节参数：滑动窗口 W ，与权重𝛼 示例中， W=3, 𝛼 =0.9 PRR=0.67 PRR=0.67*0.9+0.67*0.1=0.67 PRR=0.67*0.9+1*0.1=0.703 PRR= ？ 收到 ACK 的包 未收到 ACK 的包 67
+--- ppt/slides/slide68.xml ---
+链路质量估计 基于跨层特征的估计 4-bit 链路质量估计的信息来源 物理层 (1 bit) ：数据包解码质量情况 White bit: 设置为 1 表示收到的数据包中 每个符号误码率很低 Bit = 0, if LQI < 105 链路层 (1 bit) ：数据包 ACK 情况 Ack bit: 设置为 1 表示收到 L2 层的 ack ，上一个数据包成功发送，为 0 则表示发出去的包可能丢了 网络层 (2 bits) ：标注相对重要的链路 Pin bit ：当网络层在一个路由表的某链路上设置 pin 位时，链路估计器不能从表中删除该链路，直到该位清零为止 Compare bit ：指示数据包发过来的链路是否优于现在路由表中一个或多个链路 68
+--- ppt/slides/slide69.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide70.xml ---
+6LoWPAN IPv6 over Low Power Wireless Personal Area Network 致力于将 IPv6 与 802.15.4 相结合，使得大量物联网节点可以无缝地接入互联网 70
+--- ppt/slides/slide71.xml ---
+6LoWPAN 71 主要任务 在 IEEE 802.15.4 MAC 层和 IPv6 网络层之间加入适配层，使得 IPv6 数据包能够运行在 IEEE 802.15.4 的网络上 两种主要技术 分段重组 头部压缩
+--- ppt/slides/slide72.xml ---
+6LoWPAN 分段重组 MAC 层每一帧的长度为 127 字节， IEEE 802.15.4 能为网络提供的有效负载的长度为 80 ～ 100 字节 IPv6 数据报的最大传输单元为 1280 字节 6LoWPAN 必须支持分段与重组 IPv6 Datagram 802.15.4 Disp IPv6 Datagram (Frag 1) 802.15.4 Frag IPv6 Datagram (Frag 2) 802.15.4 Frag IPv6 Datagram (Frag 3) 802.15.4 Frag Disp 72
+--- ppt/slides/slide73.xml ---
+6LoWPAN 分段重组 Size: 每一个分段的大小 (bytes) ，所有分段中都包含 Tag: 属于同一个 IPv6 报文的， Tag 相同 Offset: 表示在原来 IPv6 报文中的位置，用于重组 在第一个分段中省略，其它分段需要包含该字段 73
+--- ppt/slides/slide74.xml ---
+6LoWPAN IPv6 数据报头部 40B ， UDP 头部 8B IPv6 头部（ 40B ）压缩 源节点与目的节点的 IPv6 地址（共 32B ）压缩非常关键 基本思想：利用链路层地址与 IPv6 地址之间的直接映射关系 64 位前缀 64 位 IID 6LowPAN 中 的 IPv6 地址 - 本地链路单播地址 ( FE80:: 开头 ) - 16 种全球单播地址前缀 - 由链路层地址直接配置而成 74
+--- ppt/slides/slide75.xml ---
+6LoWPAN 其它字节压缩 其它字节压缩思想类似：限定常用值个数并编号，或直接省略能从 MAC 层头部获取的字段 版本（ Version ）和有效载荷长度（ PayloadLen ）字段可以直接省略 75
+--- ppt/slides/slide76.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide77.xml ---
+CTP CTP 多对一的路由模式 基于距离向量路由协议 , 选择距离最短的路径 建立在 CSMA MAC 或 LPL MAC ，及链路质量估计器上 路由指标： ETX(expected number of transmissions) 链路 ETX ：在一条链路上成功发送一个数据包所需的传输次数 ETX f = 1 / ( df X dr ) 1/df df : 数据包成功到达接收者的概率， dr : 接收者回复的 ACK 包成功到达发送者的概率 路径 ETX ：在一条路径上成功发送一个数据包所需的传输次数 77
+--- ppt/slides/slide78.xml ---
+思考题 已知一条 n 跳路径，其中 代表第 i 跳的链路。证明这条路径的 ETX 等于其所有链路 ETX 之和
+--- ppt/slides/slide79.xml ---
+CTP CTP 基本工作流程 S 广播 beacon, A B 更新路由表 A B C E D F 3 4 1 1 1 1 1 1 1 1 S 2 1 下一跳 开销 S 1 A 下一跳 开销 S 3 B 下一跳 开销 C 下一跳 开销 D 下一跳 开销 E 下一跳 开销 F 79
+--- ppt/slides/slide80.xml ---
+CTP CTP 基本工作流程 A 广播 beacon, B 发现走 A 路径更优，更新父节点为 A ；其余邻居节点 C 和 D 分别更新路由 A B C E D F 3 4 1 1 1 1 1 1 1 1 S 2 1 80 下一跳 开销 S 1 A 下一跳 开销 A 2 S 3 B 下一跳 开销 A 2 C 下一跳 开销 A 2 D 下一跳 开销 E 下一跳 开销 F
+--- ppt/slides/slide81.xml ---
+CTP CTP 基本工作流程 重复此过程 A B C E D F 3 4 1 1 1 1 1 1 1 1 S 2 1 81 下一跳 开销 S 1 A 下一跳 开销 A 2 S 3 B 下一跳 开销 A 2 B 3 C 下一跳 开销 A 2 B 3 D 下一跳 开销 C 3 D 4 E 下一跳 开销 C 3 E 4 D 6 F
+--- ppt/slides/slide82.xml ---
+CTP CTP 路由帧 (beacon) 格式 P: 路由信息请求标志位。置位 , 则收到该包的节点将发送路由帧更新路由信息 C: 拥塞标志位。置位，表示上一个 CTP 包丢失，发生拥塞 Parent: beacon 发送节点的 parent ETX: 发送节点的 path ETX 82
+--- ppt/slides/slide83.xml ---
+CTP CTP 数据帧格式 P: 路由信息请求标志位 C ：拥塞标志位 THL: Time Has Lived, 数据包生成时为 0, 每经过一跳增加 1 ETX: 发送节点的 path ETX Origin: 源节点 ID SeqNo: 序列号 83
+--- ppt/slides/slide84.xml ---
+CTP 路由回路问题 发生原因 路由信息陈旧 , 没有及时更新 如何发现 数据包中的节点 ETX 应该逐跳 减小 当节点收到的数据包 ETX 比自 己的 ETX 低时 , 说明发生回路 两种解决机制 通过广播 beacon 包来解决不一致性 当数据包 ETX 高于设定的阈值时， 不再发送该数据包 D A B C 8.1 4.6 6.3 3.2 5.8 X 4.6 6.3 8.1 5.8 4.6 < 6.3? 3.2 < 4.6? 5.8 < 8.1? 4.6<5.8? 4.6 8.1 < 4.6? 84
+--- ppt/slides/slide85.xml ---
+CTP Beacon 频率问题 Beacon 用于更新 ETX 及路由信息 , 频率过高 , 路由信息准确度高 , 但开销大 ; 频率过低 , 则无法及时更新路由 解决方法 自适应的调节机制 (Adaptive beaconing), beacon 间隔从小到大增加 当检测到网络不一致性时，将 beacon 间隔设成最小 E.g. , 发生路由回路时 Increasing interval      Reset interval TX 85
+--- ppt/slides/slide86.xml ---
+基于 IEEE802.15.4 的传感网协议 IEEE 802.15.4 技术物理层 低功耗 MAC 链路质量估计 6LoWPAN CTP RPL
+--- ppt/slides/slide87.xml ---
+RPL 低功耗有损网络中的 IPv6 路由协议 (IPv6 Routing Protocol for Low Power and Lossy Networks) IPv6 与 IEEE 802.15.4 的结合 : 6LoWPAN 基于 6LoWPAN 的路由策略： RPL 87
+--- ppt/slides/slide88.xml ---
+RPL RPL(Ripple) , Routing Protocol for Low Power and Lossy Networks 组网模式： DODAG(Destination-Oriented DAG) ，只有一个根节点的有向无环图 通信模式： MP2P, P2MP,P2P MP2P: 数据收集 P2MP: 数据分发 P2P: 点对点 , 由前两种模式结合 实现 88
+--- ppt/slides/slide89.xml ---
+RPL RPL 路由建立 目标函数 选取路由度量计算 Rank 值，同时考虑路由约束条件，以选出最优路径，即 Rank 值最低的路径 路由度量：跳数、延迟、 ETX 等 DODAG 建立 上行路由建立 由根节点开始向下广播 DIO 消息，含有节点的 ID 、 Rank 值等关键信息，收到的节点依据目标函数选择是否加入或更换父节点 下行路由建立 在建立好的上行路由上，节点向父节点发送 DAO 消息，包含节点的路由前缀信息 89
+--- ppt/slides/slide90.xml ---
+RPL DAG 上行路由建立 路由度量： ETX, 标在每条边上 目标函数：最小化节点到根的 ETX 建立过程 LBR-1 广播 DIO 信息 A B C E D F G H I 1 3 2 1 1 1 1 1 4 1 1 1 1 1 1 LBR-1 90
+--- ppt/slides/slide91.xml ---
+RPL DAG 建立 路由度量： ETX, 标在每条边上 目标函数：最小化节点到根的 ETX 建立过程 LBR-1 广播 DIO 信息 ABC 收到，设置 LBR-1 为 父节点，加入 DAG A B C E D F G H I 1 3 2 1 1 LBR-1 1 1 1 4 1 1 1 1 1 1 91
+--- ppt/slides/slide92.xml ---
+RPL DAG 建立 路由度量： ETX, 标在每条边上 目标函数：最小化节点到根的 ETX 建立过程 LBR-1 广播 DIO 信息 ABC 收到，设置 LBR-1 为 父节点，加入 DAG C 广播 DIO 信息， B 添加 C 为 可选父节点 ; E 加入 DAG, 距离 3 C A B E D F G H I 1 3 2 1 1 LBR-1 1 1 1 4 1 1 1 1 1 1 92
+--- ppt/slides/slide93.xml ---
+RPL DAG 建立 路由度量： ETX, 标在每条边上 目标函数：最小化节点到根的 ETX 建立过程 LBR-1 广播 DIO 信息 ABC 收到，设置 LBR-1 为 父节点，加入 DAG C 广播 DIO 信息， B 添加 C 为 可选父节点 ; E 加入 DAG, 距离 3 A 广播 DIO 信息 , B 发现 A 是更优 的父节点 , 因而改路由到 A A B C E D F G H I 1 3 2 1 1 LBR-1 1 1 1 4 1 1 1 1 1 1 93
+--- ppt/slides/slide94.xml ---
+RPL DAG 建立 路由度量： ETX, 标在每条边上 目标函数：最小化节点到根的 ETX 建立过程 LBR-1 广播 DIO 信息 ABC 收到，设置 LBR-1 为 父节点，加入 DAG C 广播 DIO 信息， B 添加 C 为 可选父节点 ; E 加入 DAG, 距离 3 A 广播 DIO 信息 , B 发现 A 是更优 的父节点 , 因而改路由到 A 继续该过程 , 直到所有节点 都加入 DAG A B C E D F G H I 1 3 2 1 1 LBR-1 1 1 1 4 1 1 1 1 1 1 94
+--- ppt/slides/slide95.xml ---
+目录 概述 关键特性 基于 IEEE802.15.4 的传感网协议架构 蓝牙低功耗协议（ BLE ） 应用案例 研究进展
+--- ppt/slides/slide96.xml ---
+蓝牙低功耗协议（ BLE ） 基于 BLE 的通信场景 BLE 的设备构造成了星型的网络（ piconet ） 一个 master ，多个 slave master 负责了整个 piconet 的通信协调 ， slave 只能和 master 通信 在一个 piconet 中，每个 slave 使用的是不同的通信信道 一个 BLE 设备可以同时为一个 piconet 的 slave ，也同时为另外一个 piconet 的 slave 或者 master 96 相同颜色为同一个信道
+--- ppt/slides/slide97.xml ---
+蓝牙低功耗协议（ BLE ） mesh 组网（多跳）：网络中节点不同的角色 普通节点 : 网络边缘的节点，没有 relay 功能。 转发节点 : 具有转发功能，收到数据立即转发 朋友节点 : 特殊的转发节点，还可以暂存数据 低功耗节点：可从朋友节点查询数据，无需一直监听数据包。 朋友节点（未使用） : 可以作为朋友节点，但未启用对应的功能 97
+--- ppt/slides/slide98.xml ---
+蓝牙低功耗协议（ BLE ） BLE 的协议栈 低功耗物理层 40 个跳频信道： 37 个数据传输信道， 3 个广播信道 低功耗链路层 周期性醒睡 L2CAP 数据包融合 / 分割 控制数据包重传 GATT ， ATT 服务交换的数据结构 SMP 密钥生成与分发 98
+--- ppt/slides/slide99.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 BLE mesh 蓝牙 5.x 规范 99
+--- ppt/slides/slide100.xml ---
+物理层协议 信道分配 从 2.4GHz 到 2.480GHz ， 每个信道 2MHz ，总共 40 个信道（ 0~39 ） 37,38,39 为广播信道，其他为数据传输信道 为了减少数据传输阶段的干扰，使用 跳频技术 基础信道的跳频 每一对 master 和 slave 以同一种伪随机序列的方式切换信道 下一次跳频的信道由 gMap 、 c 和 hop 决定 自适应跳频 master 和 slave 会维护一系列的信道质量数组 ChM gMap 根据 ChM 对每个信道的标记情况进行可用信道的更新 100
+--- ppt/slides/slide101.xml ---
+物理层协议 BLE 的调制方式 : GFSK （高斯频移键控） 给定传输数据 101 ， FSK 和 GFSK 调制波形图如下所示 降低不同频率调制之间的干扰。 1 0 1 高斯滤波原始数据 GFSK 调制 FSK 调制 频谱图对比 红色： FSK 黑色： GFSK 101
+--- ppt/slides/slide102.xml ---
+物理层协议 物理帧结构。 preamble: 0,1 交替，首位 bit 和 Access Address 的首位 bit 相同 10101010 ， 8 位 (1Mbps 模式 ) Access Address (AA) 广播包：固定的值 0x8E89BED6 数据包：在建立连接过程中确定，每一对链路唯一的 AA PDU 广播包：最多 37 字节，最少 6 字节 数据包：最多 257 字节，最少 2 字节 102
+--- ppt/slides/slide103.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 BLE mesh 蓝牙 5.x 规范 103
+--- ppt/slides/slide104.xml ---
+链路层协议 BLE 数据传输流程 数据校验 使用 CRC 实现对数据包的校验 BLE 中使用的 CRC 生成多项式为 x24+x10+x9+x6+x4+x3+x1+x 0 数据白化 对二进制数据与一个伪随机序列进行异或操作 BLE 中使用了 7bit 长的随机序列进行数据白化
+--- ppt/slides/slide105.xml ---
+链路层协议 BLE 链路层状态机 扫描状态 : 对广播信道 37 ， 38 ， 39 轮流扫描 准备状态：可以向其他状态切换的中间状态 广播状态：纯广播或者可以被连接 初始化状态：监听指定的 device 信道，等待发送连接反馈 连接状态：从广播状态或者初始化状态通过发送连接广播包 CONNECT_REQ 切换。 105
+--- ppt/slides/slide106.xml ---
+链路层协议 BLE 的数据包类型 ： 广播包和数据包 广播包 帧结构 Header PDU type （ 7 种类型） ADV_IND ( 可连接 ) <-> CONNECT_REQ ( 连接请求 ) ADV_DIRECT_IND ( 定向可连接 ), <-> CONNECT_REQ ( 连接请求 ) ADV_SCAN_IND ( 可扫描 ) <- > SCAN_REQ ( 扫描请求 ), <->SCAN_RSP ( 扫描反馈 ) ADV_NONCONN_IND ( 不可连接 ) –x TxAdd 和 RxAdd ：发送方的地址类型和接收方的地址类型 0-> 使用厂商分配的静态地址 ,1-> 自己生成的随机地址 RFU ：保留位
+--- ppt/slides/slide107.xml ---
+链路层协议 连接请求广播包结构 (CONNECT_REQ) initA : 发起者的地址 AdvA : 接收方的地址 LLData AA: 建立连接后确定链路的唯一标记 ( 广播包是固定的 ) WinSize,Winoffset : BLE 处理多个连接的缓冲时间 Interval: 连接事件的间隔 Latency: slave 隔多少个连接事件再反馈 master Timeout: 等待反馈的延迟 ChM: 信道可用情况标记 (40 bits, 每个 bit 代表一个信道 ) ，与 gMap 数组对应 Hop: 随机跳频的增量因子 107
+--- ppt/slides/slide108.xml ---
+链路层协议 连接建立过程 Master 发起连接请求 等待 1.25ms+winoffset 时间间隔（ BLE 处理多个连接的 schedule 时间） Master 发送数据包， slave 成功反馈，则连接成功，且连接事件间隔确认 连接失败 ① slave 没有在 winsize 时间内收到 master 数据包，失败 ② master 没有在 timeout 时间内收到 salve 反馈，失败 108
+--- ppt/slides/slide109.xml ---
+链路层协议 数据包帧结构 Header LLID: 表示数据包或者控制包 NESN ：下一个期望的包序号（停等协议 , 序号为 0/1 ） SN ：包序号（停等协议 , 序号为 0/1 ） MD ： more data, 是否还有继续的数据包 MIC ：完整性校验 109
+--- ppt/slides/slide110.xml ---
+链路层协议 数据包传输 7.5ms 到 4s 之间 , 1.25ms 的倍数 Master 发起每次通信事件， slave 反馈 即使没有实际数据发送，也会周期性发送 / 反馈空数据包 Slave 可以设定 latency ，表示经过多少连接事件再反馈（节约能量） Slave 在一个连接事件间隔中，可以连续发送多个数据包 通信完成，立刻进入休眠 110
+--- ppt/slides/slide111.xml ---
+链路层协议 BLE 的邻居发现 在 BLE 设备建立连接组成 piconet 星型网络之前， BLE 设备需要首先扫描周围的设备以发现潜在的可连接设备 设备 A 在扫描信道 38 的时候，发现了设备 B ，向设备 B 发送了扫描反馈数据包。其后，设备 A 和设备 B 即可进入连接建立过程
+--- ppt/slides/slide112.xml ---
+链路层协议 BLE 的连接建立 master 发现邻居 slave 后， 发送广播包 CONNECT_REQ 以建立连接 1.25ms+Winoffset 后 再向该 slave 发送初始的连接事件同步数据包 连接建立失败 当 slave 没有在 WinSize 的时间窗口内接收到来自 master 的初始连接事件数据包时，表示连接建立失败 当 master 没有在 Timeout 时延内收到 slave 的反馈时，连接建立失败
+--- ppt/slides/slide113.xml ---
+链路层协议 BLE 多个连接的维持 一个 master 为了保持与多个 slave 的连接，采用了 TDMA （时分复用）的调度方式 Master 和 slave 跳频以 0.625ms 的 slot 为单位同步 对于 master, 一个连接事件间隔内会处理完所有的 slave 通信，并且执行扫描 对于 slave ， piconet 中 slave 越多，连接事件间隔越长 113
+--- ppt/slides/slide114.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 BLE mesh 蓝牙 5.x 规范 114
+--- ppt/slides/slide115.xml ---
+L2CAP 协议 数据包的分割和重组 L2CAP 帧格式 Length: 数据帧长度 Channel ID: 用于唯一表示当前通信链路的标识 L2CAP SDU length: 传输数据帧总长度（子数据帧重组后的长度）。每个子数据帧最大 251 字节。 示例 发送 90 字节数据， CID 为 0x4b ，每个子数据帧长度最大为 44 字节（包括包头）。（ master, slave 协商达成） 注：子数据帧没有偏移编号，因为 BLE 使用停等协议 115
+--- ppt/slides/slide116.xml ---
+L2CAP 协议 差错控制和重传 L2CAP 层的差错控制主要通过重传来完成 信息帧：用来发送数据。 control 域主要定义了两种重传模式 ACK 超时， sender 重传 sender 等待 receiver 通知再重传 监督帧：反馈 ACK/NACK 信息 . Control 域主要定义了反馈的类型 成功接收数据包 没有成功接收 拒绝接收数据包 拒绝接收部分数据包 116
+--- ppt/slides/slide117.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 BLE mesh 蓝牙 5.x 规范 117
+--- ppt/slides/slide118.xml ---
+ATT 属性检索协议和 GATT 通用属性框架 ATT(Attribute Protocol) ：提供对服务的 检索功能 GATT(Generic Attribute Profile) ：定义了服务存储的 数据结构 Profile ： slave 提供的一系列服务的组合 服务：一系列具体的功能的集合 特征 ： 提供的功能 118
+--- ppt/slides/slide119.xml ---
+Handler UUID Value Permission 备注 0x0100 0x2800 UUID=0x1800 Read Generic Access [service] 0x0101 0x1800 UUID=0x2a00, handler=0x0102 Read,write 设备名 [characteristic] 0x0102 0x2a00 BLE device Read,write 0x0111 0x2a01 0x0100 Read 外观 [characteristic] 手机 0x0200 0x2800 UUID=0x1809 Read 温度计 [service] 0x0201 0x1809 UUID=0x2a1c, Handler=0x0202 Read 0x0202 0x2a1c 20 Read 读取温度 [characteristic] ATT 属性检索协议和 GATT 通用属性框架 每个特征的句柄是唯一确定的，用于区分不同的特征和服务 Handler ：句柄，区分不同的服务或特征 . UUID ：服务 / 特征的标志，可用系统默认，也可自定义 Value ：对应的值 Permission ：可读，可写 等 ATT 协议：定义了如何解析发送来的 GATT 数据结构中的数据 Profile 服务 特征 119
+--- ppt/slides/slide120.xml ---
+ATT 属性检索协议和 GATT 通用属性框架 示例：一个提供了设备名称服务和温度查询服务的手机 每个服务以 UUID=0x2800 表示开始和结束， value 即为其包含的具体服务 服务中的 value 包含提供的特征 UUID 和 handler （比如设备名称 BLE device, 外观编号 0x0100 表示手机） 120 Handler UUID Value Permission 备注 0x0100 0x2800 UUID=0x1800 Read Generic Access [service] 0x0101 0x1800 UUID=0x2a00, handler=0x0102 Read,write 设备名 [characteristic] 0x0102 0x2a00 BLE device Read,write 0x0111 0x2a01 0x0100 Read 外观 [characteristic] 手机 0x0200 0x2800 UUID=0x1809 Read 温度计 [service] 0x0201 0x1809 UUID=0x2a1c, Handler=0x0202 Read 0x0202 0x2a1c 20 Read 读取温度 [characteristic]
+--- ppt/slides/slide121.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 SMP 安全管理协议 BLE mesh 蓝牙 5.x 规范 121
+--- ppt/slides/slide122.xml ---
+BLE Mesh 组网：四种链路类型 (1) ADV(Not Relayed) ：非转发节点的广播包收发 (2) ADV(Low power) ：用于低功耗节点与朋友节点之间收发数据包， (3) ADV Bearer ：两个节点之间可以基于 mesh 协议收发广播消息，并且可以作为中继转发； (4) GATT Bearer ：用于没有 mesh 能力的传统节点也能参与 MESH 网络 122
+--- ppt/slides/slide123.xml ---
+BLE Mesh 场景：节点 J 需要发送数据包给节点 E ， TTL 值设定为 3 节点 J 发送数据包给节点 P 朋友节点 P 收到收据包后， 将 TTL 修改为 2 ，广播该数据包 此时，节点 A 、 Q 、 H 都会收到该数据包 转发节点 Q 收到数据包后， 将 TTL 修改为 1 ，广播该数据包 节点 A 、 B 、 C 、 D 、 E 以及 R 都会收到该数据包 节点 E 判断 DST 地址是自己，收到数据包。节点 R 是转发节点，但是 由于 TTL 为 1 ，节点 R 会丢弃该数据包 123
+--- ppt/slides/slide124.xml ---
+思考题 如果节点 E 想要发送数据到节点 L ，会经历哪些过程？该数据包的 TTL 设置为 3
+--- ppt/slides/slide125.xml ---
+蓝牙低功耗协议（ BLE ） 物理层协议 链路层协议 L2CAP 协议 ATT 属性检索协议和 GATT 通用属性框架 SMP 安全管理协议 BLE mesh 蓝牙 5.x 规范 125
+--- ppt/slides/slide126.xml ---
+蓝牙 5.x 规范 2016 年，蓝牙技术联盟公布蓝牙 5.0 规范，截止 2021 年，蓝牙规范已经迭代至 5.3 版本 针对 BLE ，蓝牙 5.0 相比于 4.2 版本 有 三点重大更新 2M PHY 蓝牙 5.0 中提出了 2M PHY ，其物理层最高速率达到了 2Mbps ，相较于旧版本提升了 1 倍 更高的数据传输速率可以为物联网设备的 OTA 空中升级等应用提供极大的便利
+--- ppt/slides/slide127.xml ---
+蓝牙 5.x 规范 BLE 远距离编码信道 蓝牙 5.0 中提出了编码物理层（ LE Coded PHY ） 使用编码物理层，使得设备在使用相同的物理硬件的前提下变相提高了其接收灵敏度，最终实现更长的通信距离 增加了对信号的编码和模式映射两部分 编码：使用卷积前向纠错码（ Forward Error Correction ， FEC ）对数据包进行编码，将 1bit 数据扩展为 2bit 模式映射：模式映射将 FEC 输出的每一位映射为 P 符号 其中 S=2 编码方式对 FEC 输出的数据不做任何改变， S=8 的编码将 FEC 输出的 2bit 数据拓展为 8bit 。 显然，使用 S=8 编码方式能够拥有更强的抗干扰能力 ， 但数据率仅为使用 S=2 编码方式的速率的四分之一 FEC 输入 输入（ S=2 ） 输入（ S=8 ） 0 0 0011 1 1 1100
+--- ppt/slides/slide128.xml ---
+蓝牙 5.x 规范 扩展广播 将广播信道抽象为了两类： 主广播信道（ primary advertisement channels ）， 37 ， 38 ， 39 号 次要广播信道（ Secondary Advertising Channel ），剩余 37 个信道 主广播信道上广播的数据包类型为 ADV_EXT_IND ，不包含任何的数据， AuxPtr 字段指明了下一个数据包发送的信道号 收到广播包后，接收机将跳频至指定的次要广播信道接收后续的广播数据包 次要广播信道上广播的第一个数据包类型为 AUX_ADV_IND
+--- ppt/slides/slide129.xml ---
+蓝牙 5.x 规范 室内定位辅助功能 配合 WiFi 可以实现精度小于 1 米的室内定位 ， 在 2019 年公布的蓝牙 5.1 标准将这一精度提升到了厘米级别并支持测向功能 蓝牙 5.1 标准还优化了通用属性配置文件（ GATT ）的性能，提高了配对速度和数据传输速度 2020 年更新蓝牙 5.2 标准主要提供了 ATT 协议的升级版本 EATT 、增加了 BLE 功耗管理功能以及提供了 LE 同步信道功能以实现对 BLE 多路音频的支持 2021 年更新的蓝牙 5.3 标准中提出了连接降级（ connection subrating ）功能，允许 BLE 实时在高占空比和低占空比之间切换，实现功耗和吞吐量之间的平衡 还规定了定期广播增强，允许周期性广播使用 AdvDataInfo (ADI) 字段，扩展了周期性广播的应用场景
+--- ppt/slides/slide130.xml ---
+目录 概述 基于 IEEE802.15.4 的传感网协议架构 Bluetooth 应用案例 研究进展
+--- ppt/slides/slide131.xml ---
+编程实例 - 智能灯泡远程控制系统 案例描述 通过搭建 RPL 边界路由器（ Border Router ），实现从因特网到传感网的穿透，从而实现对智能 LED 节点灯的远程控制 实验场景 : PC 端发出一条命令，经过因特网，传到 RPL 边界路由器 再由边界路由器将携带命令的 IPv6 数据包转为符合 IEEE 802.15.4 标准的数据包，发送到智能 LED 节点上，控制 LED 灯的亮灭 131
+--- ppt/slides/slide132.xml ---
+智能灯泡远程控制系统 - 硬件选择 RPL 边界路由（ Raspberry 3+ CC2538SF53 节点） 树莓派： 用于搭建与 Internet 连接的网络服务，并实现 RPL 和 6LoWPAN 功能 CC2538SF53 节点 ：提供 IEEE 802.15.4 的无线电收发功能 智能 LED 节点： CC2538SF53 节点 根据收到的 IEEE 802.15.4 数据包，控制 LED 灯的亮灭 Raspberry 3 CC2538SF53 132
+--- ppt/slides/slide133.xml ---
+智能灯泡远程控制系统 - 软件环境搭建 节点操作系统： Contiki-NG Contiki-NG 的源代码： https://github.com/contiki-ng/contiki-ng.git Contiki-NG 配置教程： http://anrg.usc.edu/Contiki-OS/index.php/Installation 应用层网络服务： MQTT MQTT 协议中有三种角色：订阅者、发布者和 MQTT 代理 MQTT 代理 : RPL 边界路由器 , 订阅者 : 智能 LED 节点 , 发布者 :PC MQTT 安装 MQTT 客户端（订阅者、发布者）程序已在 Contiki-NG 中提供 MQTT 代理需要在树莓派上安装 133
+--- ppt/slides/slide134.xml ---
+智能灯泡远程控制系统 - 程序编写及运行 搭建 RPL 边界路由器 树莓派编译并运行 Contiki-NG 提供的 native border router 程序 (example/ rpl -border-router) 在 CC2538SF53 节点上，烧写 slip-radio 程序 (examples/slip-radio) 在树莓派上配置串口地址指定 SLIP radio 设备 将树莓派上的 native border router 绑定到 CC2538SF53 节点的 802.15.4 无线电上，并生成 IPv6 地址 134
+--- ppt/slides/slide135.xml ---
+智能灯泡远程控制系统 - 程序编写及运行 编写并配置 MQTT 客户端服务程序 在 MQTT 客户端配置文件（ project-conf.h ）里设置 MQTT 代理的 IPv6 地址为搭建好的边界路由器的 IPv6 Global 地址 在 MQTT 客户端程序件指定订阅的话题（ iot-2/cmd/led/fmt/json ） 编写 mqtt-client.c 中对 LED 灯的控制代码 // 命令行参数为 1 ，则打开红灯 // 命令行参数为 0 ，则关闭红灯 135
+--- ppt/slides/slide136.xml ---
+智能灯泡远程控制系统 - 程序编写及运行 编译后烧写到智能 LED 节点上 案例验证 136
+--- ppt/slides/slide137.xml ---
+目录 概述 基于 IEEE802.15.4 的传感网协议架构 Bluetooth 应用案例 研究进展
+--- ppt/slides/slide138.xml ---
+研究进展 [Ipsn16] Oppcast: Exploiting Spatial and Channel Diversity for Robust Data Collection in Urban Environments 提供了 一种能够在干扰源动态变化的情况下，实现稳定的数据收集的路由协议。 Oppcast 背后的关键理念是它同时利用了空间和信道多样性。 通过结合两种机制：机会路由和多信道跳频的使用， Oppcast 能够显著地增加可以用来稳定传输数据的链路，实现可靠的网络数据收集。 138
+--- ppt/slides/slide139.xml ---
+研究进展 [mobicom17] WEBee: Physical-Layer Cross-Technology Communication via Emulation 实现了 WiFi 到 ZigBee 的跨技术通信，能够达到以 126Kbps 的速率实现 99% 以上收包率的传输 其背后原理是 WiFi 的物理层和 ZigBee 的物理层能够相互转换，通过在 WiFi 端选择特定的发送的数据，就能够在 ZigBee 端成功解码出跨技术通信的数据。 139
+--- ppt/slides/slide140.xml ---
+谢谢！

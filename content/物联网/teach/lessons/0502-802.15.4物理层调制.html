@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 章 · 802.15.4 物理层调制</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 5 章 · 小课 2/9 · 课件提炼</span>
+  <h1>IEEE 802.15.4 物理层调制</h1>
+  <p class="subtitle">一句话：学习目标里的"掌握 802.15.4 调制与解调"就考这节——DSSS 扩频 + O-QPSK 调制的完整数据流和帧结构。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件"基于 IEEE802.15.4 的传感网协议"一节中的"IEEE 802.15.4 技术物理层"部分【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第五章 低功耗无线协议2026.pdf</p>
+  </div>
+
+  <h2>一、物理层功能与工作流程</h2>
+  <p>物理层功能：<strong>从比特流到 RF 信号</strong>。工作流程四步（顺序必背）：</p>
+  <table>
+    <tr><th>步骤</th><th>内容</th></tr>
+    <tr><td>① DSSS 扩频</td><td>每 <strong>4bit</strong> 数据映射为 <strong>32 位码片（chips）</strong></td></tr>
+    <tr><td>② O-QPSK 调制</td><td>32 位码片序列调制到信号的 <strong>I 相位和 Q 相位</strong>上</td></tr>
+    <tr><td>③ 脉冲成形</td><td><strong>上半正弦表示 1，下半正弦表示 0</strong></td></tr>
+    <tr><td>④ 数模转换及信号发送</td><td>转为模拟 RF 信号发出</td></tr>
+  </table>
+
+  <h2>二、DSSS 扩频（直接序列扩频）</h2>
+  <ul>
+    <li>每 4bit 数据（数据符号 b0b1b2b3）转化为 32 位码片，共 16 种码片序列（如 0000 → 11011001110000110101001000101110）。</li>
+    <li><strong>Chip rate：2M chip/s；data rate：250kb/s</strong>。验证：2M chip/s ÷ 32 chip/4bit = 250kb/s。</li>
+  </ul>
+
+  <h2>三、O-QPSK 调制（必考计算）</h2>
+  <p>将 32 位码元序列调制到信号的 I 和 Q 相位上：</p>
+  <ul>
+    <li><strong>偶数位码片 c0, c2, c4, …, c30 → I 相位；奇数位码片 c1, c3, c5, …, c31 → Q 相位</strong>。</li>
+    <li>每个相位的 chip rate = C/2 = <strong>1M chip/s</strong>；每个码元的发送时间：1s/(1Mchip/s) = <strong>1μs</strong>（即每个码片持续 1μs）。</li>
+    <li>O 表示 offset（相位偏移）：<strong>offset = 0.5μs</strong>，即 Q 相位相对 I 相位偏移半个码片。</li>
+  </ul>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：为什么要 offset</div>
+    <p>O-QPSK 的"偏移"使 I、Q 两路数据跳变时刻错开半个码片，避免两路同时翻转造成的大幅度相位跳变，降低包络波动。</p>
+  </div>
+
+  <h2>四、帧结构（PPDU 与 MPDU）</h2>
+  <p><strong>物理层数据单元 PPDU = 物理层头部 + MAC 层数据单元 MPDU</strong>。</p>
+  <h3>4.1 物理层头部</h3>
+  <table>
+    <tr><th>字段</th><th>长度</th><th>作用</th></tr>
+    <tr><td>SHR / Preamble</td><td>4B</td><td>实现码元和位同步</td></tr>
+    <tr><td>SFD</td><td>1B</td><td>帧定界符，固定特殊值，标志 SHR 结束、实际数据报文开始</td></tr>
+    <tr><td>PHR（Frame Length）</td><td>1B</td><td>PSDU 的长度</td></tr>
+    <tr><td>PSDU</td><td>0~127B</td><td>实际数据报文，从 MAC 层传来的数据单元</td></tr>
+  </table>
+  <h3>4.2 MAC 层数据单元 MPDU</h3>
+  <table>
+    <tr><th>字段</th><th>长度</th><th>作用</th></tr>
+    <tr><td>Frame Control（Preamble Control）</td><td>2B</td><td>帧控制字段</td></tr>
+    <tr><td>Data Sequence Number</td><td>1B</td><td>序列号字段</td></tr>
+    <tr><td>Address Information</td><td>4~20B</td><td>地址信息字段</td></tr>
+    <tr><td>MSDU（Data Payload）</td><td>可变（n）</td><td>MAC 载荷</td></tr>
+    <tr><td>FCS（MFR）</td><td>2B</td><td>校验</td></tr>
+  </table>
+  <p>总长关系：PPDU = <strong>11 + (4~20) + n</strong> 字节；MHR 部分 = 5 + (4~20) + n。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课）</h3>
+    <p><strong>调制题</strong>：现有数据流 10111110，要通过 IEEE 802.15.4 物理层发送，请给出经过物理层调制后，I 相位与 Q 相位上的码元序列。</p>
+    <details><summary>点开看答案</summary>
+      <p>① 按 4bit 分组：1011、1110。② 查 DSSS 表：1011 → 01100000011101111011100011001001；1110 → 10011100001101010010001011101101。③ 拼成 64 位码片序列。④ 偶数位码片进 I 相位、奇数位码片进 Q 相位：</p>
+      <p><strong>I 相位：01000101111010101010010001011110</strong><br><strong>Q 相位：10001111010010010110011100001011</strong></p>
+      <p>（课后习题答案第四章第 3 题；每个码片 1μs，Q 相位相对 I 相位偏移 0.5μs。）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第五章 低功耗无线协议2026》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/通信协议速查.html">通信协议速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0501-无线通信基础与关键特性.html">无线通信基础与关键特性</a>
+    · 下一课：<a href="0503-低功耗MAC与链路质量估计.html">低功耗 MAC 与链路质量估计</a>
+    · <a href="../课程总目录.html">课程总目录</a><br>
+    有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "802.15.4 物理层工作流程的正确顺序是？",
+    options: [
+      "O-QPSK 调制 → DSSS 扩频 → 脉冲成形 → 数模转换",
+      "DSSS 扩频 → O-QPSK 调制 → 脉冲成形 → 数模转换及发送",
+      "脉冲成形 → DSSS 扩频 → 数模转换 → O-QPSK 调制"
+    ],
+    answer: 1,
+    explain: "课件：物理层工作流程为 DSSS 扩频 → O-QPSK 调制 → 脉冲成形 → 数模转换及信号发送。"
+  },
+  {
+    prompt: "DSSS 扩频中，Chip rate 与 data rate 分别是？",
+    options: [
+      "2M chip/s 与 250kb/s",
+      "1M chip/s 与 250kb/s",
+      "2M chip/s 与 2Mbps"
+    ],
+    answer: 0,
+    explain: "每 4bit 扩为 32 位码片，Chip rate 2M chip/s，data rate 250kb/s（2M÷32×4=250k）。O-QPSK 后每个相位 chip rate 为 1M chip/s。"
+  },
+  {
+    prompt: "O-QPSK 中每个码片的持续时间和 I/Q 相位偏移分别是？",
+    options: [
+      "1μs 与 0.5μs",
+      "0.5μs 与 1μs",
+      "2μs 与 0.5μs"
+    ],
+    answer: 0,
+    explain: "每个相位 chip rate=1M chip/s → 每码片 1μs；O 表示 offset=0.5μs，即 Q 相位（奇数位码片）相对 I 相位偏移半个码片。"
+  },
+  {
+    prompt: "PPDU 中 SFD 字段的作用是？",
+    options: [
+      "实现码元和位同步",
+      "标志 SHR 结束和实际数据报文的开始",
+      "记录 PSDU 的长度"
+    ],
+    answer: 1,
+    explain: "物理层头部：SHR/Preamble（4B）用于码元和位同步；SFD（1B）为帧定界符，标志 SHR 结束、数据报文开始；PHR（1B）记录 PSDU 长度。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— DSSS/O-QPSK 流程掌握了。" : " —— 回头看标红的解析，重点是流程顺序与码片速率。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>第 09 课 · 量子相位估计（QPE）</title>
+<link href="../assets/course.css" rel="stylesheet"/>
+<script>window.MathJax = { tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }, svg: { fontCache: 'global' } };</script><script async="True" id="MathJax-script" src="../assets/mathjax/tex-svg.js"></script><script src="../assets/mq.js"></script></head>
+<body>
+<div class="page">
+<p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+<p class="lesson-no">LESSON 09</p>
+<h1>量子相位估计（QPE）</h1>
+<p class="lede">相位估计是很多量子算法的核心零件。给定酉矩阵 U 和它的一个本征态 |μ⟩，对应本征值 \(e^{2\pi i\phi}\)，QPE 要估计的就是相位 \(\phi\in[0,1)\)。它的套路是：受控 U 把相位"踢"进叠加态，再用<strong>逆 QFT</strong> 把相位信息转成可读取的位信息。内容来自课件 <strong>03 · P2（P25–P36）</strong>。</p>
+<h2>一、基本目标</h2>
+<p>对于一个酉矩阵 \(U\)，已知其本征态 \(|\mu\rangle\)，对应本征值为 \(e^{2\pi i\phi}\)，估计相位 \(\phi\) 的值，其中 \(\phi\in[0,1)\)（课件 03 · P25）。它在量子模拟、量子化学、量子机器学习中都有广泛应用。</p>
+<h2>二、算法流程</h2>
+<div class="keybox">
+<span class="label">QPE 五步</span>
+<p>① <strong>初始化</strong>：准备两个寄存器，寄存器 1 存相位估计结果，寄存器 2 存本征态 \(|\mu\rangle\)；<br/>
+    ② <strong>作用 H 门</strong>：对寄存器 1 中用于存相位的每个量子比特施加 H 门；<br/>
+    ③ <strong>作用受控 U 门</strong>：第 j 个量子比特执行受控 \(U^{2^{j}}\) 门；<br/>
+    ④ <strong>逆 QFT</strong>：对寄存器 1 做逆 QFT，把相位信息转为位信息；<br/>
+    ⑤ <strong>测量</strong>：读取寄存器 1，得到相位估计值。</p>
+</div>
+<p>直觉：受控 U 把本征值相位 \(e^{2\pi i\phi}\) 以"相位反冲"的方式编码进寄存器 1 的叠加幅度里；逆 QFT 则像"频谱分析"一样，把这种周期性相位翻译成具体的二进制小数（课件 03 · P26–P31）。</p>
+<h2>三、示例：旋转门 P(φ)</h2>
+<p>课件给出例题（课件 03 · P33–P34）：相位旋转门</p>
+<div class="eq">\[P(\phi) = [[1,0],[0,e^{2\pi i\phi}]]\text{，本征态之一为} |1\rangle\]</div>
+<p>取 \(\phi = 1/8\)，即 \(P(1/8)\) 对应本征值 \(e^{2\pi i\cdot(1/8)}\)。用 3 个相位比特（寄存器 1 初始化为 \(|000\rangle\)）、寄存器 2 初始化为本征态 \(|1\rangle\)，运行 QPE 电路，输出相位的<strong>三比特估计值为 \(\hat{\phi} = 0.001_{2} = 1/8\)</strong>，与理论值完全相符。</p>
+<h2>四、精度与注意点</h2>
+<div class="warn">
+<p><strong>两个要点（课件 03 · P34–P35）：</strong><br/>
+    ① 若 \(\phi\) 能由 n 个二进制位<strong>精确表示</strong>（如 1/8 = 0.001₂），QPE 可精确估计；若不能（如 1/3 = 0.010101…₂），则只能<strong>近似</strong>，需多次运行、用测得某值的概率衡量接近程度。<br/>
+    ② <strong>精度取决于 qubit 数目</strong>：用 n 个 qubit 可把相位估计到 \(2^{n}\) 的精度。</p>
+</div>
+<p>谱分解视角（TIPS，课件 03 · P35–P36）：把 U 谱分解为 \(U = \sum_\mu \lambda_\mu |\mu\rangle\langle\mu|\)，任意输入 \(b = \sum_\mu \beta_\mu |\mu\rangle\)，执行 QPE 后得到 \(\sum_\mu \beta_\mu |\phi_\mu\rangle|\mu\rangle\)——即同时把各本征态的相位都估了出来。</p>
+<h2>五、即时小测</h2>
+<div class="quiz" data-answer="c" data-explanation="QPE 目标是对酉矩阵 U 的本征态 |μ⟩，估计本征值 e^{2πiφ} 中的相位 φ，课件 03 · P25。">
+<p class="quiz-q"><span class="qno">Q1</span>QPE 要估计的量是？</p>
+<div class="opts">
+<button data-opt="a">酉矩阵 U 的迹</button>
+<button data-opt="b">本征态 |μ⟩ 的范数</button>
+<button data-opt="c">本征值 e^{2πiφ} 中的相位 φ</button>
+<button data-opt="d">测量概率的平方</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="a" data-explanation="QPE 流程含 受控 U^{2^j} 与逆 QFT 两步，课件 03 · P26。">
+<p class="quiz-q"><span class="qno">Q2</span>QPE 中用于把相位转为位信息的关键一步是？</p>
+<div class="opts">
+<button data-opt="a">逆 QFT</button>
+<button data-opt="b">SWAP 门</button>
+<button data-opt="c">Toffoli 门</button>
+<button data-opt="d">直接测量寄存器 2</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="d" data-explanation="φ=1/8 的三比特二进制为 0.001₂，与课件例题 φ̂=0.001₂=1/8 一致，课件 03 · P33–P34。">
+<p class="quiz-q"><span class="qno">Q3</span>对旋转门取 φ=1/8，用 3 个相位比特的 QPE 输出估计值为？</p>
+<div class="opts">
+<button data-opt="a">0.010₂</button>
+<button data-opt="b">0.100₂</button>
+<button data-opt="c">0.111₂</button>
+<button data-opt="d">0.001₂ (=1/8)</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="quiz" data-answer="b" data-explanation="精度取决于 qubit 数目：n 个 qubit 可估计到 2ⁿ 的精度，课件 03 · P35。">
+<p class="quiz-q"><span class="qno">Q4</span>关于 QPE 精度，正确的是？</p>
+<div class="opts">
+<button data-opt="a">精度与 qubit 数无关</button>
+<button data-opt="b">n 个 qubit 可估计到 2ⁿ 的精度</button>
+<button data-opt="c">只能得到近似值，永远无法精确</button>
+<button data-opt="d">必须测量寄存器 2</button>
+</div>
+<p class="feedback"></p>
+</div>
+<div class="ask">
+<p><strong>卡住了就直接问我。</strong>比如"受控 U^{2^j} 为什么要 2 的次幂""逆 QFT 具体怎么实现"——都可以在对话里追问。</p>
+</div>
+<h2>六、这节课你应该能独立完成</h2>
+<ul>
+<li>复述 QPE 的五个步骤，说清"受控 U 编码相位 + 逆 QFT 解码相位"的直觉。</li>
+<li>套用例题：φ=1/8 时三比特估计结果为 0.001₂。</li>
+<li>记住精度随 qubit 数指数提升，以及 φ 不能精确二进制表示时只能近似。</li>
+</ul>
+<div class="note">
+<p><strong>主资源：</strong>本课正文均来自课件 <strong>03 · P2（P25–P36）</strong>。下一课用 QFT+QPE 解决一个大问题：Shor 的大数分解算法。</p>
+</div>
+<p class="lesson-footer">
+    下一课：<a href="0010-shor-algorithm.html"><strong>Shor 算法</strong></a>——用 QPE"计算阶"来破解大数分解，量子优势的代表作。
+  </p>
+</div>
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

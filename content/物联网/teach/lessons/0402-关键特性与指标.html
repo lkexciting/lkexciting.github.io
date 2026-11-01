@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 章 · 关键特性与指标</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 4 章 · 小课 2/6 · 课件提炼</span>
+  <h1>关键特性与指标</h1>
+  <p class="subtitle">一句话：参数量怎么换算存储、推理内存怎么估算、四大精度指标公式、延迟吞吐权衡与「不可能三角」——本章数字题最密集的一节。</p>
+  <div class="callout def"><div class="label">本课依据</div><p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第四章-1009》"关键特性"节（第 10–25 页）。本章为老师自编课件，教材无对应章节。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第四章-1009.pdf</p></div>
+
+  <h2>一、九大关键特性总览（谁决定、受什么影响）</h2>
+  <table>
+    <tr><th>关键特性</th><th>主要由谁决定</th></tr>
+    <tr><td>模型规模</td><td>模型为主（网络结构决定参数量，存储位宽与量化影响权重大小）</td></tr>
+    <tr><td>运行时内存</td><td>模型＋推理引擎＋运行配置</td></tr>
+    <tr><td>数值精度</td><td>部署配置＋推理引擎＋硬件</td></tr>
+    <tr><td>任务准确率</td><td>模型与训练为主</td></tr>
+    <tr><td>延迟／吞吐量</td><td>多因素共同决定</td></tr>
+    <tr><td>模型计算量（FLOPs／MACs）</td><td>模型＋输入为主</td></tr>
+    <tr><td>硬件峰值算力（FLOPS）</td><td>硬件为主</td></tr>
+    <tr><td>内存访问成本（访存开销）</td><td>多因素共同决定</td></tr>
+    <tr><td>能耗</td><td>多因素共同决定</td></tr>
+    <tr><td>支持硬件（CPU／GPU／NPU）</td><td>引擎后端＋软硬件环境</td></tr>
+  </table>
+
+  <h2>二、模型规模：参数量与存储换算</h2>
+  <p><strong>定义</strong>（课件第 11 页）：模型规模通常指模型所包含的<strong>参数总量</strong>，即权重、偏置等参数的总数，取值通过训练从数据中学习获得。参数越多，「学习容量」越大，能学到更细致的数据特征。</p>
+  <table>
+    <tr><th>精度格式</th><th>位数</th><th>字节数</th><th>要点（课件原文）</th><th>用途</th></tr>
+    <tr><td>fp32（单精度）</td><td>32 = 1 符号 + 8 指数 + 23 尾数</td><td>4 Bytes</td><td>高精度，广泛支持；内存和计算开销大</td><td>训练和推理</td></tr>
+    <tr><td>fp16（半精度）</td><td>16</td><td>2 Bytes</td><td>精度较低，可能溢出或下溢</td><td>混合精度训练、推理加速</td></tr>
+    <tr><td>bf16（脑浮点）</td><td>16 = 1 符号 + 8 指数 + 7 尾数</td><td>2 Bytes</td><td>动态范围大，适合训练；精度较低</td><td>深度学习训练（如 TPU）</td></tr>
+    <tr><td>int8（量化）</td><td>8</td><td>1 Byte（有符号 −128～127）</td><td>精度损失较大</td><td>边缘设备推理</td></tr>
+    <tr><td>int4（极致量化）</td><td>4</td><td>0.5 Byte（有符号 −8～7）</td><td>精度损失非常大</td><td>超低功耗设备</td></tr>
+  </table>
+  <div class="calc"><b>参数量 → 存储换算（32 位存储）</b>：1M × 32 bit = 32Mb = <b>4MB</b>。
+    对应关系：1M（一百万）→ 4MB；100M（一亿）→ 400MB；1B（十亿）→ 4GB；100B（一千亿）→ 400GB。<br>
+    课件验证：Bert Base model 参数量 110M，模型大小约 <b>440MB</b>（110M × 4B）。</div>
+
+  <h2>三、运行时内存与精度指标</h2>
+  <div class="calc"><b>推理峰值内存估算</b>：Mpeak ≈ MW + MA + MKV + MR
+    <br>W 权重＝参数量 × 每参数字节数｜A 中间张量＝看形状与精度、关注同时存活峰值｜KV 自回归缓存＝看缓存长度、并发与精度｜R 额外开销＝工作区、运行库与内存池。</div>
+  <p>课件实测（Orange Pi 5 Plus）：Qwen2.5-0.5B-Instruct Q4_K_M（468.6 MiB GGUF），llama.cpp，128 输入、32 输出 tokens，上下文容量 512/2048/4096 时请求峰值 RSS 分别为 <strong>609.2 / 627.1 / 651.2 MiB</strong>——模型文件大小 ≠ 运行内存占用。另一例中显存构成：Parameters 5.178 GiB ≈ 参数量(2.78B) × 每参数字节数(2)。</p>
+  <table>
+    <tr><th>指标</th><th>定义（课件原文）</th><th>公式</th></tr>
+    <tr><td>准确率 Accuracy</td><td>预测正确的样本占总样本的比例</td><td>(TP+TN) / (TP+FP+TN+FN)</td></tr>
+    <tr><td>精确率 Precision</td><td>预测为正例中真正为正的比例，反映预测可信度</td><td>TP / (TP+FP)</td></tr>
+    <tr><td>召回率 Recall（灵敏度）</td><td>实际正类中被正确预测的比例，反映捕获正类能力</td><td>TP / (TP+FN)</td></tr>
+    <tr><td>F1 分数</td><td>精确率与召回率的调和平均，综合评价指标</td><td>2·P·R / (P+R)</td></tr>
+  </table>
+
+  <h2>四、延迟／吞吐、能耗、硬件与不可能三角</h2>
+  <div class="grid cols-2">
+    <div class="card"><h4>延迟 vs 吞吐量（相互制约）</h4><p>延迟 Latency：完成一次请求所花费的时间，单位毫秒（ms）——关注「快不快」。<br>吞吐量 Throughput：单位时间内处理的数据总量，单位样本/秒、FPS——关注「能处理多少」。<br><strong>权衡</strong>：增大 batch → 硬件利用率提高、吞吐量上升；但请求要攒够一批才处理，单次延迟随之增加。<strong>端侧多为实时单请求场景（如摄像头逐帧推理），通常优先保延迟。</strong></p></div>
+    <div class="card"><h4>能耗</h4><p>能耗决定移动/边缘设备续航。<br><strong>能耗 = 平均功耗 × 推理时延</strong>。<br><strong>瓶颈定位：频繁的内存读写是能耗的主要来源。</strong><br>优化策略：① 模型量化（FP32→INT8，减少访存数据量）；② 算子融合（如卷积+激活合并，减少中间结果搬运）。</p></div>
+    <div class="card"><h4>支持硬件 CPU / GPU / NPU</h4><p>CPU：通用推理、轻量模型及算子回退；GPU：卷积与矩阵计算等并行任务；NPU：已适配模型的专用神经网络计算。部分设备还有特殊加速单元，如 NVIDIA Jetson 系列的 DLA。实例：骁龙 8 Elite（小米 15 等）SoC 借助 NPU 实现高性能大模型推理，且不占用 CPU、GPU 的计算资源。</p></div>
+    <div class="card"><h4>不可能三角（必背结论）</h4><p>端侧 AI 落地 = 精度 × 速度 × 资源的多目标优化：<br>· 精度高 → 参数量大、结构复杂；<br>· 速度 → 要求简化计算或强大算力；<br>· 资源（算力、内存、能耗）受边缘设备物理形态硬性约束。<br><strong>三者互斥</strong>：提升精度牺牲速度/资源；压缩资源易致精度崩塌。后续模型压缩（量化/剪枝/蒸馏）与分割计算：扩展三角面积。</p></div>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第四章-1009》（老师自编，教材无对应章节）
+    · 速查：<a href="../reference/边缘智能速查.html">边缘智能速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0401-边缘智能是什么.html">0401 边缘智能是什么</a>
+    · 下一课：<a href="0403-模型量化.html">0403 模型量化</a>
+    · <a href="../课程总目录.html">课程总目录</a>
+    <br>有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+<script>
+const questions = [
+  {
+    prompt: "按课件换算（32 位存储），参数量 1B（十亿）的模型需要多少存储空间？",
+    options: [
+      "400MB",
+      "4GB",
+      "40GB"
+    ],
+    answer: 1,
+    explain: "课件第 13 页：1M→4MB、100M→400MB、1B→4GB、100B→400GB；Bert Base 110M 参数即约 440MB（110M×4B）。"
+  },
+  {
+    prompt: "四大精度指标中，「预测为正例中真正为正的比例，反映预测可信度」的是？",
+    options: [
+      "Accuracy = (TP+TN)/(TP+FP+TN+FN)",
+      "Recall = TP/(TP+FN)",
+      "Precision = TP/(TP+FP)"
+    ],
+    answer: 2,
+    explain: "课件第 17 页：Precision＝TP/(TP+FP)，预测为正例中真正为正的比例；Recall＝TP/(TP+FN)，实际正类中被正确预测的比例；F1＝2PR/(P+R)。"
+  },
+  {
+    prompt: "课件认为边缘设备能耗的主要来源（瓶颈）是什么？",
+    options: [
+      "频繁的内存读写",
+      "神经网络的层数太多",
+      "CPU 主频过高"
+    ],
+    answer: 0,
+    explain: "课件第 21 页：瓶颈定位——频繁的内存读写是能耗的主要来源；能耗＝平均功耗×推理时延；优化靠量化（减少访存数据量）与算子融合（减少中间结果搬运）。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 数字题全对，稳。" : " —— 回头看标红的解析，重点背参数换算与四大指标。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

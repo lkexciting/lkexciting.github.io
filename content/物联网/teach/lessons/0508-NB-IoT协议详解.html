@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 章 · NB-IoT 协议详解</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 5 章 · 小课 8/9 · 课件提炼</span>
+  <h1>NB-IoT 协议详解</h1>
+  <p class="subtitle">一句话：授权频段的 3GPP 窄带技术——网络架构、物理层信号信道表、卷积码（学习目标"掌握"编码与解码）、随机接入四步，一条线过完。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件"低功耗长距离通信"一节中的"代表性协议——NB-IoT"部分【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第五章 低功耗无线协议2026.pdf</p>
+  </div>
+
+  <h2>一、网络架构与典型场景</h2>
+  <p>典型场景：城市范围的垃圾桶使用状态检测；城市范围的家庭水箱、燃气表等（<strong>超过 2000 万个</strong>）。覆盖全国主要城市和乡镇，<strong>基站数量超过 90 万个</strong>；NB-IoT 在 5G-A 中被明确定位为<strong>低速物联接入技术</strong>。</p>
+  <table>
+    <tr><th>网元</th><th>职责（课件原文）</th></tr>
+    <tr><td>NB-IoT UE</td><td>用户终端设备（User Equipment）</td></tr>
+    <tr><td>BS 基站</td><td>UE 接入处理、小区管理等</td></tr>
+    <tr><td>IoT 核心网</td><td>UE 移动性、安全性管理，业务数据转发：<strong>MME</strong>（协议参数设置如协商包头压缩算法、连接切换管理）、<strong>SGW</strong>（转发速率控制）、<strong>PGW</strong>（数据转发）</td></tr>
+    <tr><td>IoT 平台</td><td>汇聚各接入网 IoT 数据，按类型转发到相应业务应用器</td></tr>
+    <tr><td>应用服务器</td><td>IoT 数据最终汇聚点</td></tr>
+  </table>
+  <p>UE 通过无线空口连 BS，BS 有线连核心网；NB-IoT 基站可依赖现有 GSM/LTE 基站部署（省建网成本）也可独立建站。</p>
+
+  <h2>二、物理层（上下行不对称，必背表）</h2>
+  <table>
+    <tr><th>方向</th><th>带宽/多址</th><th>频域</th><th>时域</th></tr>
+    <tr><td>下行</td><td>180kHz，<strong>OFDM</strong></td><td>12 个子载波，间隔 15kHz</td><td>slot 0.5ms（7 个 symbol）；子帧 1ms=2 slots（基本调度单元）；无线帧 10ms=10 子帧</td></tr>
+    <tr><td>上行</td><td>180kHz，<strong>SC-FDMA</strong>（单载波，比 OFDMA 峰均比 PAPR 更低）</td><td>两种子载波间隔：12 子载波×15kHz 或 48 子载波×3.75kHz；模式：<strong>single-tone</strong>（1 用户 1 载波，支持两种间隔）/<strong>multi-tone</strong>（1 用户多载波，仅 15kHz）</td><td>15kHz：slot 0.5ms；3.75kHz：slot 2ms（NB-slot）；无线帧 10ms=5 NB-slot；RU 为资源分配基本单位（15kHz 时 4 种：12 子载波×1ms、6×2ms、3×4ms、1×8ms）</td></tr>
+  </table>
+  <h3>2.1 下行信号与信道总结表（课件原表）</h3>
+  <table>
+    <tr><th>名称</th><th>方向</th><th>作用及性质</th></tr>
+    <tr><td>NPSS</td><td>下行</td><td>时间和频率同步；<strong>每个无线帧的子帧 #5 发送，周期 10ms</strong></td></tr>
+    <tr><td>NSSS</td><td>下行</td><td>携带小区 ID（PCI，范围 0-503）信息；<strong>偶数无线帧的子帧 #9 发送，周期 20ms</strong>；占用 11symbol×12subcarrier=132 RE（先生成 131 根序列再循环拓展）</td></tr>
+    <tr><td>NRS</td><td>下行</td><td>下行信道质量估计；每子帧每天线端口 8 个 RE，最多两个天线端口；作用：上行功率控制、判断覆盖等级</td></tr>
+    <tr><td>NPBCH</td><td>下行</td><td>承载主系统消息块 MIB-NB（含部署方式指示）；每个无线帧子帧 #0 发送</td></tr>
+    <tr><td>NPDCCH</td><td>下行</td><td>承载 DCI（资源分配等控制信息）</td></tr>
+    <tr><td>NPDSCH</td><td>下行</td><td>下行业务数据和系统消息（单播数据、寻呼、随机接入响应）</td></tr>
+    <tr><td>DMRS</td><td>上行</td><td>信道估计；每时隙传 1 或 3 个 SC-FDMA 符号</td></tr>
+    <tr><td>NPRACH</td><td>上行</td><td>随机接入过程，跳频传输</td></tr>
+    <tr><td>NPUSCH</td><td>上行</td><td>上行数据与控制信息；Format 1 传数据，Format 2 传 UCI（目前限于 HARQ ACK）</td></tr>
+  </table>
+  <p><strong>ZC 序列</strong>（NPSS/NSSS 用）：Zadoff-Chu 序列，N_ZC=11（NB-IoT）、根索引 q=5；好特性：<strong>恒定幅度、零自相关</strong>。</p>
+
+  <h2>三、链路层：卷积码（必考编码+解码）</h2>
+  <div class="calc">卷积码（P. Elias，1955）：有记忆的纠错码，k 个信息比特编码成 n 个比特，
+输出不仅与当前 k 位输入有关，还与之前 L−1 组信息比特有关
+三元组 (n, k, L)：n 输出码字长、k 输入比特数、L 约束长度（记忆深度）；码率 R = k/n
+
+课件样例（n=2, k=1, L=2，寄存器初始 00）输入 0110：
+  输入 0 → 输出 (00)，状态 (00)
+  输入 1 → 输出 (11)，状态 (10)
+  输入 1 → 输出 (01)，状态 (11)
+  输入 0 → 输出 (01)，状态 (01)
+  最终输出序列 (00 11 01 01)</div>
+  <ul>
+    <li><strong>Trellis diagram（网格图）</strong>：维特比解码的工具。课件例：u=[1 1 0 1] → V=[11 01 01 00]；正确接收 R=[11 01 01 00]，错误接收 R=[11 01 11 00] 时沿网格图找汉明距离最小的路径即可还原。</li>
+    <li><strong>TBCC（咬尾卷积码）</strong>：最后比特编码完成后寄存器回到初始状态（S0S1,…,S5=ck-1,…,ck-6）；<strong>NB-IoT 下行采用 TBCC</strong>。</li>
+    <li><strong>Turbo code</strong>：广泛用于 LTE；通过交织使码重分布合理、增大最小汉明距，比 TBCC 纠错能力更好；但<strong>迭代译码复杂、时延大</strong>，更适用于<strong>长数据包</strong>。</li>
+  </ul>
+
+  <h2>四、随机接入过程（四步，Msg1~Msg4）</h2>
+  <table>
+    <tr><th>步骤</th><th>要点</th></tr>
+    <tr><td>Msg1 发送前导</td><td>Preamble 采用 <strong>single-tone、子载波间隔 3.75kHz、默认跳频</strong>；NPRACH 重发次数可选 {1,2,4,8,16,32,64,128}；<strong>开环功控</strong>：TRANSMISSION_POWER = INITIAL_POWER + (TRANSMISSION_COUNTER−1) × POWER_RAMP_STEP（步长 {0,2,4,6}dB）</td></tr>
+    <tr><td>Msg2 随机接入响应 RAR</td><td>在 NPDSCH 上发送，位置由 NPDCCH 指示；携带 RA-preamble identifier、定时调整量、Msg3 的 UL grant、Temporary C-RNTI；时间窗内没等到响应则重发 preamble</td></tr>
+    <tr><td>Msg3 上行调度传输</td><td>按 RAR 授权在 NPUSCH 上发送；初始接入传 RRC 连接请求；开环发射功率（与 Msg1 类似）；发送后启动<strong>竞争解决定时器</strong>等待 Msg4</td></tr>
+    <tr><td>Msg4 竞争解决</td><td>BS 在 MAC 层竞争检测，通过 NPDCCH 发 C-RNTI 或 NPDSCH 发竞争解决 ID；定时器内检测到自己的 C-RNTI → 成功；超时未收到 → 随机退避后重试，超过最大次数则失败</td></tr>
+  </table>
+  <p>失败处理：<strong>覆盖增强等级（CE level）估计</strong>——由下行测量（如 RSRP）确定 CE level，用对应 CE 的 NPRACH 资源发起随机接入；前导失败则 Level up。</p>
+
+  <h2>五、网络层与实例（AT 命令）</h2>
+  <ul>
+    <li>IP 相关：<strong>AT+NBAND=n</strong>（n=5,8,20 对应 850/900/800MHz）；<strong>AT+CSCON=?</strong>（查询连接状态，1 连接 / 0 IDLE）；<strong>AT+CGPADDR=?</strong>（查询模块 IP 地址）。</li>
+    <li>UDP 相关：<strong>AT+NSOCR=DGRAM,17,3000,1</strong>（创建 UDP 端口 3000，17=UDP 协议，1=可接收下行数据）；<strong>AT+NSOST=0,服务器IP,3000,长度,数据</strong>（<strong>最大支持发送 512 字节</strong>）。</li>
+    <li><strong>上行发送全流程</strong>（课件实例）：附着（AT+CGATT?=1）→ 创建 UDP → 发 20bytes → <strong>协议层包头转换</strong>（UDP +8B；IP +20~40B；数据链路层包头压缩到 1~2B 再加 1~4B；假设 20B payload 变为 25B）→ <strong>信道编码</strong>（+3B CRC，1/3-turbo code，编码后 (25+3)×3 = 84B）→ 速率匹配 → <strong>分段</strong>（8 个 RU 分成 2 个相同大小子块 BL1、BL2）→ <strong>QPSK 调制</strong> → <strong>资源映射</strong>（每 RU 占 3 subcarriers×8 slots，重复传输 NREP=4）。</li>
+  </ul>
+
+  <div class="exam">
+    <h3>课件思考题（本课）</h3>
+    <p><strong>维特比解码</strong>：编码器只含两个移位寄存器（初始状态 00），收到序列 [00 10 01 01]，如何解码出原始数据？写出译码结果及实际编码数据。</p>
+    <details><summary>点开看答案</summary>
+      <p>用维特比算法在网格图上按汉明距离最小原则逐段搜索路径：原始数据 <strong>u=[0 1 1 0]</strong>，对应的实际编码数据 <strong>V=[00 11 01 01]</strong>（接收序列中 10 为误码，V 与 R 仅第二段差 1 位，累积距离最小）。（课后习题答案第五章第 5 题）</p>
+    </details>
+    <p><strong>小区容量</strong>：某市区住户密度 1517 户/km²，每户平均 40 个设备，基站小区覆盖为正六边形，两基站平均距离 1732m，求每小区容量？</p>
+    <details><summary>点开看答案</summary>
+      <p>正六边形边长 1732m 时小区面积约 3×3×1.732²（km² 口径按习题解答），每个小区设备数 = 小区覆盖面积 × 住户密度 × 每户设备数 = 32×3×1.732²×1517×40 ≈ <strong>52547 个</strong>。（课后习题答案第五章第 3 题，建议按原解答式子复算口径）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>
+    主源：课件《第五章 低功耗无线协议2026》· 教材 董玮等《从创意到原型（第2版）》
+    · 速查：<a href="../reference/通信协议速查.html">通信协议速查</a>
+    · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a>
+    · 上一课：<a href="0507-LPWAN概述与覆盖增强.html">LPWAN 概述与覆盖增强</a>
+    · 下一课：<a href="0509-LoRaWAN协议详解.html">LoRaWAN 协议详解</a>
+    · <a href="../课程总目录.html">课程总目录</a><br>
+    有不懂的随时在对话里问你的 AI 老师。
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "NB-IoT 上行采用的多址技术及其相对 OFDMA 的优势是？",
+    options: [
+      "OFDMA；带宽更宽",
+      "SC-FDMA；峰值平均功率比 PAPR 更低",
+      "TDMA；时延更小"
+    ],
+    answer: 1,
+    explain: "课件：上行采用单载波频分多址 SC-FDMA，由于单载波方式，与 OFDMA 相比具有更低的峰值平均功率比 PAPR；下行是 OFDM。"
+  },
+  {
+    prompt: "NPSS 的发送位置与周期是？",
+    options: [
+      "偶数无线帧子帧 #9，周期 20ms",
+      "每个无线帧子帧 #5，周期 10ms",
+      "每个无线帧子帧 #0，周期 10ms"
+    ],
+    answer: 1,
+    explain: "NPSS 在每个无线帧的子帧 #5 上发送、周期 10ms，用于时间和频率同步；NSSS 在偶数无线帧子帧 #9、周期 20ms，携带小区 ID；NPBCH 在子帧 #0 承载 MIB-NB。"
+  },
+  {
+    prompt: "卷积码样例（n=2,k=1,L=2，初始 00）：输入第一位 0，输出码字与状态是？",
+    options: [
+      "输出 (00)，状态 (00)",
+      "输出 (11)，状态 (10)",
+      "输出 (01)，状态 (11)"
+    ],
+    answer: 0,
+    explain: "课件样例输入 0110：0→(00)/状态00；1→(11)/状态10；1→(01)/状态11；0→(01)/状态01。最终输出 00 11 01 01。"
+  },
+  {
+    prompt: "NB-IoT 下行采用的信道编码是？",
+    options: [
+      "Turbo code",
+      "TBCC（咬尾卷积码）",
+      "RS 码"
+    ],
+    answer: 1,
+    explain: "课件：NB-IoT 下行采用 TBCC（编码完成后寄存器回到初始状态）；Turbo code 广泛用于 LTE，纠错更好但迭代译码复杂时延大，适合长数据包。"
+  },
+  {
+    prompt: "随机接入 Msg1 中，preamble 的传输方式是？",
+    options: [
+      "multi-tone，子载波间隔 15kHz",
+      "single-tone，子载波间隔 15kHz，不跳频",
+      "single-tone，子载波间隔 3.75kHz，默认跳频"
+    ],
+    answer: 2,
+    explain: "课件：Preamble 采用 single-tone 方式传输，子载波间隔 3.75kHz，默认通过跳频发送；NPRACH 重发次数可选 {1,2,4,8,16,32,64,128}，采用开环功控。"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— NB-IoT 这块稳了。" : " —— 回头看标红的解析，重点复习上下行参数表与卷积码。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

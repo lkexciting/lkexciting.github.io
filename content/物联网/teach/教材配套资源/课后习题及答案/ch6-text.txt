@@ -1,0 +1,465 @@
+
+第六章 物联网云平台
+1. 对于变长头部和数据内容长度和分别为100,200,30000的MQTT报文，分别写出MQTT固定头部的剩余长度字段。
+解：
+当变长头部和数据内容长度和为100时，MQTT固定头部的剩余字段为100。
+当变长头部和数据内容长度和为200时，MQTT固定头部的剩余字段为1。
+当变长头部和数据内容长度和为30000时，MQTT固定头部的剩余字段为1。
+2. 对于以下代码，画出完整的MQTT报文
+
+解：
+
+3. 对于以下CoAP请求，画出完整的CoAP报文
+
+解：
+CoAP的报文格式如下所示：
+
+本例的请求报文：
+
+    本例的响应报文：
+
+4. 设备管理主要管理哪些内容？请至少举出5个例子。
+答：
+云平台可以管理设备的很多内容，例如：
+可以对设备生命周期进行管理，可以注册、删除设备；
+可以对设备状态进行管理，从而提供设备上线、离线的变更通知服务；
+可以对设备固件版本进行管理，获取设备当前的版本号；
+可以进行固件更新管理，选择需更新的设备，指示设备在哪里查找更新，并监视更新过程。
+可以对设备的消息进行处理并将其其安全可靠地路由至终端节点和其他设备。
+5. 直接管理和设备影子有什么不同？请举一个具体的例子说明。
+答：
+设备影子与直接管理的区别：
+由于设备影子具有存储设备状态信息的功能，在设备离线状况下云平台发布的指令可以在设备上线后执行。直接管理遵循请求-响应模式，类似于会立即成功或失败的HTTP调用，适用于需要立即确认其结果的交互，因此，其在设备离线时的所有操作都是无效的，必须考虑设备是否在线；
+设备影子可以保证基于调用指令的排序。这是因为从应用程序发出的指令到达设备影子的时间是严格按照指令发出顺序排序的。而直接管理方法无法保证基于调用指令的排序，并且无法支持任何并发语义；
+举例：
+对一盏灯先后调用开红色光和开蓝色光指令，当使用设备影子方法时，这盏灯最后的状态一定是开蓝色光；而使用直接管理时，若第二个指令先传输到设备，则设备最终打开的是红色光。
+6. 不同于传统的关系型数据库基于B+树实现，时序数据库选择LSM树以实现高性能的写入操作，请调研并回答以下问题：
+1. 简述LSM树和B+树最显著的区别。
+2. 解释LSM树读取性能不佳的原因并提出一种优化的方法。
+答：
+LSM树和B+树最主要的区别在于他们的结构和如何利用硬件，特别是磁盘。
+B+树的特点决定了能够对主键进行高效的查找和删除，B+树能够提供高效的的范围扫描功能得益于相互连接且按主键有序，扫描时避免了耗时的遍历操作。 
+LSM树在查找时先查找内存的存储，如果在内存中未命中就去磁盘文件中查找文件，找到key之后返回最新的版本。
+原因：由于LSM树数据存放的位置不确定，导致查找时需要一层一层地遍历，增加了时间的消耗。例如当需要读取指定key的数据时，先在内存中的 MemTable 和 Immutable MemTable 中查找，如果没有找到，则继续从 Level 0 层开始，找不到就从更高层的 SSTable 文件中查找，如果查找失败，说明整个 LSM Tree 中都不存在这个 key 的数据。
+优化：在内存中放入一个记录文件，用来记录每个数据的Level层、文件名、最小key值、最大key值等，可以帮助快速定位到要查询的SSTable文件，避免频繁读取。
+7. 对于问题“快速找出1 – 100 （无重复）中缺失的2个数”，除了利用流计算思想一次遍历计算得到，还有其它算法可以实现？请再提出一种算法，并通过实际编程测试，给出两种算法的运行时长的比值。
+解：
+算法：运用桶排序的思想，输入每个数，就令下标为该数的数组值为1，最后遍历该数组，当第二个值为0的数出现时，跳出循环，最后值为0的两个数即为所求值。
+测试（环境为c++语言环境）：
+流计算代码：
+#include <stdio.h>  
+#include <math.h>  
+#include <time.h>  
+  
+int a[100]={18,4,93,9,11,67,3,59,62,14,75,23,52,55,49,7,41,56,85,65,61,66,88,32,80,36,74,2,12,26,16,89,98,5,82,77,13,34,97,58,70,71,46,95,91,37,54,21,10,20,79,57,44,30,92,64,25,39,33,45,83,63,27,87,69,43,6,50,38,40,1,100,86,60,19,84,76,35,72,48,68,24,90,96,8,53,15,22,51,47,28,29,17,94,81,42,99,73};  
+int main(){  
+    clock_t start, finish;  //计时
+    double  duration;  
+    int z1=5050,z2=338350;  //1+2+…+100=5050,1^2+2^2+…+100^2=338350
+    int x;  // 一个解
+    start = clock();  
+    for(int i=0;i<98;i++)  
+    {  
+        z1-=a[i];  // 求出x+y的值
+        z2-=a[i]*a[i];  // 求出x^2+y^2的值
+    }  
+    x=(2*z1+sqrt(4*z1*z1-8*(z1*z1-z2)))/4; // 计算解 
+    printf("缺失的两个数字为: %d 和 %d\n", x,z1-x);  
+    finish = clock();  
+    duration = (double)(finish - start) / CLOCKS_PER_SEC;  
+    printf("流计算共花费时间: %f 秒\n",duration);  //算出秒数
+  
+    return 0;  
+}  
+
+桶排序代码：
+#include <stdio.h>  
+#include <math.h>  
+#include <time.h>  
+  
+int a[100]={18,4,93,9,11,67,3,59,62,14,75,23,52,55,49,7,41,56,85,65,61,66,88,32,80,36,74,2,12,26,16,89,98,5,82,77,13,34,97,58,70,71,46,95,91,37,54,21,10,20,79,57,44,30,92,64,25,39,33,45,83,63,27,87,69,43,6,50,38,40,1,100,86,60,19,84,76,35,72,48,68,24,90,96,8,53,15,22,51,47,28,29,17,94,81,42,99,73};  
+int b[100]={0};  // 桶排序数组
+int main(){  
+    clock_t start, finish;   //计时
+    double  duration;  
+    int x=0,y=0;  // 两个解
+    start = clock();  
+    for(int i=0;i<98;i++)  // 将出现的数字下标变为1 
+        b[a[i]]=1;  
+    for(int i=1;i<=100;i++)  // 遍历100查找值
+        if(!b[i]){  // 如果为解
+            if(!x){  // 如果第一个解
+                x=i;  
+                continue;  //继续查找下一个解
+            }  
+            y=i;  // 第2个解
+            break;  // 跳出循环
+        }  
+    printf("缺失的两个数字为: %d 和 %d\n", x,y);  
+    finish = clock();  
+    duration = (double)(finish - start) / CLOCKS_PER_SEC;  
+    printf("桶排序共花费时间: %f 秒\n",duration);  
+  
+    return 0;  
+}  
+
+两种算法的运行时长比值为：
+0.0000260.000031=2631
+8. 请根据描述和样例输入输出设计一个体现流计算的算法：
+描述：直线上有n个等距的村庄，每个村庄要么买酒（ai>0），要么卖酒（ai<0）,所有村庄供需平衡，即所有ai之和等于0.把k个单位的酒从一个村庄运到相邻村庄需要k个单元的劳动力。计算最少需要多少劳动力可以满足所有村庄的需求，要求最多只能扫描一次数组。
+样例输入：首先输入n代表村庄个数，然后分别输入n个买酒/卖酒的数量
+5
+5 -4 1 -3 1
+6
+-1000 -1000 -1000 1000 1000 1000
+样例输出：输出最少需要的劳动力个数
+9
+9000
+解：
+算法思想：由于最后所有的村庄酒的数目都是0，因此我们可以从第1个村庄遍历到倒数第2个村庄，对于每个村庄i，需要的劳动力为当前酒的数目的绝对值，因为这些酒不管是买还是卖，都需要劳动力，我们假设是从后面的那个村庄来买或卖，因此第i+1个村庄的酒的数目加上第i个村庄的酒的数目，最后算出来的值即为需要的劳动力数目。
+代码：
+#include <stdio.h>  
+#include <math.h>  
+#include <time.h>  
+  
+const int N=500050;  
+int a[N];  
+int main(){  
+  
+    int n;  // 村庄的数目  
+    scanf("%d",&n);  
+    for(int i=0;i<n;i++)  
+    {  
+        scanf("%d",a+i); //输入每个村的情况  
+    }  
+    int need=0;  // 需要的劳动力数目  
+    for(int i=0;i<n-1;i++)  
+    {  
+        need+=fabs(a[i]);  
+        a[i+1]+=a[i];  
+    }  
+    printf("需要的劳动力数目为: %d\n",need);  
+  
+    return 0;  
+}  
+
+
+9. 结合基于对称密钥和非对称密钥的设备认证方法的优缺点，讨论分别在什么样的物联网场景下，适合使用基于对称密钥的设备认证和非对称密钥的设备认证？
+答：
+对称密钥
+对称密钥加密，又称私钥加密，即信息的发送方和接收方用一个密钥去加密和解密数据。它的最大优势是加/解密速度快，适合于对大数据量进行加密，对称加密的一大缺点是密钥的管理与分配，换句话说，如何把密钥发送到需要解密你的消息的人的手里是一个问题。由于需要将密钥在网络传输，密钥有很大的风险会被黑客们拦截并解密，所以只适合用在一些安全性不高的场景。
+非对称密钥
+非对称密钥加密系统，又称公钥密钥加密。非对称加密为数据的加密与解密提供了一个非常安全的方法，它使用了一对密钥，即公钥（public key）和私钥（private key）。私钥由一方安全保管，不能外泄，而公钥则可以发给任何请求它的人。非对称加密使用这对密钥中的一个进行加密，而解密则需要另一个密钥。公钥机制灵活，但加密和解密速度却比对称密钥加密慢得多，不适合数据传输频繁的场景下，适合于数据安全性较高的情景中，如国家安全、军队通信方面。
+10. 若Azure Function 每隔0.05秒被调用一次，每次执行时间为0.1s ，每次调用需要0.03秒的冷启动时间，相对于PaaS架构，无服务器计算方式节省了多少CPU时间（按1个月30天计算）？
+解：
+由题意得，Azure Function空闲时间为0.03+0.05=0.08s，占百分比为：
+0.05+0.030.1+0.05+0.03×100%=44.44%
+由于PaaS架构是一直都在执行的，因此节省的CPU时间为空闲时间，
+即：
+30×24×60×60×44.44% s=  1152000s
+    答：节省了CPU时间1152000s。
+11. 为物联网边缘计算场景设计一个寻找计算下沉锚点的算法（使用C语言实现），并求其计算复杂度（提示：边缘节点只知道自身的父节点（也即路由信息））
+解：
+该寻找计算下沉锚点的算法即为寻找两个点最近公共祖先算法。
+算法思想：
+对于两个结点u和v，假设它们的最近公共祖先为lca(u, v)，用depth[x]表示x这个结点的深度，pre[x]表示x的父结点。那么很显然，有depth[ lca(u, v) ] <= min{depth[u], depth[v]}，通过这样一个性质，我们可以很容易得出一个算法：
+1) 当depth[u] < depth[v]时，lca(u, v) = lca(u, pre[v]);
+2) 当depth[u] > depth[v]时，lca(u, v) = lca(pre[u], v);
+利用以上两个条件，可以将u和v不断向根进行步进，递归求解，直到u == v时，这里的u或v就是原先要求的(u, v)的最近公共祖先。
+代码：
+#include<stdio.h>  
+#include<string>  
+#include<iostream>  
+#include<vector>  
+#include<set>  
+#include<map>  
+#include<string.h>  
+#include<algorithm>  
+#include<bitset>  
+#include<queue>  
+using namespace std;  
+#define inf 0x3f3f3f3f  
+#define pii pair<int,int>  
+#define ll long long  
+ll poww(ll a,ll b,ll c){ll ans=1%c;for(;b;b>>=1,a=a*a%c)if(b&1)ans=ans*a%c;return ans;}  
+const int N=1e6+7;  
+  
+template <typename T>inline void rd(T &x)  
+{  
+    char c=getchar();int s=1;  
+    while(c!='-'&&!isdigit(c))c=getchar();  
+    if(c=='-')s=-1,x=0;else x=c-'0';  
+    while(c=getchar(),isdigit(c))x=x*10+c-'0';x*=s;  
+}  
+  
+struct node  
+{  
+    int data;  
+    int l,r;  
+}e[N];  
+int pre[N];  
+int in[N];  
+int ind;  
+int creat(int pl,int pr,int il,int ir)  
+{  
+    if(pl>pr)return -1;  
+    int tmp=++ind;  
+    for(int i=il;i<=ir;i++)  
+    {  
+        if(in[i]==pre[pl])  
+        {  
+            e[tmp].data=in[i];  
+            e[tmp].l=creat(pl+1,pl+i-il,il,i-1);  
+            e[tmp].r=creat(pl+i-il+1,pr,i+1,ir);  
+            return tmp;  
+        }  
+    }  
+}  
+int n,m;  
+int depth[200100];  
+int vis[2000100];  
+int fa[5005][5005];  
+int lg[200500];  
+set<int>s;  
+void init()  
+{  
+    for(int i=1;i<=30;i++)  
+    {  
+        lg[i]=lg[i-1]+(1<<lg[i-1]==i);  
+    }  
+}  
+void dfs(int nw,int fat)  
+{  
+    depth[nw]=depth[fat]+1;  
+    fa[nw][0]=fat;  
+    for(int i=1;(1<<i)<=depth[nw];i++)  
+        fa[nw][i]=fa[fa[nw][i-1]][i-1];  
+    if(e[nw].l!=-1)dfs(e[nw].l,nw);  
+    if(e[nw].r!=-1)dfs(e[nw].r,nw);  
+}  
+void lca(int x,int y)  
+{  
+    int xxx=x,yyy=y;  
+    if(depth[x]<depth[y])  
+        swap(x,y);  
+    int xx=x,yy=y;  
+    while(depth[x]>depth[y])  
+        x=fa[x][lg[depth[x]-depth[y]]-1];  
+    if(x==y)  
+    {  
+        printf("%d is an ancestor of %d.\n",e[yy].data,e[xx].data);  
+        return;  
+    }  
+    for(int k=lg[depth[x]]-1;k>=0;k--)  
+    {  
+        if(fa[x][k]!=fa[y][k])  
+            x=fa[x][k],y=fa[y][k];  
+    }  
+    printf("LCA of %d and %d is %d.\n",e[xxx].data,e[yyy].data,e[fa[x][0]].data);  
+}  
+int main()  
+{  
+    rd(n);rd(m);  
+    int z=1;  
+    for(int i=0;i<m;i++)  
+    {  
+        rd(pre[i]);  
+        vis[pre[i]]=i+1;  
+        s.insert(pre[i]);  
+        in[i]=pre[i];  
+    }  
+    sort(in,in+m);  
+    int root=creat(0,m-1,0,m-1);  
+    init();  
+    while(n--)  
+    {  
+        int a,b;  
+        rd(a);rd(b);  
+        if(s.find(a)==s.end())  
+        {  
+            if(s.find(b)==s.end())printf("ERROR: %d and %d are not found.\n",a,b);  
+            else printf("ERROR: %d is not found.\n",a);  
+        }  
+        else if(s.find(b)==s.end()) printf("ERROR: %d is not found.\n",b);  
+        else  
+        {  
+            dfs(root,0);  
+            lca(vis[a],vis[b]);  
+        }  
+    }  
+    return 0;  
+} 
+时间复杂度：
+预处理：
+O(nlogn)
+查找：
+O(depth(u)+depth(v))
+12. 在Azure云平台上编写一个处理Restful API的函数，调用方法与理想返回值如下：
+调用：GET (Azure API)
+返回：“Hello World！”
+
+第七章 物联网云-端一体开发
+1. 简述云-端一体开发平台是如何简化物联网应用开发的。
+答：
+物联网应用的开发分为设备端开发、云服务开发、Web应用/移动应用开发。针对设备端开发，云-端一体开发平台为开发者提供设备开发SDK，物联网操作系统等内容，简化设备开发与设备入云流程；针对云服务开发，云-端一体开发平台为开发者提供IFTTT规则配置及流式服务编排等方式，通过可视化配置即可完成云服务的开发；针对Web应用/移动应用开发，云-端一体开发平台同样提供了可视化的开发方式。另外，在三端应用的集成方面，云-端一体开发平台通过物模型、命名机制等，对三端应用的集成进行了简化。
+2. 用表7-4作为硬件数据库，以下面的代码作为输入，试给出满足应用需求且价格最低的硬件配置。
+1void upload();
+2TL_HTTP http;
+3void setup() {
+4TL_WiFi.init();
+5TL_WiFi.join("SSID","PASSWORD");
+6http = TL_WiFi.fetchHTTP();
+7}
+8void loop() {
+9TL_Light.read();
+10TL_Soil_Moisture.read();
+11upload();
+12TL_Time.delayMillis(60000);
+13}
+14void upload() {
+15double light = TL_Light.data();
+16double sm = TL_Soil_Moisture.data();
+17String url = "http://hostname/ul.php?";
+18url += String("light=") + String(light);
+19url += String("&sm=") + String(sm);
+20http.get(url);
+21}
+解：
+使用TinyLink配置后的硬件如下图所示：
+
+3. 根据上一题配置，如果开发者想查看推荐配置，试为开发者计算出有多少种可用的组合？
+答：
+从图中可以看出，为开发者计算出8种可用的组合。
+
+4. 假设我们要使用IoT Studio平台定义一个空气盒子的物模型，模型需要包含的具体功能信息如下：
+属性：
+温度（Temp）：float 类型，最小值为-40，最大值为50，单位为℃，步长0.1，可读；
+湿度（Humi）： float 类型，最小值为0%RH，最大值为100%RH，单位为%RH， 可读；
+事件：
+属性数据上报事件（PropPost）：输出参数包含上述两个属性的值，事件对应的方法名称为“thing.event.prop.post”，其余参数可自定义。
+请参考上述信息，写出设备的物模型定义。
+解：
+{  
+  "schema":"https://iotx-tsl.oss-ap-southeast-1.aliyuncs.com/schema.json",  
+  "profile": {  
+    "productKey": "xxxxxx"  
+  },  
+  "properties": [  
+    {  
+      "identifier": "Temp",  
+      "dataType": {  
+        "specs": {  
+          "unit": "°C",  
+          "min": "-40",  
+          "max": "50",  
+          "step": "0.1"  
+        },  
+        "type": "float"  
+      },  
+      "name": "温度",  
+      "accessMode": "r",  
+      "required": false  
+    },  
+    {  
+      "identifier": "Humi",  
+      "dataType": {  
+        "specs": {  
+          "unit": "%RH",  
+          "min": "0",  
+          "max": "100",  
+          "step": "0.1"  
+        },  
+        "type": "float"  
+      },  
+      "name": "湿度",  
+      "accessMode": "r",  
+      "required": false  
+    }  
+  ],  
+  "events": [  
+    {  
+      "outputData": [  
+        {  
+          "identifier": "Temp",  
+          "dataType": {  
+            "specs": {  
+              "unit": "°C",  
+              "min": "-40",  
+              "max": "50",  
+              "step": "0.1"  
+            },  
+            "type": "float"  
+          },  
+          "name": "温度"  
+        },  
+        {  
+          "identifier": "Humi",  
+          "dataType": {  
+            "specs": {  
+              "unit": "%RH",  
+              "min": "0",  
+              "max": "100",  
+              "step": "0.1"  
+            },  
+            "type": "float"  
+          },  
+          "name": "湿度"  
+        }  
+      ],  
+      "identifier": "post",  
+      "method": "thing.event.property.post",  
+      "name": "post",  
+      "type": "info",  
+      "required": true,  
+      "desc": "属性上报"  
+    }  
+  ]  
+}  
+5. 假设我们要使用IoT Studio 服务编排工具开发一个智能电灯的云服务，实现以下功能：当房间没有人并且电灯打开时，关闭电灯（房间有没有人通过摄像头判断，处理时间较长；电灯是否打开通过当前光照强度判断，处理时间较短）；否则，不做任何处理。请列出此服务需要用到的服务节点，并对这些节点进行编排。
+解：
+在本示例中，我们需要开发一个设备触发服务。用到的节点有“设备触发”节点、“脚本节点”、“条件”节点、“自定义API”节点、以及“产品”节点，节点的编排如下图所示。每个节点的作用如下。
+“设备触发”节点：服务流的起始节点；
+第一个“脚本”节点：负责处理设备上传的数据，根据光照强度数据判断电灯是否打开，并将判断结果传给“条件”节点；
+第一个“条件”节点：判断电灯是否打开，如果打开则继续；否则服务结束；
+第二个“脚本”节点：获取设备上传的图像数据，并将其传给“自定义API”节点；
+“自定义API”节点：根据摄像头拍摄的图片数据，判断当前房间内是否有人，将判断结果传给“条件”节点；
+第二个“条件”节点：判断房间是否有人，如果无人则继续；否则服务结束；
+“产品”节点：调用设备服务，关闭电灯。编排如下：
+
+
+6. 现有一设备，其相关参数如表7-13所示。
+表 7-13 某设备相关属性
+clientID
+deviceName
+productKey
+securemode
+timestamp
+signmethod
+deviceSecret
+1001
+bulb
+bulbkey
+3
+123
+hmacsha1
+mysecret
+
+根据上述设备信息，计算使用 TinyLink 连接Link Develop 平台的MQTT 相关连接参数，填写在表7-14 中。
+表 7-14 该设备的MQTT 连接参数
+参数名称
+参数值
+serverName
+bulb.iot-as-mqtt.cn-shanghai.aliyuncs.com
+port
+1883
+clientName
+1001|securemode=3,signmethod=hmacsha1,timestamp=123|
+userName
+bulb&bulbkey
+passWord
+8ea1b574a7f1e6b51a1afb73149c8e5906635e93
+7. 基于TinyLink、IoT Studio平台和Tuya IoT平台，开发一个完整的物联网应用，主要包括以下功能。
+设备采集室内温度数据，每隔10s上报至Link Develop平台；
+云平台运行设备触发服务，当温度大于30℃，打开设备上的风扇；
+移动应用实时显示当前温度以及风扇状态，允许用户打开/关闭风扇。
+

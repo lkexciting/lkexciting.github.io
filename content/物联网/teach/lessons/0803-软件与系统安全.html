@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 章 · 软件与系统安全</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 8 章 · 小课 3/6 · 课件提炼</span>
+  <h1>软件与系统安全</h1>
+  <p class="subtitle">一句话：存储、漏洞、沙盒、蜜罐、OTA 五个软件侧防线——静态/动态分析之分和 Potd 蜜罐三模块是本节最常考的点。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第八章-v2(2)》第 2 节"安全机制2：软件安全机制"【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第八章-v2(2).pdf</p>
+  </div>
+
+  <h2>一、数据安全存储与漏洞技术</h2>
+  <h3>1.1 数据安全存储技术</h3>
+  <ul>
+    <li><strong>设备存储安全</strong>：利用 TEE 等新型硬件特性；数据加密。</li>
+    <li><strong>云存储安全</strong>：访问控制、授权管理、安全日志与审计、冗余与容错等传统安全技术；<strong>数据加密以及在加密后的数据上进行计算</strong>成为云存储安全的发展重点——如<strong>安全多方计算、隐私计算、加密数据库</strong>等是这个领域最活跃的方向。</li>
+  </ul>
+  <h3>1.2 漏洞分析挖掘与修复（定义必背）</h3>
+  <p><strong>漏洞（Vulnerability）</strong>：系统中存在的功能性或安全性的逻辑缺陷，是计算机系统在<strong>硬件、软件、协议</strong>的具体实现或<strong>系统安全策略</strong>上存在的缺陷和不足。</p>
+  <table>
+    <tr><th>技术</th><th>课件定义</th></tr>
+    <tr><td>漏洞挖掘技术</td><td>综合应用各种技术和工具（符号执行等静态分析技术、Fuzzing 等动态分析技术），尽可能找出系统中<strong>未知、潜在</strong>的漏洞</td></tr>
+    <tr><td>漏洞分析技术</td><td>对<strong>已发现</strong>漏洞的细节进行深入分析，为漏洞利用、补救等作铺垫</td></tr>
+  </table>
+  <div class="callout">
+    <div class="label">教材 PPT 补充</div>
+    <p>挖掘对象：<strong>源码</strong>（仅针对开源项目）与<strong>目标代码</strong>（需编译器、指令系统、可执行文件格式等多方面知识，难度较大）。按"是否需要运行所检测的程序"分类：<strong>静态分析</strong>——不运行目标程序，通过词法分析、语法分析等扫描代码验证漏洞，代表性技术<strong>符号执行</strong>；<strong>动态分析</strong>——运行目标程序，观察运行状态、资源使用情况，从代码和数据两方面验证，代表性技术<strong>模糊测试（Fuzzing）</strong>。</p>
+  </div>
+
+  <h2>二、沙盒：隔离运行环境</h2>
+  <p><strong>沙盒</strong>：一种安全机制，为运行中的程序提供的<strong>隔离环境</strong>。例子：基于软件的内存沙盒机制 <strong>Harbor</strong>、<strong>WebAssembly</strong> 轻量虚拟机制。</p>
+  <ul>
+    <li><strong>无沙盒</strong>：内核模块与用户模块共享内存堆，用户模块代码乱写内存时可能破坏内核状态，导致系统崩溃。</li>
+    <li><strong>有沙盒</strong>：内存空间被划分成不同的<strong>保护域</strong>（如内核域和用户域）；内核模块驻留在独自一个域内、可以读写任何域；其他模块只能驻留一个域且<strong>只能写入自己的域</strong>。</li>
+    <li>Harbor 两个关键机制：<strong>安全域</strong>——受保护的安全域，存储函数返回地址和跨域调用帧，防止返回地址被破坏导致回调跳转到其它位置的代码；<strong>栈界限（stack bound）</strong>——限制被调用函数可使用栈的内存范围。</li>
+  </ul>
+
+  <h2>三、蜜罐与 OTA 安全</h2>
+  <h3>3.1 蜜罐（Potd）</h3>
+  <p><strong>蜜罐</strong>：通常将物联网感知、执行、网络等资源作为<strong>诱饵</strong>，捕获并分析针对物联网设备的攻击活动。开源物联网蜜罐：<strong>Potd</strong>。</p>
+  <table>
+    <tr><th>模块</th><th>课件作用</th></tr>
+    <tr><td>诱饵环境 = 重定向器 + 协议进程</td><td>为攻击者提供入侵的通信接口；重定向器收到 TCP 连接请求后转发至协议进程子模块；协议进程实现相应的协议</td></tr>
+    <tr><td>监控模块 = 监视器</td><td>采集攻击者威胁数据并维护蜜罐安全</td></tr>
+  </table>
+  <h3>3.2 OTA 安全</h3>
+  <p><strong>OTA（Over-the-Air）</strong>：空中下载技术，设备借助无线网络或移动网络实现<strong>系统在线升级</strong>；能及时修复系统漏洞、提供系统升级服务，但 OTA 过程易遭受攻击。课件给出的<strong>安全性需求</strong>：<strong>传输安全性、OTA 操作的权限、OTA 更新完整性与回滚机制</strong>。（教材 PPT 表述为：连接安全性、OTA 更新的真实性和完整性、操作人员安全性——两套说法都要认识。）</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>1. Potd 蜜罐由哪几部分构成？它们的作用分别是什么？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>Potd 蜜罐由<strong>重定向器、协议进程、监视器</strong>三个子模块构成。重定向器和协议进程构成<strong>诱饵环境</strong>，为攻击者提供入侵的通信接口：重定向器在接收到 TCP 连接请求后将其转发至协议进程子模块并限制会话的数量，保护蜜罐免受 DDoS 攻击；协议进程子模块初始化协议子进程，根据应用层通信协议在子进程中实现相应的协议，将该子进程与 TCP 连接转发至监视器。<strong>监视器</strong>是蜜罐的监控模块，用于采集攻击者威胁数据并维护蜜罐的安全——监视器对沙盒进行初始化，并在伪终端下搭建 TCP 处理器，TCP 连接与传输将在沙盒中进行，以确保蜜罐的安全。（教材课后习题答案第 5 题原解）</p>
+    </details>
+    <p><strong>2. 简述 OTA 技术，并概括为了提高 OTA 的安全性需要注意哪几点？</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>OTA（Over-the-Air）又称空中下载技术，是指设备借助无线网络或者移动网络实现系统在线升级。为了提高 OTA 的安全性需要保证：1）连接安全性；2）OTA 更新的真实性和完整性；3）操作人员安全性。（教材课后习题答案第 6 题原解；校课件表述为"传输安全性、OTA 操作的权限、OTA 更新完整性与回滚机制"，两者对应记忆）</p>
+    </details>
+    <p><strong>3.（教材习题补充）简述模糊测试的流程。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>1）对目标程序进行分析，确定程序所有可能的输入；2）通过随机生成或添加某种约束的方式生成测试用例；3）将测试用例作为程序输入，运行程序；4）在测试用例的执行过程中，对程序运行进行监控，监视程序的输出、资源使用情况等是否存在异常；5）判断程序异常是否为有价值的漏洞。（教材课后习题答案第 4 题原解）</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <p>每题选一个，立刻出反馈；做错就看解析。</p>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第八章-v2(2)》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/安全速查.html">安全速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0802-硬件安全机制.html">0802 硬件安全机制</a> · 下一课：<a href="0804-无线安全机制.html">0804 无线安全机制</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "漏洞挖掘与漏洞分析的区别，课件的说法是？",
+    options: [
+      "挖掘找未知、潜在的漏洞；分析对已发现漏洞的细节深入分析",
+      "挖掘针对硬件漏洞；分析针对软件漏洞",
+      "挖掘必须在程序运行时进行；分析不需要运行程序"
+    ],
+    answer: 0,
+    explain: "课件原文：漏洞挖掘技术是综合应用各种技术和工具（符号执行等静态分析、Fuzzing 等动态分析）尽可能找出系统中未知、潜在的漏洞；漏洞分析技术是对已发现漏洞的细节进行深入分析，为漏洞利用、补救等作铺垫。"
+  },
+  {
+    prompt: "不运行目标程序、通过词法/语法分析等技术扫描代码的漏洞检测方式，其代表性技术是？",
+    options: [
+      "模糊测试（Fuzzing）",
+      "符号执行",
+      "侧信道分析（SCA）"
+    ],
+    answer: 1,
+    explain: "教材 PPT：静态分析不运行目标程序，代表性技术是符号执行；动态分析在运行目标程序的方式下观察运行状态与资源使用情况，代表性技术是模糊测试（Fuzzing）。"
+  },
+  {
+    prompt: "使用沙盒技术后，内存空间的划分方式是？",
+    options: [
+      "内核模块与用户模块继续共享内存堆，只是加了访问密码",
+      "划分成不同保护域，内核模块独占一域可读写任何域，其他模块只能写入自己的域",
+      "所有模块都移入 TEE 安全世界执行"
+    ],
+    answer: 1,
+    explain: "课件：沙盒将内存空间划分成不同的保护域（如内核域和用户域）；内核模块驻留在独自一个域内，可以读写任何域；其他模块只能驻留在一个域中且只能写入自己的域。Harbor 还用安全域存返回地址、用栈界限限制被调用函数的栈范围。"
+  },
+  {
+    prompt: "Potd 蜜罐中，'采集攻击者威胁数据并维护蜜罐安全'的模块是？",
+    options: [
+      "重定向器",
+      "协议进程",
+      "监视器"
+    ],
+    answer: 2,
+    explain: "课件/习题答案第 5 题：重定向器 + 协议进程构成诱饵环境、提供入侵通信接口；监视器是监控模块，采集攻击者威胁数据并维护蜜罐安全（初始化沙盒、伪终端下搭建 TCP 处理器）。"
+  }
+];
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 软件防线五件套拿下。" : " —— 回头看标红的解析，重点复习静态/动态分析与 Potd 三模块。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

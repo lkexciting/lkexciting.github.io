@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 章 · 时序数据库与流计算</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+  <span class="course-tag">第 6 章 · 小课 5/7 · 课件提炼</span>
+  <h1>时序数据库与流计算：InfluxDB、压缩与滑动窗口</h1>
+  <p class="subtitle">一句话：这节讲时序数据的存储优化（InfluxDB/压缩/容量估算）与流计算核心算法（滑动窗口直接 vs 增量），本章计算大题最集中的地方。</p>
+
+  <div class="callout def">
+    <div class="label">本课依据</div>
+    <p><strong>考试内容以 PPT（课件）为准</strong>。本课对应课件《第六章-2026》6.2 主要功能之"时序数据库与流计算"节【教材 PPT 补充单独标注】。原始课件：D:\学习文件\大三上\物联网技术基础与应用开发\第六章-2026.pdf</p>
+  </div>
+
+  <h2>一、时序数据规模与存储选型</h2>
+  <p><strong>采样规模假设（必背数字）</strong>：10,000 台设备、每台每秒 1 点、16 字节/点 → <strong>8.64 亿点/天、13.824 GB/天</strong>；查最近 10 分钟：单设备 600 点，全部设备 600 万点。（16 字节 = 8 字节时间戳 + 8 字节浮点值；GB 为十进制单位；未计设备标识、索引、副本及协议开销。）核心区别：访问重点从单条业务记录，转向<strong>设备序列与时间范围</strong>。</p>
+  <p>关系库并非不能查时序——用联合索引 (device, ts) 也能做区间统计；但<strong>时序优化针对持续追加与时间范围分析</strong>。选型看负载：时序库管持续采样与时间聚合，关系库管业务事务、约束与复杂关联；同一平台可以组合使用。</p>
+  <div class="callout">
+    <div class="label">教材 PPT 补充：时序数据库特点与代表产品</div>
+    <p>特点：没有更新操作（一般只支持插入/查询/删除）；支持高并发写入（借助 LSM 树，先写内存再顺序写磁盘）；低查询延时、高查询并发（分布式查询、预处理）；存储成本低（分级存储、编码压缩）。开源产品：InfluxDB、KairosDB、OpenTSDB、Beringei（Facebook）、TimeScaleDB；云服务：AWS Timestream、阿里云 TSDB。</p>
+  </div>
+
+  <h2>二、InfluxDB 关键机制与压缩</h2>
+  <p><strong>tag 与 field</strong>（InfluxDB 2.x）：写入行 <code>temperature,device=A temp=25.3</code> 中，measurement=temperature，<strong>tag（device=A）用于标识与筛选序列</strong>，<strong>field（temp=25.3）存放测量值</strong>；不断变化的标识不宜随意作 tag（标签基数影响序列数量和资源占用）。写入接口指定 <code>precision=s</code> 解释时间戳单位，Token 提供访问凭据；查询用 Flux：range 给时间边界 → filter 限定序列和字段 → mean 对筛选后的数值求均值。</p>
+  <p><strong>Gorilla 无损压缩</strong>：利用<strong>相邻采样的位模式相关性，记录差异而非反复存储完整数值</strong>；压缩内部表示，不降低最终恢复出的浮点精度。课件数字：5 个采样 20.0/20.5/21.0/21.0/21.5——未压缩 40 字节 vs Gorilla 编码 23 字节，减少 17 字节（占原值空间 42.5%）。数据分布影响收益（同 1000 个合成采样、原值 8000 字节）：固定值 → 144 字节；规则缓变 → 1,465 字节；随机噪声 → 6,767 字节。</p>
+  <div class="calc">容量估算（给定条件：时间戳 8 B + 数值 8 B = 16 B/点；数值压缩为平均 2 B，时间戳仍 8 B）
+压缩后字节/点：8 + 2 = 10 B
+整条记录（含其它信息 16 B）：
+  压缩前 8+8+16 = 32 B；压缩后 8+2+16 = 26 B
+  数值字段节省 75%；整条记录节省 6/32 = 18.75%
+要点：字段压缩收益不能直接当作数据库总容量下降比例（还有索引和元数据）。</div>
+  <p>前沿了解：TsFile（VLDB 2024）把设备、时间组织与类型编码纳入可交换文件格式；InfluxDB 3 Core（2025）结合 Arrow、DataFusion 与 Parquet 面向列式分析——2.x 的 TSM 与 Flux 不能直接等同于 3.x。</p>
+
+  <h2>三、流计算：滑动窗口均值（直接 vs 增量）</h2>
+  <p>历史查询按请求读取数据；<strong>流计算随事件到达持续维护计算状态</strong>。问题定义：输入单设备顺序采样 x₁,…,xₙ，窗口长度 k，窗口满后每到一个新采样输出一次（窗口按点数计，不按秒计）。例：20、22、24、30、28，k=3 → 输出 22、76/3、82/3。</p>
+  <div class="calc">直接算法：每个完整窗口重新求 k 个值的和再除以 k
+  每个新结果：k−1 次加法；处理全部输入 O((n−k+1)·k)；在线窗口空间 O(k)
+
+增量算法：保留上一个窗口的总和 S，减旧值加新值
+  不变式：每次更新后 S 恰好等于当前窗口总和
+  初始化后每个新结果仅 2 次加减（一次减法+一次加法）；处理全部输入 O(n)；窗口空间仍 O(k)
+
+k=3 输入 20,22,24,30,28：
+  初始 [20,22,24]，S=66，输出 22
+  移出 20 加入 30：S=76，输出 25.33…
+  移出 22 加入 28：S=82，输出 27.33…
+O(1) 更新依靠 O(k) 窗口存储（环形缓冲），不能只保留总和。</div>
+  <p><strong>规模数字（课件 96–97 页）</strong>：n=10,000、k=1,000 时，加减次数从 8,991,999 降到 18,999（两者都输出 9,001 个结果）；D 台设备仅窗口值约占 8Dk 字节——每设备 8×1000=8000 B，<strong>10 万设备约 0.8 GB</strong>；时间优化不会消除状态规模。</p>
+  <p><strong>滑动最大值（课件 99–100 页）</strong>：双端队列保存"候选最大值"——队首过期时移除，新值淘汰队尾较小候选；每个下标至多入队、出队一次，总时间 O(n)、空间 O(k)。</p>
+  <p><strong>Flink</strong>：分布式有状态流处理引擎，keyBy(device) 按设备隔离状态，ValueState 保存总和、指针，MapState 保存窗口槽位；框架负责分区、调度、托管状态与故障恢复，<strong>窗口统计仍由明确的算法实现</strong>。适用：多设备持续指标、在线异常检测等长期任务；选型依据是数据规模、结果时效、状态规模与运行保障。评测方法：固定任务与资源→校验结果（与直接算法比较）→测量系统代价（吞吐、P95 时延、状态大小、恢复耗时）。前沿：Flink 2.0（PVLDB 2025）将主要状态存储与计算节点分离，约 290GB 状态的物流工作负载从 16 CU 降到 8 CU（1 CU = 1 核 CPU、4GB 内存、20GB 本地磁盘）。</p>
+
+  <div class="exam">
+    <h3>课件思考题（本课相关）</h3>
+    <p><strong>思考题（课件 98 页）：滑动窗口方差——直接算法怎么算？已保存总和 S，还需维护什么统计量？写出递推式并分析时间与空间。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（按课件推导思路整理，课件未给完整标准答案）① 直接算法：对每个完整窗口重新求 Σxᵢ 与 Σxᵢ²，方差 = Σxᵢ²/k − (Σxᵢ/k)²。② 除总和 S 外还需维护<strong>平方和 Q=Σxᵢ²</strong>，即可增量更新。③ 递推式：退出旧值 x_old、加入新值 x_new 时，S ← S − x_old + x_new，Q ← Q − x_old² + x_new²，方差 = Q/k − (S/k)²；每点更新 4 次加减（2 次减 2 次加），时间 O(n)、空间 O(k)（需环形缓冲保留窗口内各值）。窗口 [20,22,24]：S=66，Q=1984，方差 = 1984/3 − 22² = 661.33−484 = 177.33；[22,24,30]：S=76，Q=2080，方差 = 693.33−576 = 117.33。建议向老师确认书写格式。</p>
+    </details>
+    <p><strong>思考题（课件 99 页）：滑动窗口最大值——只保存旧最大值与新输入能否确定下一窗口最大值？设计单遍算法。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（课件 100 页原解思路）不能：当旧最大值 30 退出、20 进入时（输入 30,22,24,20,28，k=3），剩余窗口 [24,20] 的最大值 24 必须另外记住。单遍算法用<strong>双端队列保存候选最大值的下标</strong>，值从大到小排列：队首过期（滑出窗口）时移除；新值到来时从队尾淘汰所有比它小的候选（这些旧值不可能再成为最大值）。过程：30→[30] 输出 30；22→[30,22]；24→[30,24]；20→[24,20] 输出 24；28→[28] 输出 28。每个下标至多入队、出队一次 → 总时间 O(n)，空间 O(k)；单次更新最坏可淘汰多个候选。</p>
+    </details>
+    <p><strong>课后习题第 6 题：LSM 树与 B+ 树最显著的区别？LSM 读取性能为何不佳？给出一种优化。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（习题答案第 6 题原解要点）区别在结构与如何利用磁盘：B+ 树对主键高效查找删除、叶子相连支持高效范围扫描；LSM 树查找时先查内存存储，未命中再去磁盘文件逐层查找并返回最新版本。读取慢的原因：数据存放位置不确定，需一层层遍历（MemTable → Immutable MemTable → Level 0 → 更高层 SSTable）。优化：内存中放一个记录文件，记录每个数据的 Level 层、文件名、最小/最大 key 值等，快速定位要查询的 SSTable 文件，避免频繁读取。</p>
+    </details>
+    <p><strong>课后习题第 7 题：快速找出 1–100（无重复）中缺失的 2 个数，除流计算思想外再提一种算法。</strong></p>
+    <details><summary>点开看参考答案</summary>
+      <p>（习题答案第 7 题原解要点）算法一（流计算）：一次遍历计算 z1=5050−Σa[i] 与 z2=338350−Σa[i]²，再解方程求出两个缺失数。算法二（桶排序）：输入每个数就令下标为该数的数组值为 1，最后遍历数组，值为 0 的两个下标即为所求。习题要求实际编程测试并给出两种算法运行时长比值（原解给出比值 26/31）。</p>
+    </details>
+  </div>
+
+  <h2>即时小测</h2>
+  <div class="quiz" id="quiz"></div>
+  <div class="score" id="score" style="display:none"></div>
+
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY.html">GLOSSARY.md</a> · 上一课：<a href="0604-IFTTT与规则引擎.html">0604-IFTTT与规则引擎</a> · 下一课：<a href="0606-安全认证与无服务器.html">0606-安全认证与无服务器</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+</div>
+
+<script>
+const questions = [
+  {
+    prompt: "10,000 台设备、每台每秒 1 点、每点 16 字节，课件算出每天的数据量是？",
+    options: [
+      "8.64 亿点 / 天，13.824 GB / 天",
+      "8.64 亿点 / 天，1.3824 GB / 天",
+      "8,640 万点 / 天，13.824 GB / 天"
+    ],
+    answer: 0,
+    explain: "课件：10,000 点/秒 × 86400 s = 8.64 亿点/天；×16 字节 = 13.824 GB/天（GB 为十进制单位）。（课件 6.2 时序数据）"
+  },
+  {
+    prompt: "滑动窗口均值（窗口长 k、共 n 个输入）：增量算法处理全部输入的时间复杂度是？",
+    options: [
+      "O((n−k+1)·k)",
+      "O(n)",
+      "O(n log k)"
+    ],
+    answer: 1,
+    explain: "课件对比表：直接重算 O((n−k+1)·k)，增量维护 O(n)；两者在线窗口空间都是 O(k)，增量每个新结果只需 2 次加减。（课件 6.2 流计算）"
+  },
+  {
+    prompt: "每点 16 字节（时间戳 8 B + 数值 8 B + 其它 16 B 记录共 32 B），数值压到 2 B 后整条记录节省多少？",
+    options: [
+      "75%（与数值字段同比下降）",
+      "18.75%（6/32，按整条记录计算）",
+      "50%（8 字节压成 2 字节的一半）"
+    ],
+    answer: 1,
+    explain: "课件：压缩前 32 B、压缩后 26 B；数值字段节省 75%，但整条记录只节省 6/32 = 18.75%——字段压缩收益不能直接当总容量下降比例。（课件 6.2 容量估算）"
+  }
+];
+
+const quiz = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let answered = 0, correctCount = 0;
+
+questions.forEach((q, qi) => {
+  const box = document.createElement("div");
+  box.className = "q";
+  const p = document.createElement("div");
+  p.className = "prompt";
+  p.textContent = (qi + 1) + ". " + q.prompt;
+  box.appendChild(p);
+
+  q.options.forEach((opt, oi) => {
+    const btn = document.createElement("button");
+    btn.className = "opt";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      if (btn.disabled) return;
+      const isCorrect = oi === q.answer;
+      box.querySelectorAll(".opt").forEach(b => b.disabled = true);
+      if (isCorrect) { btn.classList.add("correct"); correctCount++; }
+      else {
+        btn.classList.add("wrong");
+        box.querySelectorAll(".opt")[q.answer].classList.add("correct");
+      }
+      const fb = document.createElement("div");
+      fb.className = "feedback " + (isCorrect ? "ok" : "bad");
+      fb.textContent = (isCorrect ? "✓ 正确。 " : "✗ 正确答案已标绿。 ") + q.explain;
+      box.appendChild(fb);
+      answered++;
+      if (answered === questions.length) {
+        scoreEl.style.display = "block";
+        scoreEl.textContent = "小测完成：答对 " + correctCount + " / " + questions.length +
+          (correctCount === questions.length ? " —— 时序与流计算的计算题稳了。" : " —— 重点复习容量估算 18.75% 与直接/增量复杂度对比。");
+      }
+    };
+    box.appendChild(btn);
+  });
+  quiz.appendChild(box);
+});
+</script>
+</body>
+</html>

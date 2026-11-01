@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>速查：量子计算术语与核心公式</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">量子计算理论基础与软件系统 · 速查卡</p>
+  <h1>术语与核心公式</h1>
+  <p class="lede">一页纸的压缩知识：术语对照、必背矩阵、必背公式。放在手边，做推导时随时回查。所有定义以课件 01–03 为准，符号与之后每节课一致。</p>
+
+  <h2>一、量子术语 ↔ 线性代数术语</h2>
+  <p>这门课的核心约定：<strong>量子力学的语言，就是线性代数</strong>。看到左边的词，立刻在脑子里换成右边的操作。</p>
+
+  <table>
+    <thead>
+      <tr><th>量子力学术语</th><th>线性代数含义</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>态矢量 (State Vector)</td><td>向量</td></tr>
+      <tr><td>本征态 (Eigenstate)</td><td>特征向量</td></tr>
+      <tr><td>本征值 (Eigenvalue)</td><td>特征值</td></tr>
+      <tr><td>右矢 <span class="math">|a⟩</span>（ket）</td><td>列向量</td></tr>
+      <tr><td>左矢 <span class="math">⟨a|</span>（bra）</td><td>行向量（<span class="math">|a⟩</span> 的共轭转置）</td></tr>
+      <tr><td>内积 <span class="math">⟨a|b⟩</span></td><td>标量；<span class="math">a<sup>†</sup>b</span></td></tr>
+      <tr><td>外积 <span class="math">|a⟩⟨b|</span></td><td>矩阵（秩 1，投影矩阵的基本单元）</td></tr>
+      <tr><td>算符 (Operator)</td><td>矩阵</td></tr>
+      <tr><td>线性算符</td><td>线性变换</td></tr>
+      <tr><td>酉算符（幺正算符）</td><td>酉矩阵：<span class="math">U U<sup>†</sup> = I</span></td></tr>
+      <tr><td>厄米算符</td><td>厄米矩阵：<span class="math">H = H<sup>†</sup></span></td></tr>
+      <tr><td>基态 (Ground State)</td><td>本征值最小的本征态</td></tr>
+      <tr><td>叠加原理</td><td>线性组合性质</td></tr>
+      <tr><td>投影算符 <span class="math">P<sub>i</sub> = |e<sub>i</sub>⟩⟨e<sub>i</sub>|</span></td><td>投影矩阵</td></tr>
+    </tbody>
+  </table>
+
+  <div class="keybox">
+    <span class="label">记住这两句</span>
+    <p>只有<strong>酉矩阵</strong>才能表示量子门；只有<strong>厄米矩阵</strong>才能表示可观测量（可测量的物理量）。</p>
+  </div>
+
+  <h2>二、必背矩阵</h2>
+  <p>基矢约定：<span class="math">|0⟩ = (1, 0)<sup>T</sup></span>，<span class="math">|1⟩ = (0, 1)<sup>T</sup></span>。</p>
+
+  <table>
+    <thead><tr><th>门</th><th>矩阵</th><th>作用</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><span class="math">X</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">0</span></span></td>
+        <td>比特翻转：<span class="math">|0⟩↔|1⟩</span>；Bloch 球上绕 x 轴转 π</td>
+      </tr>
+      <tr>
+        <td><span class="math">Y</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">0</span><span class="cell">−i</span><span class="cell">i</span><span class="cell">0</span></span></td>
+        <td>绕 y 轴转 π</td>
+      </tr>
+      <tr>
+        <td><span class="math">Z</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">−1</span></span></td>
+        <td>相位翻转：<span class="math">|1⟩ → −|1⟩</span>；绕 z 轴转 π</td>
+      </tr>
+      <tr>
+        <td><span class="math">H</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">1/√2</span><span class="cell">1/√2</span><span class="cell">1/√2</span><span class="cell">−1/√2</span></span></td>
+        <td>制造叠加：<span class="math">|0⟩→|+⟩</span>，<span class="math">|1⟩→|−⟩</span></td>
+      </tr>
+      <tr>
+        <td><span class="math">S</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">i</span></span></td>
+        <td>相位门 <span class="math">P(π/2)</span></td>
+      </tr>
+      <tr>
+        <td><span class="math">T</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">e<sup>iπ/4</sup></span></span></td>
+        <td>π/8 门，<span class="math">P(π/4)</span></td>
+      </tr>
+      <tr>
+        <td><span class="math">R<sub>x</sub>(θ)</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">cos(θ/2)</span><span class="cell">−i sin(θ/2)</span><span class="cell">−i sin(θ/2)</span><span class="cell">cos(θ/2)</span></span></td>
+        <td>绕 x 轴转 θ（可调参数）</td>
+      </tr>
+      <tr>
+        <td><span class="math">R<sub>y</sub>(θ)</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">cos(θ/2)</span><span class="cell">−sin(θ/2)</span><span class="cell">sin(θ/2)</span><span class="cell">cos(θ/2)</span></span></td>
+        <td>绕 y 轴转 θ（可调参数）</td>
+      </tr>
+      <tr>
+        <td><span class="math">R<sub>z</sub>(θ)</span></td>
+        <td><span class="mat" style="--cols:2"><span class="cell">e<sup>−iθ/2</sup></span><span class="cell">0</span><span class="cell">0</span><span class="cell">e<sup>iθ/2</sup></span></span></td>
+        <td>绕 z 轴转 θ（可调参数）</td>
+      </tr>
+      <tr>
+        <td><span class="math">CNOT</span></td>
+        <td><span class="mat" style="--cols:4"><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">0</span><span class="cell">0</span><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">0</span><span class="cell">0</span><span class="cell">0</span><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">1</span><span class="cell">0</span></span></td>
+        <td>控制位为 1 时翻转目标位；基序 <span class="math">|00⟩,|01⟩,|10⟩,|11⟩</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>三、必背公式</h2>
+
+  <h3>1. 态与归一化</h3>
+  <div class="eq"><span class="var">|ψ⟩</span> = <span class="var">α</span><span class="math">|0⟩</span> + <span class="var">β</span><span class="math">|1⟩</span>，　<span class="var">α</span>, <span class="var">β</span> ∈ ℂ</div>
+  <div class="eq">⟨<span class="var">ψ</span>|<span class="var">ψ</span>⟩ = |<span class="var">α</span>|<sup>2</sup> + |<span class="var">β</span>|<sup>2</sup> = 1</div>
+  <p>测得 0 的概率 <span class="math">p(0)=|α|<sup>2</sup></span>，测得 1 的概率 <span class="math">p(1)=|β|<sup>2</sup></span>。</p>
+
+  <h3>2. 内积与正交</h3>
+  <div class="eq">⟨<span class="var">φ</span>|<span class="var">ψ</span>⟩ = <span class="var">φ</span><sup>†</sup><span class="var">ψ</span>，　⟨<span class="var">φ</span>|<span class="var">ψ</span>⟩ = 0 ⟺ 两态正交</div>
+
+  <h3>3. 叠加基</h3>
+  <div class="eq"><span class="math">|+⟩</span> = <span class="frac"><span>1</span><span>√2</span></span>(<span class="math">|0⟩</span> + <span class="math">|1⟩</span>)，　<span class="math">|−⟩</span> = <span class="frac"><span>1</span><span>√2</span></span>(<span class="math">|0⟩</span> − <span class="math">|1⟩</span>)</div>
+  <p><span class="math">⟨+|−⟩ = 0</span>，且两者都归一化，所以它们也是一组标准正交基。</p>
+
+  <h3>4. 张量积（多比特）</h3>
+  <div class="eq"><span class="math">|a⟩ ⊗ |b⟩</span> = (<span class="var">a</span><sub>1</sub><span class="var">b</span>, <span class="var">a</span><sub>1</sub><span class="var">b</span><sub>2</sub>, <span class="var">a</span><sub>2</sub><span class="var">b</span><sub>1</sub>, <span class="var">a</span><sub>2</sub><span class="var">b</span><sub>2</sub>)<sup>T</sup></div>
+  <p><span class="math">n</span> 个量子比特的态是 <span class="math">2<sup>n</sup></span> 维单位复向量。能写成单个张量积的态叫<strong>可分态</strong>，否则叫<strong>纠缠态</strong>。</p>
+
+  <h3>5. 四个贝尔态</h3>
+  <div class="eq"><span class="math">|Φ<sup>±</sup>⟩</span> = <span class="frac"><span>1</span><span>√2</span></span>(<span class="math">|00⟩ ± |11⟩</span>)，　<span class="math">|Ψ<sup>±</sup>⟩</span> = <span class="frac"><span>1</span><span>√2</span></span>(<span class="math">|01⟩ ± |10⟩</span>)</div>
+  <p>制备方法：<span class="math">|00⟩</span> → 对 <span class="math">q<sub>1</sub></span> 施加 H → 再以 <span class="math">q<sub>0</sub></span> 为控制施加 CNOT，得到 <span class="math">|Φ<sup>+</sup>⟩</span>。</p>
+
+  <h3>6. 投影测量</h3>
+  <div class="eq"><span class="var">p</span>(<span class="var">i</span>) = ⟨<span class="var">ψ</span>|<span class="var">P</span><sub><span class="var">i</span></sub>|<span class="var">ψ</span>⟩ = |⟨<span class="var">e</span><sub><span class="var">i</span></sub>|<span class="var">ψ</span>⟩|<sup>2</sup>，　坍缩后 <span class="math">|ψ′⟩</span> = <span class="var">P</span><sub><span class="var">i</span></sub>|<span class="var">ψ</span>⟩ / √<span class="var">p</span>(<span class="var">i</span>)</div>
+  <p>平均值 <span class="math">⟨A⟩ = ⟨ψ|A|ψ⟩</span>；方差 <span class="math">ΔA = √(⟨A<sup>2</sup>⟩ − ⟨A⟩<sup>2</sup>)</span>。</p>
+
+  <h3>7. 量子傅里叶变换（QFT）</h3>
+  <div class="eq"><span class="math">|j⟩ → </span><span class="frac"><span>1</span><span>√N</span></span> Σ<sub><span class="var">k</span>=0</sub><sup><span class="var">N</span>−1</sup> <span class="var">e</span><sup>2πi<span class="var">jk</span>/<span class="var">N</span></sup> <span class="math">|k⟩</span>，　<span class="var">N</span> = 2<sup><span class="var">n</span></sup></div>
+  <p>电路只由 H 门与受控相位旋转门构成，门数 <span class="math">O(n<sup>2</sup>)</span>；输出比特顺序与张量积形式相反，末尾需要 SWAP。</p>
+
+  <h2>四、常用恒等式（化简 Oracle 时会用到）</h2>
+  <table>
+    <tbody>
+      <tr><td><span class="math">H<sup>2</sup> = I</span></td><td>H 门做两次等于没做</td></tr>
+      <tr><td><span class="math">H X H = Z</span></td><td>共轭变换：把 X 换成 Z</td></tr>
+      <tr><td><span class="math">H Z H = X</span></td><td>反过来也成立</td></tr>
+      <tr><td><span class="math">X<sup>2</sup> = Y<sup>2</sup> = Z<sup>2</sup> = I</span></td><td>泡利门各自平方为恒等</td></tr>
+      <tr><td><span class="math">X = H Z H</span></td><td>与上式等价，常用于"把 X 换成 Z"</td></tr>
+      <tr><td><span class="math">H = i R<sub>y</sub>(π/2) R<sub>x</sub>(π)</span></td><td>H 的旋转分解（课件 01 · P40）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <p><strong>使用方式</strong>：推导时先写"基矢 + 列向量"，再套矩阵乘法，最后用归一化/正交做自检。80% 的考试推导题都能用这三步走完。</p>
+  </div>
+
+  <p class="lesson-footer">
+    来源：课件 01–03（卢丽强，浙江大学）；Nielsen &amp; Chuang, <em>Quantum Computation and Quantum Information</em>，第 1–4 章。
+  </p>
+
+</div>
+</body>
+</html>

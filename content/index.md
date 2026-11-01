@@ -3,7 +3,7 @@ title: 学习，是不断建立连接。
 description: lkexciting 的课程笔记与知识花园，记录计算机科学与量子计算的学习。
 ---
 
-<div class="garden-intro"><span class="eyebrow">LKEXCITING / DIGITAL GARDEN</span><p class="garden-lead">把零散的理解，慢慢连成自己的知识地图。</p><p>这里收录我的课程笔记与学习记录。沿着目录阅读，也可以从搜索开始，发现知识之间的联系。</p><div class="garden-stats"><span><strong>08</strong> 个学习方向</span><span><strong>78</strong> 篇课程笔记</span><span><strong>约 33.1 万</strong> 字</span><span class="growing">持续生长中</span></div></div>
+<div class="garden-intro"><span class="eyebrow">LKEXCITING / DIGITAL GARDEN</span><p class="garden-lead">把零散的理解，慢慢连成自己的知识地图。</p><p>这里收录我的课程笔记与学习记录。沿着目录阅读，也可以从搜索开始，发现知识之间的联系。</p><div class="garden-stats"><span><strong>08</strong> 个学习方向</span><span><strong>78</strong> 篇课程笔记</span><span><strong>约 33.9 万</strong> 字</span><span class="growing">持续生长中</span></div></div>
 
 ## 探索笔记
 
