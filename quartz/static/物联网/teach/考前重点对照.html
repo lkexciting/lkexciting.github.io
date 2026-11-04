@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考前重点对照 · 物联网技术基础与应用开发</title>
+<style>
+  :root{
+    --ink:#1c2430; --muted:#5b6676; --line:#e3e8ef; --bg:#f6f8fb; --card:#ffffff;
+    --red:#c2413b; --red-bg:#fdf1f0; --orange:#b45309; --orange-bg:#fef7ec;
+    --blue:#2563a8; --blue-bg:#eef5fc; --green:#1e7d4f; --green-bg:#eef8f2;
+    --calc-bg:#f2f6fb; --warn-bg:#fffbe8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.75 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px}
+  header.hero{background:linear-gradient(135deg,#20304d,#34507e);color:#fff;border-radius:16px;
+    padding:30px 30px 24px;margin-bottom:22px}
+  header.hero h1{margin:0 0 8px;font-size:26px;letter-spacing:.5px}
+  header.hero .sub{opacity:.88;font-size:13.5px;margin:0}
+  .badges{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .badges span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+    padding:3px 12px;border-radius:999px;font-size:12.5px}
+  .toc{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 24px}
+  .toc a{text-decoration:none;color:var(--blue);background:var(--card);border:1px solid var(--line);
+    padding:6px 14px;border-radius:999px;font-size:13px}
+  .toc a:hover{border-color:var(--blue)}
+  h2.sec{display:flex;align-items:center;gap:10px;font-size:20px;margin:38px 0 14px;
+    padding-bottom:8px;border-bottom:2px solid var(--line)}
+  h2.sec .n{font-size:12px;color:#fff;border-radius:6px;padding:2px 8px;letter-spacing:1px}
+  .p3 .n{background:var(--red)} .p2 .n{background:var(--orange)} .p1 .n{background:var(--blue)}
+  .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:8px}
+  .legend div{border-radius:10px;padding:10px 14px;font-size:13.5px;border:1px solid var(--line)}
+  .legend .l3{background:var(--red-bg);color:var(--red)}
+  .legend .l2{background:var(--orange-bg);color:var(--orange)}
+  .legend .l1{background:var(--blue-bg);color:var(--blue)}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;margin:12px 0;box-shadow:0 1px 3px rgba(16,24,40,.04)}
+  .item.star3{border-left:5px solid var(--red)}
+  .item.star2{border-left:5px solid var(--orange)}
+  .item.star1{border-left:5px solid var(--blue)}
+  .item h3{margin:0 0 6px;font-size:16.5px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .item h3 .tag{font-size:11.5px;font-weight:600;border-radius:5px;padding:1px 8px;white-space:nowrap}
+  .t3{background:var(--red-bg);color:var(--red)} .t2{background:var(--orange-bg);color:var(--orange)}
+  .t1{background:var(--blue-bg);color:var(--blue)} .tw{background:var(--warn-bg);color:#8a6d1a}
+  .lesson{font-size:12px;color:var(--muted);background:var(--bg);border:1px solid var(--line);
+    border-radius:5px;padding:1px 8px;text-decoration:none}
+  a.lesson:hover{color:var(--blue);border-color:var(--blue)}
+  .item ul{margin:6px 0 4px;padding-left:20px}
+  .item li{margin:3px 0}
+  .item li::marker{color:var(--muted)}
+  b.k{color:var(--red)}
+  .calc{background:var(--calc-bg);border:1px dashed #b9cbe4;border-radius:10px;
+    padding:12px 16px;margin:10px 0;font-size:14px}
+  .calc .ct{font-weight:700;color:var(--blue);font-size:12.5px;letter-spacing:1px;margin-bottom:4px}
+  .calc code, .formula{font-family:Consolas,Menlo,monospace;background:#e8eff8;border-radius:4px;padding:1px 6px;font-size:13px}
+  .formula{display:inline-block;background:#e8eff8;padding:2px 10px;border-radius:6px;margin:2px 0}
+  table{border-collapse:collapse;width:100%;margin:10px 0;font-size:13.5px;background:#fff}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#f0f4f9;font-weight:700;white-space:nowrap}
+  tr:nth-child(even) td{background:#fafbfd}
+  .note{background:var(--warn-bg);border:1px solid #eadfa8;border-radius:10px;padding:10px 14px;
+    font-size:13.5px;margin:10px 0}
+  .note b{color:#8a6d1a}
+  .dui{color:var(--green);font-weight:700} .cuo{color:var(--red);font-weight:700}
+  .done{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);
+    cursor:pointer;user-select:none;margin-left:auto}
+  .done input{accent-color:var(--green);cursor:pointer}
+  .item.doned{opacity:.55}
+  .item.doned h3{text-decoration:line-through}
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--muted);line-height:1.9}
+  @media print{
+    body{background:#fff} .wrap{max-width:100%;padding:0}
+    header.hero{border-radius:0;background:#20304d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .item{break-inside:avoid;box-shadow:none}
+    .toc,.done{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>考前重点对照</h1>
+  <p class="sub">《物联网技术基础与应用开发》· 依据老师手写重点（2026-11-04），已逐条与课程课件核对</p>
+  <div class="badges">
+    <span>📝 题型：大题考<b>计算、简答</b></span>
+    <span>📚 考试范围以课件（PPT）为准</span>
+    <span>✅ 勾选进度自动保存在本机</span>
+  </div>
+</header>
+
+<nav class="toc">
+  <a href="#p3">★★★ 超级重点</a>
+  <a href="#calc">★★ 计算题专区</a>
+  <a href="#jd">★★ 简答大题</a>
+  <a href="#p1">★ 了解即可</a>
+  <a href="#todo">⏳ 待确认</a>
+</nav>
+
+<div class="legend">
+  <div class="l3">★★★ 超级重点 —— 老师手写画了（×）号：量化、编程模型</div>
+  <div class="l2">★★ 明确出题 —— 无服务器计算"有题目"；全部计算题与简答大题</div>
+  <div class="l1">★ 了解即可 —— IFTTT、时序数据、第 7 章概念</div>
+</div>
+
+<!-- ============ ★★★ 超级重点 ============ -->
+<h2 class="sec p3" id="p3"><span class="n">★★★</span>超级重点（×号两块，最优先啃）</h2>
+
+<div class="item star3">
+  <h3><span class="tag t3">★★★</span>模型量化<span class="done"><input type="checkbox" data-id="q1">已掌握</span></h3>
+  <a class="lesson" href="lessons/0403-模型量化.html">小课 0403</a>
+  <ul>
+    <li><b class="k">本质</b>：通过特定<span class="formula">映射函数</span>把高精度浮点数（FP32）映射为低精度整数，减少存储、内存与计算开销</li>
+    <li><b class="k">存储位宽表（必背）</b>：</li>
+  </ul>
+  <table>
+    <tr><th>数据类型</th><th>位宽</th><th>字节数</th><th>表示范围</th></tr>
+    <tr><td>FP32（单精度浮点）</td><td>32 位</td><td>4 Byte</td><td>—</td></tr>
+    <tr><td>Int8（量化）</td><td>8 位</td><td>1 Byte</td><td>有符号 −128 ～ 127</td></tr>
+    <tr><td>Int4（极致量化）</td><td>4 位</td><td>0.5 Byte</td><td>有符号 −8 ～ 7</td></tr>
+  </table>
+  <div class="calc">
+    <div class="ct">例题重算（直接由上表推出）</div>
+    FP32 → INT8：4 Byte → 1 Byte，存储压缩 <b>4 倍</b>；FP32 → INT4：4 Byte → 0.5 Byte，压缩 <b>8 倍</b>。<br>
+    例：400 MB 的 FP32 模型量化为 INT8 后 = 400 × (1/4) = <b class="dui">100 MB</b>；量化为 INT4 后 = 400 × (1/8) = <b class="dui">50 MB</b>。
+  </div>
+  <ul>
+    <li>课件关联案例：DeepSeek-R1-Distill-Qwen-7B 的 GGUF 文件对比（量化档位越小文件越小）</li>
+  </ul>
+</div>
+
+<div class="item star3">
+  <h3><span class="tag t3">★★★</span>编程模型<span class="done"><input type="checkbox" data-id="q2">已掌握</span></h3>
+  <a class="lesson" href="lessons/0302-编程模型与调度方式.html">小课 0302</a>
+  <ul>
+    <li><b class="k">事件驱动</b>：基于事件的编程模型可以较好地保证系统的<b class="k">实时性和响应性</b>（课件原文）</li>
+    <li><b class="k">事件 vs 线程</b>：会对比作答——事件驱动省内存、无并发切换开销；线程风格直观但每线程占栈</li>
+    <li><b class="k">各系统对应（举例必记）</b>：</li>
+  </ul>
+  <table>
+    <tr><th>OS</th><th>编程模型</th></tr>
+    <tr><td>TinyOS / SOS</td><td>事件驱动（课件"编程模型举例"）</td></tr>
+    <tr><td>Contiki</td><td>基于 <b>protothreads</b>，支持多线程编程风格</td></tr>
+    <tr><td>AliOS Things</td><td>事件和多线程的编程模型 + 异步事件框架 <b>Yloop</b></td></tr>
+  </table>
+</div>
+
+<!-- ============ ★★ 计算题 ============ -->
+<h2 class="sec p2" id="calc"><span class="n">★★</span>计算题专区（大题必考，先背模板再刷例题）</h2>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>① 节点寿命 T = C / I（低功耗与节能）<span class="done"><input type="checkbox" data-id="c1">已掌握</span></h3>
+  <a class="lesson" href="lessons/0001-物联网概述.html">小课 0001 · 八点五节</a>
+  <div class="calc">
+    <div class="ct">三步模板（考试直接套）</div>
+    1️⃣ 平均电流 <span class="formula">I = 工作电流×占空比 + 休眠电流×(1−占空比)</span><br>
+    2️⃣（有自放电时）漏电流 <span class="formula">I_漏 = C×自放电率 ÷ 24h</span>，加进 I<br>
+    3️⃣ <span class="formula">T = C ÷ I</span>（小时），÷24 换成天
+  </div>
+  <div class="calc">
+    <div class="ct">课件例题重算：2800mAh，工作 20mA、休眠 0.5mA</div>
+    占空比 10%：I = 20×10% + 0.5×90% = 2 + 0.45 = <b>2.45mA</b> → T = 2800÷2.45 ≈ <b class="dui">1142h</b>（课件答案一致）<br>
+    变式 占空比 1%：I = 20×1% + 0.5×99% = 0.695mA → T ≈ <b class="dui">4029h ≈ 168 天</b><br>
+    再叠加自放电 0.5%/天：I_漏 = 2800×0.5%÷24 ≈ 0.583mA → I = 1.278mA → T ≈ <b class="dui">2190h ≈ 91 天</b>
+  </div>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>② 能耗计算 ΔE = Σ Δtᵢ·Iᵢ·pᵢ<span class="done"><input type="checkbox" data-id="c2">已掌握</span></h3>
+  <a class="lesson" href="lessons/0002-物联网硬件平台.html">小课 0002 · 关键特性 2</a>
+  <ul>
+    <li>课件 Arduino 例题结果：<span class="formula">0.50025×10⁻³ J</span></li>
+    <li><b class="k">口诀</b>：占空比高比"工作功率"，占空比低比"睡眠功率"（Msp430F2618 vs F5437 题）</li>
+  </ul>
+  <div class="calc">
+    <div class="ct">例题重算（3V 恒压，10s）</div>
+    占空比 80%（8s 工作 + 2s 睡眠）：F2618：2s×1.1μA + 8s×0.5mA ≈ <b>0.012J</b>；F5437：≈ <b>0.0067J</b> → <b class="dui">F5437 低</b>（工作功率小占主导）<br>
+    占空比 0.1%（0.01s 工作 + 9.99s 睡眠）：F2618 ≈ <b>4.80×10⁻⁵J</b>；F5437 ≈ <b>5.93×10⁻⁵J</b> → <b class="dui">F2618 低</b>（睡眠功率小占主导）
+  </div>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>③ 有效数据率：实际 vs 最大<span class="done"><input type="checkbox" data-id="c3">已掌握</span></h3>
+  <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">小课 0501</a>
+  <ul>
+    <li>最大数据率：<b>802.15.4 = 250kbps</b>，<b>BLE = 2Mbps</b></li>
+    <li>802.15.4 发送前主动退避（initialbackoff ∈ (0, CW<sub>init</sub>]，CW<sub>init</sub> ≈ 10ms），<b class="k">实际数据率一般为最大数据率的 1/3</b></li>
+  </ul>
+  <div class="calc">
+    <div class="ct">公式（课件原文）</div>
+    <span class="formula">η = 数据载荷传输时间 ÷ (退避时间 + 包头传输时间 + 数据载荷传输时间)</span><br>
+    <span class="formula">R_real = η × R</span><br>
+    快速估算：802.15.4 实际 ≈ 250kbps × 1/3 ≈ <b class="dui">83.3kbps</b>
+  </div>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>④ 802.15.4 物理层：DSSS + O-QPSK 时间计算<span class="done"><input type="checkbox" data-id="c4">已掌握</span></h3>
+  <a class="lesson" href="lessons/0502-802.15.4物理层调制.html">小课 0502</a>
+  <ul>
+    <li><b class="k">DSSS</b>：每 <b>4 bit</b> 数据 → <b>32 位码片</b>（查表扩频）</li>
+    <li><b class="k">Chip rate = 2M chip/s</b> → data rate = 250kb/s</li>
+    <li><b class="k">O-QPSK</b>：码片分奇/偶两相位，每相位 chip rate = C/2 = <b>1M chip/s</b>；每个码片持续 <b>1μs</b>；两相位<b>半码片偏移 0.5μs</b></li>
+  </ul>
+  <div class="calc">
+    <div class="ct">例题重算：验证 250kbps</div>
+    每 4bit 符号 = 32 码片；总速率 2M chip/s → 每符号时间 = 32 ÷ 2M = <b>16μs</b><br>
+    数据率 = 4bit ÷ 16μs = <b class="dui">250 kb/s</b> ✓（与课件一致）
+  </div>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>⑤ LoRaWAN 参数表计算（Chirp 调制）<span class="done"><input type="checkbox" data-id="c5">已掌握</span></h3>
+  <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">小课 0509</a>
+  <ul>
+    <li><b>BW</b>：带宽，中国取 <b>125kHz</b>，美国可取 125kHz 和 500kHz</li>
+    <li><b>SF</b>：spreading factor，一个 chirp 表示 SF 个 bits，取值 <b>7–12</b></li>
+    <li>频率偏移等价于时间偏移；数据由起始频率 offset 调制</li>
+  </ul>
+  <div class="calc">
+    <div class="ct">公式 + 例题重算（课件原文）</div>
+    <span class="formula">Ts = 2^SF ÷ BW</span>（一个 chirp 的发送时间）<br>
+    SF=8、BW=125kHz：Ts = 2⁸ ÷ 125000 = 256/125000 s = <b class="dui">2.048ms</b><br>
+    课件案例：SF=8、BW=125kHz 发送 [0, 0, 50] → 频率偏移等价时间偏移 <b>0/256Ts、0/256Ts、50/256Ts</b>（2⁸=256）<br>
+    并发性：同一信道 6 个用户选 6 个不同 SF，相互正交可并发传输
+  </div>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>⑥ 云边计算卸载（老师写"是图"，图+计算都备）<span class="done"><input type="checkbox" data-id="c6">已掌握</span></h3>
+  <a class="lesson" href="lessons/0607-边缘计算与典型平台.html">小课 0607</a>
+  <ul>
+    <li>比较原则：同一任务<b>完成时间</b>；输入上传、网络往返、计算都计入；忽略项先明确</li>
+    <li><b class="k">临界判据</b>：若 <span class="formula">E ≤ L + C</span>，则云端不可能更快</li>
+  </ul>
+  <div class="calc">
+    <div class="ct">课件例题重算：D=2Mbit，L=30ms，C=10ms，E=100ms（忽略排队重传）</div>
+    云端总时间 = D/R + L + C<br>
+    R=20Mbit/s：100+30+10 = <b>140ms</b> &gt; E=100ms → <b class="dui">边缘更快</b> ✓<br>
+    R=50Mbit/s：40+30+10 = <b>80ms</b> &lt; 100ms → <b class="dui">云端更快</b> ✓<br>
+    阈值：D/R + L + C = E → R = D/(E−L−C) = 2Mbit ÷ 60ms ≈ <b class="dui">33.3 Mbit/s</b>（阈值处两路径时间相同）
+  </div>
+  <div class="note"><b>画图准备</b>：Greengrass V2 云边协作结构（组件/消息/缓存部署到现场，按端到端时延选择云边分工）——会默画。</div>
+</div>
+
+<!-- ============ ★★ 简答 ============ -->
+<h2 class="sec p2" id="jd"><span class="n">★★</span>简答大题专区（按章过）</h2>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 有题目</span>无服务器计算（Serverless）<span class="done"><input type="checkbox" data-id="j1">已掌握</span></h3>
+  <a class="lesson" href="lessons/0606-安全认证与无服务器.html">小课 0606</a>
+  <ul><li>老师明确写了"有题目"——概念、特点、与云函数的关系，按小课内容完整过一遍</li></ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>第 6 章云平台（重点最密集）<span class="done"><input type="checkbox" data-id="j2">已掌握</span></h3>
+  <ul>
+    <li><b class="k">MQTT vs HTTP</b> 数据获取的区别 → <a class="lesson" href="lessons/0602-MQTT通信接入.html">小课 0602</a></li>
+    <li><b class="k">三个 QoS 等级</b>：等级区别、传输通信开销、什么时候使用 → 0602</li>
+    <li><b class="k">直接控制 vs 设备影子</b>（执行模式区别）→ <a class="lesson" href="lessons/0603-设备管理与OTA.html">小课 0603</a></li>
+    <li><b class="k">OTA</b>：是什么 + <b class="k">差分包</b>（增量升级）→ 0603</li>
+    <li><b class="k">流计算 vs 批处理</b>的区别与模型；流计算的相关组成（<b class="k">滑动窗口</b>）→ <a class="lesson" href="lessons/0605-时序数据库与流计算.html">小课 0605</a></li>
+  </ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>第 5 章通信协议<span class="done"><input type="checkbox" data-id="j3">已掌握</span></h3>
+  <ul>
+    <li><b class="k">6LoWPAN 两个主要技术 = 分段重组 + 头部压缩</b> → <a class="lesson" href="lessons/0504-组网协议CTP与RPL.html">小课 0504</a></li>
+    <li><b class="k">BLE</b>：设备构成、星型网络（piconet）、为什么低功耗（技术）、GFSK → <a class="lesson" href="lessons/0505-BLE协议架构与链路层.html">小课 0505</a></li>
+    <li><b class="k">LoRaWAN</b>：显著特性、参数及优缺点、chirp 调制、<b class="k">设备类型 Class A / B / C</b> → <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">小课 0509</a></li>
+    <li>嵌入式设备通信功耗对比：降低<b class="k">无线收发器占比</b>（功耗大头）→ <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">小课 0501</a></li>
+  </ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>第 8 章安全<span class="done"><input type="checkbox" data-id="j4">已掌握</span></h3>
+  <ul>
+    <li><b class="k">攻击分类</b>：硬件层面 / 软件层面 → <a class="lesson" href="lessons/0801-物联网安全概述与攻击.html">小课 0801</a></li>
+    <li><b class="k">硬件机制</b>：熔断、可信执行环境（TEE）→ <a class="lesson" href="lessons/0802-硬件安全机制.html">小课 0802</a></li>
+    <li><b class="k">软件机制</b>：溢出（漏洞）、蜜罐 → <a class="lesson" href="lessons/0803-软件与系统安全.html">小课 0803</a></li>
+    <li><b class="k">无线安全机制</b> → <a class="lesson" href="lessons/0804-无线安全机制.html">小课 0804</a></li>
+    <li><b class="k">TLS</b> → <a class="lesson" href="lessons/0805-认证传输与隐私保护.html">小课 0805</a></li>
+  </ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>第 3、4 章其余重点<span class="done"><input type="checkbox" data-id="j5">已掌握</span></h3>
+  <ul>
+    <li><b class="k">剪枝</b>：非结构化剪枝与结构化剪枝（按剪枝粒度分类）→ <a class="lesson" href="lessons/0404-模型剪枝.html">小课 0404</a></li>
+    <li><b class="k">蒸馏</b>：教师模型输出/特征指导学生模型（两个模型、核心思想）→ <a class="lesson" href="lessons/0405-知识蒸馏.html">小课 0405</a></li>
+    <li><b class="k">典型操作系统</b>（Contiki / RIOT / AliOS 等）→ <a class="lesson" href="lessons/0304-网络AI与系统总览.html">0304</a> · <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305</a> · <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306</a></li>
+    <li><b class="k">常见物联网硬件平台</b>：主要特性、思考题；能耗计算见上② → <a class="lesson" href="lessons/0002-物联网硬件平台.html">小课 0002</a></li>
+    <li><b class="k">典型物联网应用架构</b>（会画图）+ 思考题 → <a class="lesson" href="lessons/0001-物联网概述.html">小课 0001</a></li>
+  </ul>
+</div>
+
+<!-- ============ ★ 了解 ============ -->
+<h2 class="sec p1" id="p1"><span class="n">★</span>了解即可（不作为大题准备）</h2>
+
+<div class="item star1">
+  <h3><span class="tag t1">★</span>云平台：IFTTT、时序数据<span class="done"><input type="checkbox" data-id="u1">已掌握</span></h3>
+  <ul>
+    <li>IFTTT（if this then that 规则触发）→ <a class="lesson" href="lessons/0604-IFTTT与规则引擎.html">小课 0604</a></li>
+    <li>时序数据（特点与时序数据库）→ <a class="lesson" href="lessons/0605-时序数据库与流计算.html">小课 0605</a></li>
+  </ul>
+</div>
+
+<div class="item star1">
+  <h3><span class="tag t1">★</span>第 7 章云-端一体开发（了解概念）<span class="done"><input type="checkbox" data-id="u2">已掌握</span></h3>
+  <ul>
+    <li><b>物模型：阿里云 IoT Studio vs 三星 SmartThings 的区别</b>（课件"设备模型：SmartThings VS IoT Studio"对比页）→ <a class="lesson" href="lessons/0703-设备模型与命名机制.html">0703</a> · <a class="lesson" href="lessons/0705-IoTStudio物模型与服务编排.html">0705</a></li>
+    <li>设备端软件开发：系统软件开发 / 设备端；<b>编译型技术开发 vs 解释器</b>对比 → <a class="lesson" href="lessons/0701-云-端一体开发概述.html">小课 0701</a></li>
+    <li>云服务开发：业务逻辑 IFTTT；<b>Node-RED：流的组成</b> → <a class="lesson" href="lessons/0702-云服务与应用开发.html">小课 0702</a></li>
+    <li><b>TinyLink：自顶向下</b> → <a class="lesson" href="lessons/0704-TinyLink开发平台.html">小课 0704</a></li>
+    <li><b>Vibe coding / spec coding</b>：工作模式、区别、对比 → <span class="tag tw">课件外</span> 老师课堂补充，课件 153 页无此内容，等老师讲义</li>
+  </ul>
+</div>
+
+<!-- ============ 待确认 ============ -->
+<h2 class="sec p2" id="todo"><span class="n">⏳</span>待确认（问老师/同学）</h2>
+<div class="item star2">
+  <ul>
+    <li>"云边计算<b>是图</b>"——是否指<b>画图题</b>（画 Greengrass 云边协作结构）？目前按"画图 + 计算两手准备"处理。</li>
+    <li><b>Vibe coding / spec coding</b> 讲义或课件（老师课堂补充内容，现有课件 PDF 中没有）。</li>
+  </ul>
+</div>
+
+<footer>
+  <b>来源</b>：老师手写重点（笔记 2026年11月4日.pdf，3 页，按第 8→1 章倒序）+ 课程课件第一~八章逐条核对（2026-11-04）。<br>
+  <b>小课链接</b>：在本地教学工作区（teach/物联网技术基础与应用开发/）中点击可跳转对应课程；单独发布到网页时链接不可用，按编号查课程总目录即可。<br>
+  <b>进度保存</b>：勾选"已掌握"记录在浏览器本地（localStorage），仅对当前浏览器生效。<br>
+  配套：课程总目录.html · 各章速查卡（reference/）· GLOSSARY.md · 考试重点.md
+</footer>
+
+</div>
+<script>
+(function(){
+  var KEY = 'iot-exam-focus-progress';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ state = {}; }
+  var boxes = document.querySelectorAll('input[type="checkbox"][data-id]');
+  boxes.forEach(function(b){
+    var card = b.closest('.item');
+    function paint(on){ if(card) card.classList.toggle('doned', on); b.checked = on; }
+    paint(!!state[b.dataset.id]);
+    b.addEventListener('change', function(){
+      state[b.dataset.id] = b.checked;
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+      paint(b.checked);
+    });
+  });
+  var total = boxes.length, dn = 0;
+  boxes.forEach(function(b){ if(b.checked) dn++; });
+  if(total){
+    var hero = document.querySelector('.badges');
+    if(hero){
+      var s = document.createElement('span');
+      s.id = 'progressBadge';
+      function refresh(){ s.textContent = '✅ 进度：' + dn + ' / ' + total; }
+      refresh();
+      hero.appendChild(s);
+      boxes.forEach(function(b){ b.addEventListener('change', function(){ dn = 0; boxes.forEach(function(x){ if(x.checked) dn++; }); refresh(); }); });
+    }
+  }
+})();
+</script>
+</body>
+</html>

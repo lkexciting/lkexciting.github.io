@@ -75,6 +75,10 @@ async function genCourse(course, site) {
   lines.push(`title: 分步学习 · ${course}`)
   lines.push('---')
   lines.push('')
+  if (course === '物联网') {
+    lines.push(`<p><a class="exam-focus-button" href="${urlBase}/${encodeURIComponent('考前重点对照.html')}" style="display:inline-block;padding:0.75em 1.25em;border-radius:6px;background:var(--secondary,#236b60);color:var(--light,#fff);font-weight:600;text-decoration:none">考前重点对照 →</a></p>`)
+    lines.push('')
+  }
   lines.push('<style>')
   lines.push(`
 .stepper { max-width: 100%; margin-top: 1rem; }
