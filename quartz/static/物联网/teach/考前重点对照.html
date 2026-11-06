@@ -28,13 +28,18 @@
   .toc a:hover{border-color:var(--blue)}
   h2.sec{display:flex;align-items:center;gap:10px;font-size:20px;margin:38px 0 14px;
     padding-bottom:8px;border-bottom:2px solid var(--line)}
-  h2.sec .n{font-size:12px;color:#fff;border-radius:6px;padding:2px 8px;letter-spacing:1px}
+  h2.sec .n{font-size:12px;color:#fff;border-radius:6px;padding:2px 8px;letter-spacing:1px;white-space:nowrap}
   .p3 .n{background:var(--red)} .p2 .n{background:var(--orange)} .p1 .n{background:var(--blue)}
+  .ch .n{background:#34507e}
+  .chmeta{font-size:12.5px;color:var(--muted);margin:-4px 0 12px;padding-left:2px}
+  .chmeta a{color:var(--blue);text-decoration:none;border-bottom:1px dotted var(--blue);margin-right:10px}
+  .chmeta a:hover{opacity:.75}
   .legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px;margin-bottom:8px}
   .legend div{border-radius:10px;padding:10px 14px;font-size:13.5px;border:1px solid var(--line)}
   .legend .l3{background:var(--red-bg);color:var(--red)}
   .legend .l2{background:var(--orange-bg);color:var(--orange)}
   .legend .l1{background:var(--blue-bg);color:var(--blue)}
+  .legend .l0{background:#eef1f5;color:var(--muted)}
   .item{background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:16px 18px;margin:12px 0;box-shadow:0 1px 3px rgba(16,24,40,.04)}
   .item.star3{border-left:5px solid var(--red)}
@@ -84,19 +89,24 @@
 
 <header class="hero">
   <h1>考前重点对照</h1>
-  <p class="sub">《物联网技术基础与应用开发》· 依据老师手写重点（2026-11-04），已逐条与课程课件核对</p>
+  <p class="sub">《物联网技术基础与应用开发》· 依据老师手写重点（2026-11-04），已逐条与课程课件核对 · 按章节 1→8 排列</p>
   <div class="badges">
     <span>📝 题型：大题考<b>计算、简答</b></span>
     <span>📚 考试范围以课件（PPT）为准</span>
+    <span>🏷️ 每条前的 ★ = 优先级，复习时先啃 ★★★</span>
     <span>✅ 勾选进度自动保存在本机</span>
   </div>
 </header>
 
 <nav class="toc">
-  <a href="#p3">★★★ 超级重点</a>
-  <a href="#calc">★★ 计算题专区</a>
-  <a href="#jd">★★ 简答大题</a>
-  <a href="#p1">★ 了解即可</a>
+  <a href="#ch1">第1章 概述</a>
+  <a href="#ch2">第2章 硬件平台</a>
+  <a href="#ch3">第3章 操作系统</a>
+  <a href="#ch4">第4章 边缘智能</a>
+  <a href="#ch5">第5章 通信协议</a>
+  <a href="#ch6">第6章 云平台</a>
+  <a href="#ch7">第7章 云端一体</a>
+  <a href="#ch8">第8章 安全</a>
   <a href="#todo">⏳ 待确认</a>
 </nav>
 
@@ -104,13 +114,97 @@
   <div class="l3">★★★ 大重点 —— 老师手写（×）号：<b>量化</b>（唯一）</div>
   <div class="l2">★★ 明确出题 —— 无服务器计算"有题目"；全部计算题与简答大题</div>
   <div class="l1">★ 了解即可 —— IFTTT、时序数据、第 7 章概念</div>
+  <div class="l0">条目按<b>章节顺序</b>排列，★ 标签表示优先级；章头附对应小课与速查卡链接</div>
 </div>
 
-<!-- ============ ★★★ 超级重点 ============ -->
-<h2 class="sec p3" id="p3"><span class="n">★★★</span>超级重点（×号两块，最优先啃）</h2>
+<!-- ============ 第 1 章 ============ -->
+<h2 class="sec ch" id="ch1"><span class="n">第 1 章</span>物联网概述</h2>
+<div class="chmeta">
+  <a href="lessons/0001-物联网概述.html">📖 小课 0001 物联网概述</a>
+  <a href="reference/端-管-云速查.html">🗂 速查卡：端-管-云</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>典型物联网应用架构（会画图）<span class="done"><input type="checkbox" data-id="a1">已掌握</span></h3>
+  <ul>
+    <li>老师笔记原文"典型物联网应用架构 + 思考题"——<b class="k">会画图</b>：终端感知设备 → 无线接入 → 网关 → 互联网 → 云平台 → 客户端</li>
+    <li>结合课件第 1 章思考题复习（小课 0001 内有分题答案）</li>
+  </ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 计算</span>节点寿命 T = C / I（低功耗与节能）<span class="done"><input type="checkbox" data-id="c1">已掌握</span></h3>
+  <a class="lesson" href="lessons/0001-物联网概述.html">小课 0001 · 八点五节</a>
+  <div class="calc">
+    <div class="ct">三步模板（考试直接套）</div>
+    1️⃣ 平均电流 <span class="formula">I = 工作电流×占空比 + 休眠电流×(1−占空比)</span><br>
+    2️⃣（有自放电时）漏电流 <span class="formula">I_漏 = C×自放电率 ÷ 24h</span>，加进 I<br>
+    3️⃣ <span class="formula">T = C ÷ I</span>（小时），÷24 换成天
+  </div>
+  <div class="calc">
+    <div class="ct">课件例题重算：2800mAh，工作 20mA、休眠 0.5mA</div>
+    占空比 10%：I = 20×10% + 0.5×90% = 2 + 0.45 = <b>2.45mA</b> → T = 2800÷2.45 ≈ <b class="dui">1142h</b>（课件答案一致）<br>
+    变式 占空比 1%：I = 20×1% + 0.5×99% = 0.695mA → T ≈ <b class="dui">4029h ≈ 168 天</b><br>
+    再叠加自放电 0.5%/天：I_漏 = 2800×0.5%÷24 ≈ 0.583mA → I = 1.278mA → T ≈ <b class="dui">2190h ≈ 91 天</b>
+  </div>
+</div>
+
+<!-- ============ 第 2 章 ============ -->
+<h2 class="sec ch" id="ch2"><span class="n">第 2 章</span>物联网硬件平台</h2>
+<div class="chmeta">
+  <a href="lessons/0002-物联网硬件平台.html">📖 小课 0002 硬件平台</a>
+  <a href="reference/硬件平台速查.html">🗂 速查卡：硬件平台</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>常见物联网硬件平台（主要特性 + 思考题）<span class="done"><input type="checkbox" data-id="a2">已掌握</span></h3>
+  <ul>
+    <li>老师笔记原文"常见物联网硬件平台：主要特性、思考题"——六类平台的定位与特点见小课 0002（传感节点 / STM32 / ESP32 / Arduino / 树莓派 / Jetson）</li>
+    <li>平台的"三类划分"（类 PC / 智能物件 / 物件）与各平台关键参数按速查卡过一遍</li>
+  </ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 计算</span>能耗计算 ΔE = Σ Δtᵢ·Iᵢ·pᵢ<span class="done"><input type="checkbox" data-id="c2">已掌握</span></h3>
+  <a class="lesson" href="lessons/0002-物联网硬件平台.html">小课 0002 · 关键特性 2</a>
+  <ul>
+    <li>课件 Arduino 例题结果：<span class="formula">0.50025×10⁻³ J</span></li>
+    <li><b class="k">口诀</b>：占空比高比"工作功率"，占空比低比"睡眠功率"（Msp430F2618 vs F5437 题）</li>
+  </ul>
+  <div class="calc">
+    <div class="ct">例题重算（3V 恒压，10s）</div>
+    占空比 80%（8s 工作 + 2s 睡眠）：F2618：2s×1.1μA + 8s×0.5mA ≈ <b>0.012J</b>；F5437：≈ <b>0.0067J</b> → <b class="dui">F5437 低</b>（工作功率小占主导）<br>
+    占空比 0.1%（0.01s 工作 + 9.99s 睡眠）：F2618 ≈ <b>4.80×10⁻⁵J</b>；F5437 ≈ <b>5.93×10⁻⁵J</b> → <b class="dui">F2618 低</b>（睡眠功率小占主导）
+  </div>
+</div>
+
+<!-- ============ 第 3 章 ============ -->
+<h2 class="sec ch" id="ch3"><span class="n">第 3 章</span>物联网操作系统</h2>
+<div class="chmeta">
+  <a href="lessons/0301-操作系统概述与构成.html">📖 小课 0301–0306</a>
+  <a href="reference/操作系统速查.html">🗂 速查卡：操作系统</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★</span>典型操作系统（Contiki / RIOT / AliOS 等）<span class="done"><input type="checkbox" data-id="a3">已掌握</span></h3>
+  <a class="lesson" href="lessons/0304-网络AI与系统总览.html">0304</a>
+  <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305</a>
+  <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306</a>
+  <ul>
+    <li>老师笔记原文"典型操作系统"——各系统的定位、机制对比按 0304–0306 过一遍</li>
+    <li>重点认得出：<b class="k">Contiki</b>（protothreads、事件驱动）、<b class="k">RIOT</b>（多线程、IoT 专用）、<b class="k">AliOS Things</b>（Yloop 异步事件框架）</li>
+  </ul>
+</div>
+
+<!-- ============ 第 4 章 ============ -->
+<h2 class="sec ch" id="ch4"><span class="n">第 4 章</span>边缘智能</h2>
+<div class="chmeta">
+  <a href="lessons/0401-边缘智能是什么.html">📖 小课 0401–0406</a>
+  <a href="reference/边缘智能速查.html">🗂 速查卡：边缘智能</a>
+</div>
 
 <div class="item star3">
-  <h3><span class="tag t3">★★★</span>模型量化<span class="done"><input type="checkbox" data-id="q1">已掌握</span></h3>
+  <h3><span class="tag t3">★★★</span>模型量化（×号 = 全清单唯一大重点）<span class="done"><input type="checkbox" data-id="q1">已掌握</span></h3>
   <a class="lesson" href="lessons/0403-模型量化.html">小课 0403</a>
   <ul>
     <li><b class="k">本质</b>：通过特定<span class="formula">映射函数</span>把高精度浮点数（FP32）映射为低精度整数，减少存储、内存与计算开销</li>
@@ -132,42 +226,34 @@
   </ul>
 </div>
 
-<!-- ============ ★★ 计算题 ============ -->
-<h2 class="sec p2" id="calc"><span class="n">★★</span>计算题专区（大题必考，先背模板再刷例题）</h2>
-
 <div class="item star2">
-  <h3><span class="tag t2">★★</span>① 节点寿命 T = C / I（低功耗与节能）<span class="done"><input type="checkbox" data-id="c1">已掌握</span></h3>
-  <a class="lesson" href="lessons/0001-物联网概述.html">小课 0001 · 八点五节</a>
-  <div class="calc">
-    <div class="ct">三步模板（考试直接套）</div>
-    1️⃣ 平均电流 <span class="formula">I = 工作电流×占空比 + 休眠电流×(1−占空比)</span><br>
-    2️⃣（有自放电时）漏电流 <span class="formula">I_漏 = C×自放电率 ÷ 24h</span>，加进 I<br>
-    3️⃣ <span class="formula">T = C ÷ I</span>（小时），÷24 换成天
-  </div>
-  <div class="calc">
-    <div class="ct">课件例题重算：2800mAh，工作 20mA、休眠 0.5mA</div>
-    占空比 10%：I = 20×10% + 0.5×90% = 2 + 0.45 = <b>2.45mA</b> → T = 2800÷2.45 ≈ <b class="dui">1142h</b>（课件答案一致）<br>
-    变式 占空比 1%：I = 20×1% + 0.5×99% = 0.695mA → T ≈ <b class="dui">4029h ≈ 168 天</b><br>
-    再叠加自放电 0.5%/天：I_漏 = 2800×0.5%÷24 ≈ 0.583mA → I = 1.278mA → T ≈ <b class="dui">2190h ≈ 91 天</b>
-  </div>
-</div>
-
-<div class="item star2">
-  <h3><span class="tag t2">★★</span>② 能耗计算 ΔE = Σ Δtᵢ·Iᵢ·pᵢ<span class="done"><input type="checkbox" data-id="c2">已掌握</span></h3>
-  <a class="lesson" href="lessons/0002-物联网硬件平台.html">小课 0002 · 关键特性 2</a>
+  <h3><span class="tag t2">★★</span>剪枝：非结构化与结构化<span class="done"><input type="checkbox" data-id="a4">已掌握</span></h3>
+  <a class="lesson" href="lessons/0404-模型剪枝.html">小课 0404</a>
   <ul>
-    <li>课件 Arduino 例题结果：<span class="formula">0.50025×10⁻³ J</span></li>
-    <li><b class="k">口诀</b>：占空比高比"工作功率"，占空比低比"睡眠功率"（Msp430F2618 vs F5437 题）</li>
+    <li>老师笔记小字 = 课件的两大分类：<b class="k">非结构化剪枝</b>与<b class="k">结构化剪枝</b>（按剪枝粒度分类）</li>
+    <li>与量化对照记忆：剪枝是<b>删除冗余参数</b>，量化是<b>降低数值精度</b>——都在同一模型内部操作</li>
   </ul>
-  <div class="calc">
-    <div class="ct">例题重算（3V 恒压，10s）</div>
-    占空比 80%（8s 工作 + 2s 睡眠）：F2618：2s×1.1μA + 8s×0.5mA ≈ <b>0.012J</b>；F5437：≈ <b>0.0067J</b> → <b class="dui">F5437 低</b>（工作功率小占主导）<br>
-    占空比 0.1%（0.01s 工作 + 9.99s 睡眠）：F2618 ≈ <b>4.80×10⁻⁵J</b>；F5437 ≈ <b>5.93×10⁻⁵J</b> → <b class="dui">F2618 低</b>（睡眠功率小占主导）
-  </div>
 </div>
 
 <div class="item star2">
-  <h3><span class="tag t2">★★</span>③ 有效数据率：实际 vs 最大<span class="done"><input type="checkbox" data-id="c3">已掌握</span></h3>
+  <h3><span class="tag t2">★★</span>蒸馏：教师-学生模型与核心概念<span class="done"><input type="checkbox" data-id="a5">已掌握</span></h3>
+  <a class="lesson" href="lessons/0405-知识蒸馏.html">小课 0405</a>
+  <ul>
+    <li>老师笔记小字"两个模型、核心（思想）"= <b class="k">教师模型</b>（大而准，例 DeepSeek-R1 671B）指导 <b class="k">学生模型</b>（小而快，例 DeepSeek-R1-Distill-Qwen-7B）训练</li>
+    <li>课件"蒸馏核心概念"= <b class="k">四个</b>：教师模型、学生模型、<b class="k">硬标签</b>（真实标注/独热编码）、<b class="k">软标签</b>（教师输出的概率分布，含"暗知识"）</li>
+    <li>目的：能力迁移、降低学生部署成本；代价：训练/数据生成成本增加，学生能力受容量与数据限制</li>
+  </ul>
+</div>
+
+<!-- ============ 第 5 章 ============ -->
+<h2 class="sec ch" id="ch5"><span class="n">第 5 章</span>低功耗无线通信协议</h2>
+<div class="chmeta">
+  <a href="lessons/0501-无线通信基础与关键特性.html">📖 小课 0501–0509</a>
+  <a href="reference/通信协议速查.html">🗂 速查卡：通信协议</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 计算</span>① 有效数据率：实际 vs 最大<span class="done"><input type="checkbox" data-id="c3">已掌握</span></h3>
   <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">小课 0501</a>
   <ul>
     <li>最大数据率：<b>802.15.4 = 250kbps</b>，<b>BLE = 2Mbps</b></li>
@@ -182,7 +268,7 @@
 </div>
 
 <div class="item star2">
-  <h3><span class="tag t2">★★</span>④ 802.15.4 物理层：DSSS + O-QPSK 时间计算<span class="done"><input type="checkbox" data-id="c4">已掌握</span></h3>
+  <h3><span class="tag t2">★★ 计算</span>② 802.15.4 物理层：DSSS + O-QPSK 时间计算<span class="done"><input type="checkbox" data-id="c4">已掌握</span></h3>
   <a class="lesson" href="lessons/0502-802.15.4物理层调制.html">小课 0502</a>
   <ul>
     <li><b class="k">DSSS</b>：每 <b>4 bit</b> 数据 → <b>32 位码片</b>（查表扩频）</li>
@@ -197,7 +283,7 @@
 </div>
 
 <div class="item star2">
-  <h3><span class="tag t2">★★</span>⑤ LoRaWAN 参数表计算（Chirp 调制）<span class="done"><input type="checkbox" data-id="c5">已掌握</span></h3>
+  <h3><span class="tag t2">★★ 计算</span>③ LoRaWAN 参数表计算（Chirp 调制）<span class="done"><input type="checkbox" data-id="c5">已掌握</span></h3>
   <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">小课 0509</a>
   <ul>
     <li><b>BW</b>：带宽，中国取 <b>125kHz</b>，美国可取 125kHz 和 500kHz</li>
@@ -214,7 +300,30 @@
 </div>
 
 <div class="item star2">
-  <h3><span class="tag t2">★★</span>⑥ 云边计算卸载（老师写"是图"，图+计算都备）<span class="done"><input type="checkbox" data-id="c6">已掌握</span></h3>
+  <h3><span class="tag t2">★★ 简答</span>④ 简答大题：6LoWPAN / BLE / LoRaWAN / 功耗<span class="done"><input type="checkbox" data-id="j3">已掌握</span></h3>
+  <ul>
+    <li><b class="k">6LoWPAN 两个主要技术 = 分段重组 + 头部压缩</b> → <a class="lesson" href="lessons/0504-组网协议CTP与RPL.html">小课 0504</a></li>
+    <li><b class="k">BLE</b>：设备构成、星型网络（piconet）、为什么低功耗（技术）、GFSK → <a class="lesson" href="lessons/0505-BLE协议架构与链路层.html">小课 0505</a></li>
+    <li><b class="k">LoRaWAN</b>：显著特性、参数及优缺点、chirp 调制、<b class="k">设备类型 Class A / B / C</b> → <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">小课 0509</a></li>
+    <li>嵌入式设备通信功耗对比：降低<b class="k">无线收发器占比</b>（功耗大头）→ <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">小课 0501</a></li>
+  </ul>
+</div>
+
+<!-- ============ 第 6 章 ============ -->
+<h2 class="sec ch" id="ch6"><span class="n">第 6 章</span>物联网云平台</h2>
+<div class="chmeta">
+  <a href="lessons/0601-云平台是什么.html">📖 小课 0601–0607</a>
+  <a href="reference/云平台速查.html">🗂 速查卡：云平台</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 有题目</span>无服务器计算（Serverless）<span class="done"><input type="checkbox" data-id="j1">已掌握</span></h3>
+  <a class="lesson" href="lessons/0606-安全认证与无服务器.html">小课 0606</a>
+  <ul><li>老师明确写了"有题目"——概念、特点、与云函数的关系，按小课内容完整过一遍</li></ul>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 计算</span>云边计算卸载（老师写"是图"，图+计算都备）<span class="done"><input type="checkbox" data-id="c6">已掌握</span></h3>
   <a class="lesson" href="lessons/0607-边缘计算与典型平台.html">小课 0607</a>
   <ul>
     <li>比较原则：同一任务<b>完成时间</b>；输入上传、网络往返、计算都计入；忽略项先明确</li>
@@ -230,17 +339,8 @@
   <div class="note"><b>画图准备</b>：Greengrass V2 云边协作结构（组件/消息/缓存部署到现场，按端到端时延选择云边分工）——会默画。</div>
 </div>
 
-<!-- ============ ★★ 简答 ============ -->
-<h2 class="sec p2" id="jd"><span class="n">★★</span>简答大题专区（按章过）</h2>
-
 <div class="item star2">
-  <h3><span class="tag t2">★★ 有题目</span>无服务器计算（Serverless）<span class="done"><input type="checkbox" data-id="j1">已掌握</span></h3>
-  <a class="lesson" href="lessons/0606-安全认证与无服务器.html">小课 0606</a>
-  <ul><li>老师明确写了"有题目"——概念、特点、与云函数的关系，按小课内容完整过一遍</li></ul>
-</div>
-
-<div class="item star2">
-  <h3><span class="tag t2">★★</span>第 6 章云平台（重点最密集）<span class="done"><input type="checkbox" data-id="j2">已掌握</span></h3>
+  <h3><span class="tag t2">★★ 简答</span>简答大题：MQTT / QoS / 设备影子 / OTA / 流计算<span class="done"><input type="checkbox" data-id="j2">已掌握</span></h3>
   <ul>
     <li><b class="k">MQTT vs HTTP</b> 数据获取的区别 → <a class="lesson" href="lessons/0602-MQTT通信接入.html">小课 0602</a></li>
     <li><b class="k">三个 QoS 等级</b>：等级区别、传输通信开销、什么时候使用 → 0602</li>
@@ -250,57 +350,47 @@
   </ul>
 </div>
 
-<div class="item star2">
-  <h3><span class="tag t2">★★</span>第 5 章通信协议<span class="done"><input type="checkbox" data-id="j3">已掌握</span></h3>
-  <ul>
-    <li><b class="k">6LoWPAN 两个主要技术 = 分段重组 + 头部压缩</b> → <a class="lesson" href="lessons/0504-组网协议CTP与RPL.html">小课 0504</a></li>
-    <li><b class="k">BLE</b>：设备构成、星型网络（piconet）、为什么低功耗（技术）、GFSK → <a class="lesson" href="lessons/0505-BLE协议架构与链路层.html">小课 0505</a></li>
-    <li><b class="k">LoRaWAN</b>：显著特性、参数及优缺点、chirp 调制、<b class="k">设备类型 Class A / B / C</b> → <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">小课 0509</a></li>
-    <li>嵌入式设备通信功耗对比：降低<b class="k">无线收发器占比</b>（功耗大头）→ <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">小课 0501</a></li>
-  </ul>
-</div>
-
-<div class="item star2">
-  <h3><span class="tag t2">★★</span>第 8 章安全<span class="done"><input type="checkbox" data-id="j4">已掌握</span></h3>
-  <ul>
-    <li><b class="k">攻击分类</b>：硬件层面 / 软件层面 → <a class="lesson" href="lessons/0801-物联网安全概述与攻击.html">小课 0801</a></li>
-    <li><b class="k">硬件机制</b>：熔断、可信执行环境（TEE）→ <a class="lesson" href="lessons/0802-硬件安全机制.html">小课 0802</a></li>
-    <li><b class="k">软件机制</b>：溢出（漏洞）、蜜罐 → <a class="lesson" href="lessons/0803-软件与系统安全.html">小课 0803</a></li>
-    <li><b class="k">无线安全机制</b> → <a class="lesson" href="lessons/0804-无线安全机制.html">小课 0804</a></li>
-    <li><b class="k">TLS</b> → <a class="lesson" href="lessons/0805-认证传输与隐私保护.html">小课 0805</a></li>
-  </ul>
-</div>
-
-<div class="item star2">
-  <h3><span class="tag t2">★★</span>第 3、4 章其余重点<span class="done"><input type="checkbox" data-id="j5">已掌握</span></h3>
-  <ul>
-    <li><b class="k">剪枝</b>：非结构化剪枝与结构化剪枝（按剪枝粒度分类）→ <a class="lesson" href="lessons/0404-模型剪枝.html">小课 0404</a></li>
-    <li><b class="k">蒸馏</b>：教师模型输出/特征指导学生模型（两个模型、核心思想）→ <a class="lesson" href="lessons/0405-知识蒸馏.html">小课 0405</a></li>
-    <li><b class="k">典型操作系统</b>（Contiki / RIOT / AliOS 等）→ <a class="lesson" href="lessons/0304-网络AI与系统总览.html">0304</a> · <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305</a> · <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306</a></li>
-    <li><b class="k">常见物联网硬件平台</b>：主要特性、思考题；能耗计算见上② → <a class="lesson" href="lessons/0002-物联网硬件平台.html">小课 0002</a></li>
-    <li><b class="k">典型物联网应用架构</b>（会画图）+ 思考题 → <a class="lesson" href="lessons/0001-物联网概述.html">小课 0001</a></li>
-  </ul>
-</div>
-
-<!-- ============ ★ 了解 ============ -->
-<h2 class="sec p1" id="p1"><span class="n">★</span>了解即可（不作为大题准备）</h2>
-
 <div class="item star1">
-  <h3><span class="tag t1">★</span>云平台：IFTTT、时序数据<span class="done"><input type="checkbox" data-id="u1">已掌握</span></h3>
+  <h3><span class="tag t1">★ 了解</span>IFTTT、时序数据<span class="done"><input type="checkbox" data-id="u1">已掌握</span></h3>
   <ul>
     <li>IFTTT（if this then that 规则触发）→ <a class="lesson" href="lessons/0604-IFTTT与规则引擎.html">小课 0604</a></li>
     <li>时序数据（特点与时序数据库）→ <a class="lesson" href="lessons/0605-时序数据库与流计算.html">小课 0605</a></li>
   </ul>
 </div>
 
+<!-- ============ 第 7 章 ============ -->
+<h2 class="sec ch" id="ch7"><span class="n">第 7 章</span>物联网云-端一体开发</h2>
+<div class="chmeta">
+  <a href="lessons/0701-云-端一体开发概述.html">📖 小课 0701–0706</a>
+  <a href="reference/云端一体速查.html">🗂 速查卡：云端一体</a>
+</div>
+
 <div class="item star1">
-  <h3><span class="tag t1">★</span>第 7 章云-端一体开发（了解概念）<span class="done"><input type="checkbox" data-id="u2">已掌握</span></h3>
+  <h3><span class="tag t1">★ 了解概念</span>第 7 章概念清单<span class="done"><input type="checkbox" data-id="u2">已掌握</span></h3>
   <ul>
     <li><b>物模型：阿里云 IoT Studio vs 三星 SmartThings 的区别</b>（课件"设备模型：SmartThings VS IoT Studio"对比页）→ <a class="lesson" href="lessons/0703-设备模型与命名机制.html">0703</a> · <a class="lesson" href="lessons/0705-IoTStudio物模型与服务编排.html">0705</a></li>
     <li>设备端软件开发：系统软件开发 / 设备端；<b>编译型技术开发 vs 解释器</b>对比 → <a class="lesson" href="lessons/0701-云-端一体开发概述.html">小课 0701</a></li>
     <li>云服务开发：业务逻辑 IFTTT；<b>Node-RED：流的组成</b> → <a class="lesson" href="lessons/0702-云服务与应用开发.html">小课 0702</a></li>
     <li><b>TinyLink：自顶向下</b> → <a class="lesson" href="lessons/0704-TinyLink开发平台.html">小课 0704</a></li>
     <li><b>Vibe coding / spec coding</b>：工作模式、区别、对比 → <span class="tag tw">课件外</span> 老师课堂补充，课件 153 页无此内容，等老师讲义</li>
+  </ul>
+</div>
+
+<!-- ============ 第 8 章 ============ -->
+<h2 class="sec ch" id="ch8"><span class="n">第 8 章</span>物联网安全</h2>
+<div class="chmeta">
+  <a href="lessons/0801-物联网安全概述与攻击.html">📖 小课 0801–0806</a>
+  <a href="reference/安全速查.html">🗂 速查卡：安全</a>
+</div>
+
+<div class="item star2">
+  <h3><span class="tag t2">★★ 简答</span>安全简答大题（按机制分组）<span class="done"><input type="checkbox" data-id="j4">已掌握</span></h3>
+  <ul>
+    <li><b class="k">攻击分类</b>：硬件层面 / 软件层面 → <a class="lesson" href="lessons/0801-物联网安全概述与攻击.html">小课 0801</a></li>
+    <li><b class="k">硬件机制</b>：熔断、可信执行环境（TEE）→ <a class="lesson" href="lessons/0802-硬件安全机制.html">小课 0802</a></li>
+    <li><b class="k">软件机制</b>：溢出（漏洞）、蜜罐 → <a class="lesson" href="lessons/0803-软件与系统安全.html">小课 0803</a></li>
+    <li><b class="k">无线安全机制</b> → <a class="lesson" href="lessons/0804-无线安全机制.html">小课 0804</a></li>
+    <li><b class="k">TLS</b> → <a class="lesson" href="lessons/0805-认证传输与隐私保护.html">小课 0805</a></li>
   </ul>
 </div>
 
@@ -316,6 +406,7 @@
 
 <footer>
   <b>来源</b>：老师手写重点（笔记 2026年11月4日.pdf，3 页，按第 8→1 章倒序）+ 课程课件第一~八章逐条核对（2026-11-04）。<br>
+  <b>排列方式</b>：按章节 1→8；章内条目按优先级（★★★ → ★★ → ★）排序；每章头部附对应小课与速查卡。<br>
   <b>小课链接</b>：在本地教学工作区（teach/物联网技术基础与应用开发/）中点击可跳转对应课程；单独发布到网页时链接不可用，按编号查课程总目录即可。<br>
   <b>进度保存</b>：勾选"已掌握"记录在浏览器本地（localStorage），仅对当前浏览器生效。<br>
   配套：课程总目录.html · 各章速查卡（reference/）· GLOSSARY.md · 考试重点.md
