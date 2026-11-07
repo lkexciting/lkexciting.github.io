@@ -45,6 +45,12 @@
     letter-spacing:1px;white-space:nowrap}
   h2.sec .cnt{font-size:12px;color:var(--muted);font-weight:400;margin-left:auto}
   .chmeta{font-size:12.5px;color:var(--muted);margin:0 0 12px;padding-left:2px}
+  .focus{background:#fff8e8;border:1px solid #f0dfae;border-left:4px solid #d99b20;
+    border-radius:8px;padding:9px 14px;margin:0 0 16px;font-size:13px;line-height:1.75;color:#6b5417}
+  .focus b{color:#8a6110}
+  .focus .lv{display:inline-block;background:#f6e3b8;color:#7a5610;border-radius:4px;
+    padding:0 6px;font-weight:700;margin-right:6px}
+  .focus code{background:#fff3d4;border-radius:3px;padding:0 3px}
   .item{background:var(--card);border:1px solid var(--line);border-radius:12px;
     padding:14px 18px;margin:10px 0;box-shadow:0 1px 3px rgba(16,24,40,.04);border-left:4px solid var(--blue)}
   .item.done{border-left-color:var(--green);background:#fbfdfb}
@@ -87,11 +93,11 @@
 <div class="wrap">
   <header class="hero">
     <h1>思考题合集 · 第 1–8 章</h1>
-    <p class="sub">《物联网技术基础与应用开发》｜八章课件思考题 + 小课练习题一页汇总，每题独立点开答案</p>
-    <div class="badges"><span>共 108 题</span><span>8 章</span><span>每题独立答案按钮</span><span>可勾选掌握进度</span><span>18 题课件无标准答案</span><span>考试以 PPT 为准</span></div>
+    <p class="sub">《物联网技术基础与应用开发》｜八章全部思考题一页汇总 · 按第 1–8 章排列 · 每题独立点开答案</p>
+    <div class="badges"><span>共 108 题</span><span>8 章</span><span>每题独立答案按钮</span><span>可勾选掌握进度</span><span>18 处「建议向老师确认」</span><span>考试以 PPT 为准</span><span>2026-11-07 整理</span></div>
   </header>
 
-  <div class="notice">题目来源：42 节小课中的全部思考题（PPT 原题、教材配套课后习题、按课件知识点整理的课堂练习），另补入课件第 6 章 129 页未收录的思考题。答案沿用小课原文并标注出处；<strong>课件未给出标准答案的题已写明「建议向老师确认」</strong>。教材与习题答案仅助理解，不划考试边界。</div>
+  <div class="notice"><strong>题库口径</strong>：42 节小课里的<strong>全部 108 道思考题</strong>，按课件第 1–8 章顺序重排，覆盖各章 PPT 明确标「思考题」的页、教材配套 PPT 与课后习题、以及按课件知识点整理的课堂练习；每章标题下标注了 PPT 思考题所在页与老师手写重点。<strong>每题一个独立「点开看参考答案」按钮</strong>，可搜索、按题型筛选、勾选「已掌握」（进度存本机浏览器）。答案沿用小课原文并标注出处，<strong>考试范围一律以校课件 PPT 为准</strong>，教材与习题答案仅助理解；<strong>课件未给出标准答案的题目已逐题写明「建议向老师确认」</strong>。</div>
 
   <div class="toolbar">
     <input type="search" id="search" placeholder="搜索题干或答案关键词，例如：占空比 / MQTT / 量化 / 蜜罐">
@@ -116,6 +122,7 @@
   <section class="chsec" id="ch1" data-ch="1">
     <h2 class="sec ch"><span class="n">CH 1</span> 第 1 章 · 物联网概述 <span class="cnt">6 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 18、48、53 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★ 了解 + 计算</span>典型物联网应用架构（画图六部分）、<b>低功耗与节能技术计算</b>（T=C/I、占空比、自放电三步）｜小课 0001。</div>
     <div class="item" data-tag="简答 / 概念">
       <div class="qhead"><span class="no">Q001</span><span class="tag tg-prac">简答 / 概念</span>
         <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
@@ -167,6 +174,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch2" data-ch="2">
     <h2 class="sec ch"><span class="n">CH 2</span> 第 2 章 · 物联网硬件平台 <span class="cnt">19 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 12、16、56 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★★ 计算 / 思考题</span>能耗计算（ΔE=ΣΔtᵢIᵢpᵢ）、常见硬件平台主要特性与选型；<b>本章思考题、计算题老师单列</b>｜小课 0002。</div>
     <div class="item" data-tag="简答 / 概念">
       <div class="qhead"><span class="no">Q007</span><span class="tag tg-prac">简答 / 概念</span>
         <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
@@ -305,6 +313,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch3" data-ch="3">
     <h2 class="sec ch"><span class="n">CH 3</span> 第 3 章 · 物联网操作系统 <span class="cnt">19 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 13、21、63 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★ 了解</span>典型操作系统（Contiki / RIOT / AliOS / HarmonyOS）；<b>案例开发老师明示不考</b>｜小课 0301–0306。</div>
     <div class="item" data-tag="对比">
       <div class="qhead"><span class="no">Q026</span><span class="tag tg-ex">对比</span>
         <a class="lesson" href="lessons/0301-操作系统概述与构成.html">0301-操作系统概述与构成</a>
@@ -445,6 +454,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch4" data-ch="4">
     <h2 class="sec ch"><span class="n">CH 4</span> 第 4 章 · 边缘智能 <span class="cnt">9 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 60、82、105、119 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★★★ 唯一大重点（手写 × 号）</span><b>量化</b>：本质＝映射函数（FP32→INT8/INT4）；另有剪枝（非结构化 / 结构化）、蒸馏（教师-学生）｜小课 0403–0405。</div>
     <div class="item" data-tag="对比">
       <div class="qhead"><span class="no">Q045</span><span class="tag tg-ex">对比</span>
         <a class="lesson" href="lessons/0403-模型量化.html">0403-模型量化</a>
@@ -512,6 +522,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch5" data-ch="5">
     <h2 class="sec ch"><span class="n">CH 5</span> 第 5 章 · 低功耗无线通信协议 <span class="cnt">19 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 35、57、76、128、174、197 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★★ 计算 + 简答</span>有效数据率与最大数据率、802.15.4 DSSS / O-QPSK 与时间计算、<b>6LoWPAN 两技术＝分段重组 + 头部压缩</b>、BLE 为什么低功耗、LoRaWAN 参数表 / chirp / Class A/B/C｜小课 0501–0509。</div>
     <div class="item" data-tag="计算 / 证明">
       <div class="qhead"><span class="no">Q054</span><span class="tag tg-ppt">计算 / 证明</span>
         <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">0501-无线通信基础与关键特性</a>
@@ -651,6 +662,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch6" data-ch="6">
     <h2 class="sec ch"><span class="n">CH 6</span> 第 6 章 · 物联网云平台 <span class="cnt">16 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 26、98、99、129 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★★ 明确出题</span><b>无服务器计算「有题目」三条</b>：119 页常驻服务 vs 函数计算、123 页冷启动的时延构成、129 页优化与资源取舍；另考 QoS0–2、MQTT vs HTTP、直接控制 / 设备影子、OTA 差分包、流计算 vs 批处理、云边画图与卸载计算；★ 了解 IFTTT、时序数据。<br>云边卸载通式（课件 145–147 页例题）：<code>T_cloud = 1000D/R + L + C</code>｜<code>T_edge = E</code>｜<code>R* = 1000D/(E−L−C)</code>（D 为 Mbit、R 为 Mbit/s，L/C/E 为 ms；E ≤ L+C 时云端不可能更快）。</div>
     <div class="item" data-tag="对比">
       <div class="qhead"><span class="no">Q073</span><span class="tag tg-ex">对比</span>
         <a class="lesson" href="lessons/0602-MQTT通信接入.html">0602-MQTT通信接入</a>
@@ -705,14 +717,14 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
         <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
         <label class="done"><input type="checkbox" data-id="Q080"> 已掌握</label></div>
       <p class="qtext">思考题（课件 98 页）：滑动窗口方差——直接算法怎么算？已保存总和 S，还需维护什么统计量？写出递推式并分析时间与空间。</p>
-      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（按课件推导思路整理，课件未给完整标准答案）① 直接算法：对每个完整窗口重新求 Σxᵢ 与 Σxᵢ²，方差 = Σxᵢ²/k − (Σxᵢ/k)²。② 除总和 S 外还需维护<strong>平方和 Q=Σxᵢ²</strong>，即可增量更新。③ 递推式：退出旧值 x_old、加入新值 x_new 时，S ← S − x_old + x_new，Q ← Q − x_old² + x_new²，方差 = Q/k − (S/k)²；每点更新 4 次加减（2 次减 2 次加），时间 O(n)、空间 O(k)（需环形缓冲保留窗口内各值）。窗口 [20,22,24]：S=66，Q=1984，方差 = 1984/3 − 22² = 661.33−484 = 177.33；[22,24,30]：S=76，Q=2080，方差 = 693.33−576 = 117.33。建议向老师确认书写格式。</p></div></details>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（<strong>课件 98 页思考题；课件未给出标准答案，建议向老师确认。</strong>以下为按课件提示的推导，非标准答案）① 直接算法：对每个完整窗口重新求 Σxᵢ 与 Σxᵢ²，方差 = Σxᵢ²/k − (Σxᵢ/k)²。② 除总和 S 外还需维护<strong>平方和 Q=Σxᵢ²</strong>，即可增量更新。③ 递推式：退出旧值 x_old、加入新值 x_new 时，S ← S − x_old + x_new，Q ← Q − x_old² + x_new²，方差 = Q/k − (S/k)²；每点更新 4 次加减（2 次减 2 次加），时间 O(n)、空间 O(k)（需环形缓冲保留窗口内各值）。窗口 [20,22,24]：S=66，Q=1984，方差 = 1984/3 − 22² = 661.33−484 = 177.33；[22,24,30]：S=76，Q=2080，方差 = 693.33−576 = 117.33。建议向老师确认书写格式。</p></div></details>
     </div>
     <div class="item" data-tag="计算 / 证明">
       <div class="qhead"><span class="no">Q081</span><span class="tag tg-ppt">计算 / 证明</span>
         <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
         <label class="done"><input type="checkbox" data-id="Q081"> 已掌握</label></div>
       <p class="qtext">思考题（课件 99 页）：滑动窗口最大值——只保存旧最大值与新输入能否确定下一窗口最大值？设计单遍算法。</p>
-      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（课件 100 页原解思路）不能：当旧最大值 30 退出、20 进入时（输入 30,22,24,20,28，k=3），剩余窗口 [24,20] 的最大值 24 必须另外记住。单遍算法用<strong>双端队列保存候选最大值的下标</strong>，值从大到小排列：队首过期（滑出窗口）时移除；新值到来时从队尾淘汰所有比它小的候选（这些旧值不可能再成为最大值）。过程：30→[30] 输出 30；22→[30,22]；24→[30,24]；20→[24,20] 输出 24；28→[28] 输出 28。每个下标至多入队、出队一次 → 总时间 O(n)，空间 O(k)；单次更新最坏可淘汰多个候选。</p></div></details>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（<strong>课件 99 页思考题；课件未给出标准答案，建议向老师确认。</strong>以下按课件示例与提示整理，非标准答案）不能：当旧最大值 30 退出、20 进入时（输入 30,22,24,20,28，k=3），剩余窗口 [24,20] 的最大值 24 必须另外记住。单遍算法用<strong>双端队列保存候选最大值的下标</strong>，值从大到小排列：队首过期（滑出窗口）时移除；新值到来时从队尾淘汰所有比它小的候选（这些旧值不可能再成为最大值）。过程：30→[30] 输出 30；22→[30,22]；24→[30,24]；20→[24,20] 输出 24；28→[28] 输出 28。每个下标至多入队、出队一次 → 总时间 O(n)，空间 O(k)；单次更新最坏可淘汰多个候选。</p></div></details>
     </div>
     <div class="item" data-tag="对比">
       <div class="qhead"><span class="no">Q082</span><span class="tag tg-ex">对比</span>
@@ -740,14 +752,21 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
         <a class="lesson" href="lessons/0606-安全认证与无服务器.html">0606-安全认证与无服务器</a>
         <label class="done"><input type="checkbox" data-id="Q085"> 已掌握</label></div>
       <p class="qtext">思考题（课后习题答案第 10 题）：Azure Function 每隔 0.05 s 被调用一次，每次执行 0.1 s，每次调用需 0.03 s 冷启动；相对 PaaS 架构，无服务器计算一个月（30 天）节省多少 CPU 时间？</p>
-      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 10 题原解）空闲时间为 0.03 + 0.05 = 0.08 s，占周期（0.1 + 0.05 + 0.03 = 0.18 s）的百分比：0.08/0.18 × 100% ≈ 44.44%。PaaS 架构一直都在执行，因此节省的 CPU 时间即空闲时间：30 × 24 × 60 × 60 × 44.44% ≈ 1,152,000 s。答：节省约 1152000 s。</p></div></details>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 10 题原解）空闲时间为 0.03 + 0.05 = 0.08 s，占周期（0.1 + 0.05 + 0.03 = 0.18 s）的百分比：0.08/0.18 × 100% ≈ 44.44%。PaaS 架构一直都在执行，因此节省的 CPU 时间即空闲时间：30 × 24 × 60 × 60 × 44.44% ≈ 1,152,000 s。答：节省约 <strong>1,152,000 s</strong>。</p><div class="calc">通式：T_cycle = T_exec + T_gap + T_cs；T_idle = T_gap + T_cs；r = T_idle / T_cycle
+节省 = 天数 × 86400 × r（PaaS 一直执行，故节省的 CPU 时间即空闲时间）</div><p>代入：T_cycle = 0.1+0.05+0.03 = 0.18 s；T_idle = 0.05+0.03 = 0.08 s；r ≈ 44.44%。</p></div></details>
     </div>
     <div class="item" data-tag="计算 / 证明">
       <div class="qhead"><span class="no">Q086</span><span class="tag tg-ppt">计算 / 证明</span>
         <a class="lesson" href="lessons/0606-安全认证与无服务器.html">0606-安全认证与无服务器</a>
         <label class="done"><input type="checkbox" data-id="Q086"> 已掌握</label></div>
       <p class="qtext">思考（课件 129 页）：从头启动时，平均时延 ≤70 ms，冷启动比例 p 最多是多少？</p>
-      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>课件未给出标准答案，建议向老师确认。</strong>若按课件 129 页同一公式自推：T_avg = T_hot + p×ΔT_new = 50 + 400p ≤ 70，得 p ≤ 5%；课件同时强调「平均值不能替代时延上限」，需一并比较慢调用与资源占用。<em>（此为非课件标准答案，仅供核对。）</em></p></div></details>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>课件未给出标准答案，建议向老师确认。</strong>若按课件 129 页同一公式自推：T_avg = T_hot + p×ΔT_new = 50 + 400p ≤ 70，得 p ≤ 5%；课件同时强调「平均值不能替代时延上限」，需一并比较慢调用与资源占用。<em>（此为非课件标准答案，仅供核对。）</em></p><div class="calc">老师点名三条（课件 119 / 123 / 129 页）：
+① 常驻服务 vs 函数计算：前者由应用维持进程，后者由平台管理按需执行环境
+② 冷启动时延构成：T_cold = 调度10 + 环境50 + 初始化350 + 业务40 = 450 ms
+   T_hot = 调度10 + 业务40 = 50 ms；ΔT = T_env + T_init = 400 ms
+③ 优化与资源取舍：p = N_new/N_total = 10%；T_avg = T_hot + p×ΔT_new
+   从头 90 ms / SnapStart 56 ms / 保温 50 ms（代价 0.5GiB×60s = 30 GiB·s）
+   反解 p ≤ (T_target − T_hot)/ΔT_new；SnapStart 与预置并发不能同开</div><p>必答：<strong>平均值不能替代时延上限</strong>，需同时比较平均、慢调用、资源占用；日志三字段 Duration（执行）/ Init Duration（初始化）/ Billed Duration（计费）。课件 119 页未单独给出「各自特点」标准答案，<strong>建议向老师确认</strong>。</p></div></details>
     </div>
     <div class="item" data-tag="简答 / 概念">
       <div class="qhead"><span class="no">Q087</span><span class="tag tg-prac">简答 / 概念</span>
@@ -767,6 +786,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch7" data-ch="7">
     <h2 class="sec ch"><span class="n">CH 7</span> 第 7 章 · 云-端一体开发 <span class="cnt">7 题</span></h2>
     <div class="chmeta">课件 PPT 明确标「思考题」的页：第 53、113 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★ 了解概念（点名要「区别」）</span><b>物模型：阿里云 IoT Studio vs 三星 SmartThings</b>（功能能否自定义、官方 capability 73 种）；<b>编译型技术开发 vs 解释器</b>；Node-RED 流的组成；TinyLink 自顶向下。Vibe coding / spec coding 为<b>课件外</b>课堂补充，考试口径待确认｜小课 0701–0706。</div>
     <div class="item" data-tag="简答 / 概念">
       <div class="qhead"><span class="no">Q089</span><span class="tag tg-prac">简答 / 概念</span>
         <a class="lesson" href="lessons/0703-设备模型与命名机制.html">0703-设备模型与命名机制</a>
@@ -820,6 +840,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <section class="chsec" id="ch8" data-ch="8">
     <h2 class="sec ch"><span class="n">CH 8</span> 第 8 章 · 物联网安全 <span class="cnt">13 题</span></h2>
     <div class="chmeta">课件第八章没有「思考题」页；下列为配套小课里的练习题（部分出自教材课后习题），仅助理解，考试边界以 PPT 为准。</div>
+    <div class="focus"><b>老师手写重点</b> · <span class="lv">★★ 简答</span>攻击分类、<b>熔断</b>、<b>TEE</b>、<b>溢出</b>、<b>蜜罐</b>、无线 5 协议、<b>TLS</b>。注意：课件全文<b>没有「溢出」二字</b>，手写该条对应「漏洞」与沙盒的「安全域 / 栈界限」，<b>课件未给出标准答案，建议向老师确认</b>；攻击分类课件标题为「网络层面 + 硬件层面」｜小课 0801–0806。</div>
     <div class="item" data-tag="对比">
       <div class="qhead"><span class="no">Q096</span><span class="tag tg-ex">对比</span>
         <a class="lesson" href="lessons/0801-物联网安全概述与攻击.html">0801-物联网安全概述与攻击</a>
@@ -921,7 +942,7 @@ T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
   <footer>
     <p><strong>标签说明</strong>：题型标签（简答 / 计算 / 对比 / 设计）按题干关键词自动标注，仅方便筛选。题目出处保留在题干原文里（如「课件 98 页」「课后习题 6」「教材 PPT 第 59 页」），并可点每题的小课名回看原课。<strong>考试范围一律以 PPT 为准</strong>，教材课后习题只助理解；答案中标「建议向老师确认」的题，课件没有标准答案。</p>
     <p><a href="/物联网/分步学习">← 返回分步学习</a><a href="考前重点对照.html">考前重点对照</a><a href="课程总目录.html">课程总目录</a></p>
-    <p>本页为单文件 HTML，勾选进度保存在本机浏览器（localStorage）。</p>
+    <p>2026-11-07 重新整理：题库＝42 节小课全部 108 道思考题，按课件第 1–8 章顺序排列；每章补入老师手写重点与 PPT 思考题页码，近期核对过的计算题已补通式。</p><p>本页为单文件 HTML，勾选进度保存在本机浏览器（localStorage）。</p>
   </footer>
 </div>
 <script>
