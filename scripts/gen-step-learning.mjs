@@ -76,7 +76,7 @@ async function genCourse(course, site) {
   lines.push('---')
   lines.push('')
   if (course === '物联网') {
-    lines.push(`<p><a class="exam-focus-button" href="${urlBase}/${encodeURIComponent('考前重点对照.html')}" style="display:inline-block;padding:0.75em 1.25em;border-radius:6px;background:var(--secondary,#236b60);color:var(--light,#fff);font-weight:600;text-decoration:none">考前重点对照 →</a></p>`)
+    lines.push(`<p><a class="exam-focus-button" href="${urlBase}/${encodeURIComponent('考前重点对照.html')}" style="display:inline-block;padding:0.75em 1.25em;border-radius:6px;background:var(--secondary,#236b60);color:var(--light,#fff);font-weight:600;text-decoration:none;margin-right:8px">考前重点对照 →</a><a class="exam-questions-button" href="${urlBase}/${encodeURIComponent('思考题合集.html')}" style="display:inline-block;padding:0.75em 1.25em;border-radius:6px;background:var(--secondary,#236b60);color:var(--light,#fff);font-weight:600;text-decoration:none">思考题合集 →</a></p>`)
     lines.push('')
   }
   lines.push('<style>')

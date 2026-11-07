@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考题合集 · 物联网技术基础与应用开发（第 1–8 章）</title>
+<style>
+  :root{
+    --ink:#1c2430; --muted:#5b6676; --line:#e3e8ef; --bg:#f6f8fb; --card:#ffffff;
+    --blue:#2563a8; --blue-bg:#eef5fc; --green:#1e7d4f; --green-bg:#eef8f2;
+    --orange:#b45309; --orange-bg:#fef7ec; --purple:#6d4aa8; --purple-bg:#f3eefc;
+    --calc-bg:#f2f6fb; --warn-bg:#fffbe8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:15px/1.75 -apple-system,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px}
+  header.hero{background:linear-gradient(135deg,#20304d,#34507e);color:#fff;border-radius:16px;
+    padding:30px 30px 24px;margin-bottom:18px}
+  header.hero h1{margin:0 0 8px;font-size:26px;letter-spacing:.5px}
+  header.hero .sub{opacity:.9;font-size:13.5px;margin:0}
+  .badges{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .badges span{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);
+    padding:3px 12px;border-radius:999px;font-size:12.5px}
+  .notice{background:var(--warn-bg);border:1px solid #f0e2a8;border-radius:10px;
+    padding:10px 14px;font-size:13px;color:#7a611a;margin-bottom:18px}
+  .toolbar{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:12px 14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+  .toolbar input[type=search]{flex:1;min-width:220px;padding:8px 12px;border:1px solid var(--line);
+    border-radius:8px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--ink)}
+  .toolbar select{border:1px solid var(--line);background:var(--bg);color:var(--ink);
+    border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;cursor:pointer}
+  .toolbar button{border:1px solid var(--line);background:var(--bg);color:var(--ink);
+    border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;font-family:inherit}
+  .toolbar button:hover{border-color:var(--blue);color:var(--blue)}
+  .toolbar label{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer}
+  #progress{font-size:13px;color:var(--green);font-weight:600;white-space:nowrap}
+  .toc{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}
+  .toc a{text-decoration:none;color:var(--blue);background:var(--card);border:1px solid var(--line);
+    padding:6px 14px;border-radius:999px;font-size:13px}
+  .toc a:hover{border-color:var(--blue)}
+  h2.sec{display:flex;align-items:center;gap:10px;font-size:20px;margin:38px 0 8px;
+    padding-bottom:8px;border-bottom:2px solid var(--line);flex-wrap:wrap}
+  h2.sec .n{font-size:12px;color:#fff;background:#34507e;border-radius:6px;padding:2px 8px;
+    letter-spacing:1px;white-space:nowrap}
+  h2.sec .cnt{font-size:12px;color:var(--muted);font-weight:400;margin-left:auto}
+  .chmeta{font-size:12.5px;color:var(--muted);margin:0 0 12px;padding-left:2px}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:14px 18px;margin:10px 0;box-shadow:0 1px 3px rgba(16,24,40,.04);border-left:4px solid var(--blue)}
+  .item.done{border-left-color:var(--green);background:#fbfdfb}
+  .qhead{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px}
+  .no{font-weight:700;color:var(--blue);font-size:13px;letter-spacing:.5px}
+  .tag{font-size:11.5px;font-weight:600;border-radius:5px;padding:1px 8px;white-space:nowrap}
+  .tg-ppt{background:var(--blue-bg);color:var(--blue)}
+  .tg-ex{background:var(--orange-bg);color:var(--orange)}
+  .tg-book{background:var(--purple-bg);color:var(--purple)}
+  .tg-prac{background:#eef1f5;color:var(--muted)}
+  .lesson{color:var(--muted);background:var(--bg);border:1px solid var(--line);
+    border-radius:5px;padding:1px 8px;text-decoration:none}
+  a.lesson:hover{color:var(--blue);border-color:var(--blue)}
+  .done{margin-left:auto;color:var(--muted);display:flex;align-items:center;gap:4px;cursor:pointer;white-space:nowrap}
+  .qtext{margin:8px 0 10px;font-size:15px;font-weight:600;line-height:1.7}
+  details.ans{border:1px solid var(--line);border-radius:8px;background:var(--bg);overflow:hidden}
+  details.ans summary{cursor:pointer;padding:7px 14px;font-size:13px;color:var(--blue);
+    font-weight:600;user-select:none;list-style:none}
+  details.ans summary::-webkit-details-marker{display:none}
+  details.ans summary::before{content:"▸ ";display:inline-block}
+  details.ans[open] summary::before{content:"▾ "}
+  details.ans summary:hover{background:var(--blue-bg)}
+  .ansbody{padding:4px 16px 12px;border-top:1px solid var(--line);font-size:14px;background:var(--card)}
+  .ansbody p{margin:8px 0}
+  .ansbody .calc{background:var(--calc-bg);border-left:3px solid var(--blue);border-radius:6px;
+    padding:8px 12px;white-space:pre-wrap;font:13px/1.7 ui-monospace,Consolas,monospace;margin:8px 0}
+  .ansbody .dui{color:var(--green)}
+  .ansbody code{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 4px}
+  .ansbody table{border-collapse:collapse;width:100%;font-size:13px;margin:8px 0}
+  .ansbody td,.ansbody th{border:1px solid var(--line);padding:5px 8px;text-align:left}
+  .ansbody ul,.ansbody ol{padding-left:22px;margin:8px 0}
+  .empty{display:none;text-align:center;color:var(--muted);font-size:13px;padding:30px 0}
+  footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;font-size:12.5px;color:var(--muted)}
+  footer a{color:var(--blue);text-decoration:none;margin-right:14px}
+  @media(max-width:600px){.wrap{padding:16px 12px 40px}header.hero{padding:22px 18px}
+    header.hero h1{font-size:21px}.qtext{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>思考题合集 · 第 1–8 章</h1>
+    <p class="sub">《物联网技术基础与应用开发》｜八章课件思考题 + 小课练习题一页汇总，每题独立点开答案</p>
+    <div class="badges"><span>共 108 题</span><span>8 章</span><span>每题独立答案按钮</span><span>可勾选掌握进度</span><span>18 题课件无标准答案</span><span>考试以 PPT 为准</span></div>
+  </header>
+
+  <div class="notice">题目来源：42 节小课中的全部思考题（PPT 原题、教材配套课后习题、按课件知识点整理的课堂练习），另补入课件第 6 章 129 页未收录的思考题。答案沿用小课原文并标注出处；<strong>课件未给出标准答案的题已写明「建议向老师确认」</strong>。教材与习题答案仅助理解，不划考试边界。</div>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="搜索题干或答案关键词，例如：占空比 / MQTT / 量化 / 蜜罐">
+    <select id="tagFilter" aria-label="按题型筛选">
+      <option value="">全部题型</option><option>简答 / 概念</option><option>计算 / 证明</option><option>对比</option><option>设计 / 实操</option>
+    </select>
+    <label><input type="checkbox" id="onlyTodo"> 只看未掌握</label>
+    <button id="toggleAll" type="button">全部展开</button>
+    <button id="clearDone" type="button">清空进度</button>
+    <span id="progress"></span>
+  </div>
+
+  <nav class="toc"><a href="#ch1">第 1 章 · 6 题</a>
+    <a href="#ch2">第 2 章 · 19 题</a>
+    <a href="#ch3">第 3 章 · 19 题</a>
+    <a href="#ch4">第 4 章 · 9 题</a>
+    <a href="#ch5">第 5 章 · 19 题</a>
+    <a href="#ch6">第 6 章 · 16 题</a>
+    <a href="#ch7">第 7 章 · 7 题</a>
+    <a href="#ch8">第 8 章 · 13 题</a></nav>
+
+  <section class="chsec" id="ch1" data-ch="1">
+    <h2 class="sec ch"><span class="n">CH 1</span> 第 1 章 · 物联网概述 <span class="cnt">6 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 18、48、53 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q001</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q001"> 已掌握</label></div>
+      <p class="qtext">问 ① ：一个典型物联网应用架构包括哪些部分？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>六部分：<strong>终端感知设备 → 无线接入（BLE 5.0 / NB-IoT / Wi-Fi / GPRS）→ 网关 → 互联网 → 物联网云平台 → 客户端（Web / APP）</strong>。职责：终端感知设备采集数据；网关无线接收数据并经有线回传云平台；云平台存储感知数据、提供查询/分析/处理/展示、管理终端与网关接入、提供多重安全防护；客户端是面向用户开发的应用。（本课第五节即此图）</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q002</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q002"> 已掌握</label></div>
+      <p class="qtext">问 ② ：物联网开发与传统 PC 程序开发有什么不同？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>按课件"挑战"部分作答：① <strong>开发链长</strong>——一个应用涉及嵌入式、云平台、用户端开发，需嵌入式/前端/后端多类人员协作；② <strong>没有固定的终端类型</strong>——物联网领域尚未形成统一的终端形态；③ <strong>垂直一体化架构</strong>——软硬件与云平台耦合，难以复用与标准化。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q003</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q003"> 已掌握</label></div>
+      <p class="qtext">问 ① ：在 CMU GIoTTO 项目中，如何保证安全性？机器学习层起到了什么作用？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>安全三件套（课件原文）：<strong>HTTPS</strong>——在 HTTP 基础上加密通信；<strong>OAuth 2.0</strong>——用户用账户名、密码登录中心服务器后获得唯一 ID 和密钥，访问 GIoTTO 数据库时必须先用 ID 和密钥获取 OAuth 令牌才能获得数据访问权限，令牌有效期超时后必须重新生成；<strong>访问控制层</strong>——分管理员与普通用户，管理员拥有所有传感器数据访问权限并定义普通用户权限（访问控制列表）。机器学习层作用：给数据<strong>打标签 → 训练分类器 → 得到虚拟传感器</strong>——如训练虚拟分贝计、训练座椅加速度计数据得到座位占用虚拟传感器，两者结合即可检测安静环境下的空闲座位。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q004</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q004"> 已掌握</label></div>
+      <p class="qtext">问 ② ：在 Mosaic 项目中，PM2.5 测量的原理是什么？使用一元线性模型做数据校准有什么缺陷？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>原理（课件原文）：风扇向上提供稳定气流 → 激光发射器发出一束红外激光 → 激光照射到气流上，被其中的粒子反射 → 被光传感器感知，通过反射的强弱程度测量粒子浓度。校准缺陷可对照课件给出的方案回答：课件实际采用<strong>多元线性模型 + 随机森林的二阶段校准</strong>——特征不只粒子原始数据，还有温湿度、速度、人流密度、车流密度等（Akaike 信息准则选特征防过拟合）；第一阶段多元最小二乘定线性模型参数，第二阶段用随机森林拟合线性模型的残差。可见单一特征的一元线性模型不足以刻画多因素影响，其残差中的非线性部分也无法拟合。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q005</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q005"> 已掌握</label></div>
+      <p class="qtext">问 ① ：电池 2800mAh，工作 20mA、休眠 0.5mA，占空比 1%，节点工作时长为？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><div class="calc">I = 20mA×1% + 0.5mA×99% = 0.2 + 0.495 = <b>0.695mA</b>
+T = C/I = 2800mAh / 0.695mA ≈ <b>4029h</b>（约 168 天）</div>
+      <p>方法与课件例题（占空比 10% → 2.45mA → 1142h）完全一致，只换代入值。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q006</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0001-物联网概述.html">0001-物联网概述</a>
+        <label class="done"><input type="checkbox" data-id="Q006"> 已掌握</label></div>
+      <p class="qtext">问 ② ：占空比 1%，且考虑电池自放电率 0.5%/天（课件假设：电池每天释放初始电量的 0.5%），工作时长为？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><div class="calc">自放电等效电流 = 2800mAh × 0.5% ÷ 24h = 14mAh/24h ≈ <b>0.583mA</b>
+总等效电流 I = 0.695 + 0.583 = <b>1.278mA</b>
+T = 2800mAh / 1.278mA ≈ <b>2190h</b>（约 91 天）</div>
+      <p>说明：题目条件与假设均为课件原文，解法是把自放电按课件 T=C/I 的口径折算成等效电流；这是思考题，课件未给数值答案，建议以此思路与老师核对。</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch2" data-ch="2">
+    <h2 class="sec ch"><span class="n">CH 2</span> 第 2 章 · 物联网硬件平台 <span class="cnt">19 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 12、16、56 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q007</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q007"> 已掌握</label></div>
+      <p class="qtext">问 ① ：程序中声明了 char buf[10240] （10240 字节），应该选择哪块 MCU？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>数据段存在于 MCU 的 RAM 中。10240 字节 &gt; 8KB（F2618 放不下），≤ 16KB（F5437 满足）→ 选 <strong>Msp430F5437</strong>。（课后习题答案原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q008</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q008"> 已掌握</label></div>
+      <p class="qtext">问 ② ：占空比为 80% 时，谁的能耗低？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>80% = 8s 工作 + 2s 睡眠：E(F2618) = 2×3.3×10⁻⁶ + 8×1.5×10⁻³ = <strong>0.012 J</strong>；E(F5437) = 2×5.1×10⁻⁶ + 8×0.84×10⁻³ = <strong>0.0067 J</strong> → <strong>F5437 能耗低</strong>（工作占主导，比工作功率）。（课后习题答案原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q009</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q009"> 已掌握</label></div>
+      <p class="qtext">问 ③ ：占空比为 0.1% 时，谁的能耗低？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>0.1% = 0.01s 工作 + 9.99s 睡眠：E(F2618) = 9.99×3.3×10⁻⁶ + 0.01×1.5×10⁻³ = <strong>4.7967×10⁻⁵ J</strong>；E(F5437) = 9.99×5.1×10⁻⁶ + 0.01×0.84×10⁻³ = <strong>5.9349×10⁻⁵ J</strong> → <strong>F2618 能耗低</strong>（睡眠占主导，比睡眠功率）。</p>
+      <p><strong>结论口诀</strong>：占空比高比"工作功率"，占空比低比"睡眠功率"。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q010</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q010"> 已掌握</label></div>
+      <p class="qtext">波特率 9600Bd/s、接收中断处理 2ms，接收缓存应为多少字节？（每次 11 位 = 8 数据 + 2 标识 + 1 校验，缓存只存数据位）</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>2ms 内到达数据 = 2/1000 ÷ (1/9600) = 19.2 位；数据位 = 19.2 × 8/11 ≈ 13.96 位 ≈ 1.75 字节 → 向上取整 = <strong>2 字节</strong>（习题答案第 6 题同款计算，结果一致）。习题还要求画 UART 传"10101"的波形（含起始/结束标志位与校验位）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q011</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q011"> 已掌握</label></div>
+      <p class="qtext">问 1 ：哪些硬件平台属于 Things 类别？哪些属于 Smart Things 类别？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>按课件平台分类表：<strong>Things 类</strong>——传感节点、STM32、ESP32、Arduino；<strong>Smart Things 类</strong>——树莓派、Jetson。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q012</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q012"> 已掌握</label></div>
+      <p class="qtext">问 2 ：RAM 和 Flash 有区别吗？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>RAM 存数据、易失性；Flash 存程序、非易失性（断电程序仍在）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q013</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q013"> 已掌握</label></div>
+      <p class="qtext">问 3 ：程序声明了 4100 字节的数据，能否运行在 MicaZ 节点上？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>不能。MicaZ 的 RAM 只有 4KB = 4096 字节 &lt; 4100，数据放不下。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q014</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q014"> 已掌握</label></div>
+      <p class="qtext">问 4 ：Atmega 系列处理器属于什么架构？有什么特点？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>AVR 体系结构——RISC（精简指令集）；存储采用哈佛结构，数据寻址空间与程序寻址空间分离。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q015</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q015"> 已掌握</label></div>
+      <p class="qtext">问 5 ：STM32 中一般有几种低功耗模式？哪种功耗最低？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>3 种：睡眠、停机、待机；<strong>待机</strong>功耗最低（约 2μA）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q016</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q016"> 已掌握</label></div>
+      <p class="qtext">问 6 ：盾板的功能作用是什么？适用于哪些硬件平台？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>像盾一样插在主板上，为平台扩展功能和接口；适用 Arduino（Base Shield 等）与树莓派（GrovePi+、Grove Base HAT）。注意：插上盾板后会完全覆盖主板，此时无法再用杜邦线在引脚上接传感器（习题答案第 4 题）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q017</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q017"> 已掌握</label></div>
+      <p class="qtext">问 7 ：ESP32 集成无线模块有哪些？这些无线协议能否同时运行？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>集成 2.4GHz Wi-Fi + 蓝牙双模（课件原文）。"能否同时运行"课件未给出标准答案，建议向老师确认，勿自行作答。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q018</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q018"> 已掌握</label></div>
+      <p class="qtext">问 8 ：Jetson 硬件平台的主要特点是什么？适用于哪些场景？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>强大计算能力、低功耗设计、高度集成、支持多种 AI 框架；适用于边缘计算与 AI（制造、物流、零售、服务、农业、智慧城市、医疗保健等）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q019</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q019"> 已掌握</label></div>
+      <p class="qtext">问 9 ：1.3 TFLOPS 是什么意思？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>每秒 1.3 万亿次（10¹²）浮点运算（FLOPS 通常按 FP32 计）。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q020</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q020"> 已掌握</label></div>
+      <p class="qtext">选型 1 ：环境监测（温湿度、光照强度），要求节点可以放置在 40×70 的底座内。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>符合尺寸的是 <strong>TelosB（63.75×32）、STM32F103（53×23）</strong>（树莓派 85×56、UNO 68.8×53.4、Mega 101.52×53.3 都放不下）。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q021</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q021"> 已掌握</label></div>
+      <p class="qtext">选型 2 ：环境监测，要求节点在无源环境下可以长时间工作，在此基础上找价格最低的一款。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>选 <strong>Arduino UNO</strong>（149.25 元，低于 TelosB 850 元、Mega 439.65 元；树莓派高功耗不考虑）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q022</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q022"> 已掌握</label></div>
+      <p class="qtext">选型 3 ：环境监测（温湿度、光照强度、PM2.5），并预留各类型的接口以防将来扩展。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>选 <strong>Arduino Mega 2560</strong>（54 Digital/16 Analog/14 PWM/4 UART，接口最多）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q023</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q023"> 已掌握</label></div>
+      <p class="qtext">选型 4 ：人脸识别，将摄像头采集的图片进行人脸识别，并截取人脸图片上传至云端。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>选 <strong>树莓派 4B</strong>（计算能力最强）。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q024</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q024"> 已掌握</label></div>
+      <p class="qtext">计算题（习题 7） ：以写数据&quot;10101&quot;到 0x0B 设备为例，按步描述 I2C 的传输过程，要求画出传输信号波形。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>主机先发 8 位指令——高 7 位 = 0x0B 的地址、最低位 = 0 表示写；SCL 保持高电平时 SDA 从 1 跳到 0 = 开始传输（总线"忙"），SCL 开始振荡逐位送数据；结束时 SCL 高电平期间 SDA 从 0 跳到 1 = 传输结束（总线"闲"）。考试要求画出 SDA/SCL 波形。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q025</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0002-物联网硬件平台.html">0002-物联网硬件平台</a>
+        <label class="done"><input type="checkbox" data-id="Q025"> 已掌握</label></div>
+      <p class="qtext">计算题（习题 8） ：SPI 传输中，SPPR 和 SPR 分别设置为 010 和 100，总线时钟频率至少为多少才能保证数据传输率为 200Kbps？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>BRD = (SPPR+1) × 2^(SPR+1) = (2+1) × 2⁵ = 96；fBUS = BR × BRD = 200K × 96 = <strong>19.2MHz</strong>。</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch3" data-ch="3">
+    <h2 class="sec ch"><span class="n">CH 3</span> 第 3 章 · 物联网操作系统 <span class="cnt">19 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 13、21、63 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q026</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0301-操作系统概述与构成.html">0301-操作系统概述与构成</a>
+        <label class="done"><input type="checkbox" data-id="Q026"> 已掌握</label></div>
+      <p class="qtext">课后习题 1：物联网操作系统与传统操作系统的不同，有什么作用？（课件思考题同款）</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>不同体现在四方面：①<strong>操作系统类型数量不同</strong>——传统平台基本统一（PC 端 Windows/Linux，手机端 iOS/Android），物联网操作系统仍百家争鸣（Android Things、Windows 10 IoT Core、mbed OS、AliOS-Things、Huawei-LiteOS 等），未建立统一应用生态，移植性较差；②<strong>存储空间占用不同</strong>——传统 OS 内存占用大（Linux 几百 MB、Windows 几 GB），物联网 OS 一般只有几十 KB（TinyOS 2.x 最小数据内存 2KB、程序闪存 17KB；AliOS-Things 最小数据内存 20KB、程序闪存 40KB），可节省内存资源、提高运行效率；③<strong>内存管理方式不同</strong>——传统 OS 运行在具有 MMU 的设备上、能提供地址翻译和内存保护，物联网 OS 运行在缺乏 MMU 的设备上时难以提供，可能带来安全问题和运行效率问题；④<strong>OS 特权模式不同</strong>——传统 OS 运行在有特权模式的 CPU 上、可保护硬件资源安全，物联网芯片多无特权模式、所有指令都能访问任何硬件资源，提高可扩展性但可能有安全问题。</p>
+      <p>作用有四条：<strong>屏蔽物联网碎片化特征、提供统一编程接口；培育物联网生态环境；降低物联网应用开发的成本和时间；为物联网统一管理奠定基础</strong>。（课后习题答案原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q027</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0302-编程模型与调度方式.html">0302-编程模型与调度方式</a>
+        <label class="done"><input type="checkbox" data-id="Q027"> 已掌握</label></div>
+      <p class="qtext">（1）非抢占式：时间点 0s 时 a,b,c 顺序启动，三个线程完成时间分别是多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>非抢占式下单个线程依次执行完，各自花费的时间分别为 <strong>10s、20s、30s</strong>（课后习题答案原文）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q028</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0302-编程模型与调度方式.html">0302-编程模型与调度方式</a>
+        <label class="done"><input type="checkbox" data-id="Q028"> 已掌握</label></div>
+      <p class="qtext">（2）抢占式：优先级 c&gt;b&gt;a，a、b、c 的就绪时间点分别为第 1s、第 2s、第 15s，完成时间？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件未给出此问（纯抢占式版本）的标准答案，建议向老师确认。课后习题答案给的是它的变体——"协同式和抢占式并存，b 执行完 4s 有 yield() 指令"版本：a 先执行完，花费时间为 1s+4s+9s=<strong>14s</strong>；紧接着 c 执行完，花费的时间为 <strong>30s</strong>；最后 b 执行完，花费的时间为 <strong>59s</strong>（可画甘特图计算）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q029</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0302-编程模型与调度方式.html">0302-编程模型与调度方式</a>
+        <label class="done"><input type="checkbox" data-id="Q029"> 已掌握</label></div>
+      <p class="qtext">（3）时间片轮转：时间片 10s，a、b、c 启动时间点分别为第 0s、第 10s、第 20s，完成时间？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>按课后习题答案原文：a 先执行完，花费的时间为 <strong>10s</strong>；紧接着 b 执行完，花费的时间为 <strong>30s</strong>；最后 c 执行完，花费的时间为 <strong>40s</strong>。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q030</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0303-IO内存与软件更新.html">0303-IO内存与软件更新</a>
+        <label class="done"><input type="checkbox" data-id="Q030"> 已掌握</label></div>
+      <p class="qtext">课后习题 6 ：使用 mmem 内存管理模式，静态数组为 memory[]，可用内存大小为 avial_memory，最大可用空间为 MMEM_SIZE，mmem_alloc() 分配的新内存空间指针指向的地址是？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>&amp;memory[MMEM_SIZE - avial_memory]</strong>（课后习题答案原文）。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q031</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0303-IO内存与软件更新.html">0303-IO内存与软件更新</a>
+        <label class="done"><input type="checkbox" data-id="Q031"> 已掌握</label></div>
+      <p class="qtext">旧文件：A B C D E A C B C；新文件：W A B C D E A C B C X D E A C B。差分文件大小为多少？具体指令是？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件给出两种等价方案，大小均为 <strong>18 字节</strong>：<br>
+      方案一：<strong>ADD 1 &lt;W&gt;，COPY 9 0，ADD 1 &lt;X&gt;，COPY 5 3</strong> → 4+5+4+5=18；<br>
+      方案二：<strong>ADD 1 &lt;W&gt;，COPY 9 0，ADD 6 &lt;X D E A C B&gt;</strong> → 4+5+9=18。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q032</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0303-IO内存与软件更新.html">0303-IO内存与软件更新</a>
+        <label class="done"><input type="checkbox" data-id="Q032"> 已掌握</label></div>
+      <p class="qtext">追问：基于差分的编码方式，在程序头部插入函数和在程序尾部插入函数，哪个差分升级包占用空间比较大？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>头部插入更大</strong>。因为若在头部插入函数，则在此之后的函数跳转地址都需要做相应修改，所需修改的内容更多，整体程序转化后的二进制文件与源文件的差距可能特别大；而在尾部插入函数可能仅仅是后面与源文件有差距，前面二进制文件都一样，差距不大。（课后习题答案原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q033</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q033"> 已掌握</label></div>
+      <p class="qtext">问 1 ：Contiki OS 的 protothreads 跟传统的多线程有什么区别？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>protothreads 基于<strong>协作式调度模式</strong>、使用<strong>单个堆栈</strong>实现、<strong>不能使用局部变量</strong>（课件原文三大特点）；传统多线程每个线程有独立堆栈，可被抢占。Contiki 若需要多堆栈、支持抢占，可改用 mt_thread 多线程库。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q034</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q034"> 已掌握</label></div>
+      <p class="qtext">问 2 ：Contiki OS 中的 RPL 协议与 CTP 协议有什么区别？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件：CTP 仅提供多对一通信模式；RPL 支持一对多（数据分发）、多对一（数据收集）和一对一（点对点）。课后习题答案补充细节：RPL 不仅提供多对一通信的接口 <strong>dao_output</strong>，还提供一对多的通信接口 <strong>dio_output</strong>；且 dao_output 指定的目的地址不仅可以是汇聚节点，还可以是网络中其他节点（即点对点模式）。</p></div></details>
+    </div>
+    <div class="item" data-tag="设计 / 实操">
+      <div class="qhead"><span class="no">Q035</span><span class="tag tg-book">设计 / 实操</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q035"> 已掌握</label></div>
+      <p class="qtext">问 3 ：RIOT GNRC 中哪一层实现了对下层各类网络协议的抽象，使 GNRC 可兼容大量链路层协议而无需修改代码？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>最底层的 <strong>gnrc_netdev</strong> 层（课件原文）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q036</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q036"> 已掌握</label></div>
+      <p class="qtext">问 4 ：RIOT 中一个外围设备对应 SAUL 中哪个数据结构？传感器数据和控制执行器的参数存在哪个数据结构中？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>外围设备对应 <strong>saul_reg_t</strong> 结构（内含 saul_driver_t 驱动，以链表存储）；数据存在统一的 <strong>phydat_t</strong> 类型中（课件原文）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q037</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q037"> 已掌握</label></div>
+      <p class="qtext">课后习题 8 ：基于 Contiki-OS uIP 的 TCP/IP 通信例子，填写空白处的代码。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>该题的代码原图未在提取文本中给出，课件未给出可引用的完整题面，建议对照教材原书作答：题面背景是服务端监听 <strong>45 号端口</strong>、有数据到来时反馈 "ok"；客户端向 <strong>192.168.0.1</strong> 发起连接、连接成功后发送字符串 "hello"。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q038</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0305-Contiki与RIOT详解.html">0305-Contiki与RIOT详解</a>
+        <label class="done"><input type="checkbox" data-id="Q038"> 已掌握</label></div>
+      <p class="qtext">课后习题 9 ：RIOT 节点得到 phydat_t 类型数据 d，补全打印温度整数位的代码。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>两个空：scale &gt; 0 分支循环里填 <strong>printf("0")</strong>（逐个补零）；scale &lt; 0 分支填 <strong>int32_t output = (d.val[0] / (int32_t)e)</strong>，其中 e = _tenmap[d.scale]，再用 %ld 打印 output。（课后习题答案原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q039</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q039"> 已掌握</label></div>
+      <p class="qtext">问 5 ：AliOS Things 基于哪种实时操作系统内核？其主要特点是什么？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>基于 <strong>Rhino</strong> 实时操作系统内核研发。主要特点：<strong>内存占用小</strong>（静态+动态两种分配方式、专为小内存块设计的分配器，支持固定/可变大小块和多个内存区域）、<strong>低功耗</strong>（空闲 CPU 模式，C0 活跃、C1～Cn 睡眠）、<strong>实时性与多任务</strong>（基于优先级的抢占式调度和循环调度，首选最高优先级任务）。（课件原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="设计 / 实操">
+      <div class="qhead"><span class="no">Q040</span><span class="tag tg-book">设计 / 实操</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q040"> 已掌握</label></div>
+      <p class="qtext">问 6 ：AliOS Things 中哪个协议实现自组织网络功能？哪个协议实现轻量级的 TCP/IP 功能？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>uMesh</strong> 实现自组织网络（自组织、自我修复、多跳）；<strong>LwIP</strong> 实现轻量级 TCP/IP（IPv4/IPv6、TCP/UDP、ICMP、ARP 等）。（课件原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q041</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q041"> 已掌握</label></div>
+      <p class="qtext">问 7 ：HarmonyOS 中 LiteOS-A、LiteOS-M 分别适用哪些场景？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>LiteOS-A</strong>：标准设备（参考内存 ≥128MB），支持有 MMU 的设备进行虚拟内存映射；<strong>LiteOS-M</strong>：微设备（参考内存 ≥1MB）及迷你设备（参考内存 ≥128KB）这类没有 MMU 的设备。（课件原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q042</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q042"> 已掌握</label></div>
+      <p class="qtext">问 8 ：HarmonyOS 分布式软总线是什么意思？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>参考计算机硬件总线，在 1+8+N 设备间搭建的一条<strong>"无形"的总线</strong>，具备<strong>自发现、自组网、高带宽、低时延</strong>特点；全场景设备间可基于软总线完成设备虚拟化、跨设备服务调用、多屏协同、文件分享等分布式业务。（课件原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q043</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q043"> 已掌握</label></div>
+      <p class="qtext">课后习题 12 ：HarmonyOS 提出的 1+8+N 指代哪些设备？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>1 指手机为主入口；8 指车机、音箱、耳机、手表/手环、平板、大屏、PC、AR/VR 这 8 个华为自研领域产品；N 是泛 IoT 硬件构成的华为 HiLink 生态。（课后习题答案原文，与课件一致）</p></div></details>
+    </div>
+    <div class="item" data-tag="设计 / 实操">
+      <div class="qhead"><span class="no">Q044</span><span class="tag tg-book">设计 / 实操</span>
+        <a class="lesson" href="lessons/0306-AliOS系统与案例前沿.html">0306-AliOS系统与案例前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q044"> 已掌握</label></div>
+      <p class="qtext">课后习题 13 ：HarmonyOS 的分布式软总线包括哪些模块？各自实现什么功能？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>四个模块：<strong>分布式软总线模块</strong>（多设备终端的统一基座，提供统一分布式通信能力，快速发现并连接设备、高效传输任务和数据）、<strong>分布式数据管理模块</strong>（位于软总线之上，实现应用程序数据和用户数据的分布式管理）、<strong>分布式任务调度模块</strong>（构建统一的分布式服务管理——发现、同步、注册、调用机制，支持远程启动、远程调用、绑定/解绑、迁移）、<strong>分布式设备虚拟化平台</strong>（资源融合、设备管理、数据处理，将周边设备作为手机能力的延伸，形成超级虚拟终端）。（课后习题答案原文）</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch4" data-ch="4">
+    <h2 class="sec ch"><span class="n">CH 4</span> 第 4 章 · 边缘智能 <span class="cnt">9 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 60、82、105、119 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q045</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0403-模型量化.html">0403-模型量化</a>
+        <label class="done"><input type="checkbox" data-id="Q045"> 已掌握</label></div>
+      <p class="qtext">1. 动态量化 vs. 静态量化：如果追求极致的推理速度，应该选哪种？为什么？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件第 49 页对比表与总结句直接给出答案：追求推理速度用<strong>静态量化</strong>——权重与激活值均离线量化、全程整数运算、最大化利用硬件 INT8 指令、推理速度最快；动态量化每层需实时统计激活范围并反量化，额外开销可能抵消 INT8 加速。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q046</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0403-模型量化.html">0403-模型量化</a>
+        <label class="done"><input type="checkbox" data-id="Q046"> 已掌握</label></div>
+      <p class="qtext">2. 在确定量化范围（截断阈值）时，直接取最大值（MinMax）有什么坏处？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>结合课件第 52 页异常值分析：一个巨大的异常值会极大地拉宽 [min, max] 范围，导致 scale 非常大，大部分正常值除以巨大 scale 后趋近 0，精度信息被抹平、模型性能严重下降。（本题为开放思考，以上为课件正文线索，建议向老师确认完整表述。）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q047</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0403-模型量化.html">0403-模型量化</a>
+        <label class="done"><input type="checkbox" data-id="Q047"> 已掌握</label></div>
+      <p class="qtext">3. 为什么大语言模型（LLM）比传统的 CNN 模型更难量化？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件第 51–52 页：LLM 规模大（超过约 60 亿参数时 RTN 失效），且存在数值极大（比普通值大 20 倍以上）却至关重要的稀疏异常特征维度，会把 scale 拉大、抹平正常值的精度信息。（本题为开放思考，以上为课件正文线索，建议向老师确认完整表述。）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q048</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0404-模型剪枝.html">0404-模型剪枝</a>
+        <label class="done"><input type="checkbox" data-id="Q048"> 已掌握</label></div>
+      <p class="qtext">1. 我们通常用 L1 范数（权重的绝对值大小）作为剪枝标准，认为绝对值越小的权重越不重要。是否存在「权重绝对值很小，但其实对模型非常重要」的情况？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件未给出标准答案，建议向老师确认。可结合本章其他小节的线索思考：量化一节指出大模型中存在数值极大却关键的异常维度——说明「用单一数值大小判重要性」并不总是可靠；基于梯度的剪枝标准（用泰勒展开估计移除组件对损失的影响）正是对幅度标准的补充。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q049</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0404-模型剪枝.html">0404-模型剪枝</a>
+        <label class="done"><input type="checkbox" data-id="Q049"> 已掌握</label></div>
+      <p class="qtext">2. 为什么剪枝通常是「训练 → 剪枝 → 微调」的迭代过程，而不是直接从头训练一个本来就比较小的模型？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件第 63 页给出方向：与简单从零训练小模型相比，对大模型剪枝的价值在于可能<strong>保留大型网络在训练过程中学到的「涌现能力」</strong>，而这些复杂能力是小模型可能永远无法自行发展的；此外彩票假设表明，从原始初始权重出发训练的稀疏子网络能达到与密集网络相当甚至更好的性能。（课件未给出完整标准答案，建议向老师确认。）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q050</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0405-知识蒸馏.html">0405-知识蒸馏</a>
+        <label class="done"><input type="checkbox" data-id="Q050"> 已掌握</label></div>
+      <p class="qtext">1. 在计算蒸馏的总损失时，为什么包含了两部分（软损失 + 硬损失）？只用软标签不行吗？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件第 100 页给出方向：教师模型可能存在偏差或噪声，硬目标作为「锚点」防止学生模型完全偏离真实分布；软目标可能不够精确时硬标签提供校正；Hinton 的 MNIST 实验发现添加少量硬目标权重能进一步提升性能。（课件未给出完整标准答案，建议向老师确认。）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q051</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0405-知识蒸馏.html">0405-知识蒸馏</a>
+        <label class="done"><input type="checkbox" data-id="Q051"> 已掌握</label></div>
+      <p class="qtext">2. 教师模型一定越强越好吗？让超级复杂的模型（如 GPT-4 级别）去教几层的小网络，效果一定会好吗？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件未给出标准答案，建议向老师确认。可结合课件线索思考：学生能力受容量和数据限制（第 28 页蒸馏「限制与代价」栏），教师与学生的容量差距过大时，学生可能无法消化教师的软标签知识；Hinton 论文建议中等温度 2.5–4 在小模型容量不足时效果最佳，说明师生匹配度是需要权衡的因素。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q052</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0406-云边协同与框架.html">0406-云边协同与框架</a>
+        <label class="done"><input type="checkbox" data-id="Q052"> 已掌握</label></div>
+      <p class="qtext">1. 除了寻找最佳切分点，还可以通过什么手段进一步降低传输延迟？这会对准确率产生什么潜在影响？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件未给出标准答案，建议向老师确认。可结合本章线索思考：对传输的中间数据做压缩或量化可减少数据量（呼应量化一节「减小权重体积与访存量」），但任何有损压缩都可能带来精度损失。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q053</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0406-云边协同与框架.html">0406-云边协同与框架</a>
+        <label class="done"><input type="checkbox" data-id="Q053"> 已掌握</label></div>
+      <p class="qtext">2. 智能分割系统运行中，手机从 Wi-Fi 切换到信号较差的 3G/4G 环境，为保证流畅，分割点应向「前」移动还是向「后」移动（更多在云端算）？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课件未给出标准答案，建议向老师确认。可结合课件规律推理：网络变差意味着传输开销剧增——若分割点向后移（更多计算留在云端），需传输的中间数据所处的网络阶段更差；权衡「最小化数据传输」与「最大化计算卸载」两个目标后再作答。</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch5" data-ch="5">
+    <h2 class="sec ch"><span class="n">CH 5</span> 第 5 章 · 低功耗无线通信协议 <span class="cnt">19 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 35、57、76、128、174、197 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q054</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">0501-无线通信基础与关键特性</a>
+        <label class="done"><input type="checkbox" data-id="Q054"> 已掌握</label></div>
+      <p class="qtext">计算题 1 ：无线信号传播服从对数-常态分布模型，发射功率 1mW，接收灵敏度 −90dBm，PL0 为 28.5dBm，衰减指数 3，不考虑天线增益与随机误差，最远通信距离？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>先把功率换算为 dBm：P=1mW → D=10lg1=<strong>0dBm</strong>。路径损耗 PL(d)=PL0+10n·lg(d/d0)+Xσ，令 PL(d)=90dB（0−(−90)），PL0=28.5dBm，n=3，d0=1m，Xσ=0，解得 d=10^((90−28.5)/30) m ≈ <strong>112.2m</strong>。（课后习题答案第四章第 1 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q055</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0501-无线通信基础与关键特性.html">0501-无线通信基础与关键特性</a>
+        <label class="done"><input type="checkbox" data-id="Q055"> 已掌握</label></div>
+      <p class="qtext">计算题 2 ：IEEE 802.15.4 中物理层与 MAC 层头部共 13 bytes，载荷 30 bytes，平均退避 5ms，实际数据率？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>η = l/(W·R/8 + H + l)，其中 H=13B、l=30B、W=5ms、R=250Kbps：η = 30/(5×250/8 + 13 + 30) = 30/200.5 ≈ <strong>0.1506</strong>；Rreal = ηR = 0.1506×250kbps ≈ <strong>37.6Kbps</strong>。（课后习题答案第四章第 2 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q056</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0502-802.15.4物理层调制.html">0502-802.15.4物理层调制</a>
+        <label class="done"><input type="checkbox" data-id="Q056"> 已掌握</label></div>
+      <p class="qtext">调制题 ：现有数据流 10111110，要通过 IEEE 802.15.4 物理层发送，请给出经过物理层调制后，I 相位与 Q 相位上的码元序列。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>① 按 4bit 分组：1011、1110。② 查 DSSS 表：1011 → 01100000011101111011100011001001；1110 → 10011100001101010010001011101101。③ 拼成 64 位码片序列。④ 偶数位码片进 I 相位、奇数位码片进 Q 相位：</p>
+      <p><strong>I 相位：01000101111010101010010001011110</strong><br><strong>Q 相位：10001111010010010110011100001011</strong></p>
+      <p>（课后习题答案第四章第 3 题；每个码片 1μs，Q 相位相对 I 相位偏移 0.5μs。）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q057</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0503-低功耗MAC与链路质量估计.html">0503-低功耗MAC与链路质量估计</a>
+        <label class="done"><input type="checkbox" data-id="Q057"> 已掌握</label></div>
+      <p class="qtext">LPL 探测包间隔 ：CCA 期间采样 400 次，采样平均值超过 −77dBm 才醒来；每次 CCA 长 11ms，探测包长 2ms，接收信号强度 −56dBm，环境噪声 −100dBm。探测包间隔最大为多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>设 CCA 的 400 次采样中有 n 次采到探测包信号：[n×(−56) + (400−n)×(−100)]/400 &gt; −77，解得 <strong>n ≥ 210</strong>。即 CCA 期间有数据包在传输的时间至少 (210/400)×11ms = <strong>5.8ms</strong>；至少要 3 个数据包落在 CCA 期间，两个间隙合计最大 11−5.8 = 5.2ms，故最大间隔 = <strong>5.2/2 = 2.6ms</strong>。（课后习题答案第四章第 4 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q058</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0503-低功耗MAC与链路质量估计.html">0503-低功耗MAC与链路质量估计</a>
+        <label class="done"><input type="checkbox" data-id="Q058"> 已掌握</label></div>
+      <p class="qtext">EWMA 估计 ：链路上一段时间的数据包/ACK 情况如图，EWMA 窗口 3、权重 α=0.9，求最后两个时刻 t1、t2 的 PRR 估计值。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>t1 时刻 PRRcurrent=0.67，上一时刻估计值 0.33：PRR₁ = 0.67×0.9 + 0.33×0.1 = <strong>0.636</strong>；t2 时刻 PRRcurrent=0.67，上一时刻估计 0.636：PRR₂ = 0.67×0.9 + 0.636×0.1 = <strong>0.667</strong>。（课后习题答案第四章第 5 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q059</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0504-组网协议CTP与RPL.html">0504-组网协议CTP与RPL</a>
+        <label class="done"><input type="checkbox" data-id="Q059"> 已掌握</label></div>
+      <p class="qtext">证明题 ：已知一条 n 跳路径 P=(e1,…,en)，其中 ei 代表第 i 跳的链路。证明这条路径的 ETX 等于其所有链路 ETX 之和。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>一条路径的 ETX 表示在这条路径上成功传输一个数据包所需要的传输次数。一个数据包在一条路径上传输成功，需要在<strong>每一跳</strong>的链路上都传输成功：在第一跳链路 e1 上需要传输 ETX(e1) 次，然后继续在第二跳链路上传输 ETX(e2) 次……直到第 n 跳链路需要传输 ETX(en) 次。因此路径 P 上总共需要传输的次数为 Σ(i=1→n) ETX(ei)，即<strong>路径 ETX 为组成该路径的所有链路 ETX 之和</strong>。（课后习题答案第四章第 6 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q060</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0504-组网协议CTP与RPL.html">0504-组网协议CTP与RPL</a>
+        <label class="done"><input type="checkbox" data-id="Q060"> 已掌握</label></div>
+      <p class="qtext">计算题 ：路径收包率 = 源节点成功发送的数据包数占发送总数的百分比。两跳链路构成的路径，前一跳 ETX=1、后一跳 ETX=100，路径收包率多少？反过来呢？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>ETX=1 表示该链路数据包只需传输一次，链路 PRR=1；ETX=100 表示发送 100 次失败 99 次，链路 PRR=0.01。路径 PRR = 各跳 PRR 之积：两种顺序均为 1×0.01 = <strong>0.01</strong>（即 1%）——串联路径由最差链路主导，与顺序无关。（课后习题答案第四章第 7 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q061</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0505-BLE协议架构与链路层.html">0505-BLE协议架构与链路层</a>
+        <label class="done"><input type="checkbox" data-id="Q061"> 已掌握</label></div>
+      <p class="qtext">简答题 ：简述 GFSK 和 FSK 的异同。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>GFSK（高斯频移键控）是在调制之前通过一个<strong>高斯低通滤波器</strong>限制信号的频谱宽度：先对原始数据进行高斯滤波处理，再进行传统 FSK 调制。与 FSK 相比，GFSK 调制信号在非调制信号频率上的能量更少，<strong>降低了对其他频率信号的干扰</strong>；但不同二进制数据之间的差别更加平滑，使得<strong>数据的误解调率提高了</strong>。（课后习题答案第四章第 8 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q062</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0506-BLE-Mesh与蓝牙5x.html">0506-BLE-Mesh与蓝牙5x</a>
+        <label class="done"><input type="checkbox" data-id="Q062"> 已掌握</label></div>
+      <p class="qtext">路由题 ：如果节点 E 想要发送数据到节点 L，会经历哪些过程？该数据包的 TTL 设置为 3（假设途中朋友节点未开启 relay 功能）。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>① 节点 E 发送数据包给节点 R。② 转发节点 Q 和 R 收到数据包，N 也收到；其中 Q、R 将 TTL 修改为 2 并广播；N 收到但因朋友特性未启用，不转发。③ 对 Q 广播的包：A、B、C、D 收到但不是自己的，丢弃；<strong>朋友节点 P 收到，将 TTL 改为 1，广播</strong>；对 R 转发的包：转发节点 S 和 O 收到，将 TTL 改为 1 并广播；H 收到发现不属于自己，丢弃。④ 对 P 转发的包：低功耗节点 I、J、K 若因睡眠没收到，醒来后向 P 查询，没有自己的包就继续睡；若收到但不是自己的则丢弃。对 S 转发的包：T 收到后丢弃。⑤ 对 O 转发的包：F、G 收到丢弃；<strong>低功耗节点 L、M 若睡着没收到，醒来询问 O，O 发现有属于 L 的数据包就发给 L，L 保留</strong>；M 没有自己的包就继续睡眠；若 L、M 已直接收到，则 M 丢弃、L 检查到是自己的并保留。（课后习题答案第四章第 9 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q063</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0506-BLE-Mesh与蓝牙5x.html">0506-BLE-Mesh与蓝牙5x</a>
+        <label class="done"><input type="checkbox" data-id="Q063"> 已掌握</label></div>
+      <p class="qtext">推导题 ：蓝牙的 LE Coded 信道使用 S=2 和 S=8 编码时，对应数据率分别为 500kbps 和 125kbps，这一数据率如何推导？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>LE Coded 信道基于 BLE 物理层的 <strong>1Mbps 模式</strong>。经前向纠错后 1bit 数据被拓展为 2bit，再进行模式映射：<strong>S=2 映射保留原始的 2bit 数据</strong>——发送 1bit 上层数据占用 2bit 数据位，带宽为原始的 1/2，即 <strong>500kbps</strong>；<strong>S=8 映射将 2bit 数据再拓展为 8bit</strong>——1bit 上层数据占用 8bit 数据位，带宽为原始的 1/8，即 <strong>125kbps</strong>。（课后习题答案第四章第 10 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q064</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0507-LPWAN概述与覆盖增强.html">0507-LPWAN概述与覆盖增强</a>
+        <label class="done"><input type="checkbox" data-id="Q064"> 已掌握</label></div>
+      <p class="qtext">简答题 ：增强通信距离的技术有哪几种？NB-IoT 和 LoRaWAN 分别使用了哪些技术提升通信距离？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>四种：<strong>增加功率谱密度、重传、多接收天线、扩频</strong>。NB-IoT：减小带宽增大功率谱密度、重传（增加接收冗余提高解码成功率）、多接收天线；具有 164dB 链路预算（相比 GPRS 和 LTE 提升 20dB，开阔环境覆盖范围可增加七倍），还可用低成本"中继"产品拓展盲区覆盖。LoRaWAN：扩频（高扩频因子把小容量数据用大范围频谱传输；GFSK 需要 8dB SNR，LoRa 可解调 −20dB SNR 的信号，差距 28dB）、chirp 线性调频商用扩频（延续 FSK 低功耗特性进一步增大距离）、中继产品。（课后习题答案第五章第 1 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q065</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0507-LPWAN概述与覆盖增强.html">0507-LPWAN概述与覆盖增强</a>
+        <label class="done"><input type="checkbox" data-id="Q065"> 已掌握</label></div>
+      <p class="qtext">计算题 1 ：重传 1024 次，理论覆盖增益多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>覆盖增益以基站能解调的最远上行传输计算：10×lg1024 dB ≈ <strong>30.1dB</strong>。（课后习题答案第五章第 2 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q066</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0507-LPWAN概述与覆盖增强.html">0507-LPWAN概述与覆盖增强</a>
+        <label class="done"><input type="checkbox" data-id="Q066"> 已掌握</label></div>
+      <p class="qtext">计算题 2 ：NB-IoT 上行有两种带宽 3.75kHz 和 15kHz，发送功率相同时，选 3.75kHz 的功率谱密度是选 15kHz 的多少倍？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>PSD = 功率/带宽；功率相同则 PSD 与带宽成反比：15/3.75 = <strong>4 倍</strong>。（课后习题答案第五章第 4 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q067</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0507-LPWAN概述与覆盖增强.html">0507-LPWAN概述与覆盖增强</a>
+        <label class="done"><input type="checkbox" data-id="Q067"> 已掌握</label></div>
+      <p class="qtext">计算题 3 ：链路预算 = 发送功率 − 接收端灵敏度。GPRS/GSM 链路预算 144dB，LoRa 相较 GPRS/GSM 能实现多少倍覆盖增强？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>LoRa CSS 方案接收灵敏度 −142dBm，最大发送功率 20dBm：链路预算 = 20 − (−142) = <strong>162dB</strong>；相比 GPRS/GSM 的 144dB 有 18dB 增益；由 dB=10lg(A/B)，A/B = 10^1.8 ≈ <strong>63 倍</strong>覆盖增强。（课后习题答案第五章第 6 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q068</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0508-NB-IoT协议详解.html">0508-NB-IoT协议详解</a>
+        <label class="done"><input type="checkbox" data-id="Q068"> 已掌握</label></div>
+      <p class="qtext">维特比解码 ：编码器只含两个移位寄存器（初始状态 00），收到序列 [00 10 01 01]，如何解码出原始数据？写出译码结果及实际编码数据。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>用维特比算法在网格图上按汉明距离最小原则逐段搜索路径：原始数据 <strong>u=[0 1 1 0]</strong>，对应的实际编码数据 <strong>V=[00 11 01 01]</strong>（接收序列中 10 为误码，V 与 R 仅第二段差 1 位，累积距离最小）。（课后习题答案第五章第 5 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q069</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0508-NB-IoT协议详解.html">0508-NB-IoT协议详解</a>
+        <label class="done"><input type="checkbox" data-id="Q069"> 已掌握</label></div>
+      <p class="qtext">小区容量 ：某市区住户密度 1517 户/km²，每户平均 40 个设备，基站小区覆盖为正六边形，两基站平均距离 1732m，求每小区容量？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>正六边形边长 1732m 时小区面积约 3×3×1.732²（km² 口径按习题解答），每个小区设备数 = 小区覆盖面积 × 住户密度 × 每户设备数 = 32×3×1.732²×1517×40 ≈ <strong>52547 个</strong>。（课后习题答案第五章第 3 题，建议按原解答式子复算口径）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q070</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">0509-LoRaWAN协议详解</a>
+        <label class="done"><input type="checkbox" data-id="Q070"> 已掌握</label></div>
+      <p class="qtext">网关容量倍数 ：SX1301（8 通道 8 解调器）采用 ADR 机制后网关容量能提高 232.6%，问 SX1301 的容量是单通道单解调器芯片 SX1276/8 的多少倍？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>虽然 LoRa 能同时接收正交的 6 个 SF，但受限于解调器数目，SX1301 最多只能同时解调 8 个用户的数据（而非 48 个）；ADR 机制使网关容量提高 232.6%。因此 SX1301 相较 SX1276/8 的容量 = 8 × 232.6% = <strong>18.6 倍</strong>。（课后习题答案第五章第 8 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q071</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">0509-LoRaWAN协议详解</a>
+        <label class="done"><input type="checkbox" data-id="Q071"> 已掌握</label></div>
+      <p class="qtext">chirp 符号计算 ：设备发送一字节数据 50，SF=10，BW=125KHz，频-时间图上一个符号的时长和起始位置的偏移为多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>SF=10 → 一个符号表示 10 个比特，带宽被划分为 <strong>2¹⁰=1024</strong> 份（起始位置传输数据 [0, 2¹⁰−1]）。符号时长 Ts = 2¹⁰×1000/125000 ms = <strong>8.192ms</strong>；频移量 = 50×125/2¹⁰ ≈ <strong>6.1035</strong>（kHz 口径）。（课后习题答案第五章第 7 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q072</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0509-LoRaWAN协议详解.html">0509-LoRaWAN协议详解</a>
+        <label class="done"><input type="checkbox" data-id="Q072"> 已掌握</label></div>
+      <p class="qtext">系统容量 ：LoRaWAN 终端每 10 分钟上报 12 字节，SX1301 LoRaWAN 网关的系统容量至少是多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>最小帧头帧尾共 13 字节；按最小容量计算，设备均用 SF=12 发送（数据率 250bps）。每个节点所需带宽 = (12+13)×8/600 ≈ 0.33bps；可容纳节点 = 250/0.33×8？——按习题解答原式：250/0.33×8×232.6% ≈ <strong>14096</strong>（含 ADR 机制 232.6% 扩展）。（课后习题答案第五章第 9 题，建议按原解答口径复述）</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch6" data-ch="6">
+    <h2 class="sec ch"><span class="n">CH 6</span> 第 6 章 · 物联网云平台 <span class="cnt">16 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 26、98、99、129 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q073</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0602-MQTT通信接入.html">0602-MQTT通信接入</a>
+        <label class="done"><input type="checkbox" data-id="Q073"> 已掌握</label></div>
+      <p class="qtext">思考题（教材 PPT 第 41 页）：对比 MQTT、CoAP、HTTP。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（教材 PPT 第 42 页原表，三列均为应用层协议）MQTT：传输层 TCP；可靠；传输代价小；支持多播；支持双向通信（资源受限设备）；需要中间代理（Broker）转发；温度上传示例报文长度 20（MQTT）+32（TCP）字节。CoAP：传输层 UDP；可靠可选；传输代价小；支持多播；支持双向通信；无中间代理；32（CoAP）+8（UDP）字节。HTTP：传输层 TCP；可靠；传输代价大；不支持多播；资源受限设备难做双向；32+824（HTTP）字节。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q074</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0602-MQTT通信接入.html">0602-MQTT通信接入</a>
+        <label class="done"><input type="checkbox" data-id="Q074"> 已掌握</label></div>
+      <p class="qtext">思考（课件 26 页）：QoS 1 下目标 500 条/秒、RTT=80ms，至少需要多少在途容量？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>由吞吐上界 ≈ C/RTT 得 C ≥ 500 × 0.08 = 40 条。课件未给出该问的正式标准答案，此为按课件公式的推算，建议向老师确认表述。（依据课件 26 页公式与例题）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q075</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0603-设备管理与OTA.html">0603-设备管理与OTA</a>
+        <label class="done"><input type="checkbox" data-id="Q075"> 已掌握</label></div>
+      <p class="qtext">思考题（教材 PPT 第 52 页）：设备管理主要管理哪些内容？请至少举出 5 个例子。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（课后习题答案第 4 题原解）① 设备生命周期管理：注册、删除设备；② 设备状态管理：提供设备上线、离线的变更通知服务；③ 设备固件版本管理：获取设备当前的版本号；④ 固件更新管理：选择需更新的设备、指示设备在哪里查找更新、监视更新过程；⑤ 设备消息处理：将消息安全可靠地路由至终端节点和其他设备。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q076</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0603-设备管理与OTA.html">0603-设备管理与OTA</a>
+        <label class="done"><input type="checkbox" data-id="Q076"> 已掌握</label></div>
+      <p class="qtext">思考题（课件 43 页）：&quot;灯最终为蓝色&quot;和&quot;投药一次&quot;，为什么不能用同一种状态同步？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（结合课件 42 页与习题答案第 5 题整理）"灯最终为蓝色"是<strong>幂等的目标状态</strong>——适合设备影子：离线期间云端记录期望状态，重连后以最新 desired 为依据执行，不必重放中间状态。"投药一次"是<strong>一次性动作</strong>——影子只保留最终状态会丢失"执行一次"的语义，且短期命令应有有效期，不能无限期保留重放；课件指出"一次性动作不能只保留最终状态"，且"协议交付不等于设备已执行"。课件未给出本思考题的完整标准答案，以上为课件要点的组织，建议向老师确认。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q077</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0603-设备管理与OTA.html">0603-设备管理与OTA</a>
+        <label class="done"><input type="checkbox" data-id="Q077"> 已掌握</label></div>
+      <p class="qtext">思考题（教材 PPT 第 49 页 / 课后习题答案第 5 题）：直接管理和设备影子有什么不同？举一个具体例子。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 5 题原解）区别：① 设备影子有存储设备状态信息的功能，设备离线时云平台发布的指令可在设备上线后执行；直接管理遵循请求—响应模式，适用于需要立即确认结果的交互，设备离线时所有操作无效。② 设备影子可以保证基于调用指令的排序（指令到达影子严格按发出顺序），直接管理无法保证排序，也无法支持并发语义。例子：对一盏灯先后下发"开红色光""开蓝色光"，用设备影子时灯最后一定是蓝色；用直接管理时若第二条指令先到达，灯最终是红色。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q078</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0604-IFTTT与规则引擎.html">0604-IFTTT与规则引擎</a>
+        <label class="done"><input type="checkbox" data-id="Q078"> 已掌握</label></div>
+      <p class="qtext">思考题（教材 PPT 第 59 页）：以下两条规则有无冲突？IF (time∈[07:00,17:00]) || (light&gt;10000lux) THEN light.turnOff；IF (light&lt;1000lux) || (sound&gt;55dB) THEN light.turnOn。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（教材 PPT 第 59 页原解）有冲突。反例：IF light = 999lux at 07:01 —— 此时 07:01∈[07:00,17:00] 使第一条规则触发（turnOff），同时 light=999lux&lt;1000lux 使第二条规则触发（turnOn），两条件同时成立、同一盏灯、动作相反 → 冲突。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q079</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0604-IFTTT与规则引擎.html">0604-IFTTT与规则引擎</a>
+        <label class="done"><input type="checkbox" data-id="Q079"> 已掌握</label></div>
+      <p class="qtext">思考（课件 53–54 页四组）：逐组判断有没有冲突。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>按"IF 条件能同时成立 + THEN 同一设备且动作冲突"两个条件：<br>① light&gt;10000→Off 与 light&lt;500→On：条件区间不相交，<strong>无冲突</strong>；<br>② light&gt;10000→Off 与 light&lt;20000→On：light∈(10000,20000) 可同时成立、动作相反，<strong>有冲突</strong>；<br>③ light&gt;10000→Off 与 light&lt;20000→Off：条件可同时成立但动作相同，<strong>无冲突</strong>；<br>④ light&gt;10000→Off 与 time∈[19:00,24:00]→On：晚上 19 点后若强光仍大于 10000lux，两条件同时成立、动作相反，<strong>有冲突</strong>。<br>（课件仅给出规则未逐组给答案，以上按课件判定条件推得，建议向老师确认。）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q080</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
+        <label class="done"><input type="checkbox" data-id="Q080"> 已掌握</label></div>
+      <p class="qtext">思考题（课件 98 页）：滑动窗口方差——直接算法怎么算？已保存总和 S，还需维护什么统计量？写出递推式并分析时间与空间。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（按课件推导思路整理，课件未给完整标准答案）① 直接算法：对每个完整窗口重新求 Σxᵢ 与 Σxᵢ²，方差 = Σxᵢ²/k − (Σxᵢ/k)²。② 除总和 S 外还需维护<strong>平方和 Q=Σxᵢ²</strong>，即可增量更新。③ 递推式：退出旧值 x_old、加入新值 x_new 时，S ← S − x_old + x_new，Q ← Q − x_old² + x_new²，方差 = Q/k − (S/k)²；每点更新 4 次加减（2 次减 2 次加），时间 O(n)、空间 O(k)（需环形缓冲保留窗口内各值）。窗口 [20,22,24]：S=66，Q=1984，方差 = 1984/3 − 22² = 661.33−484 = 177.33；[22,24,30]：S=76，Q=2080，方差 = 693.33−576 = 117.33。建议向老师确认书写格式。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q081</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
+        <label class="done"><input type="checkbox" data-id="Q081"> 已掌握</label></div>
+      <p class="qtext">思考题（课件 99 页）：滑动窗口最大值——只保存旧最大值与新输入能否确定下一窗口最大值？设计单遍算法。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（课件 100 页原解思路）不能：当旧最大值 30 退出、20 进入时（输入 30,22,24,20,28，k=3），剩余窗口 [24,20] 的最大值 24 必须另外记住。单遍算法用<strong>双端队列保存候选最大值的下标</strong>，值从大到小排列：队首过期（滑出窗口）时移除；新值到来时从队尾淘汰所有比它小的候选（这些旧值不可能再成为最大值）。过程：30→[30] 输出 30；22→[30,22]；24→[30,24]；20→[24,20] 输出 24；28→[28] 输出 28。每个下标至多入队、出队一次 → 总时间 O(n)，空间 O(k)；单次更新最坏可淘汰多个候选。</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q082</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
+        <label class="done"><input type="checkbox" data-id="Q082"> 已掌握</label></div>
+      <p class="qtext">课后习题第 6 题：LSM 树与 B+ 树最显著的区别？LSM 读取性能为何不佳？给出一种优化。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 6 题原解要点）区别在结构与如何利用磁盘：B+ 树对主键高效查找删除、叶子相连支持高效范围扫描；LSM 树查找时先查内存存储，未命中再去磁盘文件逐层查找并返回最新版本。读取慢的原因：数据存放位置不确定，需一层层遍历（MemTable → Immutable MemTable → Level 0 → 更高层 SSTable）。优化：内存中放一个记录文件，记录每个数据的 Level 层、文件名、最小/最大 key 值等，快速定位要查询的 SSTable 文件，避免频繁读取。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q083</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0605-时序数据库与流计算.html">0605-时序数据库与流计算</a>
+        <label class="done"><input type="checkbox" data-id="Q083"> 已掌握</label></div>
+      <p class="qtext">课后习题第 7 题：快速找出 1–100（无重复）中缺失的 2 个数，除流计算思想外再提一种算法。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 7 题原解要点）算法一（流计算）：一次遍历计算 z1=5050−Σa[i] 与 z2=338350−Σa[i]²，再解方程求出两个缺失数。算法二（桶排序）：输入每个数就令下标为该数的数组值为 1，最后遍历数组，值为 0 的两个下标即为所求。习题要求实际编程测试并给出两种算法运行时长比值（原解给出比值 26/31）。</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q084</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0606-安全认证与无服务器.html">0606-安全认证与无服务器</a>
+        <label class="done"><input type="checkbox" data-id="Q084"> 已掌握</label></div>
+      <p class="qtext">思考题（课后习题答案第 9 题）：结合对称/非对称密钥认证的优缺点，讨论各自适合什么物联网场景。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 9 题原解要点）<strong>对称密钥</strong>：加/解密速度快，适合大数据量加密与资源受限设备；最大缺点是密钥的管理与分配——密钥需在网络传输、有很大风险被拦截解密，只适合安全性要求不高的场景。<strong>非对称密钥</strong>：公钥可公开、私钥安全保管，提供非常安全的加解密方法；但加解密速度比对称加密慢得多，不适合数据传输频繁的场景，适合数据安全性较高的情景，如国家安全、军队通信方面。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q085</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0606-安全认证与无服务器.html">0606-安全认证与无服务器</a>
+        <label class="done"><input type="checkbox" data-id="Q085"> 已掌握</label></div>
+      <p class="qtext">思考题（课后习题答案第 10 题）：Azure Function 每隔 0.05 s 被调用一次，每次执行 0.1 s，每次调用需 0.03 s 冷启动；相对 PaaS 架构，无服务器计算一个月（30 天）节省多少 CPU 时间？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 10 题原解）空闲时间为 0.03 + 0.05 = 0.08 s，占周期（0.1 + 0.05 + 0.03 = 0.18 s）的百分比：0.08/0.18 × 100% ≈ 44.44%。PaaS 架构一直都在执行，因此节省的 CPU 时间即空闲时间：30 × 24 × 60 × 60 × 44.44% ≈ 1,152,000 s。答：节省约 1152000 s。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q086</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0606-安全认证与无服务器.html">0606-安全认证与无服务器</a>
+        <label class="done"><input type="checkbox" data-id="Q086"> 已掌握</label></div>
+      <p class="qtext">思考（课件 129 页）：从头启动时，平均时延 ≤70 ms，冷启动比例 p 最多是多少？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>课件未给出标准答案，建议向老师确认。</strong>若按课件 129 页同一公式自推：T_avg = T_hot + p×ΔT_new = 50 + 400p ≤ 70，得 p ≤ 5%；课件同时强调「平均值不能替代时延上限」，需一并比较慢调用与资源占用。<em>（此为非课件标准答案，仅供核对。）</em></p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q087</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0607-边缘计算与典型平台.html">0607-边缘计算与典型平台</a>
+        <label class="done"><input type="checkbox" data-id="Q087"> 已掌握</label></div>
+      <p class="qtext">思考题（教材 PPT 第 118 页）：简述 Amazon AWS IoT、Microsoft Azure IoT、阿里云 IoT 的功能。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（按课件 6.3 整理）AWS IoT：设备通信支持 MQTT/WebSockets/HTTP 1.1；设备影子包含最新状态、离线也可交互；规则引擎按业务规则转换并转发入站消息；身份验证支持 SigV4、X.509 证书、自定义令牌；注册表为设备建立唯一身份并跟踪元数据；可利用 Lambda、Kinesis、S3、DynamoDB、SNS 等服务。Azure IoT：设备连接支持 MQTT/HTTPS/AMQP；设备管理含直接管理、设备影子、智能网关；数据存储用 Cosmos DB/MySQL/PostgreSQL/MariaDB；认证用对称密钥/安全令牌与 X.509 CA 证书；Azure Functions 无服务器计算；通过无服务器计算下沉实现边缘计算；提供机器学习服务。阿里云 IoT：设备通信支持 MQTT/CoAP/HTTPS；支持直接管理、设备影子、网关子设备与 OTA；时序存储与基于 Flink 的实时计算；规则引擎可转发到存储服务、函数计算或其他 Topic 实现 M2M；ID² 芯片级安全与一机一密认证；函数计算支持多语言；Link Edge 支持设备接入、边缘函数计算、消息路由和断网续传。</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q088</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0607-边缘计算与典型平台.html">0607-边缘计算与典型平台</a>
+        <label class="done"><input type="checkbox" data-id="Q088"> 已掌握</label></div>
+      <p class="qtext">思考题（课后习题答案第 11 题）：为边缘计算场景设计寻找计算下沉锚点的算法（边缘节点只知道自身父节点），并求复杂度。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>（习题答案第 11 题原解要点）该问题即寻找两点的最近公共祖先（LCA）：设 depth[x] 为深度、pre[x] 为父结点，则 depth[lca(u,v)] ≤ min{depth[u], depth[v]}。算法：depth[u]&lt;depth[v] 时 lca(u,v)=lca(u,pre[v])；depth[u]&gt;depth[v] 时 lca(u,v)=lca(pre[u],v)——u、v 不断向根步进直到 u==v。复杂度：预处理 O(nlogn)，查找 O(depth(u)+depth(v))。</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch7" data-ch="7">
+    <h2 class="sec ch"><span class="n">CH 7</span> 第 7 章 · 云-端一体开发 <span class="cnt">7 题</span></h2>
+    <div class="chmeta">课件 PPT 明确标「思考题」的页：第 53、113 页。下方题目与小课一一对应，点击题号下按钮可看答案。</div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q089</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0703-设备模型与命名机制.html">0703-设备模型与命名机制</a>
+        <label class="done"><input type="checkbox" data-id="Q089"> 已掌握</label></div>
+      <p class="qtext">简述云-端一体开发平台是如何简化物联网应用开发的。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>物联网应用的开发分为<strong>设备端开发、云服务开发、Web 应用/移动应用开发</strong>。针对设备端开发，云-端一体开发平台为开发者提供<strong>设备开发 SDK、物联网操作系统</strong>等内容，简化设备开发与设备入云流程；针对云服务开发，平台提供 <strong>IFTTT 规则配置及流式服务编排</strong>等方式，通过可视化配置即可完成云服务的开发；针对 Web 应用/移动应用开发，平台同样提供了<strong>可视化</strong>的开发方式。另外，在三端应用的集成方面，平台通过<strong>物模型、命名机制</strong>等，对三端应用的集成进行了简化。（出处：教材课后习题答案第 1 题，与课件思考题一致）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q090</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0704-TinyLink开发平台.html">0704-TinyLink开发平台</a>
+        <label class="done"><input type="checkbox" data-id="Q090"> 已掌握</label></div>
+      <p class="qtext">习题 2 ：以表 7-4 作为硬件数据库，给定使用 TL_WiFi.fetchHTTP()、TL_Light、TL_Soil_Moisture，每 60s 上传一次光照和土壤湿度数据的代码作为输入，试给出满足应用需求且价格最低的硬件配置。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>把代码交给 TinyLink 配置即可：系统分析出应用需要 <strong>Light（光照）、Soil_Moisture（土壤湿度）、HTTP/WiFi 上传</strong>三类功能，按价格最小化 + 接口约束求解，输出 TinyLink 生成的硬件配置图（开发板 + 扩展板 + 两个传感器 + WiFi 通信模块的组合）。记忆点：<strong>约束＝功能需求（WiFi 模块总量 &gt; 1 等用户约束 + 每类接口提供 ≥ 消耗）＋目标＝价格最小化</strong>。（出处：教材课后习题答案第 2 题，答案以配置图形式给出）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q091</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0704-TinyLink开发平台.html">0704-TinyLink开发平台</a>
+        <label class="done"><input type="checkbox" data-id="Q091"> 已掌握</label></div>
+      <p class="qtext">习题 3 ：根据上一题配置，如果开发者想查看推荐配置，试计算有多少种可用的组合？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>从图中可以看出，为开发者计算出 <strong>8 种</strong>可用的组合。（出处：教材课后习题答案第 3 题；与课件"选择 LinkIt One 后推荐 34 种可行方案、其中 TinyLink 可支持编译 8 种"的数字一致）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q092</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0705-IoTStudio物模型与服务编排.html">0705-IoTStudio物模型与服务编排</a>
+        <label class="done"><input type="checkbox" data-id="Q092"> 已掌握</label></div>
+      <p class="qtext">课件思考题 / 习题 4 ：为空气盒子定义物模型——属性：温度 Temp（float，-40～50，单位℃，步长 0.1，可读）、湿度 Humi（float，0%～100%，单位 %，步长 0.1，可读）；事件：属性数据上报事件（PropPost），输出参数含上述两个属性，方法名称 &quot;thing.event.prop.post&quot;。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>JSON 结构要点：顶层含 schema、profile（productKey）、properties、events。properties 数组两项：<code>{"identifier":"Temp","dataType":{"specs":{"unit":"°C","min":"-40","max":"50","step":"0.1"},"type":"float"},"name":"温度","accessMode":"r","required":false}</code>；Humi 同理（unit "%RH"，min "0"，max "100"，step "0.1"）。events 数组一项：outputData 包含 Temp、Humi 两个参数（各带 dataType），<code>"identifier":"post"</code>，<code>"method":"thing.event.property.post"</code>，"name":"post"，"type":"info"，"required":true，"desc":"属性上报"。（出处：教材课后习题答案第 4 题，含完整 JSON，可照抄背诵结构）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q093</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0705-IoTStudio物模型与服务编排.html">0705-IoTStudio物模型与服务编排</a>
+        <label class="done"><input type="checkbox" data-id="Q093"> 已掌握</label></div>
+      <p class="qtext">习题 5 ：用 IoT Studio 服务编排开发智能电灯云服务——当房间没有人并且电灯打开时关闭电灯（人有无用摄像头判断、耗时长；灯是否开用光照强度判断、耗时短）；否则不处理。列出节点并编排。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>需要节点：<strong>"设备触发"、"脚本"、"条件"、"自定义 API"、"产品"</strong>节点。编排与各节点作用：<strong>设备触发</strong>——服务流起始节点；第一个<strong>脚本</strong>——处理设备上传数据，根据光照强度判断电灯是否打开，结果传给条件节点；第一个<strong>条件</strong>——灯开则继续，否则服务结束（耗时短的条件先判断）；第二个<strong>脚本</strong>——获取设备上传的图像数据传给自定义 API；<strong>自定义 API</strong>——根据摄像头图片判断房间内是否有人，结果传给第二个条件；第二个<strong>条件</strong>——无人则继续，否则结束；<strong>产品</strong>——调用设备服务，关闭电灯。（出处：教材课后习题答案第 5 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="计算 / 证明">
+      <div class="qhead"><span class="no">Q094</span><span class="tag tg-ppt">计算 / 证明</span>
+        <a class="lesson" href="lessons/0706-Tuya平台与联合开发案例.html">0706-Tuya平台与联合开发案例</a>
+        <label class="done"><input type="checkbox" data-id="Q094"> 已掌握</label></div>
+      <p class="qtext">习题 6 ：某设备参数为 clientId=1001、deviceName=bulb、productKey=bulbkey、securemode=3、timestamp=123、signmethod=hmacsha1、deviceSecret=mysecret。计算使用 TinyLink 连接 Link Develop 平台的 MQTT 连接参数。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>serverName：<code>bulb.iot-as-mqtt.cn-shanghai.aliyuncs.com</code>（productKey 拼前缀）；port：<code>1883</code>；clientName：<code>1001|securemode=3,signmethod=hmacsha1,timestamp=123|</code>；userName：<code>bulb&amp;bulbkey</code>；passWord：<code>8ea1b574a7f1e6b51a1afb73149c8e5906635e93</code>（＝hmacsha1 对 content="clientId1001deviceNamebulbproductKeybulbkeytimestamp123" 以 mysecret 为密钥计算）。（出处：教材课后习题答案第 6 题）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q095</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0706-Tuya平台与联合开发案例.html">0706-Tuya平台与联合开发案例</a>
+        <label class="done"><input type="checkbox" data-id="Q095"> 已掌握</label></div>
+      <p class="qtext">习题 7 ：基于 TinyLink、IoT Studio 平台和 Tuya IoT 平台开发完整物联网应用：设备采集室内温度，每隔 10s 上报至 Link Develop 平台；云平台运行设备触发服务，温度大于 30℃ 打开设备上的风扇；移动应用实时显示当前温度及风扇状态，允许用户开关风扇。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>课后习题答案<strong>未给出该题参考答案</strong>，建议向老师确认。可参考本章框架自行组织：设备端用 TinyLink（或 Tuya）按物模型周期上报温度属性；云端用 IoT Studio 业务逻辑（设备触发 + 条件判断 + 产品结点下发开风扇服务）；移动端用 IoT Studio 可视化搭建或 Tuya 面板展示并控制。</p></div></details>
+    </div>
+  </section>
+  <section class="chsec" id="ch8" data-ch="8">
+    <h2 class="sec ch"><span class="n">CH 8</span> 第 8 章 · 物联网安全 <span class="cnt">13 题</span></h2>
+    <div class="chmeta">课件第八章没有「思考题」页；下列为配套小课里的练习题（部分出自教材课后习题），仅助理解，考试边界以 PPT 为准。</div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q096</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0801-物联网安全概述与攻击.html">0801-物联网安全概述与攻击</a>
+        <label class="done"><input type="checkbox" data-id="Q096"> 已掌握</label></div>
+      <p class="qtext">故障注入攻击和侧信道攻击有何异同？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>相同点</strong>：都在于硬件加密过程中的信息泄露，通过这种泄露来推测密钥。</p>
+      <p><strong>区别</strong>：故障注入攻击是通过<strong>引入外部因素</strong>（例如电磁注入等）来改变硬件的计算逻辑，导致硬件运行出现错误，泄露系统敏感信息；侧信道攻击是通过硬件运行过程中<strong>泄露的物理量</strong>（例如泄露的电磁波等）来破解密钥。（教材课后习题答案第 2 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q097</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0802-硬件安全机制.html">0802-硬件安全机制</a>
+        <label class="done"><input type="checkbox" data-id="Q097"> 已掌握</label></div>
+      <p class="qtext">1. 简述导致物联网设备出现硬件安全的原因。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>物联网设备拥有大量传感器和控制器，采集的物联网数据会通过硬件的方式被恶意篡改，而硬件防护难以实施：一方面，不同企业根据产品需求和特性进行定制化的裁剪和开发，造成物联网设备与系统间巨大差异性，硬件安全防护方案很难直接移植至物联网中；另一方面，物联网中大量采用的开源组件或项目缺乏安全防护，却没有有效的对应策略或措施。因此物联网设备的硬件安全问题越来越难以解决。（教材课后习题答案第 1 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="对比">
+      <div class="qhead"><span class="no">Q098</span><span class="tag tg-ex">对比</span>
+        <a class="lesson" href="lessons/0802-硬件安全机制.html">0802-硬件安全机制</a>
+        <label class="done"><input type="checkbox" data-id="Q098"> 已掌握</label></div>
+      <p class="qtext">2. 物理非克隆函数是什么？为什么建立物理非克隆函数？它与信任根的区别是什么？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>是什么</strong>：PUF 是在晶圆制造过程中于芯片内创建的具有独特物理性质的模块，为半导体器件提供唯一的身份标识；具有不可复制性——即使使用相同工艺和材料重新创建相同的 IC，生成的 PUF 也不同，因此非常安全并具有防篡改能力。</p>
+      <p><strong>为什么建立</strong>：为物联网设备提供保护，通常 PUF 密钥作为主密钥，对会话密钥、应用口令等进行加密处理，保证数据安全。</p>
+      <p><strong>与信任根的区别</strong>：两者都用于对数据加密、确保设备安全。区别在于：PUF 使用半导体器件的"指纹"作为密钥进行数据加密，信任根使用硬件安全模块来生成密钥；且 PUF 生成的密钥在系统启动时重新生成、不存储在闪存中，而信任根在硬件安全模块中生成密钥，该模块无法在计算机生态系统之外访问。（教材课后习题答案第 3 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q099</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0803-软件与系统安全.html">0803-软件与系统安全</a>
+        <label class="done"><input type="checkbox" data-id="Q099"> 已掌握</label></div>
+      <p class="qtext">1. Potd 蜜罐由哪几部分构成？它们的作用分别是什么？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>Potd 蜜罐由<strong>重定向器、协议进程、监视器</strong>三个子模块构成。重定向器和协议进程构成<strong>诱饵环境</strong>，为攻击者提供入侵的通信接口：重定向器在接收到 TCP 连接请求后将其转发至协议进程子模块并限制会话的数量，保护蜜罐免受 DDoS 攻击；协议进程子模块初始化协议子进程，根据应用层通信协议在子进程中实现相应的协议，将该子进程与 TCP 连接转发至监视器。<strong>监视器</strong>是蜜罐的监控模块，用于采集攻击者威胁数据并维护蜜罐的安全——监视器对沙盒进行初始化，并在伪终端下搭建 TCP 处理器，TCP 连接与传输将在沙盒中进行，以确保蜜罐的安全。（教材课后习题答案第 5 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q100</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0803-软件与系统安全.html">0803-软件与系统安全</a>
+        <label class="done"><input type="checkbox" data-id="Q100"> 已掌握</label></div>
+      <p class="qtext">2. 简述 OTA 技术，并概括为了提高 OTA 的安全性需要注意哪几点？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>OTA（Over-the-Air）又称空中下载技术，是指设备借助无线网络或者移动网络实现系统在线升级。为了提高 OTA 的安全性需要保证：1）连接安全性；2）OTA 更新的真实性和完整性；3）操作人员安全性。（教材课后习题答案第 6 题原解；校课件表述为"传输安全性、OTA 操作的权限、OTA 更新完整性与回滚机制"，两者对应记忆）</p></div></details>
+    </div>
+    <div class="item" data-tag="设计 / 实操">
+      <div class="qhead"><span class="no">Q101</span><span class="tag tg-book">设计 / 实操</span>
+        <a class="lesson" href="lessons/0803-软件与系统安全.html">0803-软件与系统安全</a>
+        <label class="done"><input type="checkbox" data-id="Q101"> 已掌握</label></div>
+      <p class="qtext">3.（教材习题补充）简述模糊测试的流程。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>1）对目标程序进行分析，确定程序所有可能的输入；2）通过随机生成或添加某种约束的方式生成测试用例；3）将测试用例作为程序输入，运行程序；4）在测试用例的执行过程中，对程序运行进行监控，监视程序的输出、资源使用情况等是否存在异常；5）判断程序异常是否为有价值的漏洞。（教材课后习题答案第 4 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q102</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0804-无线安全机制.html">0804-无线安全机制</a>
+        <label class="done"><input type="checkbox" data-id="Q102"> 已掌握</label></div>
+      <p class="qtext">1. ZigBee 设备在数据加密过程中使用哪三种基本密钥？认证功能分为哪两层？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>三种基本密钥：<strong>主密钥、链接密钥、网络密钥</strong>。认证功能防止攻击者模仿合法设备，可应用在<strong>网络层</strong>（通过使用一个公共的网络密钥）和<strong>设备层</strong>（在两个设备之间使用唯一的链接密钥）。（课件"安全机制3：无线安全机制——ZigBee安全"原文；课件未给出更进一步的展开）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q103</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0804-无线安全机制.html">0804-无线安全机制</a>
+        <label class="done"><input type="checkbox" data-id="Q103"> 已掌握</label></div>
+      <p class="qtext">2. Hash-Lock 协议与随机化 Hash-Lock 协议各自解决了什么问题、还遗留什么问题？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>Hash-Lock 协议用 metaID 代替真实 ID 防止信息泄露，但没有 ID 与 metaID 的刷新机制，ID 与 key 以明文通过不安全信道传送，容易遭受重放与假冒攻击，攻击者也可很容易地追踪标签。随机化 Hash-Lock 协议在其基础上采用基于随机数的询问-应答机制，可抵御重放与假冒攻击，但标签 ID 仍以明文形式在不安全信道传送，攻击者依旧可以对标签进行追踪。（课件"RFID安全"两页原文归纳）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q104</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0805-认证传输与隐私保护.html">0805-认证传输与隐私保护</a>
+        <label class="done"><input type="checkbox" data-id="Q104"> 已掌握</label></div>
+      <p class="qtext">1. TLS 协议由哪两层协议组成？各自的作用是什么？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>由两层协议组成：<strong>低层协议——记录协议</strong>，为各种高层协议提供基本的安全服务；<strong>高层协议——握手协议、改变密码标准协议和警报协议</strong>，用于管理 TLS 交换。（课件"安全机制4——TLS"原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q105</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0805-认证传输与隐私保护.html">0805-认证传输与隐私保护</a>
+        <label class="done"><input type="checkbox" data-id="Q105"> 已掌握</label></div>
+      <p class="qtext">2. 简述假名系统医疗报销案例：为什么保险公司能正常报销，却不泄露用户的身份隐私？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>用户 A 用假名 Alice 在医生处开具诊断凭证，再以假名 Amy 将诊断凭证交付给保险公司。保险公司可以验证该诊断凭证的真实性、有效性和合法性，所以可进行正常报销业务；但由于 A 未向任何实体出具自己的真实身份信息，因此不会泄露任何身份隐私——医院无法确定 A 与假名之间的关联性，保险公司也无法将假名 Alice 和假名 Amy 进行关联。（课件"安全机制5——身份隐私保护"原文）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q106</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0806-安全框架案例与前沿.html">0806-安全框架案例与前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q106"> 已掌握</label></div>
+      <p class="qtext">1. AWS IoT 设备如何进行身份认证？</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>AWS IoT 在所有连接点处提供<strong>相互身份验证和加密</strong>。AWS IoT 支持 AWS 身份验证方法（称为 "SigV4"）以及基于身份验证的 X.509 证书。使用 AWS IoT 生成的证书以及由首选证书颁发机构（CA）签署的证书，将所选的角色和/或策略映射到每个证书，以便授予设备或应用程序访问权限，或撤消访问权限。（教材课后习题答案第 7 题原解；课件另指出通常 IoT 设备使用 X.509 证书，移动应用程序使用 Amazon Cognito 身份）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q107</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0806-安全框架案例与前沿.html">0806-安全框架案例与前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q107"> 已掌握</label></div>
+      <p class="qtext">2. 简述 Link ID2 在安全方面的优势。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p><strong>设备身份认证</strong>：为每个 IoT 设备提供唯一的身份标识，基于 Link ID2 提供双向身份认证服务，防止设备被篡改或仿冒。<strong>安全连接</strong>：提供兼容 TLS 和 DTLS 的轻量级安全协议 iTLS/iDTLS，更适合物联网设备，在保障安全性的同时大幅减少 IoT 设备的资源消耗。<strong>业务数据保护</strong>：基于设备可信根派生的密钥支持多种加密算法，为设备固件、业务数据、应用授权等敏感数据提供安全防护。<strong>密钥管理</strong>：为 IoT 系统中的设备、应用、业务所使用的密钥提供集中管理，包括密钥生成、密钥销毁、端到端的密钥安全分发。（教材课后习题答案第 8 题原解）</p></div></details>
+    </div>
+    <div class="item" data-tag="简答 / 概念">
+      <div class="qhead"><span class="no">Q108</span><span class="tag tg-prac">简答 / 概念</span>
+        <a class="lesson" href="lessons/0806-安全框架案例与前沿.html">0806-安全框架案例与前沿</a>
+        <label class="done"><input type="checkbox" data-id="Q108"> 已掌握</label></div>
+      <p class="qtext">3. 以百度函谷物联系统为例，说明如何从证书和密钥保护角度解决物联网安全问题。</p>
+      <details class="ans"><summary>点开看参考答案</summary><div class="ansbody"><p>函谷物联安全系统 HISK 基于 GP（Global Platform）国际安全标准。通过<strong>保护证书和密钥并提供统一的安全接口服务</strong>的方式来为上层应用提供安全能力，并赋予设备唯一身份标识，提供设备身份认证服务和敏感数据安全传输服务，进而实现端云一体的安全保障；其 PKI 证书服务还可为物联网设备签发数字证书，建立 TLS 双向认证。（教材课后习题答案第 9 题原解 + 课件原文）</p></div></details>
+    </div>
+  </section>
+
+  <div class="empty" id="empty">没有匹配的题目，试试别的关键词。</div>
+
+  <footer>
+    <p><strong>标签说明</strong>：题型标签（简答 / 计算 / 对比 / 设计）按题干关键词自动标注，仅方便筛选。题目出处保留在题干原文里（如「课件 98 页」「课后习题 6」「教材 PPT 第 59 页」），并可点每题的小课名回看原课。<strong>考试范围一律以 PPT 为准</strong>，教材课后习题只助理解；答案中标「建议向老师确认」的题，课件没有标准答案。</p>
+    <p><a href="/物联网/分步学习">← 返回分步学习</a><a href="考前重点对照.html">考前重点对照</a><a href="课程总目录.html">课程总目录</a></p>
+    <p>本页为单文件 HTML，勾选进度保存在本机浏览器（localStorage）。</p>
+  </footer>
+</div>
+<script>
+(function(){
+  var KEY='iot-thinking-questions-v1';
+  var boxes=[].slice.call(document.querySelectorAll('input[data-id]'));
+  var items=[].slice.call(document.querySelectorAll('.item'));
+  var sections=[].slice.call(document.querySelectorAll('.chsec'));
+  var saved={};
+  try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){saved={}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}}
+  function progress(){
+    var n=boxes.filter(function(b){return b.checked}).length;
+    document.getElementById('progress').textContent='已掌握 '+n+' / '+boxes.length;
+  }
+  boxes.forEach(function(b){
+    b.checked=!!saved[b.dataset.id];
+    var it=b.closest('.item'); if(b.checked) it.classList.add('done');
+    b.addEventListener('change',function(){
+      saved[b.dataset.id]=b.checked; save();
+      it.classList.toggle('done',b.checked); progress(); apply();
+    });
+  });
+  var search=document.getElementById('search');
+  var onlyTodo=document.getElementById('onlyTodo');
+  var tagFilter=document.getElementById('tagFilter');
+  function apply(){
+    var kw=search.value.trim().toLowerCase(), only=onlyTodo.checked, ft=tagFilter.value, visible=0;
+    items.forEach(function(it){
+      var hit=!kw||it.textContent.toLowerCase().indexOf(kw)>=0;
+      var tagOk=!ft||it.dataset.tag===ft;
+      var todo=!only||!it.querySelector('input[data-id]').checked;
+      var show=hit&&todo&&tagOk; it.style.display=show?'':'none'; if(show) visible++;
+    });
+    sections.forEach(function(s){
+      var n=s.querySelectorAll('.item'); var c=0;
+      for(var i=0;i<n.length;i++) if(n[i].style.display!=='none') c++;
+      s.style.display=c?'':'none';
+      var badge=s.querySelector('.cnt');
+      if(badge){badge.textContent=(kw||only||ft? c+' / ':'')+n.length+' 题';}
+    });
+    document.getElementById('empty').style.display=visible?'none':'block';
+  }
+  search.addEventListener('input',apply);
+  onlyTodo.addEventListener('change',apply);
+  tagFilter.addEventListener('change',apply);
+  var toggle=document.getElementById('toggleAll');
+  toggle.addEventListener('click',function(){
+    var ds=[].slice.call(document.querySelectorAll('details.ans'));
+    var open=ds.filter(function(d){return d.open}).length < ds.length/2;
+    ds.forEach(function(d){d.open=open});
+    toggle.textContent=open?'全部收起':'全部展开';
+  });
+  document.getElementById('clearDone').addEventListener('click',function(){
+    if(!confirm('确认清空所有「已掌握」勾选？')) return;
+    saved={}; save();
+    boxes.forEach(function(b){b.checked=false;b.closest('.item').classList.remove('done')});
+    progress(); apply();
+  });
+  progress(); apply();
+})();
+</script>
+</body>
+</html>
