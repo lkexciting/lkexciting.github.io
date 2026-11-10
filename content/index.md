@@ -16,6 +16,7 @@ description: lkexciting 的课程笔记与知识花园，记录计算机科学�
 <div class="course-card"><span class="course-label">06 / QUANTUM COMPUTING</span><h3><a class="internal" href="./量子计算理论/">量子计算理论</a></h3><p>量子态、量子门与量子计算的基础。</p><span class="course-count">4 篇笔记 <span aria-hidden="true">↗</span></span></div>
 <div class="course-card"><span class="course-label">07 / INTERNET OF THINGS</span><h3><a class="internal" href="./物联网/">物联网</a></h3><p>感知、通信与连接，记录物联网学习。</p><span class="course-count">8 篇笔记 <span aria-hidden="true">↗</span></span></div>
 <div class="course-card"><span class="course-label">08 / ADVANCED DATA STRUCTURES</span><h3><a class="internal" href="./ADS/">ADS</a></h3><p>从树结构到算法设计，攻克高级数据结构与算法。</p><span class="course-count">15 篇笔记 <span aria-hidden="true">↗</span></span></div>
+<div class="course-card"><span class="course-label">EXTERNAL / CRYPTOGRAPHY</span><h3><a href="https://zephyriiiii.github.io/blog/课程笔记/数据安全与密码学基础/Lec1/">数据安全与密码学基础 ↗</a></h3><p>作者：Zephyr2023。点击前往作者笔记本阅读 Lec1–Lec15。</p><span class="course-count">外部笔记 · 原站阅读</span></div>
 </div>
 
 ## 关于这个笔记本
