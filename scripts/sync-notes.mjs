@@ -151,6 +151,7 @@ description: lkexciting 的课程笔记与知识花园，记录计算机科学�
 
 <div class="course-grid">
 ${cards}
+<div class="course-card"><span class="course-label">EXTERNAL / CRYPTOGRAPHY</span><h3><a href="https://zephyriiiii.github.io/blog/课程笔记/数据安全与密码学基础/Lec1/">数据安全与密码学基础 ↗</a></h3><p>作者：Zephyr2023。点击前往作者笔记本阅读 Lec1–Lec15。</p><span class="course-count">外部笔记 · 原站阅读</span></div>
 </div>
 
 ## 关于这个笔记本
