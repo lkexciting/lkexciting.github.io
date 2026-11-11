@@ -3,7 +3,7 @@ title: 第 1 章 · 引言 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 1_ai
 ---
-# INTRODUCTION（计算机网络概述）
+# 第 1 章 · 引言 · AI 精讲
 
 ## 1. Uses of Computer Networks
 

@@ -3,7 +3,7 @@ title: 第 2 章 · 物理层 · AI 精讲
 aliases:
   - 计算机网络/notes/Chapter 2_ai
 ---
-# THE PHYSICAL LAYER（物理层）
+# 第 2 章 · 物理层 · AI 精讲
 
 ## 1. Physical Layer: Overview
 

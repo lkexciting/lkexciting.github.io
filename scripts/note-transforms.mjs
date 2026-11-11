@@ -3,6 +3,7 @@
 
 import { readdir, readFile, writeFile, rm } from 'node:fs/promises'
 import path from 'node:path'
+import noteNames from './note-names.json' with { type: 'json' }
 /**
  * Q1：修复 Obsidian 高亮语法在 Quartz 中的失效问题。
  * Quartz 的高亮替换只作用于文本节点，`==**术语**==` 会被解析成
@@ -88,6 +89,8 @@ function dedentOneLevel(line) {
  * - AI 精讲笔记统一标记为「· AI 精讲」：兼容 `_ai` 后缀与「 AI精讲」后缀两种命名
  */
 export function cleanNoteTitle(filename, courseName = '') {
+  const registered = noteNames[`${courseName}/${path.basename(filename, '.md')}`]
+  if (registered) return registered
   const raw = path.basename(filename, '.md')
   const isAi = /_ai$/i.test(raw) || /\s*AI\s*精讲$/i.test(raw)
   const base = raw

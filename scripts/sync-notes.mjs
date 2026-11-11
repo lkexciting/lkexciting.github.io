@@ -44,15 +44,16 @@ async function flattenPublishedNotes(courseDir, courseName) {
   const targets = new Set()
   for (const file of entries) {
     const relative = path.relative(courseDir, file)
-    const target = path.join(courseDir, ...relative.split(path.sep).filter(part => !/^notes?$/i.test(part)))
+    const target = path.join(courseDir, cleanNoteTitle(file, courseName) + '.md')
     if (targets.has(target.toLowerCase())) throw new Error(`展平后文件重名：${target}`)
     targets.add(target.toLowerCase())
   }
   for (const file of entries) {
     const relative = path.relative(courseDir, file)
-    const target = path.join(courseDir, ...relative.split(path.sep).filter(part => !/^notes?$/i.test(part)))
+    const target = path.join(courseDir, cleanNoteTitle(file, courseName) + '.md')
     const parsed = matter(await readFile(file, 'utf8'))
     parsed.data.title = cleanNoteTitle(file, courseName)
+    if (/^第 \d+ 章 · /.test(parsed.data.title)) parsed.content = parsed.content.replace(/^# .+$/m, '# ' + parsed.data.title)
     const aliases = parsed.data.aliases ?? parsed.data.alias ?? []
     parsed.data.aliases = [...new Set([...(Array.isArray(aliases) ? aliases : [aliases]), `${courseName}/${relative.split(path.sep).join('/').replace(/\.md$/, '')}`])]
     await mkdir(path.dirname(target), { recursive: true })

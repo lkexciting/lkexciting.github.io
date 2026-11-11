@@ -23,7 +23,7 @@ export function byCourseOrder(a: CourseEntry, b: CourseEntry): number {
 
   function key(entry: CourseEntry): [number, number, string] {
     const name = (entry.displayName ?? entry.frontmatter?.title ?? "").trim()
-    if (/\boutline\b/i.test(name)) return [0, 0, name]
+    if (/\boutline\b|课程大纲/i.test(name)) return [0, 0, name]
     const arabic = name.match(/(?:chapter|lesson)\s*(\d+)/i) ?? name.match(/^(\d+)/)
     if (arabic) return [1, Number(arabic[1]), name]
     const chinese = name.match(/第([零〇一二两三四五六七八九十百\d]+)[章节课]/)
