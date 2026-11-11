@@ -1,0 +1,492 @@
+---
+title: Chapter 6
+tags:
+  - 计算机网络
+  - TCP
+  - UDP
+  - QUIC
+  - 计算
+---
+
+# Chapter 6 — The Transport Layer（传输层）
+
+> 学习顺序：process-to-process服务→连接与缓冲问题→UDP/RPC/RTP→TCP首部与序号→窗口/定时器→拥塞控制→QUIC与BBR。解释采用中文，字段、机制和考试关键词保留英文。
+
+## 1. Transport Service：为什么网络层之上还要传输层？
+
+Network Layer完成host-to-host交付；Transport Layer用port（端口）把数据交给正确process，并按服务类型提供连接、差错恢复、排序、流量或拥塞控制。Transport entity可以位于OS kernel、用户进程、library或NIC等位置。
+
+IP可能丢包、乱序、重复，路由器也可能故障。应用不应为每种底层网络重写一套可靠传输机制。TCP提供可靠有序byte stream，UDP提供有边界的datagram服务；不能说“所有传输层服务都可靠”。
+
+链路层与传输层都可能有checksum、ARQ、window，但前者保护一段链路，后者跨越完整路径。逐链路检查不能替代端到端检查：主机内部处理、缓存和中间节点也可能出错。Network storage会产生delayed duplicates，使传输层建连比单一直接链路复杂。
+
+### 1.1 Encapsulation 与寻址
+
+```text
+Application data
+  → TCP segment / UDP datagram
+    → IP packet
+      → Link-layer frame
+```
+
+TSAP（Transport Service Access Point）在Internet中常用port表示；NSAP（Network Service Access Point）对应IP。Port是16bit，IP+port标识端点；TCP连接通常由源IP、源port、目的IP、目的port四元组区分。IPv6地址不是32bit，不能把所有端点都叫“48bit端点”。
+
+Well-known service ports便于发现服务；其他方式包括portmapper及按需启动服务的inetd模型。同一个server port可服务多个client，连接不能只由server port唯一识别。
+
+## 2. Transport Primitives 与 Berkeley Sockets
+
+抽象原语LISTEN、CONNECT、SEND、RECEIVE、DISCONNECT描述服务接口；packet里的协议报文不必与每个API调用一一对应。
+
+| Socket API | 做什么 | 易错点 |
+|---|---|---|
+| socket | 创建通信端点 | 不等于建立TCP连接 |
+| bind | 绑定本地IP/port | server通常固定服务端口 |
+| listen | 被动监听连接请求 | backlog是相关排队参数，不是应用数据缓冲大小 |
+| accept | 接受连接并返回connected socket | 原listening socket可继续监听 |
+| connect | 主动建立连接 | client的destination port要对准server bind的port |
+| send / recv | 在连接上传送/读取字节 | 一次调用不保证处理完整应用消息 |
+| shutdown / close | 关闭某方向或释放描述符 | 半关闭与直接退出需区分 |
+
+```text
+Server                              Client
+socket                              socket
+bind
+listen
+accept  ←----- TCP handshake -----  connect
+recv    ←-------- request --------  send
+send    -------- response --------→ recv
+close                               close
+```
+
+### 2.1 Internet File Server怎样工作？
+
+客户端把server hostname与filename作为参数，解析地址后connect，发送文件名；服务器accept后读取文件名、open文件，循环read磁盘并write到连接；客户端循环read网络并写到标准输出。SERVERPORT必须一致：客户端去连接的目的端口若不是服务器监听端口，就找不到该服务。
+
+下面四张图保留一个完整C程序的结构。学习时识别`socket/bind/listen/accept`和`connect/read/write`调用，不把示范程序当作完善的生产文件服务。
+
+![File server initialization and socket setup](计算机网络/pictures/Chapter6/socket-server-code.png)
+![File server accept and transfer loop](计算机网络/pictures/Chapter6/socket-server-code-cont.png)
+![File client initialization and arguments](计算机网络/pictures/Chapter6/socket-client-code.png)
+![File client connect and receive loop](计算机网络/pictures/Chapter6/socket-client-code-cont.png)
+
+程序题要考虑partial write/read、返回0表示EOF、网络字节序、错误检查和文件名边界。TCP不保留调用边界：一个`send(1000)`可能对应多个`recv`，几个send也可能被一个recv读到。应用需length prefix、delimiter或固定长度等framing规则。
+
+## 3. Connection Establishment：旧包为什么危险？
+
+### 3.1 Delayed Duplicates、Sequence Wraparound、Crash
+
+旧“转账请求”可能在网络中滞留，旧连接结束后又到达。仅重试CONNECTION REQUEST/ACCEPTED的两次握手不能让双方都确认对方知道本次新序号；server可能把旧请求当成新连接并等待不存在的client。
+
+Sequence number帮助识别重复，但编号空间有限会wrap around；重启丢失状态也可能复用旧号。需要限制Maximum Segment Lifetime（MSL）、保证序号空间和使用速度匹配，以及合理选择Initial Sequence Number（ISN）。
+
+基于时钟的教学模型：时钟持续运行，初始序号取其低位；不能把序号使用到与潜在未来初始号过近的forbidden region。不同主机的时钟不必绝对同步，但每台主机自身的序号安全条件要满足。
+
+![Sequence-number reuse and forbidden region](计算机网络/pictures/Chapter6/sequence-forbidden-region.png)
+
+### 3.2 有限序号空间的最大数据率
+
+若序号按segment计数、长度128B、8bit编号、最大旧包寿命30s，基本wraparound约束为：
+
+$$f_{seg}\,T_{life}<2^8$$
+
+由此长期发送速率上限量级：
+
+$$R<\frac{256\times128\times8}{30}\approx8738.13\text{ bps}$$
+
+必须进一步看接收方如何区分数据与ACK的新旧。若简化模型要求在寿命区间内额外保留一个不使用编号，采用255个segment预算，则：
+
+$$R=\frac{255\times128\times8}{30}=8704\text{ bps}$$
+
+这两者不是随意二选一：前者是“编号复用间隔大于旧包寿命”的空间/速率界；后者额外采用保留一个号的教学约定。真实协议还需窗口、ACK和重启规则，单凭8bit与30s不能证明完整可靠性。**TCP按byte编号**，不可把此题每个segment递增1的模型直接套给TCP。
+
+### 3.3 Three-way Handshake（三次握手）
+
+```text
+A                                               B
+SYN, Seq=x ------------------------------------>
+           <---------------- SYN+ACK, Seq=y, Ack=x+1
+ACK, Seq=x+1, Ack=y+1 -------------------------->
+```
+
+第一步A提出自己的ISN；第二步B确认A并提出B的ISN；第三步A确认B的ISN。SYN占用一个序号。第三步使B确认A确实看到了本次B的新挑战/序号，而不是只收到某个旧SYN。
+
+重复旧SYN可能让B临时创建等待状态，但不能仅凭它认定双向连接已正常完成。握手对旧包的防御依赖序号选择、有效窗口等条件，并非“任何旧报文组合在任何实现下都绝对安全”。
+
+## 4. Connection Release、Buffering 与 Crash Recovery
+
+### 4.1 Symmetric Release（对称释放）
+
+全双工可视为两条单向流。A发送FIN只表示A不再发送新数据，不代表B不能继续发。常见关闭：
+
+```text
+A                                         B
+FIN, Seq=u ------------------------------>
+        <------------------ ACK, Ack=u+1
+        <------------------ FIN, Seq=v
+ACK, Ack=v+1 ---------------------------->
+```
+
+FIN占一个序号，纯ACK不占。ACK与FIN可能合并，所以不必永远出现四个独立segment。Abrupt release可能丢弃未完成数据；RST用于中止/复位，不能与正常FIN完全等同。
+
+Two-army problem说明：消息可能丢失时，有限次通信无法保证双方获得无限层次的共同确信。实际协议使用timeout、重传和等待，在可用性与风险间折中。
+
+### 4.2 TCP States怎样记？
+
+| State | 含义 |
+|---|---|
+| CLOSED | 无连接 |
+| LISTEN | 等待主动连接 |
+| SYN-SENT | 已发SYN，等回应 |
+| SYN-RECEIVED | 收到SYN并回应，等确认 |
+| ESTABLISHED | 正常数据传输 |
+| FIN-WAIT-1 | 主动关闭，FIN尚未确认 |
+| FIN-WAIT-2 | 本端FIN已确认，等对方FIN |
+| CLOSE-WAIT | 收到对方FIN，本端应用尚未关闭 |
+| LAST-ACK | 已发本端FIN，等其ACK |
+| CLOSING | 双方几乎同时关闭，仍等待相关确认 |
+| TIME-WAIT | 保留状态，容纳旧包消失及最后ACK重发需要 |
+
+LAST-ACK不是“等待全部旧包死亡”，它等待自己FIN的确认；TIME-WAIT才关联2MSL等待。主动关闭方通常进入TIME-WAIT，不能仅凭client/server身份判断。
+
+### 4.3 缓冲与动态窗口
+
+sender保存已发未确认数据以便重传；receiver用buffer容纳未交给应用的数据和可能的乱序数据。buffer可用fixed-size chain、variable-size chain、per-connection circular buffer；固定块有内部浪费，可变块有管理/碎片问题，环形buffer适合连续字节流。
+
+![Buffer organization alternatives](计算机网络/pictures/Chapter6/buffer-organizations.png)
+
+Multiplexing把多条会话共享网络资源；demultiplexing根据协议与端口等交给正确进程。Inverse multiplexing把一条逻辑通信分散到多路径/接口；它不意味着所有支持multihoming的协议都自动并行使用所有路径。
+
+### 4.4 为什么ACK与写盘的顺序也解决不了所有崩溃？
+
+- ACK→write：ACK后、写入前崩溃，发送方以为成功，数据可能丢。
+- write→ACK：写入后、ACK前崩溃，发送方重传，可能重复执行。
+
+需要更高层持久状态、事务ID、幂等操作或日志，才能判断业务是否已经执行。可靠TCP交付不等于“银行业务恰好执行一次”。
+
+## 5. Congestion Control的目标与Max-min Fairness
+
+Throughput可含协议开销和重复，goodput只算有效交付数据。负载过高会增大delay，甚至因重传引起congestion collapse。教学指标power常写为goodput/delay，关注可用吞吐与延迟的折中。
+
+**Max-min fairness：**不能增加某条流的速率而不减少一条速率不高于它的流。用progressive filling求解：所有未冻结流等速增长→某链路饱和→冻结经过此瓶颈的流→其余继续利用剩余容量。
+
+例：一条10 Mbps链路三条流，其中A最多需要2 Mbps，B/C需求充分。先各2 Mbps，A冻结；剩余6 Mbps给B/C各加3，得到2、4、4 Mbps。
+
+![Max-min allocation topology](计算机网络/pictures/Chapter6/max-min-topology.png)
+
+图中所有相关链路容量1，B/C/D共同经过R4–R5，因此各最多1/3；A还可增长到2/3，使R2–R3上A+B=1。原分配A=2/3，B=C=D=1/3。
+
+![Adding flow E to the network](计算机网络/pictures/Chapter6/max-min-new-flow.png)
+
+按橙色路径E走R1→R2→R5→R6。R5–R6由C/D/E共享，三者各1/3；R4–R5把B也限制为1/3；A可增长到2/3。得到A=2/3、B=C=D=E=1/3。图题中的简写R1→R2→R6应按实际连线补上R5，不能臆造R2–R6直连边。
+
+### 5.1 为什么AIMD能改善公平性？
+
+两流速率平面中，$x_1+x_2=C$为efficiency line，$x_1=x_2$为fairness line。Additive Increase让两者加相同量，朝总容量增长；Multiplicative Decrease让两者按相同比例缩小。反复组合可在理想同步反馈模型下趋向公平高效附近。
+
+无线丢包未必由拥塞造成。把所有随机误码都解释成network congestion会过度降速；链路层重传与端到端控制作用时间尺度不同，既可互补，也会相互影响。
+
+## 6. UDP：简单但仍有价值
+
+UDP（User Datagram Protocol）首部8B：source port16、destination port16、length16、checksum16。Length含UDP首部和数据。
+
+UDP提供port multiplexing/demultiplexing、datagram边界及checksum检测，但不提供协议自身的重传、排序、拥塞控制或流量控制。说“没有error control”应理解为不提供完整恢复机制，不是完全没有checksum。
+
+为什么不用raw IP代替？UDP给应用统一端口服务、长度与校验接口，便于进程复用，不要求应用拥有原始IP操作权限。应用可在UDP之上自定义实时策略或可靠性机制，QUIC就是重要例子。
+
+例：应用数据100B，UDP总长108B；无选项IPv4总长128B，有效比例=$100/128=78.125\%$，这里未计链路层开销。
+
+## 7. RPC / RTP / RTCP
+
+### 7.1 Remote Procedure Call（远程过程调用）
+
+```text
+Client procedure → Client stub → Network → Server stub → Server procedure
+                     marshal                 unmarshal
+```
+
+Client stub序列化参数，server stub解码后调用服务，再把结果回传。远程调用存在网络失败、类型/字节序、指针没有跨进程意义、可变长数组和全局变量等问题，不等同于普通本地函数调用。RPC可建立在TCP或UDP上。
+
+**RPC链路效率题：**128B请求，100km光纤，1Gbps，假设信号速度$2\times10^8$m/s、处理及响应发送时间忽略。
+
+$$T_{tx}=128\times8/10^9=1.024\,\mu s$$
+$$T_{prop}=100000/(2\times10^8)=500\,\mu s$$
+$$\eta=\frac{1.024}{1.024+2\times500}\approx0.001023=0.1023\%$$
+
+这是单次请求后等待结果的理想利用率口径；响应不为零、处理不忽略或允许多个并发RPC时应修改分母。题目不明确传播速度时要声明采用的数值。
+
+### 7.2 RTP（Real-time Transport Protocol）
+
+RTP通常在UDP之上提供sequence number、timestamp、payload type、SSRC等，用于实时媒体识别与播放组织。基本首部12B，CSRC及extension可增加长度。
+
+![RTP header](计算机网络/pictures/Chapter6/rtp-header.png)
+
+Version、P、X、CC、M、PT、Sequence Number、Timestamp、SSRC、CSRC：序号识别包丢失/乱序；timestamp反映采样时钟，不是简单的网络到达时刻；SSRC区分源。P表示存在padding，其含义不能只概括成固定“补成4B”。
+
+RTP基本机制不保证及时到达，不自带可靠重传保证。RTCP携带接收质量反馈、source description与跨媒体同步信息，不承载主要媒体payload。
+
+例：音频8kHz，每包20ms，则每包160个采样、timestamp递增160；若每采样1B，payload160B。加RTP12、UDP8、IPv420后总200B：包率50/s，线上IP层速率80kbps，而音频净速率64kbps。
+
+### 7.3 Playout Buffer（播放缓冲）
+
+按预设播放时刻输出，吸收jitter。缓冲越大可减少迟到丢弃，却增加端到端交互延迟。例：每20ms一个包，选择60ms播放延后；某包传输延迟80ms就迟于截止时刻，可能丢弃/补偿，而不是让全部后续音频无限等待。
+
+## 8. TCP Service Model 与 Segment Header
+
+TCP是reliable、ordered、full-duplex、point-to-point byte stream。它不保留message boundaries，也不支持IP组播式一连接多接收者。发送应用交给TCP的数据可被合并或分段，接收应用读到的块也可变化。
+
+![TCP header fields](计算机网络/pictures/Chapter6/tcp-header.png)
+
+| Field | Size | 使用方法 |
+|---|---|---|
+| Source/Destination port | 各16bit | 本连接两端进程 |
+| Sequence Number | 32bit | 本segment首个数据字节的编号 |
+| Acknowledgment Number | 32bit | 希望对方下一次提供的连续字节编号 |
+| Data Offset | 4bit | TCP首部长，以4B为单位，常见20–60B |
+| Flags | 若干控制位 | SYN、ACK、FIN、RST、PSH、URG、ECE、CWR |
+| Window | 16bit原始值 | receiver advertised window，可配合scale |
+| Checksum | 16bit | TCP首部+数据+IP pseudo-header |
+| Urgent Pointer | 16bit | URG有效时的紧急数据语义 |
+| Options | 可变 | MSS、Window Scale、SACK、Timestamp等 |
+
+ACK=1表示Acknowledgment字段有效；PSH不是应用消息边界，也不能当成“保证立即送达”的实时开关。ECE反馈ECN，CWR通知已作拥塞窗口调整。
+
+MSS（Maximum Segment Size）只计TCP数据，不含TCP/IP首部。常见Ethernet MTU1500、IPv420、TCP20时MSS1460。IPv4总长最大65535，无选项时TCP最大payload=$65535-20-20=65495$B；这不是Internet常用MSS，也不适用于IPv6 jumbogram等特殊情况。
+
+## 9. TCP Sequence / ACK：最重要的计算规则
+
+### 9.1 Byte numbering，且两个方向独立
+
+若本segment Seq=$s$、数据长$d$、SYN/FIN各占0或1，则下一个新序号：
+
+$$Seq_{next}=s+d+I_{SYN}+I_{FIN}\pmod{2^{32}}$$
+
+ACK不是“最后已收到的字节”，而是next expected byte；它通常累计确认所有更小序号的连续数据。
+
+例：Seq=90后，下一个连续segment的Seq=110，首段数据20B。若第一段丢失而第二段到达，receiver仍缺90，因此返回ACK=90，不是110。
+
+例：Seq=38、data=4B，对端收到本段后可能回ACK42；但**当前本段自己携带的Ack**确认的是反方向数据，不能由38+4推出。
+
+### 9.2 乱序与累计确认图
+
+```text
+Receiver expected: 1000
+Receive [1500..1999] → ACK1000   （缺口仍在）
+Receive [2000..2499] → ACK1000   （重复ACK）
+Receive [1000..1499] → ACK2500   （若此前乱序已缓存）
+```
+
+SACK option补充报告已收到的非连续byte blocks；ACK字段本身仍保持累计语义。TCP不是因为“打开SACK就完全变成教科书SR协议”。
+
+## 10. Sliding Window、rwnd、cwnd
+
+**rwnd**来自receiver，限制接收buffer；**cwnd**由sender拥塞算法维护，限制对network的负载。
+
+$$W_{allowed}=\min(rwnd,cwnd)$$
+$$FlightSize=LastByteSent-LastByteAcked$$
+$$NewData_{max}=\max(0,\min(rwnd,cwnd)-FlightSize)$$
+
+例：rwnd=8000B、cwnd=6000B、未确认2000B，还可发4000B新数据。不能只报min=6000B而忽略已在途数据。
+
+![TCP window update and zero-window blocking](计算机网络/pictures/Chapter6/tcp-window.png)
+
+接收窗口可随应用读取而增加、随到达而减少。rwnd=0时sender不能继续普通新数据，但可用persist/zero-window probe避免窗口更新丢失导致永久死锁。ACK即使没有反向应用数据也可以单独发送。
+
+Window Scale在握手协商，后续有效window=16位字段值$\times2^s$；SYN中的window值自身不缩放。大窗口是否需要通过bandwidth-delay product判断：
+
+$$W\gtrsim R\cdot RTT$$
+
+例：100Mbps、RTT100ms，带宽时延积10Mbit=1.25MB；若窗口64KiB，理想吞吐上界约$65536\times8/0.1=5.243$Mbps，远低于链路100Mbps。
+
+### 10.1 Nagle 与 Silly Window Syndrome
+
+发送端Nagle：已有小量未确认数据时，积累新小数据，直到ACK回来或可组成足够大的segment；可用TCP_NODELAY关闭。它减少tinygrams，不等于任何时候都等整个窗口。
+
+接收端Clark：不要每释放一个字节就通告一个字节窗口，等有足够可用空间再更新，例如能接收一个MSS或buffer的较大比例。两者分别处理sender tiny writes与receiver tiny windows，不能混用名称。
+
+## 11. Timer Management：RTT怎样估计？
+
+设sample RTT=$R$，更新顺序先用旧SRTT算误差：
+
+$$RTTVAR_{new}=\tfrac34RTTVAR_{old}+\tfrac14|SRTT_{old}-R|$$
+$$SRTT_{new}=\tfrac78SRTT_{old}+\tfrac18R$$
+$$RTO\approx SRTT+4RTTVAR$$
+
+实际还受clock granularity、最小RTO等规则约束；以上为考试常用简化式。初次采样可取SRTT=R、RTTVAR=R/2；对重传包的ACK存在计时歧义，Karn规则避免直接使用这种不明确样本，除非有其他机制消除歧义。超时后还需RTO backoff。
+
+### 11.1 连续三个样本，α=0.9
+
+初值30ms，样本26、32、24ms，公式$S'=0.9S+0.1R$：
+
+1. $S_1=0.9(30)+0.1(26)=29.6$ms。
+2. $S_2=0.9(29.6)+0.1(32)=29.84$ms。
+3. $S_3=0.9(29.84)+0.1(24)=29.256$ms。
+
+不要每次都用原来的30代入；也不要把该题的0.9替换为默认7/8。
+
+其他timer：retransmission防丢失，persist防零窗口死锁，keepalive检测长时间空闲连接对端，TIME-WAIT关联旧包消失及最终ACK处理。Keepalive并非每条连接必须启用。
+
+## 12. TCP Congestion Control：画cwnd曲线
+
+### 12.1 Ack clock与基本两阶段
+
+ACK到来表示某些在途数据已离开网络，可释放发送额度，称ACK clock。以下采用传统考试模型：初始cwnd=1MSS，每个segment一个ACK，忽略delayed ACK与现代初始窗口差异。
+
+**Slow Start（SS）：**每确认新的数据段，cwnd约增加1MSS，因此每RTT约翻倍：1、2、4、8、16……。
+
+**Congestion Avoidance（CA）：**每ACK约增加$MSS^2/cwnd$B，因此每RTT约增加1MSS。若cwnd以MSS为单位，则每ACK增约$1/cwnd$。
+
+ssthresh是阶段切换阈值，达到后进入线性增长。不能把slow start画成缓慢直线，它的“慢”是相对突然把满窗口灌入网络而言。
+
+### 12.2 Timeout vs. Triple Duplicate ACK
+
+| 事件 | Tahoe | Reno的简化轮次图 |
+|---|---|---|
+| Timeout | ssthresh减半，cwnd→1，SS | 同样回1并SS |
+| 3 duplicate ACKs | fast retransmit后回1，SS | fast retransmit/recovery后约减半，CA |
+
+真实Reno进入fast recovery时会暂取`ssthresh+3MSS`并随额外dupACK膨胀，收到恢复所需的新ACK后收回到ssthresh。简化图把这一短阶段压成一次“减半”。减半的依据严谨地说与FlightSize及最低阈值有关，不能在有大量未用cwnd时机械只除cwnd。
+
+![TCP Reno congestion-window growth](计算机网络/pictures/Chapter6/tcp-reno-growth.png)
+
+为什么不同？3dupACK说明后续数据仍能到达，网络仍有交付能力；timeout通常表明更严重或更不确定的失效，所以采取更保守的降速。
+
+### 12.3 作图练习与逐轮读数
+
+![TCP Reno graph exercise](计算机网络/pictures/Chapter6/reno-exercise.png)
+
+用标准离散轮次重建这张示意曲线：round1–6窗口1、2、4、8、16、32；round6后每轮+1，所以round16为42。round16后减半至21，round17–22线性21–26。round22后回1，round23–26为1、2、4、8。
+
+- SS区间：1–6，以及23–26。
+- CA区间：6–16，以及17–22；把第6轮视作边界时需说明它是达到阈值的那轮。
+- round16后：3dupACK，因为窗口约减半而非回1。
+- round22后：timeout，因为回1。
+- 初始ssthresh=32MSS。
+- round18时ssthresh=$42/2=21$MSS。
+- round24时ssthresh=$26/2=13$MSS。
+- 若round26窗口8时出现3dupACK，简化模型ssthresh=4、恢复后cwnd=4；真实fast recovery瞬间可为7MSS。
+- 若改Tahoe且round16后3dupACK：ssthresh=21，round17/18/19窗口1/2/4，因此round19 cwnd=4MSS。
+
+原图为手画，线点不应按像素去猜整数，使用标明的轮次、初始翻倍和线性+1规则核对。自己画图时横轴Transmission round，纵轴Congestion window (MSS)，损失处用垂直下降线，并另画ssthresh水平虚线。
+
+## 13. TCP性能计算与作业
+
+### 13.1 Reno单流10Mbps、RTT150ms、每段1500B、无buffer
+
+假设瓶颈唯一、receiver buffer充分、始终CA、忽略首部和额外发送时延，峰值窗口约为BDP：
+
+$$W_{max}=\frac{10^7\times0.15}{1500\times8}=125\text{ segments}$$
+
+减半后约62.5段，锯齿平均：
+
+$$W_{avg}\approx\frac{125+62.5}{2}=93.75\text{ segments}$$
+$$Throughput_{avg}\approx\frac{93.75\times1500\times8}{0.15}=7.5\text{ Mbps}$$
+
+每RTT增1段，从62.5回到125约62.5RTT，即9.375s。窗口整数化时会有约一轮差异；应注明连续近似，不把62.5当可发送的半个segment。
+
+### 13.2 64bit byte序号在75Tbps多久回绕？
+
+$$T_{wrap}=\frac{2^{64}\times8}{75\times10^{12}}\approx1.96765\times10^6\text{ s}\approx22.77\text{ days}$$
+
+希望不在旧包存活时复用同号，packet lifetime应明显小于这个回绕时间，还要满足协议其他安全条件。不要用$2^{64}/75\times10^{12}$而漏掉每byte的8bit。
+
+### 13.3 Long Fat Networks与loss敏感性
+
+传统Reno简化稳态近似：
+
+$$Throughput\approx\frac{1.22\,MSS}{RTT\sqrt p}$$
+
+MSS用byte则结果byte/s；$p$是loss probability。它依赖拥塞避免、较小损失等模型，不是所有TCP的精确公式。若MSS1500B、RTT0.1s、目标10Gbps=1.25GB/s，则平均在途约83333段，要求$p$量级约$2.1\times10^{-10}$，说明传统loss-based模型在高速长RTT路径上的困难。
+
+### 13.4 判断题与常见误读
+
+| Statement | 判断与理由 |
+|---|---|
+| B无应用数据就不能发ACK | False；可发纯ACK |
+| rwnd整条连接始终不变 | False；随buffer和应用读取变化 |
+| 未确认字节数可忽略接收buffer | False；流量控制必须限制未确认新数据 |
+| 下一段序号一定是m+1 | False；通常按本段数据长度推进 |
+| 最后RTT样本1s则RTO必≥1s | 不可仅凭样本断言；RTO还由历史SRTT、variation和计时下限规则决定 |
+| Seq38、data4则本段Ack一定42 | False；本段Ack针对反向流 |
+| IP负责重组，所以TCP不需排序 | False；完整IP数据报之间仍可乱序 |
+
+## 14. Packet Capture：把字节、窗口和握手连起来
+
+![TCP packet capture exercise](计算机网络/pictures/Chapter6/tcp-capture.png)
+
+固定IP首部20B后读TCP，首部长度看TCP的Data Offset，而非总是假定20。
+
+| Packet | Direction | Seq | Ack | Flags | TCP header | Data |
+|---|---|---|---|---|---|---|
+| 1 | A→B | 21 | 0（ACK未置位） | SYN | 28B | 0 |
+| 2 | B→A | 15 | 22 | SYN+ACK | 28B | 0 |
+| 3 | A→B | 22 | 16 | ACK | 20B | 0 |
+| 4 | A→B | 22 | 16 | PSH+ACK | 20B | 16B |
+| 5 | B→A | 16 | 38 | ACK | 20B | 16B |
+| 7 | B→A | 32 | 54 | ACK | 20B | 1496B |
+
+解释：包1总长48B，$48-20-28=0$；包4总长56B，$56-20-20=16$。Flags低字节`02`=SYN，`12`=SYN+ACK，`10`=ACK，`18`=PSH+ACK。
+
+题目逐项答案：
+
+1. 前四包中包4不是三次握手组成包。
+2. 包5应用数据16B。
+3. 包7 ACK=`0x36`=54。A的ISN21，首数据Seq22，所以B已连续收到A的应用数据$54-22=32$B。
+4. A端口=`0x0102`=258，是此连接的client port；**没有证据证明A在此端口listen**。把题干“listened by host A”严谨理解为A本地所用端口。
+5. B服务port=`0x100A`=4106。
+6. 包4 Window=`0x2008`=8200B，假定未协商scale；它是A向B通告A的接收能力，不是A自己的发送窗口。
+7. A收到包5后，B通告Window=`0x1004`=4100B，cwnd=6KB大于4100。若此时A没有其他尚未确认数据，最多再发4100B；若有FlightSize，还要从4100中扣除。包5已ACK至38，确认此前Seq22开始的16B。
+
+## 15. QUIC、BBR 与其他演进
+
+### 15.1 QUIC：UDP之上的安全多流传输
+
+QUIC把可靠传送、拥塞控制、流控和加密握手整合为UDP之上的传输协议，常可在用户态实现；不是“使用UDP所以不可靠”。HTTP/3运行在QUIC之上。
+
+- Connection establishment：把传输和安全状态协商结合，常见全握手约1RTT，恢复条件下可能0RTT，0RTT有重放风险等限制。
+- Streams：多个stream独立排序，一条流丢包不要求所有其他流等待该流缺失字节。
+- Flow control：既有per-stream也有connection级额度。
+- Congestion control：连接共享网络资源；不能说多流完全互不影响。
+- Connection ID支持路径/地址变化时识别连接的设计，与仅靠TCP四元组不同。
+
+![Stream multiplexing and head-of-line blocking](计算机网络/pictures/Chapter6/quic-streams.png)
+
+HTTP/2在TCP上多路复用仍受TCP字节流HOL blocking；QUIC主要消除跨stream的传输层HOL，**同一stream内部仍需按序**，带宽拥塞也仍会影响其他流。
+
+### 15.2 BBR（Bottleneck Bandwidth and Round-trip Propagation Time）
+
+Loss-based控制可能在大buffer中持续排队形成bufferbloat。BBR尝试估计BtlBw和RTprop，控制pacing rate与inflight，以较高吞吐和较低排队为目标；不能把所有BBR版本和场景的性能视为相同。
+
+$$BDP=BtlBw\times RTprop$$
+
+![BBR bandwidth, delay and inflight operating regions](计算机网络/pictures/Chapter6/bbr-operating-point.png)
+
+若inflight低于BDP，可能带宽未充分利用；超过BDP后多余数据会在瓶颈排队，近似：
+
+$$RTT\approx RTprop+\frac{inflight-BDP}{BtlBw}$$
+
+例：BtlBw=100Mbps=12.5MB/s、RTprop=40ms，BDP=0.5MB。若inflight=0.75MB，多余0.25MB造成约20ms排队，RTT约60ms。
+
+RTprop常用一段窗口内的低RTT样本估计，BtlBw由delivery-rate样本估计；还需探测，否则无法知道容量是否变化。经典BBR有Startup、Drain、ProbeBW、ProbeRTT等阶段思路，实际增益与周期依版本而异。
+
+![BBR measurement and estimation](计算机网络/pictures/Chapter6/bbr-measurement.png)
+
+BBR是拥塞控制算法，QUIC是传输协议，两者不绑定；QUIC可用不同控制算法，不能说HTTP/3必定使用BBR。SCTP提供可靠message-oriented服务和multistreaming等，SST、FAST TCP、transactional TCP等是其他研究/历史演进方向，不要把它们混为TCP必选特性。
+
+## 16. English Exam Toolkit
+
+| 题目关键词 | 第一反应 |
+|---|---|
+| Next expected byte | 累计ACK，找第一个缺口 |
+| Outstanding / In-flight bytes | 已发未确认，从额度扣除 |
+| Advertised receive window | 接收方通过本包Window告诉对方的容量 |
+| Maximum segment payload | 总长扣IP/TCP首部，不是segment总长 |
+| Triple duplicate ACK | 传统Reno快重传/恢复，约减半 |
+| Retransmission timeout | 严格降速、回slow start |
+| Smoothed RTT | 递推估计，不能每次回到初值 |
+| Byte stream | 无消息边界，两个方向独立序号 |
+
+> The acknowledgment number identifies the next byte expected in order.
+>
+> The sender is limited by both the receive window and the congestion window, and must subtract the data already in flight.
+>
+> QUIC avoids head-of-line blocking across independent streams, while preserving ordering within each stream.
