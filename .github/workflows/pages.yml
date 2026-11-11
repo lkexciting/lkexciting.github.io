@@ -22,6 +22,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: node scripts/update-home-stats.mjs
       - run: node quartz/bootstrap-cli.mjs build
       - name: Stamp build version and inject auto-refresh check
         run: node scripts/inject-version-check.js

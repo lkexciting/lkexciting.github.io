@@ -3,6 +3,8 @@ Set-Location $PSScriptRoot
 $env:GH_CONFIG_DIR = Join-Path $PSScriptRoot '.local-tools\gh-config'
 node scripts/sync-notes.mjs
 if ($LASTEXITCODE -ne 0) { throw '同步失败' }
+node scripts/update-home-stats.mjs
+if ($LASTEXITCODE -ne 0) { throw '统计更新失败' }
 node quartz/bootstrap-cli.mjs build
 if ($LASTEXITCODE -ne 0) { throw '构建失败，请先修复错误' }
 git add -- content
