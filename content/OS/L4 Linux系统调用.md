@@ -28,7 +28,7 @@ aliases:
 
 ## 2. 模式、上下文与地址空间（Mode, Context and Address Space）
 
-课件 7–8、16–17 页。系统调用进入内核态，通常仍在**当前进程的执行上下文（Process Context）**中；模式切换（Mode Switch）不必然发生进程切换（Context Switch）。如果服务阻塞，调度器才可能换到另一进程。
+课件 7–8、16–17 页。系统调用进入内核态，通常仍在**当前进程的执行上下文（Process Context）** 中；模式切换（Mode Switch）不必然发生进程切换（Context Switch）。如果服务阻塞，调度器才可能换到另一进程。
 
 需要保存寄存器与返回位置，使用相应内核栈（Kernel Stack）；不能让用户程序随意指定内核执行栈。
 
@@ -53,7 +53,7 @@ aliases:
 
 ![课件跨越用户态和内核态的调用链](OS/pictures/L4%20Linux%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/%E5%AD%A3%E8%80%81%E5%B8%88-p012.png)
 
-**调用号（System-Call Number）**用于选服务；**调用表（System-Call Table）**关联编号与服务入口。不能把函数名地址直接由用户任意传给内核去执行。
+**调用号（System-Call Number）** 用于选服务；**调用表（System-Call Table）** 关联编号与服务入口。不能把函数名地址直接由用户任意传给内核去执行。
 
 课件 `call *sys_call_table(,%eax,4)` 中比例因子 4 来自其 32 位指针表项大小。若 eax=24，表内偏移是 `24×4=96 B`；不是“调用第 96 号服务”。
 

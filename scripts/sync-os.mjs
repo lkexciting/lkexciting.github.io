@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import matter from 'gray-matter'
+import { fixBoldBoundaries } from './os-bold-boundaries.mjs'
 import { cleanNoteTitle } from './note-transforms.mjs'
 const vault=path.resolve('..','OS'), dest=path.resolve('content','OS')
 const chapters=Array.from({length:9},(_,i)=>`Chapter ${i+1}`)
@@ -27,7 +28,7 @@ for(const [stem,raw] of sources){
   const output=path.join(dest,relative);await fs.mkdir(path.dirname(output),{recursive:true});await fs.copyFile(src,output);images++
   return 'OS/'+relative.split(path.sep).map(encodeURIComponent).join('/')
  }
- let body=m.content
+ let body=fixBoldBoundaries(m.content)
  for(const match of [...body.matchAll(/!\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g)]){
   const src=assets.get(path.basename(match[1]));if(!src)throw Error('Missing embedded image '+match[1])
   const rel=path.relative(vault,src);const output=path.join(dest,rel);await fs.mkdir(path.dirname(output),{recursive:true});await fs.copyFile(src,output);images++
