@@ -1,5 +1,5 @@
 ---
-title: L6 Linux内存管理
+title: Linux 第 6 讲 · 内存管理
 tags:
   - OS
   - Linux
@@ -8,9 +8,10 @@ tags:
   - Slab
 aliases:
   - OS/notes/L6 Linux内存管理
+  - OS/L6 Linux内存管理
 ---
 
-# L6 Linux内存管理
+# Linux 第 6 讲 · 内存管理
 
 > 来源：`L6 Linux内存管理.pdf`，85 页。前置 [[OS/第 8 章 · 主存管理|Chapter 8]] 与 [[OS/第 9 章 · 虚拟内存|Chapter 9]]。课件主要以 IA-32、旧式 VMA 结构及历史 Linux 实现讲解；3G/1G、页表层数、函数名和内核字段不作为跨版本不变量。
 

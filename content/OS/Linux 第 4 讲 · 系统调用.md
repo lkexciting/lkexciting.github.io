@@ -1,16 +1,17 @@
 ---
-title: L4 Linux系统调用
+title: Linux 第 4 讲 · 系统调用
 tags:
   - OS
   - Linux
   - 系统调用
 aliases:
   - OS/notes/L4 Linux系统调用
+  - OS/L4 Linux系统调用
 ---
 
-# L4 Linux系统调用
+# Linux 第 4 讲 · 系统调用
 
-> 来源：`L4 Linux系统调用.pdf`，38 页。对应 [[OS/第 2 章 · 操作系统服务与结构|Chapter 2]]，进程结构见 [[OS/L5 Linux进程管理|L5 Linux进程管理]]。核心代码以旧式 x86 32 位 `int 0x80` 路径为例，寄存器、编号和入口均不能直接套到其他 ABI。
+> 来源：`L4 Linux系统调用.pdf`，38 页。对应 [[OS/第 2 章 · 操作系统服务与结构|Chapter 2]]，进程结构见 [[OS/Linux 第 5 讲 · 进程管理|Linux 第 5 讲 · 进程管理]]。核心代码以旧式 x86 32 位 `int 0x80` 路径为例，寄存器、编号和入口均不能直接套到其他 ABI。
 
 ## 1. 为什么需要系统调用（Purpose）
 

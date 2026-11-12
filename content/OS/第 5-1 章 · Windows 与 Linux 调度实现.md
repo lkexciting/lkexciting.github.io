@@ -12,7 +12,7 @@ aliases:
 
 # 第 5-1 章 · Windows 与 Linux 调度实现
 
-> 来源：`ch5-1 Windows & Linux scheduling.pdf`，82 页。基础与计算见 [[OS/第 5 章 · CPU 调度|Chapter 5]]；Linux 结构与进程创建见 [[OS/L5 Linux进程管理|L5 Linux进程管理]]。这里专门组织历史系统实现，不重复 FCFS、SJF、RR 的基础推导。
+> 来源：`ch5-1 Windows & Linux scheduling.pdf`，82 页。基础与计算见 [[OS/第 5 章 · CPU 调度|Chapter 5]]；Linux 结构与进程创建见 [[OS/Linux 第 5 讲 · 进程管理|Linux 第 5 讲 · 进程管理]]。这里专门组织历史系统实现，不重复 FCFS、SJF、RR 的基础推导。
 
 ## 1. Windows 2000/XP 的线程调度（Thread Scheduling）
 
@@ -46,7 +46,7 @@ I/O 完成、事件等待结束、GUI 唤醒等可触发课件所述优先级提
 
 ## 2. Linux 调度（Linux Scheduling）
 
-课件 49–82 页，结合 [[OS/L5 Linux进程管理|L5 Linux进程管理]] 阅读。
+课件 49–82 页，结合 [[OS/Linux 第 5 讲 · 进程管理|Linux 第 5 讲 · 进程管理]] 阅读。
 
 ### 2.1 版本先分开
 

@@ -1,16 +1,17 @@
 ---
-title: L2 Linux内核
+title: Linux 第 2 讲 · 内核
 tags:
   - OS
   - Linux
   - 内核构建
 aliases:
   - OS/notes/L2 Linux内核
+  - OS/L2 Linux内核
 ---
 
-# L2 Linux内核
+# Linux 第 2 讲 · 内核
 
-> 来源：`L2 Linux内核.pdf`，38 页。对应 [[OS/第 2 章 · 操作系统服务与结构|Chapter 2]]；模块见 [[OS/L3 Linux内核模块|L3 Linux内核模块]]。课件混合旧 x86 启动及不同版本构建示例，下文按历史教学流程解释，不将其当成当前机器直接执行清单。
+> 来源：`L2 Linux内核.pdf`，38 页。对应 [[OS/第 2 章 · 操作系统服务与结构|Chapter 2]]；模块见 [[OS/Linux 第 3 讲 · 内核模块|Linux 第 3 讲 · 内核模块]]。课件混合旧 x86 启动及不同版本构建示例，下文按历史教学流程解释，不将其当成当前机器直接执行清单。
 
 ## 1. 内核子系统（Kernel Subsystems）
 

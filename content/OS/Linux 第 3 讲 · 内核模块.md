@@ -1,16 +1,17 @@
 ---
-title: L3 Linux内核模块
+title: Linux 第 3 讲 · 内核模块
 tags:
   - OS
   - Linux
   - 内核模块
 aliases:
   - OS/notes/L3 Linux内核模块
+  - OS/L3 Linux内核模块
 ---
 
-# L3 Linux内核模块
+# Linux 第 3 讲 · 内核模块
 
-> 来源：`L3 Linux内核模块.pdf`，14 页。前置 [[OS/L2 Linux内核|L2 Linux内核]]。本笔记解释课程机制与代码结构，未在本机编译、加载或卸载模块。
+> 来源：`L3 Linux内核模块.pdf`，14 页。前置 [[OS/Linux 第 2 讲 · 内核|Linux 第 2 讲 · 内核]]。本笔记解释课程机制与代码结构，未在本机编译、加载或卸载模块。
 
 ## 1. 模块是什么（Module Concept）
 

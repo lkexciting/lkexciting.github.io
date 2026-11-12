@@ -28,12 +28,12 @@ aliases:
 
 | 笔记 | 对应理论 | 内容 |
 | --- | --- | --- |
-| [[OS/L1 Linux概述|L1 Linux概述]] | 1–2 | GNU、发行版、目录、Shell、GCC、Make |
-| [[OS/L2 Linux内核|L2 Linux内核]] | 2 | 子系统、源码目录、配置构建与启动 |
-| [[OS/L3 Linux内核模块|L3 Linux内核模块]] | 2 | 模块生命周期、Kbuild、加载与清理 |
-| [[OS/L4 Linux系统调用|L4 Linux系统调用]] | 2–3 | 旧 x86 调用入口、参数、分派、getuid 跟踪 |
-| [[OS/L5 Linux进程管理|L5 Linux进程管理]] | 3–5 | task_struct、队列、fork/exec 与调度历史 |
-| [[OS/L6 Linux内存管理|L6 Linux内存管理]] | 8–9 | VMA、页表、缺页、回收、Buddy 与 Slab |
+| [[OS/Linux 第 1 讲 · 概述|Linux 第 1 讲 · 概述]] | 1–2 | GNU、发行版、目录、Shell、GCC、Make |
+| [[OS/Linux 第 2 讲 · 内核|Linux 第 2 讲 · 内核]] | 2 | 子系统、源码目录、配置构建与启动 |
+| [[OS/Linux 第 3 讲 · 内核模块|Linux 第 3 讲 · 内核模块]] | 2 | 模块生命周期、Kbuild、加载与清理 |
+| [[OS/Linux 第 4 讲 · 系统调用|Linux 第 4 讲 · 系统调用]] | 2–3 | 旧 x86 调用入口、参数、分派、getuid 跟踪 |
+| [[OS/Linux 第 5 讲 · 进程管理|Linux 第 5 讲 · 进程管理]] | 3–5 | task_struct、队列、fork/exec 与调度历史 |
+| [[OS/Linux 第 6 讲 · 内存管理|Linux 第 6 讲 · 内存管理]] | 8–9 | VMA、页表、缺页、回收、Buddy 与 Slab |
 
 ## 3. 16 份课件对应关系（Source Coverage）
 

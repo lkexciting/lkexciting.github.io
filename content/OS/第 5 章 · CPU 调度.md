@@ -1066,7 +1066,7 @@ L=λW
 
 ## 18. 季老师课件对照与实现专题入口
 
-来源：ch5 CPU Scheduling.pdf（69页）与 ch5-1 Windows & Linux scheduling.pdf（82页）。原章已覆盖基础算法与指标，保留其完整推导。新增实现专题见 [[OS/第 5-1 章 · Windows 与 Linux 调度实现|Chapter 5-1]]：Windows 2000/XP 的优先级、时间配额（Quantum）、就绪位图（Ready Bitmap）、处理器亲和性（Processor Affinity），以及历史 Linux O(1) 调度。进程结构和创建见 [[OS/L5 Linux进程管理|L5 Linux进程管理]]。
+来源：ch5 CPU Scheduling.pdf（69页）与 ch5-1 Windows & Linux scheduling.pdf（82页）。原章已覆盖基础算法与指标，保留其完整推导。新增实现专题见 [[OS/第 5-1 章 · Windows 与 Linux 调度实现|Chapter 5-1]]：Windows 2000/XP 的优先级、时间配额（Quantum）、就绪位图（Ready Bitmap）、处理器亲和性（Processor Affinity），以及历史 Linux O(1) 调度。进程结构和创建见 [[OS/Linux 第 5 讲 · 进程管理|Linux 第 5 讲 · 进程管理]]。
 
 实现题先固定系统和版本，确认优先级编号方向；区分就绪与运行、调度机制与策略；时间片不保证线程不受抢占地连续执行。
 

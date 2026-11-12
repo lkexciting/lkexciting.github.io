@@ -1,5 +1,5 @@
 ---
-title: L5 Linux进程管理
+title: Linux 第 5 讲 · 进程管理
 tags:
   - OS
   - Linux
@@ -7,9 +7,10 @@ tags:
   - 调度
 aliases:
   - OS/notes/L5 Linux进程管理
+  - OS/L5 Linux进程管理
 ---
 
-# L5 Linux进程管理
+# Linux 第 5 讲 · 进程管理
 
 > 来源：`L5 Linux进程管理.pdf`，89 页。对应 [[OS/第 3 章 · 进程|Chapter 3]]、[[OS/第 4 章 · 线程|Chapter 4]]、[[OS/第 5 章 · CPU 调度|Chapter 5]]；调度补充见 [[OS/第 5-1 章 · Windows 与 Linux 调度实现|Chapter 5-1]]。课件并列 Linux 2.4、2.6 和 5.9.x 的材料，字段和实现必须按对应版本阅读。
 

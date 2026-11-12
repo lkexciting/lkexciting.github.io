@@ -1,14 +1,15 @@
 ---
-title: L1 Linux概述
+title: Linux 第 1 讲 · 概述
 tags:
   - OS
   - Linux
   - 开发工具
 aliases:
   - OS/notes/L1 Linux概述
+  - OS/L1 Linux概述
 ---
 
-# L1 Linux概述
+# Linux 第 1 讲 · 概述
 
 > 来源：`L1 linux概述.pdf`，72 页，按 PDF 实际页定位。对应 [[OS/第 1 章 · 操作系统概述|Chapter 1]] 的系统概念、[[OS/第 2 章 · 操作系统服务与结构|Chapter 2]] 的工具与接口。
 
