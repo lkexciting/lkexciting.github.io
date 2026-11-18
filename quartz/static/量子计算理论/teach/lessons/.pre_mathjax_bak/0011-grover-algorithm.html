@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 11 课 · Grover 算法</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+  <p class="lesson-no">LESSON 11</p>
+  <h1>Grover 算法</h1>
+  <p class="lede">最后一个算法是另一类加速：在无结构的数据库里搜索一个目标。经典要逐个遍历，复杂度 O(N)；Grover 用<strong>振幅放大</strong>把它降到 O(√N)。它的核心是一个反复作用的 <strong>Grover 算子 G</strong>，把初态一点点"旋"向正确答案。内容来自课件 <strong>03 · P4（P50–P60）</strong>。</p>
+
+  <h2>一、为什么需要 Grover</h2>
+  <p>在一个含 N 个元素的无结构集合里找目标（例如"24 的因子"），经典只能遍历检验，复杂度 <span class="math">O(N)</span>。Grover 算法把它加速到 <span class="math">O(√N)</span>（课件 03 · P50–P51）。这是<strong>平方根级</strong>加速——不像 Shor 那样指数级，但适用面极广。</p>
+
+  <h2>二、状态分解：错解叠加 vs 正解叠加</h2>
+  <p>把 N 个基态分成两类（课件 03 · P51–P52）：</p>
+  <ul>
+    <li><span class="math">|α⟩</span>：所有<strong>错解</strong>的等概率叠加；</li>
+    <li><span class="math">|β⟩</span>：所有<strong>正解</strong>的等概率叠加（若有 M 个正解）。</li>
+  </ul>
+  <p>初始均匀叠加态 <span class="math">|ψ⟩</span> 落在 <span class="math">|α⟩</span> 与 <span class="math">|β⟩</span> 张成的平面内。Grover 的本质，就是让 <span class="math">|ψ⟩</span> 在这个平面里<strong>逐渐旋转、靠近 |β⟩</strong>，从而测到正解的概率越来越大。</p>
+
+  <h2>三、Oracle：能验证、不能给出</h2>
+  <p>Oracle 是一个黑盒：它<strong>不能</strong>直接给出可行解，但能检验某个候选是不是正解（课件 03 · P52–P54）。记判断函数 <span class="math">f(x)</span>：<span class="math">x</span> 是正解时 <span class="math">f(x)=1</span>，否则 <span class="math">f(x)=0</span>。不同问题 Oracle 电路不同（如"检验 x 是否某数的因子"），学习 Grover 时不必纠结 Oracle 内部实现。</p>
+
+  <h2>四、算法流程与 Grover 算子</h2>
+  <div class="keybox">
+    <span class="label">Grover 流程</span>
+    <p>① 从 <span class="math">|0⟩^{⊗n}</span> 出发，作用 <span class="math">H^{⊗n}</span> 得到均匀叠加态 <span class="math">|ψ⟩</span>（课件 03 · P54–P55）；<br>
+    ② 反复作用 <strong>Grover 算子 G</strong>：<span class="math">G = (2|ψ⟩⟨ψ| − I) · O</span>（课件 03 · P56）。</p>
+  </div>
+  <p>算子两步的含义（课件 03 · P56–P60）：</p>
+  <ul>
+    <li><strong>第 1 步：Oracle（O）</strong>——翻转正解的相位。几何上，O 以 <span class="math">|α⟩</span> 为对称轴做对称操作：在 <span class="math">|α⟩</span> 上的投影不变，在 <span class="math">|β⟩</span> 上的投影翻号。</li>
+    <li><strong>第 2–4 步：关于均值的反演</strong>——即 <span class="math">2|ψ⟩⟨ψ| − I</span>，几何上以 <span class="math">|ψ⟩</span> 为对称轴再做一次对称。两步合起来，每次 G 都把状态朝 <span class="math">|β⟩</span> 方向旋转一个固定角度 <span class="math">θ</span>。</li>
+  </ul>
+  <div class="warn">
+    <p><strong>要点：</strong>由于是"反射的复合"，每作用一次 G 状态就绕平面旋转 <span class="math">θ</span> 角。当旋转到最接近 <span class="math">|β⟩</span> 时测量，得到正解概率最大；若转过头则概率回落，所以迭代次数要恰到好处（约 <span class="math">O(√(N/M))</span> 次）。</p>
+  </div>
+
+  <h2>五、即时小测</h2>
+
+  <div class="quiz" data-answer="b" data-explanation="Grover 把无结构搜索从经典 O(N) 加速到 O(√N)，课件 03 · P51。">
+    <p class="quiz-q"><span class="qno">Q1</span>Grover 算法把无结构搜索的复杂度从 O(N) 降到？</p>
+    <div class="opts">
+      <button data-opt="a">O(log N)</button>
+      <button data-opt="b">O(√N)</button>
+      <button data-opt="c">O(1)</button>
+      <button data-opt="d">O(N²)</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="a" data-explanation="Oracle 是黑盒，能检验某个候选是否为正解，但不能直接给出解，课件 03 · P52–P54。">
+    <p class="quiz-q"><span class="qno">Q2</span>关于 Grover 中的 Oracle，正确的是？</p>
+    <div class="opts">
+      <button data-opt="a">能验证候选是否为正解，但不直接给出解</button>
+      <button data-opt="b">能直接输出所有正解</button>
+      <button data-opt="c">不需要任何判断函数</button>
+      <button data-opt="d">等同于测量门</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="d" data-explanation="Grover 算子 G=(2|ψ⟩⟨ψ|−I)·O，其中 2|ψ⟩⟨ψ|−I 是均值反演（关于 |ψ⟩ 的对称），课件 03 · P56。">
+    <p class="quiz-q"><span class="qno">Q3</span>Grover 算子 G 的"关于均值反演"部分对应？</p>
+    <div class="opts">
+      <button data-opt="a">Oracle O</button>
+      <button data-opt="b">H 门</button>
+      <button data-opt="c">CNOT</button>
+      <button data-opt="d">2|ψ⟩⟨ψ| − I</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="c" data-explanation="Oracle 翻转正解相位，几何上以 |α⟩ 为对称轴做对称、在 |β⟩ 上投影翻号，课件 03 · P59。">
+    <p class="quiz-q"><span class="qno">Q4</span>Grover 第一步 Oracle 对正解的作用是？</p>
+    <div class="opts">
+      <button data-opt="a">让正解振幅归零</button>
+      <button data-opt="b">翻转正解的概率</button>
+      <button data-opt="c">翻转正解的相位（符号）</button>
+      <button data-opt="d">把正解移到 |α⟩</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="ask">
+    <p><strong>卡住了就直接问我。</strong>比如"为什么两次反射等于一次旋转""迭代次数怎么算最优"——都可以在对话里追问。</p>
+  </div>
+
+  <h2>六、这节课你应该能独立完成</h2>
+  <ul>
+    <li>说清 Grover 把 O(N) 搜索加速到 O(√N)，并解释 |α⟩/|β⟩ 分解。</li>
+    <li>复述 Grover 算子 G = (2|ψ⟩⟨ψ| − I)·O 的两步含义：Oracle 翻相位 + 均值反演。</li>
+    <li>理解"两次对称 = 一次旋转"，迭代到位时测量概率最大。</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>主资源：</strong>本课正文均来自课件 <strong>03 · P4（P50–P60）</strong>。至此，课件 01–03 的量子比特、量子门、测量、算法专题已完整覆盖。建议回看 <a href="0001-quantum-state-as-unit-vector.html">第 01 课</a> 复习整条主线。</p>
+  </div>
+
+  <p class="lesson-footer">
+    下一课：<a href="0012-derivation-practice.html"><strong>期中推导训练题</strong></a>——按 X/Y/Z/H/S/T/CNOT 矩阵、Deutsch 末态、QFT、QPE→Shor、Grover θ 等题型集中练手（课件 01–03）。
+    课程回顾：从 <a href="0000-course-introduction.html"><strong>第 00 课 · 课程引言</strong></a> 重新开始，串起整条"态 → 门 → 测量 → 算法"主线。
+  </p>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+</body>
+</html>

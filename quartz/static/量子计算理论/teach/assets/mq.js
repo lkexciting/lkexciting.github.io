@@ -1,7 +1,7 @@
-/* mq.js — 把交互工具输出的“类 LaTeX Unicode 文本”转成 MathJax 可渲染的 \(...\)。
+/* mq.js — 把交互工具输出的“类 LaTeX Unicode 文本”转成 KaTeX 可渲染的 \(...\)。
    与 lessons 中使用的转换器同源：只把“数学字符连续段”包进 \(...\)，中文/全角标点/空格留在数学模式外，
    因此 “Alice 测到 |Φ⁺⟩” 会变成 “Alice 测到 \(|\Phi^{+}\rangle\)”，渲染正确。
-   依赖：MathJax（tex-svg.js，已注入各课 <head>）。 */
+   依赖：KaTeX + auto-render（已注入各课 <head>）。 */
 (function () {
   var MAP = {
     '⟨': '\\langle ', '⟩': '\\rangle ', '⊗': '\\otimes ', '⊕': '\\oplus ',
@@ -79,8 +79,16 @@
   };
 
   window.MQTypeset = function (el) {
-    if (window.MathJax && MathJax.typesetPromise) {
-      try { MathJax.typesetPromise([el]); } catch (e) {}
+    if (window.renderMathInElement) {
+      try {
+        renderMathInElement(el, {
+          delimiters: [
+            { left: '\\(', right: '\\)', display: false },
+            { left: '\\[', right: '\\]', display: true },
+          ],
+          throwOnError: false,
+        });
+      } catch (e) {}
     }
   };
 })();

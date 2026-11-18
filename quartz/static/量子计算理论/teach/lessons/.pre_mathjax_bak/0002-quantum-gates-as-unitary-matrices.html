@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第 02 课 · 量子门就是酉矩阵</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="page">
+
+  <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
+  <p class="lesson-no">LESSON 02</p>
+  <h1>量子门就是酉矩阵</h1>
+  <p class="lede">量子计算本质上就是酉矩阵计算（课件 01 · P37）。这一课把"量子门"和"酉矩阵"完全等同起来：为什么只有酉矩阵能当门、X/Y/Z/H 长什么样、相位旋转门怎么转、以及"任意单比特门都能拆成旋转"这件事。</p>
+
+  <h2>一、量子非门 = 一个 2×2 矩阵</h2>
+  <p>经典非门翻转 0/1。量子 X 门不但能 <span class="math">|0⟩→|1⟩</span>，还是线性的——作用到叠加态上就是"互换两个复系数"（课件 01 · P34）：</p>
+  <div class="eq"><span class="math">X|ψ⟩ = X(α|0⟩ + β|1⟩) = α|1⟩ + β|0⟩</span></div>
+  <p>所以单量子比特门就是一个 2×2 矩阵，矩阵的分量决定了门的行为。</p>
+
+  <h2>二、Hadamard 门：制造叠加态</h2>
+  <p>H 门把计算基变成叠加态（课件 01 · P35）：</p>
+  <div class="eq">
+    <span class="math">H</span> = <span class="frac"><span>1</span><span>√2</span></span>
+    <span class="mat" style="--cols:2"><span class="cell">1</span><span class="cell">1</span><span class="cell">1</span><span class="cell">−1</span></span>，　
+    <span class="math">H|0⟩ = |+⟩</span>，　<span class="math">H|1⟩ = |−⟩</span>
+  </div>
+  <p>课件给了一个几何理解：H 让量子态在 Bloch 球上"绕 x–z 中界线旋转 180°"，本质是把 z 基的态转到 x 基。这一手后面制备贝尔态、做 Deutsch 算法都要反复用。</p>
+
+  <h2>三、泡利门 X / Y / Z</h2>
+  <p>Pauli-X 就是上面的量子非门；完整的 Pauli 集合（课件 01 · P36）：</p>
+  <div class="eq">
+    <span class="math">X</span> = <span class="mat" style="--cols:2"><span class="cell">0</span><span class="cell">1</span><span class="cell">1</span><span class="cell">0</span></span>，　
+    <span class="math">Y</span> = <span class="mat" style="--cols:2"><span class="cell">0</span><span class="cell">−i</span><span class="cell">i</span><span class="cell">0</span></span>，　
+    <span class="math">Z</span> = <span class="mat" style="--cols:2"><span class="cell">1</span><span class="cell">0</span><span class="cell">0</span><span class="cell">−1</span></span>
+  </div>
+  <p>几何上：X 绕 x 轴转 π、Y 绕 y 轴转 π、Z 绕 z 轴转 π（课件 01 · P36）。</p>
+
+  <div class="tool" data-widget="gate-apply"></div>
+
+  <h2>四、为什么只有"酉矩阵"能当门</h2>
+  <p>任意一个 2×2 矩阵都能表示一个门吗？<strong>不能。</strong>只有酉矩阵才行（课件 01 · P38）：</p>
+  <div class="keybox">
+    <span class="label">两个关键定义</span>
+    <p><strong>厄米矩阵</strong>：<span class="math">H = H<sup>†</sup></span>。性质：本征值全为实数、本征向量正交——这保证了可观测量的测量结果是实数。<br>
+    <strong>酉矩阵</strong>：<span class="math">U<sup>−1</sup> = U<sup>†</sup></span>（即 <span class="math">UU<sup>†</sup> = I</span>）。性质：作用在态上保持范数（仍是合法量子态）、保持内积（正交性不变）。</p>
+  </div>
+  <p>课件 01 · P37 一句话点题：<em>"量子计算本质是酉矩阵计算！输出态 = 演化矩阵 · 输入态"</em>，且可逆、保归一。</p>
+
+  <h2>五、相位旋转门 P / S / T</h2>
+  <p>相位旋转门只改变相对相位、不改变概率分布（课件 01 · P39）。常见：</p>
+  <table>
+    <thead><tr><th>门</th><th>作用</th><th>相位参数</th></tr></thead>
+    <tbody>
+      <tr><td>P(φ)</td><td>带参数 φ 的相位旋转</td><td>φ 任意</td></tr>
+      <tr><td>S</td><td>P 的特例</td><td><span class="math">φ = π/2</span></td></tr>
+      <tr><td>T</td><td>另一个相位旋转门</td><td><span class="math">φ = π/4</span></td></tr>
+    </tbody>
+  </table>
+  <p>它在量子相位估计、量子傅里叶变换里是关键角色（后面 03 号课件会用到）。</p>
+
+  <h2>六、参数旋转门 R<sub>x</sub> / R<sub>y</sub> / R<sub>z</sub></h2>
+  <p>单比特系统里最常见的参数旋转门（课件 01 · P40）：</p>
+  <div class="eq">
+    <span class="math">R<sub>z</sub>(θ)</span> = <span class="mat" style="--cols:2"><span class="cell">e<sup>−iθ/2</sup></span><span class="cell">0</span><span class="cell">0</span><span class="cell">e<sup>iθ/2</sup></span></span>，　<span class="math">R<sub>y</sub>、R<sub>x</sub></span> 同理（绕对应轴转 θ）
+  </div>
+  <p>课件还给了两个要背的恒等式（后面化简 Oracle 会用到）：</p>
+  <div class="eq"><span class="math">H = iR<sub>y</sub>(π/2)</span>，　<span class="math">R<sub>z</sub>(π) = iR<sub>x</sub>(π)R<sub>y</sub>(π/2)</span></div>
+
+  <h2>七、任意单比特门都能拆成旋转</h2>
+  <p>单比特门无穷多，能不能用少数几个拼出来？可以。对任意一个 2×2 酉矩阵，都有如下分解（课件 01 · P41）：</p>
+  <div class="eq">U = e<sup>iα</sup> R<sub>z</sub>(β) R<sub>y</sub>(γ) R<sub>z</sub>(δ)</div>
+  <p>中间是绕 y 轴的旋转，前后是在特定平面内的绕 z 轴旋转。这就是"通用门集"思想的雏形——下一课多比特门会把它坐实。</p>
+
+  <h2>八、即时小测</h2>
+
+  <div class="quiz" data-answer="d" data-explanation="酉矩阵定义 U⁻¹=U†，即 UU†=I，课件 01 · P38。">
+    <p class="quiz-q"><span class="qno">Q1</span>量子门必须满足什么条件才能表示合法演化？</p>
+    <div class="opts">
+      <button data-opt="a">行列式为 1</button>
+      <button data-opt="b">对称矩阵</button>
+      <button data-opt="c">迹为 0</button>
+      <button data-opt="d">酉矩阵（UU<sup>†</sup>=I）</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="a" data-explanation="H|0⟩=(|0⟩+|1⟩)/√2 = |+⟩，课件 01 · P35。">
+    <p class="quiz-q"><span class="qno">Q2</span><span class="math">H|0⟩</span> 等于？</p>
+    <div class="opts">
+      <button data-opt="a">|+⟩</button>
+      <button data-opt="b">|−⟩</button>
+      <button data-opt="c">|1⟩</button>
+      <button data-opt="d">(|0⟩−|1⟩)/√2</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="c" data-explanation="X 互换系数：X(α|0⟩+β|1⟩)=α|1⟩+β|0⟩，课件 01 · P34。">
+    <p class="quiz-q"><span class="qno">Q3</span>对态 <span class="math">α|0⟩ + β|1⟩</span> 作用 X 门，结果是？</p>
+    <div class="opts">
+      <button data-opt="a">β|0⟩ + α|1⟩</button>
+      <button data-opt="b">α|0⟩ − β|1⟩</button>
+      <button data-opt="c">α|1⟩ + β|0⟩</button>
+      <button data-opt="d">不变</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="quiz" data-answer="b" data-explanation="相位旋转门只改相对相位、不改概率分布，课件 01 · P39。">
+    <p class="quiz-q"><span class="qno">Q4</span>相位旋转门（如 T、S）对量子态的主要影响是？</p>
+    <div class="opts">
+      <button data-opt="a">改变测量概率</button>
+      <button data-opt="b">改变相对相位、不改变概率分布</button>
+      <button data-opt="c">交换两个比特</button>
+      <button data-opt="d">使态坍缩</button>
+    </div>
+    <p class="feedback"></p>
+  </div>
+
+  <div class="ask">
+    <p><strong>卡住了就直接问我。</strong>比如"为什么厄米对应实数本征值""HXH=Z 怎么推"——都可以在对话里追问，我会就这一步重讲。</p>
+  </div>
+
+  <h2>九、这节课你应该能独立完成</h2>
+  <ul>
+    <li>写出 X / Y / Z / H 的矩阵，并验证 <span class="math">HH=I</span>、<span class="math">XX=I</span>。</li>
+    <li>解释"酉矩阵"为什么能保证演化后仍是合法量子态。</li>
+    <li>用 <span class="math">H = iR<sub>y</sub>(π/2)</span> 等恒等式做简单化简。</li>
+  </ul>
+
+  <div class="note">
+    <p><strong>主资源：</strong>本课正文与例题均来自课件 <strong>01 · P33–P41</strong>。下一篇（第 3 课）进入多比特与纠缠——那里会用到 H 门和 CNOT 门。</p>
+  </div>
+
+  <p class="lesson-footer">
+    下一课：<a href="0003-tensor-product-and-bell-states.html"><strong>多量子比特、张量积与纠缠贝尔态</strong></a>——两个比特怎么拼成 4 维空间、纠缠怎么判定、四个贝尔态是什么。
+  </p>
+
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script src="../assets/gate-apply.js"></script>
+</body>
+</html>
