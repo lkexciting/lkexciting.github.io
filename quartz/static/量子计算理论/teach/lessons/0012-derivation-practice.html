@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 12 课 · 期中推导训练题</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -15,7 +15,7 @@
 <p class="lede">这课不教新内容，只练"笔头推导"——期中/作业最常考的六类题：单比特门矩阵、双比特门、Deutsch 末态、QFT 电路、QPE→Shor 归约、Grover 旋转角。每题先自己推，再点"看解答"核对。答案严格对应课件 01–03。</p>
 <div class="keybox">
 <span class="label">题型分布</span>
-<p>A 单比特门矩阵（X/Y/Z/H/S/T）· B 双比特门与纠缠判定 · C Deutsch 末态 · D QFT 电路与矩阵 · E QPE→Shor 归约 · F Grover 旋转角 θ。把这 14 题推顺，期中计算题基本不慌。</p>
+<p>A 单比特门矩阵（X/Y/Z/H/S/T）· B 双比特门与纠缠判定 · C Deutsch 末态 · D QFT 电路与矩阵 · E QPE→Shor 归约 · F Grover 旋转角 \(\theta\)。把这 14 题推顺，期中计算题基本不慌。</p>
 </div>
 <h2>A. 单比特门矩阵</h2>
 <div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
@@ -72,8 +72,8 @@
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
 <p>判定式：双比特态 \(\alpha_{00}|00\rangle+\alpha_{01}|01\rangle+\alpha_{10}|10\rangle+\alpha_{11}|11\rangle\) 可分 ⇔ \(\alpha_{00}\alpha_{11} = \alpha_{01}\alpha_{10}\)（矩阵秩为 1）。</p>
-<p>\((|00\rangle+|01\rangle)/\sqrt{2}\)：系数 (1,1,0,0)/√2，\(1\cdot0 = 1\cdot0 = 0\) ⇒ 可分，且 = \(|0\rangle\otimes(|0\rangle+|1\rangle)/\sqrt{2}\)。</p>
-<p>\((|00\rangle+|11\rangle)/\sqrt{2}\)：系数 (1,0,0,1)/√2，\(1\cdot1 - 0\cdot0 = 1 \neq 0\) ⇒ 纠缠（即贝尔态 \(|\Phi^{+}\rangle\)）。</p>
+<p>\((|00\rangle+|01\rangle)/\sqrt{2}\)：系数 (1,1,0,0)\(/\sqrt{2}\)，\(1\cdot0 = 1\cdot0 = 0\) ⇒ 可分，且 = \(|0\rangle\otimes(|0\rangle+|1\rangle)/\sqrt{2}\)。</p>
+<p>\((|00\rangle+|11\rangle)/\sqrt{2}\)：系数 (1,0,0,1)\(/\sqrt{2}\)，\(1\cdot1 - 0\cdot0 = 1 \neq 0\) ⇒ 纠缠（即贝尔态 \(|\Phi^{+}\rangle\)）。</p>
 </div>
 </details>
 </div>
@@ -93,7 +93,7 @@
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
 <p>\(f(0)=1, f(1)=0\)，\(s=f(0)\oplus f(1)=1\) 仍是平衡。相位反冲：\((-1)^{1}=-1\) 在 \(|0\rangle\) 上、\((-1)^{0}=1\) 在 \(|1\rangle\) 上，第一寄存器同样为 \(|-\rangle\)，末态 \(|1\rangle\) ⇒ 平衡。</p>
-<p>⚠ 课件 p64 原句把"测 |0⟩→平衡"写反了，正确应为 <strong>|0⟩→常数、|1⟩→平衡</strong>（s=0 才是常数）。</p>
+<p>⚠ 课件 p64 原句把"测 \(|0\rangle\to\)平衡"写反了，正确应为 <strong>\(|0\rangle\to\)常数、\(|1\rangle\to\)平衡</strong>（s=0 才是常数）。</p>
 </div>
 </details>
 </div>
@@ -103,12 +103,12 @@
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
 <p>\(U_F = 1/2 [[1,1,1,1],[1,i,-1,-i],[1,-1,1,-1],[1,-i,-1,i]]\)（基 \(|00\rangle,|01\rangle,|10\rangle,|11\rangle\) 对应 x=0,1,2,3）。</p>
-<p>电路（n=2）：\(H(q0) \to CR_{2}(q0\text{控}\to q1\text{标}) \to H(q1) \to SWAP(q0,q1)\)，其中 \(R_{2}\) 相位 \(e^{2\pi i/4}=i\)（即 S 门）。CR₂ 是受控相位门。</p>
+<p>电路（n=2）：\(H(q0) \to CR_{2}(q0\text{控}\to q1\text{标}) \to H(q1) \to SWAP(q0,q1)\)，其中 \(R_{2}\) 相位 \(e^{2\pi i/4}=i\)（即 S 门）。\(CR_{2}\) 是受控相位门。</p>
 </div>
 </details>
 </div>
 <div class="prob" style="border-left:3px solid var(--accent);padding:0.4rem 0 0.4rem 1rem;margin:1rem 0">
-<p><strong>10.</strong> 画出 3-比特 QFT₃ 的电路结构（门序列，不用展开矩阵）。</p>
+<p><strong>10.</strong> 画出 3-比特 \(QFT_{3}\) 的电路结构（门序列，不用展开矩阵）。</p>
 <details><summary style="cursor:pointer;color:var(--accent)">看解答</summary>
 <div style="margin-top:0.6rem">
 <p>从最高位到最低位依次：</p>
@@ -160,15 +160,15 @@
 <div class="quiz" data-answer="a" data-explanation="Z=diag(1,−1)，S=diag(1,i)，故 S²=Z，T²=S；T 不是 Z 的平方根，S 才是。">
 <p class="quiz-q"><span class="qno">Q1</span>下列关系正确的是？</p>
 <div class="opts">
-<button data-opt="a">S² = Z，T² = S</button>
-<button data-opt="b">T² = Z</button>
-<button data-opt="c">S = T² 且 Z = T</button>
-<button data-opt="d">X² = Z</button>
+<button data-opt="a">\(S^{2}\) = Z，\(T^{2}\) = S</button>
+<button data-opt="b">\(T^{2}\) = Z</button>
+<button data-opt="c">S = \(T^{2}\) 且 Z = T</button>
+<button data-opt="d">\(X^{2}\) = Z</button>
 </div>
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="b" data-explanation="Deutsch 正确判定：测第一比特 |0⟩→常数、|1⟩→平衡（课件 p64 写反，以推导为准）。">
-<p class="quiz-q"><span class="qno">Q2</span>Deutsch 算法测得第一比特为 |1⟩，说明 f 是？</p>
+<p class="quiz-q"><span class="qno">Q2</span>Deutsch 算法测得第一比特为 \(|1\rangle\)，说明 f 是？</p>
 <div class="opts">
 <button data-opt="a">常数函数</button>
 <button data-opt="b">平衡函数</button>

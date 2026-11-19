@@ -27,12 +27,13 @@ value = int.from_bytes(raw, "big", signed=True) * 0.1
 协议适配必须保留数据语义，不能只把字节搬到云端。</div>
 
   <h2>二、计算卸载与断网缓存（两道计算模板）</h2>
-  <div class="calc">① 计算卸载的带宽临界条件：
-上传 D Mbit，网络往返 L ms，云端处理 C ms，边缘处理 E ms
-边缘路径 ≈ E + D/R（R 单位 Mbit/s）；若 E ≤ L + C，则云端不可能更快
-课件数值例：D=2 Mbit、L=30 ms、C=10 ms、E=100 ms
-→ 20 Mbit/s 时边缘更快；50 Mbit/s 时云端更快；阈值处两条路径时间相同
-先统一单位再解带宽阈值；分母符号决定是否存在可行解。</div>
+  <div class="calc">① 计算卸载的带宽临界条件（课件第 145–147 页）：
+<b class="k">通式</b>：<span class="formula">T_cloud = 1000D/R + L + C</span>　<span class="formula">T_edge = E</span>　（单位 ms；D: Mbit，R: Mbit/s，L/C/E: ms，D/R 是秒需 ×1000）
+云端更快 ⟺ <span class="formula">T_cloud &lt; T_edge</span> ⟺ <span class="formula">1000D/R &lt; E − L − C</span> ⟺ <span class="formula">R &gt; R* = 1000D/(E − L − C)</span>
+可行解前提 <span class="formula">E &gt; L + C</span>（分母为正）；若 <b class="k">E ≤ L + C，则云端不可能更快</b>。R &lt; R* 边缘更快、R = R* 两条路径时间相同。
+课件数值例：D=2 Mbit、L=30 ms、C=10 ms、E=100 ms → <span class="formula">R* = 2000/60 ≈ 33.33 Mbit/s</span>
+R=20：<span class="formula">1000×2/20 = 100ms</span> → 100+30+10 = 140 ms &gt; E=100 ms → 边缘更快；R=50：<span class="formula">1000×2/50 = 40ms</span> → 40+30+10 = 80 ms &lt; 100 ms → 云端更快。
+比较原则：同一任务的完成时间，输入上传、网络往返、计算都计入；<b>不能只比 CPU 计算部分</b>；忽略项需先明确；结果返回量较小时并入 L，大结果应另加下行传输时间。链路变化会改变最优执行位置，时延只是选型指标之一。</div>
   <div class="calc">② 断网缓存的容量与补传：
 容量预算：50 KB/s × 4 × 3600 s = 720,000 KB = 720 MB（十进制）→ 数据库预算 > 720 MB
 缓存上限例：600,000 KB / 50 KB/s = 12,000 s ≈ 3 小时 20 分（满盘策略：背压/丢最旧/降采样）
@@ -72,7 +73,7 @@ value = int.from_bytes(raw, "big", signed=True) * 0.1
   <div class="quiz" id="quiz"></div>
   <div class="score" id="score" style="display:none"></div>
 
-  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：GLOSSARY.md · 上一课：<a href="0606-安全认证与无服务器.html">0606-安全认证与无服务器</a> · 下一课：<a href="0701-云-端一体开发概述.html">第 7 章 云-端一体开发</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
+  <footer>主源：课件《第六章-2026》· 教材 董玮等《从创意到原型（第2版）》<br>· 速查：<a href="../reference/云平台速查.html">云平台速查</a> · 术语：<a href="../GLOSSARY.md">GLOSSARY.md</a> · 上一课：<a href="0606-安全认证与无服务器.html">0606-安全认证与无服务器</a> · 下一课：<a href="0701-云-端一体开发概述.html">第 7 章 云-端一体开发</a> · <a href="../课程总目录.html">课程总目录</a><br>有不懂的随时在对话里问你的 AI 老师。</footer>
 </div>
 
 <script>

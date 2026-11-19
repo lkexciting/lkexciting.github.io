@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 05 课 · 多量子门、CNOT 与量子隐形传态</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -77,8 +77,8 @@
 <div class="quiz" data-answer="a" data-explanation="CNOT 仅在控制比特为 |1⟩ 时翻转目标比特，|0⟩ 时保持，课件 01 · P45。">
 <p class="quiz-q"><span class="qno">Q1</span>关于 CNOT 门，正确的是？</p>
 <div class="opts">
-<button data-opt="a">控制比特为 |1⟩ 时翻转目标比特，|0⟩ 时不变</button>
-<button data-opt="b">控制比特为 |0⟩ 时翻转目标比特</button>
+<button data-opt="a">控制比特为 \(|1\rangle\) 时翻转目标比特，\(|0\rangle\) 时不变</button>
+<button data-opt="b">控制比特为 \(|0\rangle\) 时翻转目标比特</button>
 <button data-opt="c">无论控制比特如何都翻转目标比特</button>
 <button data-opt="d">CNOT 是单量子比特门</button>
 </div>
@@ -88,7 +88,7 @@
 <p class="quiz-q"><span class="qno">Q2</span>要制备贝尔态 \(|\Phi^{+}\rangle=(|00\rangle+|11\rangle)/\sqrt{2}\)，下列哪条电路可行？</p>
 <div class="opts">
 <button data-opt="a">先 CNOT 再对 q1 作用 H</button>
-<button data-opt="b">从 |00⟩ 先对 q0 作用 H，再 CNOT(q0→q1)</button>
+<button data-opt="b">从 \(|00\rangle\) 先对 q0 作用 H，再 CNOT(q0→q1)</button>
 <button data-opt="c">仅对 q0 作用 H，不加 CNOT</button>
 <button data-opt="d">仅对 q1 作用 X 门</button>
 </div>
@@ -97,10 +97,10 @@
 <div class="quiz" data-answer="c" data-explanation="Bob 必须等 Alice 用经典信道发来 2 个比特才能修正，受光速限制，不能超距，课件 01 · P51。">
 <p class="quiz-q"><span class="qno">Q3</span>关于量子隐形传态，正确的是？</p>
 <div class="opts">
-<button data-opt="a">Alice 测量后 Bob 立刻自动得到 |ψ⟩</button>
+<button data-opt="a">Alice 测量后 Bob 立刻自动得到 \(|\psi\rangle\)</button>
 <button data-opt="b">不需要任何经典通信即可完成</button>
 <button data-opt="c">需经经典信道传输 2 个比特，不能超光速</button>
-<button data-opt="d">本质是复制了一份 |ψ⟩</button>
+<button data-opt="d">本质是复制了一份 \(|\psi\rangle\)</button>
 </div>
 <p class="feedback"></p>
 </div>

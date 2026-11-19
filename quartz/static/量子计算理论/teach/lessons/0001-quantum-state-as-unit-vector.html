@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 01 课 · 单量子比特与量子态</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -18,18 +18,18 @@
 <table>
 <thead><tr><th>量子力学术语</th><th>线性代数术语</th></tr></thead>
 <tbody>
-<tr><td>态矢量 |a⟩</td><td>向量（列向量）</td></tr>
+<tr><td>态矢量 \(|a\rangle\)</td><td>向量（列向量）</td></tr>
 <tr><td>本征态</td><td>特征向量</td></tr>
 <tr><td>本征值</td><td>特征值</td></tr>
-<tr><td>右矢 |a⟩ / 左矢 ⟨a|</td><td>列向量 / 行向量</td></tr>
-<tr><td>⟨a|b⟩</td><td>a、b 的内积</td></tr>
-<tr><td>|a⟩⟨b|</td><td>a、b 外积构成的投影矩阵</td></tr>
+<tr><td>右矢 \(|a\rangle\) / 左矢 \(\langle a|\)</td><td>列向量 / 行向量</td></tr>
+<tr><td>\(\langle a|b\rangle\)</td><td>a、b 的内积</td></tr>
+<tr><td>\(|a\rangle\langle b|\)</td><td>a、b 外积构成的投影矩阵</td></tr>
 <tr><td>算符</td><td>矩阵</td></tr>
 <tr><td>幺正（酉）算符</td><td>正交矩阵（复数版：\(UU^{\dagger}=I\)）</td></tr>
 <tr><td>厄米矩阵</td><td>自伴矩阵（\(H=H^{\dagger}\)）</td></tr>
 </tbody>
 </table>
-<p>课件还点了一句关键区别：正交矩阵是<strong>实数</strong>概念（\(AA^{T}=I\)），幺正矩阵是<strong>复数</strong>概念（\(UU^{\dagger}=I\)，† 是共轭转置）。酉矩阵之所以重要，是因为它保证量子态经过演化后"还是个合法量子态"（课件 01 · P5）。</p>
+<p>课件还点了一句关键区别：正交矩阵是<strong>实数</strong>概念（\(AA^{T}=I\)），幺正矩阵是<strong>复数</strong>概念（\(UU^{\dagger}=I\)，\(\dagger\) 是共轭转置）。酉矩阵之所以重要，是因为它保证量子态经过演化后"还是个合法量子态"（课件 01 · P5）。</p>
 <div class="keybox">
 <span class="label">一句话</span>
 <p>把"态"想成向量，把"门"想成矩阵，把"测量"想成投影。量子计算 = 酉矩阵在复数向量空间上的计算。</p>
@@ -39,17 +39,17 @@
 <div class="eq">\[|\psi\rangle = \alpha|0\rangle + \beta|1\rangle\]</div>
 <p>其中 \(\alpha, \beta\) 是<strong>复数</strong>，所以量子态是二维复向量空间里的向量；\(|0\rangle\)、\(|1\rangle\) 是一组正交基，任意量子态都能写成它们的线性组合。课件用"薛定谔的猫"作类比：在打开盒子前，猫处在"死"和"活"的叠加中（课件 01 · P13）。</p>
 <div class="note">
-<p><strong>物理实现（课件 01 · P8–P12，了解即可）：</strong>量子比特可以是电子自旋、原子的能级、超导约瑟夫森结等。判断一个物理系统能否做量子计算，看它是否满足 <strong>DiVincenzo 判据</strong>（课件 01 · P9）：① 可操控、可扩充的量子比特；② 可初始化为 |0⟩；③ 足够长的相干时间；④ 一组通用量子门；⑤ 可测量。</p>
+<p><strong>物理实现（课件 01 · P8–P12，了解即可）：</strong>量子比特可以是电子自旋、原子的能级、超导约瑟夫森结等。判断一个物理系统能否做量子计算，看它是否满足 <strong>DiVincenzo 判据</strong>（课件 01 · P9）：① 可操控、可扩充的量子比特；② 可初始化为 \(|0\rangle\)；③ 足够长的相干时间；④ 一组通用量子门；⑤ 可测量。</p>
 </div>
-<h2>三、换一组基：|+⟩ 与 |−⟩</h2>
+<h2>三、换一组基：\(|+\rangle\) 与 \(|\)−\(\rangle\)</h2>
 <p>除了 \(|0\rangle,|1\rangle\)，任意两个单位正交基都能用（课件 01 · P16）。常用的一组称为 X 基：</p>
 <div class="eq">\[
 |+\rangle = \frac{1}{\sqrt{2}}(|0\rangle + |1\rangle)\text{，} 
     |-\rangle = \frac{1}{\sqrt{2}}(|0\rangle - |1\rangle)
   \]</div>
-<p>课件 01 · P16 留的练习：<strong>证明 |+⟩ 与 |−⟩ 正交</strong>。只做一次内积：</p>
+<p>课件 01 · P16 留的练习：<strong>证明 \(|+\rangle\) 与 \(|\)−\(\rangle\) 正交</strong>。只做一次内积：</p>
 <div class="eq">\[\langle+|-\rangle = \frac{1}{2}(1, 1)\cdot(1, -1)^{T} = \frac{1}{2}(1 - 1) = 0\]</div>
-<p>再算 ⟨+|+⟩ = (1/2)(1+1) = 1，两者都满足，所以 \({|+\rangle,|-\rangle}\) 也是一组标准正交基。</p>
+<p>再算 \(\langle+|+\rangle\) = (1/2)(1+1) = 1，两者都满足，所以 \({|+\rangle,|-\rangle}\) 也是一组标准正交基。</p>
 <h2>四、向量表示与内积</h2>
 <p>把基矢写成列向量（课件 01 · P17）：</p>
 <div class="eq">\[
@@ -82,7 +82,7 @@
 <button data-opt="a">(0, 1)<sup>T</sup></button>
 <button data-opt="b">(1, 0)<sup>T</sup></button>
 <button data-opt="c">(1, 1)<sup>T</sup></button>
-<button data-opt="d">(1/√2, 1/√2)<sup>T</sup></button>
+<button data-opt="d">(\(1/\sqrt{2}\), \(1/\sqrt{2}\))<sup>T</sup></button>
 </div>
 <p class="feedback"></p>
 </div>
@@ -102,7 +102,7 @@
 <button data-opt="a">1</button>
 <button data-opt="b">0</button>
 <button data-opt="c">1/2</button>
-<button data-opt="d">√2</button>
+<button data-opt="d">\(\sqrt{2}\)</button>
 </div>
 <p class="feedback"></p>
 </div>
@@ -117,7 +117,7 @@
 <p class="feedback"></p>
 </div>
 <div class="ask">
-<p><strong>卡住了就直接问我。</strong>比如"为什么 bra 要取共轭""|+⟩ 在 Bloch 球上什么位置"——都可以在对话里追问，我会就这一步重讲并换例子。</p>
+<p><strong>卡住了就直接问我。</strong>比如"为什么 bra 要取共轭""\(|+\rangle\) 在 Bloch 球上什么位置"——都可以在对话里追问，我会就这一步重讲并换例子。</p>
 </div>
 <h2>八、这节课你应该能独立完成</h2>
 <ul>

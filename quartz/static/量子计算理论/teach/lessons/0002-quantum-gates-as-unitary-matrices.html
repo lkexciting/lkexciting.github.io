@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 02 课 · 量子门就是酉矩阵</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -32,7 +32,7 @@ X = \begin{pmatrix}0 &amp; 1 \\ 1 &amp; 0\end{pmatrix}\text{，}
     Y = \begin{pmatrix}0 &amp; -i \\ i &amp; 0\end{pmatrix}\text{，} 
     Z = \begin{pmatrix}1 &amp; 0 \\ 0 &amp; -1\end{pmatrix}
 \]</div>
-<p>几何上：X 绕 x 轴转 π、Y 绕 y 轴转 π、Z 绕 z 轴转 π（课件 01 · P36）。</p>
+<p>几何上：X 绕 x 轴转 \(\pi\)、Y 绕 y 轴转 \(\pi\)、Z 绕 z 轴转 \(\pi\)（课件 01 · P36）。</p>
 <div class="tool" data-widget="gate-apply"></div>
 <h2>四、为什么只有"酉矩阵"能当门</h2>
 <p>任意一个 2×2 矩阵都能表示一个门吗？<strong>不能。</strong>只有酉矩阵才行（课件 01 · P38）：</p>
@@ -47,7 +47,7 @@ X = \begin{pmatrix}0 &amp; 1 \\ 1 &amp; 0\end{pmatrix}\text{，}
 <table>
 <thead><tr><th>门</th><th>作用</th><th>相位参数</th></tr></thead>
 <tbody>
-<tr><td>P(φ)</td><td>带参数 φ 的相位旋转</td><td>φ 任意</td></tr>
+<tr><td>P(\(\phi\))</td><td>带参数 \(\phi\) 的相位旋转</td><td>\(\phi\) 任意</td></tr>
 <tr><td>S</td><td>P 的特例</td><td>\(\phi = \pi/2\)</td></tr>
 <tr><td>T</td><td>另一个相位旋转门</td><td>\(\phi = \pi/4\)</td></tr>
 </tbody>
@@ -71,26 +71,26 @@ R_{z}(\theta) = \begin{pmatrix}e^{-i\theta/2} &amp; 0 \\ 0 &amp; e^{i\theta/2}\e
 <button data-opt="a">行列式为 1</button>
 <button data-opt="b">对称矩阵</button>
 <button data-opt="c">迹为 0</button>
-<button data-opt="d">酉矩阵（UU<sup>†</sup>=I）</button>
+<button data-opt="d">酉矩阵（UU<sup>\(\dagger\)</sup>=I）</button>
 </div>
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="a" data-explanation="H|0⟩=(|0⟩+|1⟩)/√2 = |+⟩，课件 01 · P35。">
 <p class="quiz-q"><span class="qno">Q2</span>\(H|0\rangle\) 等于？</p>
 <div class="opts">
-<button data-opt="a">|+⟩</button>
-<button data-opt="b">|−⟩</button>
-<button data-opt="c">|1⟩</button>
-<button data-opt="d">(|0⟩−|1⟩)/√2</button>
+<button data-opt="a">\(|+\rangle\)</button>
+<button data-opt="b">\(|\)−\(\rangle\)</button>
+<button data-opt="c">\(|1\rangle\)</button>
+<button data-opt="d">(\(|0\rangle\)−\(|1\rangle\))\(/\sqrt{2}\)</button>
 </div>
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="c" data-explanation="X 互换系数：X(α|0⟩+β|1⟩)=α|1⟩+β|0⟩，课件 01 · P34。">
 <p class="quiz-q"><span class="qno">Q3</span>对态 \(\alpha|0\rangle + \beta|1\rangle\) 作用 X 门，结果是？</p>
 <div class="opts">
-<button data-opt="a">β|0⟩ + α|1⟩</button>
-<button data-opt="b">α|0⟩ − β|1⟩</button>
-<button data-opt="c">α|1⟩ + β|0⟩</button>
+<button data-opt="a">\(\beta|0\rangle\) + \(\alpha|1\rangle\)</button>
+<button data-opt="b">\(\alpha|0\rangle\) − \(\beta|1\rangle\)</button>
+<button data-opt="c">\(\alpha|1\rangle\) + \(\beta|0\rangle\)</button>
 <button data-opt="d">不变</button>
 </div>
 <p class="feedback"></p>

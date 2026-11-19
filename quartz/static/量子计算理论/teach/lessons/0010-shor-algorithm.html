@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 10 课 · Shor 算法</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -46,13 +46,13 @@
 <div class="opts">
 <button data-opt="a">RSA 公钥生成</button>
 <button data-opt="b">求最大公约数 gcd</button>
-<button data-opt="c">计算阶 r = ordₙ(a)</button>
+<button data-opt="c">计算阶 r = \(ord_{n}\)(a)</button>
 <button data-opt="d">把小数还原成分数</button>
 </div>
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="a" data-explanation="a 模 n 的阶 r 是使 aʳ ≡ 1 (mod n) 成立的最小正整数，课件 03 · P38。">
-<p class="quiz-q"><span class="qno">Q2</span>“阶 ordₙ(a)”的定义是？</p>
+<p class="quiz-q"><span class="qno">Q2</span>“阶 \(ord_{n}\)(a)”的定义是？</p>
 <div class="opts">
 <button data-opt="a">使 aʳ ≡ 1 (mod n) 成立的最小正整数 r</button>
 <button data-opt="b">a 与 n 的最大公约数</button>
@@ -62,12 +62,12 @@
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="d" data-explanation="Shor 对 |1⟩ 做 QPE，因为 |1⟩ 是所有本征态 |uₛ⟩ 的等概率叠加，无需专门制备本征态，课件 03 · P46–P47。">
-<p class="quiz-q"><span class="qno">Q3</span>为什么 Shor 可以直接对 |1⟩ 做 QPE 而不必制备本征态 |uₛ⟩？</p>
+<p class="quiz-q"><span class="qno">Q3</span>为什么 Shor 可以直接对 \(|1\rangle\) 做 QPE 而不必制备本征态 \(|u_{s}\rangle\)？</p>
 <div class="opts">
-<button data-opt="a">因为 |1⟩ 就是本征态</button>
+<button data-opt="a">因为 \(|1\rangle\) 就是本征态</button>
 <button data-opt="b">QPE 不需要本征态</button>
 <button data-opt="c">制备本征态更简单</button>
-<button data-opt="d">|1⟩ 恰好是各 |uₛ⟩ 的等概率叠加态</button>
+<button data-opt="d">\(|1\rangle\) 恰好是各 \(|u_{s}\rangle\) 的等概率叠加态</button>
 </div>
 <p class="feedback"></p>
 </div>
@@ -86,15 +86,15 @@
 </div>
 <h2>六、这节课你应该能独立完成</h2>
 <ul>
-<li>说清 Shor 与 RSA 的关系：分解 n → 求 φ(n) → 破私钥。</li>
+<li>说清 Shor 与 RSA 的关系：分解 n → 求 \(\phi\)(n) → 破私钥。</li>
 <li>复述主流程，并记住"只有计算阶是量子的"。</li>
-<li>理解量子部分：对 |1⟩ 做 QPE 得到相位 s/r，再还原出 r。</li>
+<li>理解量子部分：对 \(|1\rangle\) 做 QPE 得到相位 s/r，再还原出 r。</li>
 </ul>
 <div class="note">
 <p><strong>主资源：</strong>本课正文均来自课件 <strong>03 · P3（P37–P49）</strong>。下一课是另一类加速：Grover 的无结构数据库搜索。</p>
 </div>
 <p class="lesson-footer">
-    下一课：<a href="0011-grover-algorithm.html"><strong>Grover 算法</strong></a>——用振幅放大把 O(N) 的经典搜索加速到 O(√N)。
+    下一课：<a href="0011-grover-algorithm.html"><strong>Grover 算法</strong></a>——用振幅放大把 O(N) 的经典搜索加速到 O(\(\sqrt{N}\))。
   </p>
 </div>
 <script src="../assets/quiz.js"></script>

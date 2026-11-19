@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 06 课 · Deutsch 算法</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -49,7 +49,7 @@
 </div>
 <div class="tool" data-widget="deutsch-phase"></div>
 <div class="warn">
-<p><strong>⚠ 课件 p64 此处结论写反了。</strong>原幻灯片写"测到 |0⟩ 说明是平衡函数、反之是常数函数"，与上面正确推导相反。按标准 Deutsch 算法（以及本课的相位推导），<strong>|0⟩ 对应常数、|1⟩ 对应平衡</strong>。考试/作业请以正确推导为准；若老师按课件原话出题，请同时理解两种表述的来源。</p>
+<p><strong>⚠ 课件 p64 此处结论写反了。</strong>原幻灯片写"测到 \(|0\rangle\) 说明是平衡函数、反之是常数函数"，与上面正确推导相反。按标准 Deutsch 算法（以及本课的相位推导），<strong>\(|0\rangle\) 对应常数、\(|1\rangle\) 对应平衡</strong>。考试/作业请以正确推导为准；若老师按课件原话出题，请同时理解两种表述的来源。</p>
 </div>
 <h2>五、Oracle（黑盒）视角</h2>
 <p>课件 01（P64–P68）把 U_f 抽象为 <strong>Oracle（神谕/黑盒）</strong>：我们只知道它的行为（输入 x，输出 1 或 0 表示 yes/no），不知道内部如何实现，目标是以<strong>尽可能少的调用次数</strong>完成判定。其线路用异或 \(\oplus\) 表示：\(y \oplus f(x)\)。</p>
@@ -96,12 +96,12 @@
 <p class="feedback"></p>
 </div>
 <div class="ask">
-<p><strong>卡住了就直接问我。</strong>比如"相位反冲 (−1)^{f(x)} 是怎么来的""为什么 H|+⟩=|0⟩"——都可以在对话里追问，我会就这一步重讲。</p>
+<p><strong>卡住了就直接问我。</strong>比如"相位反冲 (−1)^{f(x)} 是怎么来的""为什么 \(H|+\rangle=|0\rangle\)"——都可以在对话里追问，我会就这一步重讲。</p>
 </div>
 <h2>七、这节课你应该能独立完成</h2>
 <ul>
 <li>说清常数函数与平衡函数的定义，以及经典为何要查 2 次。</li>
-<li>复述 Deutsch 电路（|0⟩|1⟩ → 双 H → U_f → 单 H → 测量第一比特）并解释相位反冲。</li>
+<li>复述 Deutsch 电路（\(|0\rangle|1\rangle\) → 双 H → U_f → 单 H → 测量第一比特）并解释相位反冲。</li>
 <li>记住正确判定规则：\(|0\rangle\)→常数、\(|1\rangle\)→平衡，并知道课件 p64 结论写反。</li>
 </ul>
 <div class="note">

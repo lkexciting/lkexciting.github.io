@@ -6,7 +6,7 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 00 课 · 课程引言：从计算本质到量子硬件</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
@@ -44,7 +44,7 @@
 <thead><tr><th>计算要素</th><th>经典体系</th><th>量子体系</th></tr></thead>
 <tbody>
 <tr><td>计算理论</td><td>通用经典图灵机</td><td>通用量子图灵机</td></tr>
-<tr><td>编码规则</td><td>二进制（0 / 1）</td><td>量子比特（|0⟩, |1⟩ 及其叠加）</td></tr>
+<tr><td>编码规则</td><td>二进制（0 / 1）</td><td>量子比特（\(|0\rangle\), \(|1\rangle\) 及其叠加）</td></tr>
 <tr><td>物理实现</td><td>CMOS 电流的开闭表示 0 / 1</td><td>超导量子、光量子、离子阱等</td></tr>
 </tbody>
 </table>
@@ -61,7 +61,7 @@
 <p><strong>爱因斯坦 vs 玻尔（"上帝掷骰子吗？"，课件 00 · P649）：</strong>爱因斯坦相信决定论与"隐变量"——粒子的路径在被观测前就已确定；玻尔认为路径不是预先确定的，<strong>是否去观测本身决定了结果</strong>——不看时粒子处于"左缝/右缝"的相干叠加。这场争论由<strong>贝尔定理</strong>给出实验判据。</p>
 </div>
 <div class="warn">
-<p><strong>贝尔定理与 2022 诺奖（课件 00 · P676）：</strong>1964 年 Bell 定义可观测量，局域隐变量理论预言其值 ≤ 2，而量子力学预言可超过它。实验历经 Clauser（1972）、Aspect（1982）不断改进，最终否定局域隐变量理论、确证量子力学的非定域性，三人获 2022 年诺贝尔物理学奖。注意：课件原文写"最大值可以到 2"，标准 CHSH 上界实际为 \(2\sqrt{2} \approx 2.828\)，课件此处为简写/笔误，考场若考"贝尔不等式经典上界"答 2、若考"量子可违反到的上界"答 \(2\sqrt{2}\)。</p>
+<p><strong>贝尔定理与 2022 诺奖（课件 00 · P676）：</strong>1964 年 Bell 定义可观测量，局域隐变量理论预言其值 \(\le\) 2，而量子力学预言可超过它。实验历经 Clauser（1972）、Aspect（1982）不断改进，最终否定局域隐变量理论、确证量子力学的非定域性，三人获 2022 年诺贝尔物理学奖。注意：课件原文写"最大值可以到 2"，标准 CHSH 上界实际为 \(2\sqrt{2} \approx 2.828\)，课件此处为简写/笔误，考场若考"贝尔不等式经典上界"答 2、若考"量子可违反到的上界"答 \(2\sqrt{2}\)。</p>
 </div>
 <h2>五、量子计算模型的诞生（课件 00 · P51）</h2>
 <ul>

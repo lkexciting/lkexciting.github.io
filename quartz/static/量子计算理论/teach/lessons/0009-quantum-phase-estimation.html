@@ -6,13 +6,13 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>第 09 课 · 量子相位估计（QPE）</title>
 <link href="../assets/course.css" rel="stylesheet"/>
-<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" src="../assets/katex/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});"></script><script src="../assets/mq.js"></script></head>
+<link href="../assets/katex/katex.min.css" rel="stylesheet"/><script defer="defer" src="../assets/katex/katex.min.js"></script><script defer="defer" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false});" src="../assets/katex/auto-render.min.js"></script><script src="../assets/mq.js"></script></head>
 <body>
 <div class="page">
 <p class="eyebrow">量子计算理论基础与软件系统 · <a href="../reference/glossary.html">速查卡</a></p>
 <p class="lesson-no">LESSON 09</p>
 <h1>量子相位估计（QPE）</h1>
-<p class="lede">相位估计是很多量子算法的核心零件。给定酉矩阵 U 和它的一个本征态 |μ⟩，对应本征值 \(e^{2\pi i\phi}\)，QPE 要估计的就是相位 \(\phi\in[0,1)\)。它的套路是：受控 U 把相位"踢"进叠加态，再用<strong>逆 QFT</strong> 把相位信息转成可读取的位信息。内容来自课件 <strong>03 · P2（P25–P36）</strong>。</p>
+<p class="lede">相位估计是很多量子算法的核心零件。给定酉矩阵 U 和它的一个本征态 \(|\mu\rangle\)，对应本征值 \(e^{2\pi i\phi}\)，QPE 要估计的就是相位 \(\phi\in[0,1)\)。它的套路是：受控 U 把相位"踢"进叠加态，再用<strong>逆 QFT</strong> 把相位信息转成可读取的位信息。内容来自课件 <strong>03 · P2（P25–P36）</strong>。</p>
 <h2>一、基本目标</h2>
 <p>对于一个酉矩阵 \(U\)，已知其本征态 \(|\mu\rangle\)，对应本征值为 \(e^{2\pi i\phi}\)，估计相位 \(\phi\) 的值，其中 \(\phi\in[0,1)\)（课件 03 · P25）。它在量子模拟、量子化学、量子机器学习中都有广泛应用。</p>
 <h2>二、算法流程</h2>
@@ -25,14 +25,14 @@
     ⑤ <strong>测量</strong>：读取寄存器 1，得到相位估计值。</p>
 </div>
 <p>直觉：受控 U 把本征值相位 \(e^{2\pi i\phi}\) 以"相位反冲"的方式编码进寄存器 1 的叠加幅度里；逆 QFT 则像"频谱分析"一样，把这种周期性相位翻译成具体的二进制小数（课件 03 · P26–P31）。</p>
-<h2>三、示例：旋转门 P(φ)</h2>
+<h2>三、示例：旋转门 P(\(\phi\))</h2>
 <p>课件给出例题（课件 03 · P33–P34）：相位旋转门</p>
 <div class="eq">\[P(\phi) = [[1,0],[0,e^{2\pi i\phi}]]\text{，本征态之一为} |1\rangle\]</div>
 <p>取 \(\phi = 1/8\)，即 \(P(1/8)\) 对应本征值 \(e^{2\pi i\cdot(1/8)}\)。用 3 个相位比特（寄存器 1 初始化为 \(|000\rangle\)）、寄存器 2 初始化为本征态 \(|1\rangle\)，运行 QPE 电路，输出相位的<strong>三比特估计值为 \(\hat{\phi} = 0.001_{2} = 1/8\)</strong>，与理论值完全相符。</p>
 <h2>四、精度与注意点</h2>
 <div class="warn">
 <p><strong>两个要点（课件 03 · P34–P35）：</strong><br/>
-    ① 若 \(\phi\) 能由 n 个二进制位<strong>精确表示</strong>（如 1/8 = 0.001₂），QPE 可精确估计；若不能（如 1/3 = 0.010101…₂），则只能<strong>近似</strong>，需多次运行、用测得某值的概率衡量接近程度。<br/>
+    ① 若 \(\phi\) 能由 n 个二进制位<strong>精确表示</strong>（如 1/8 = 0.\(001_{2}\)），QPE 可精确估计；若不能（如 1/3 = 0.010101…\(_{2}\)），则只能<strong>近似</strong>，需多次运行、用测得某值的概率衡量接近程度。<br/>
     ② <strong>精度取决于 qubit 数目</strong>：用 n 个 qubit 可把相位估计到 \(2^{n}\) 的精度。</p>
 </div>
 <p>谱分解视角（TIPS，课件 03 · P35–P36）：把 U 谱分解为 \(U = \sum_\mu \lambda_\mu |\mu\rangle\langle\mu|\)，任意输入 \(b = \sum_\mu \beta_\mu |\mu\rangle\)，执行 QPE 后得到 \(\sum_\mu \beta_\mu |\phi_\mu\rangle|\mu\rangle\)——即同时把各本征态的相位都估了出来。</p>
@@ -41,8 +41,8 @@
 <p class="quiz-q"><span class="qno">Q1</span>QPE 要估计的量是？</p>
 <div class="opts">
 <button data-opt="a">酉矩阵 U 的迹</button>
-<button data-opt="b">本征态 |μ⟩ 的范数</button>
-<button data-opt="c">本征值 e^{2πiφ} 中的相位 φ</button>
+<button data-opt="b">本征态 \(|\mu\rangle\) 的范数</button>
+<button data-opt="c">本征值 \(e^{2\pi i\phi}\) 中的相位 \(\phi\)</button>
 <button data-opt="d">测量概率的平方</button>
 </div>
 <p class="feedback"></p>
@@ -58,12 +58,12 @@
 <p class="feedback"></p>
 </div>
 <div class="quiz" data-answer="d" data-explanation="φ=1/8 的三比特二进制为 0.001₂，与课件例题 φ̂=0.001₂=1/8 一致，课件 03 · P33–P34。">
-<p class="quiz-q"><span class="qno">Q3</span>对旋转门取 φ=1/8，用 3 个相位比特的 QPE 输出估计值为？</p>
+<p class="quiz-q"><span class="qno">Q3</span>对旋转门取 \(\phi=1/8\)，用 3 个相位比特的 QPE 输出估计值为？</p>
 <div class="opts">
-<button data-opt="a">0.010₂</button>
-<button data-opt="b">0.100₂</button>
-<button data-opt="c">0.111₂</button>
-<button data-opt="d">0.001₂ (=1/8)</button>
+<button data-opt="a">0.\(010_{2}\)</button>
+<button data-opt="b">0.\(100_{2}\)</button>
+<button data-opt="c">0.\(111_{2}\)</button>
+<button data-opt="d">0.\(001_{2}\) (=1/8)</button>
 </div>
 <p class="feedback"></p>
 </div>
@@ -71,7 +71,7 @@
 <p class="quiz-q"><span class="qno">Q4</span>关于 QPE 精度，正确的是？</p>
 <div class="opts">
 <button data-opt="a">精度与 qubit 数无关</button>
-<button data-opt="b">n 个 qubit 可估计到 2ⁿ 的精度</button>
+<button data-opt="b">n 个 qubit 可估计到 \(2^{n}\) 的精度</button>
 <button data-opt="c">只能得到近似值，永远无法精确</button>
 <button data-opt="d">必须测量寄存器 2</button>
 </div>
@@ -83,8 +83,8 @@
 <h2>六、这节课你应该能独立完成</h2>
 <ul>
 <li>复述 QPE 的五个步骤，说清"受控 U 编码相位 + 逆 QFT 解码相位"的直觉。</li>
-<li>套用例题：φ=1/8 时三比特估计结果为 0.001₂。</li>
-<li>记住精度随 qubit 数指数提升，以及 φ 不能精确二进制表示时只能近似。</li>
+<li>套用例题：\(\phi=1/8\) 时三比特估计结果为 0.\(001_{2}\)。</li>
+<li>记住精度随 qubit 数指数提升，以及 \(\phi\) 不能精确二进制表示时只能近似。</li>
 </ul>
 <div class="note">
 <p><strong>主资源：</strong>本课正文均来自课件 <strong>03 · P2（P25–P36）</strong>。下一课用 QFT+QPE 解决一个大问题：Shor 的大数分解算法。</p>
