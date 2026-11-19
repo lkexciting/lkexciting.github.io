@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+﻿$ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 $env:GH_CONFIG_DIR = Join-Path $PSScriptRoot '.local-tools\gh-config'
 node scripts/sync-notes.mjs
